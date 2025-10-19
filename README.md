@@ -1,0 +1,1 @@
+This is an AI tool that leverages Deepseek and GAN to swap plots between two novel outlines and adjust the overall logic of the outline.
