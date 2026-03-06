@@ -1,0 +1,28 @@
+# PlotWeaver Requirements
+
+# LLM - OpenAI-compatible SDK (used for DeepSeek)
+openai>=1.0.0
+
+# HTTP client (used for Ollama direct HTTP calls)
+httpx>=0.25.0
+
+# Vector database
+chromadb>=0.4.0
+
+# Local embeddings
+sentence-transformers>=2.2.0
+
+# Graph analysis
+networkx>=3.0
+
+# Numerical computing
+numpy>=1.24.0
+
+# Scientific computing (Savitzky-Golay filter, peak detection, Hungarian algorithm)
+scipy>=1.10.0
+
+# YAML config parsing
+pyyaml>=6.0
+
+# Rich CLI output
+rich>=13.0.0

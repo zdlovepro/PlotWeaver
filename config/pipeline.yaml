@@ -1,0 +1,52 @@
+# PlotWeaver Pipeline Configuration
+
+llm:
+  # LLM provider: "deepseek" or "ollama"
+  provider: ollama
+  # Model name
+  model: qwen2.5
+  # Sampling temperature
+  temperature: 0.7
+  # Max tokens per response
+  max_tokens: 4096
+  # Request timeout (seconds)
+  timeout: 120
+
+  # DeepSeek configuration (used when provider = "deepseek")
+  api_key: "YOUR_DEEPSEEK_API_KEY_HERE"
+  base_url: "https://api.deepseek.com"
+
+  # Ollama configuration (used when provider = "ollama")
+  ollama_host: "http://localhost:11434"
+
+embedding:
+  # Embedding provider: "local" (sentence-transformers) or "openai"
+  provider: local
+  # Local model (sentence-transformers)
+  model: "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2"
+  # OpenAI embedding config (used when provider = "openai")
+  api_key: "YOUR_OPENAI_API_KEY_HERE"
+  openai_model: "text-embedding-3-small"
+
+rag:
+  # ChromaDB persistent storage directory
+  chromadb_path: "data/vectordb"
+  # Number of results to retrieve per query
+  top_k: 10
+  # Reranker weights for each retrieval path (must sum to 1.0)
+  reranker_weights:
+    semantic: 0.40
+    metadata_filter: 0.30
+    reverse: 0.15
+    theme: 0.15
+
+pipeline:
+  # Which novel to use as the framework (by file name without extension)
+  # Leave empty to use the first novel found in data/input/
+  framework_novel: ""
+  # Maximum number of plot units to replace in the framework
+  replacement_depth: 3
+  # Number of parallel workers for preprocessing
+  parallel_workers: 4
+  # Optional: path to custom prompt template overrides directory
+  # prompts_dir: "config/prompts"
