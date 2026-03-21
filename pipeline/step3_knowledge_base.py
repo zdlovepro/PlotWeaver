@@ -358,12 +358,90 @@ def _fuse_cultivation_system(
     for i in range(len(realms) - 1):
         dag.add_edge(realms[i].name, realms[i + 1].name)
 
+    # ── NetworkX validation: no LLM for graph-validity checks ─────────────────
+    # LLM is only called here if networkx detects a cycle (broken link).
+    if not nx.is_directed_acyclic_graph(dag):
+        cycles = list(nx.simple_cycles(dag))
+        print(f"[Step 3] WARNING: cultivation DAG has cycles {cycles}; using LLM to fix.")
+        realms, dag = _fix_realm_dag_cycles(client, realms, cycles)
+    else:
+        # topological_sort confirms a valid linear progression; re-order realms
+        # to match the canonical topological ordering from the graph.
+        topo_names = list(nx.topological_sort(dag))
+        realm_map = {r.name: r for r in realms}
+        ordered = [realm_map[n] for n in topo_names if n in realm_map]
+        if len(ordered) == len(realms):
+            realms = ordered
+        else:
+            print(
+                f"[Step 3] WARNING: topological ordering returned {len(ordered)} realms "
+                f"but expected {len(realms)}; keeping level-sorted order."
+            )
+
     return FusedWorld(
         cultivation_realms=realms,
         realm_dag=dag,
         world_name=data.get("world_name", "新世界"),
         raw_system_text=raw,
     )
+
+
+@retry(stop=stop_after_attempt(3), wait=wait_exponential(min=2, max=10))
+def _fix_realm_dag_cycles(
+    client,
+    realms: List[CultivationRealm],
+    cycles: List[List[str]],
+) -> tuple[List[CultivationRealm], nx.DiGraph]:
+    """
+    Called ONLY when networkx.is_directed_acyclic_graph() returns False.
+    Sends the specific broken-link information to the LLM and asks it to
+    reassign level numbers so the progression is linear.  Validation itself
+    is always done by networkx – we never ask the LLM "is this a DAG?".
+    """
+    cycle_desc = json.dumps(cycles, ensure_ascii=False)
+    realm_desc = json.dumps(
+        [{"name": r.name, "level": r.level} for r in realms],
+        ensure_ascii=False,
+    )
+    prompt = (
+        "以下修炼体系的境界进阶存在循环（由图论检测发现）：\n"
+        f"循环路径：{cycle_desc}\n\n"
+        f"当前境界列表：{realm_desc}\n\n"
+        "请重新分配每个境界的level编号，消除循环，使境界进阶成为线性无回路序列（level从1开始递增）。\n"
+        '以JSON数组输出修正后的列表：[{"name": "境界名", "level": 1}, ...]'
+    )
+    raw = chat_completion_json(
+        client,
+        system="你是修炼体系设计师，负责修正境界进阶图中的逻辑错误，只输出合法JSON。",
+        user=prompt,
+        json_mode=True,
+    )
+    try:
+        fixed_data = json.loads(raw)
+        if isinstance(fixed_data, dict):
+            fixed_data = fixed_data.get("realms", fixed_data.get("levels", []))
+    except (json.JSONDecodeError, AttributeError):
+        fixed_data = []
+
+    # Apply fixed levels back onto the existing realm objects
+    fixed_levels: Dict[str, int] = {
+        item["name"]: int(item["level"])
+        for item in fixed_data
+        if isinstance(item, dict) and "name" in item and "level" in item
+    }
+    for realm in realms:
+        if realm.name in fixed_levels:
+            realm.level = fixed_levels[realm.name]
+    realms.sort(key=lambda r: r.level)
+
+    # Rebuild a clean linear DAG from the fixed ordering
+    dag = nx.DiGraph()
+    for realm in realms:
+        dag.add_node(realm.name, level=realm.level)
+    for i in range(len(realms) - 1):
+        dag.add_edge(realms[i].name, realms[i + 1].name)
+
+    return realms, dag
 
 
 @retry(stop=stop_after_attempt(3), wait=wait_exponential(min=2, max=10))

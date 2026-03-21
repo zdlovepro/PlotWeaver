@@ -57,16 +57,15 @@ def validate_and_output(
     output_dir = Path(output_dir)
     output_dir.mkdir(parents=True, exist_ok=True)
 
-    client = get_deepseek_client()
-
     # 1. Collect all text from the new outline
     outline_text = _compile_outline_text(volumes)
 
-    # 2. NER exact-match check
+    # 2. NER exact-match check – pure Python, no LLM
     ner_ratio, flagged_ner = _ner_exact_check(outline_text, source_texts)
     print(f"[Step 7] NER overlap ratio: {ner_ratio:.2%}")
 
-    # 3. Adversarial DeepSeek check
+    # 3. Adversarial DeepSeek check – LLM is only used here, for the trope check
+    client = get_deepseek_client()
     similar_tropes, flagged_trope_events = _adversarial_check(
         client, outline_text, source_texts, reassembled_events
     )
@@ -100,16 +99,29 @@ def validate_and_output(
 
 def _extract_named_entities(text: str) -> Set[str]:
     """
-    Heuristic NER for Chinese text: extract 2-4 character sequences that look
-    like named entities (person names, place names, technique names).
-    This is intentionally lightweight – a production system would use a proper
-    NER model.
+    Pure-Python NER for Chinese text using jieba (if installed) with a regex
+    fallback.  Extracts person names, place names, and cultivation-specific
+    technique/item names without calling any LLM.
+
+    jieba POS tags used:
+      nr – person name, ns – place name, nt – organisation,
+      nz – other proper noun, n  – common noun (kept for technique terms)
     """
-    # Match typical Chinese proper nouns: 2-6 Chinese characters
     entities: Set[str] = set()
-    # Look for capitalised words in mixed text
+
+    # Primary: jieba part-of-speech tagging (richer than pure regex)
+    try:
+        import jieba.posseg as pseg  # type: ignore[import]
+        for word, flag in pseg.cut(text):
+            if len(word) >= 2 and flag in ("nr", "ns", "nt", "nz", "n"):
+                entities.add(word)
+    except ImportError:
+        pass  # jieba not installed; rely on regex below
+
+    # Fallback / supplement: regex patterns always applied so that
+    # cultivation-specific terms (功法, 门派, 境界…) are captured even when
+    # jieba's generic noun tagger misses them.
     entities.update(re.findall(r"[A-Z][a-zA-Z]{2,}", text))
-    # Chinese noun phrases: 2-6 chars followed by common suffixes
     suffixes = r"(?:功|诀|剑|刀|拳|掌|宗|门|宫|殿|界|境|峰|山|城|洞|府|道|法|经|典|丹|器|符|阵)"
     entities.update(re.findall(rf"[\u4e00-\u9fff]{{1,5}}{suffixes}", text))
     return entities
