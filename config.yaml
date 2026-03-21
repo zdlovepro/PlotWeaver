@@ -1,0 +1,29 @@
+# PlotWeaver V2.0 Configuration File
+# Copy this file and rename to config.local.yaml for local overrides,
+# or set values via environment variables (they take precedence).
+
+deepseek:
+  api_key: "YOUR_DEEPSEEK_API_KEY"   # or set env var DEEPSEEK_API_KEY
+  base_url: "https://api.deepseek.com/v1"
+  model: "deepseek-chat"
+  max_tokens: 8192
+  temperature: 0.7
+
+chromadb:
+  mode: "local"          # "local" or "http"
+  path: "./chroma_data"  # used when mode is "local"
+  host: "localhost"      # used when mode is "http"
+  port: 8000             # used when mode is "http"
+
+paths:
+  input_dir: "./input"       # Directory containing source novel texts/outlines
+  output_dir: "./output"     # Directory for generated outlines and world bibles
+
+pipeline:
+  max_retry_steps: 2         # Maximum retries for Step 5 re-generation if validation fails
+  plagiarism_ner_threshold: 0.05   # NER exact-match ratio threshold (< 5%)
+  semantic_chunk_min_chapters: 3   # Minimum chapters per narrative event
+  semantic_chunk_max_chapters: 5   # Maximum chapters per narrative event
+  max_text_chunk_length: 3000      # Max characters per LLM prompt fragment
+  plagiarism_source_synopsis_length: 1000   # Source novel synopsis chars for plagiarism check
+  plagiarism_outline_excerpt_length: 3000   # New outline excerpt chars for plagiarism check
