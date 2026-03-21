@@ -7,13 +7,15 @@ Responsibilities:
 
 Output:
   List[VolumeArc], where each VolumeArc holds a list of NarrativeEvent objects.
+  The result is also persisted to ``intermediate_dir/step1_chunks.json`` for
+  pipeline resume capability.
 """
 
 from __future__ import annotations
 
 import json
 import re
-from dataclasses import dataclass, field
+from dataclasses import dataclass, field, asdict
 from pathlib import Path
 from typing import List
 
@@ -74,6 +76,8 @@ def process_all_novels(input_dir: str | Path) -> dict[str, List[VolumeArc]]:
     """
     Process every .txt file in *input_dir* and return a mapping
     {filename: List[VolumeArc]}.
+
+    The result is saved to ``intermediate_dir/step1_chunks.json``.
     """
     input_dir = Path(input_dir)
     results: dict[str, List[VolumeArc]] = {}
@@ -82,7 +86,57 @@ def process_all_novels(input_dir: str | Path) -> dict[str, List[VolumeArc]]:
         results[novel_file.name] = process_novel(novel_file)
     if not results:
         print("[Step 1] Warning: no .txt files found in input directory.")
+    else:
+        save_step1_output(results)
     return results
+
+
+# ── Intermediate I/O ──────────────────────────────────────────────────────────
+
+_STEP1_FILENAME = "step1_chunks.json"
+
+
+def save_step1_output(novel_arcs: dict[str, List[VolumeArc]]) -> Path:
+    """Serialise *novel_arcs* to ``intermediate_dir/step1_chunks.json``."""
+    out_dir = Path(config.INTERMEDIATE_DIR)
+    out_dir.mkdir(parents=True, exist_ok=True)
+    out_path = out_dir / _STEP1_FILENAME
+    serialisable = {
+        novel_name: [asdict(arc) for arc in arcs]
+        for novel_name, arcs in novel_arcs.items()
+    }
+    with open(out_path, "w", encoding="utf-8") as f:
+        json.dump(serialisable, f, ensure_ascii=False, indent=2)
+    print(f"[Step 1] Intermediate output saved → {out_path}")
+    return out_path
+
+
+def load_step1_output(intermediate_dir: str | Path | None = None) -> dict[str, List[VolumeArc]]:
+    """Load previously saved Step 1 output from ``intermediate_dir/step1_chunks.json``."""
+    inter_dir = Path(intermediate_dir or config.INTERMEDIATE_DIR)
+    in_path = inter_dir / _STEP1_FILENAME
+    if not in_path.exists():
+        raise FileNotFoundError(
+            f"Step 1 intermediate file not found: {in_path}\n"
+            "Run the pipeline from Step 1 first to generate it."
+        )
+    with open(in_path, "r", encoding="utf-8") as f:
+        raw = json.load(f)
+    result: dict[str, List[VolumeArc]] = {}
+    for novel_name, arcs_data in raw.items():
+        arcs: List[VolumeArc] = []
+        for arc_d in arcs_data:
+            events = [NarrativeEvent(**ev) for ev in arc_d.get("events", [])]
+            arc = VolumeArc(
+                arc_name=arc_d["arc_name"],
+                realm_start=arc_d["realm_start"],
+                realm_end=arc_d["realm_end"],
+                events=events,
+            )
+            arcs.append(arc)
+        result[novel_name] = arcs
+    print(f"[Step 1] Loaded intermediate output from {in_path}")
+    return result
 
 
 # ── Internal helpers ──────────────────────────────────────────────────────────
