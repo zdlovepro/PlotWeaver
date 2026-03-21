@@ -71,3 +71,6 @@ chroma_data/
 
 config.yaml
 
+input/
+output/
+
