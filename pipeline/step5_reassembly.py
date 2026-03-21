@@ -54,12 +54,16 @@ def reassemble_plot(
     protagonist_desc = _format_protagonist(protagonist)
     realm_system = _format_realm_system(fused_world)
 
+    # ── Build realm-level → topological-position index from the DAG ──────────
+    # networkx validates the graph; the LLM is never asked "is this valid?".
+    realm_topo_index: Dict[int, int] = _build_realm_topo_index(fused_world)
+
     reassembled: List[ReassembledEvent] = []
     prev_realm_level = 0
 
     for node in skeleton.nodes:
-        # --- Bridge gap if realm skips ---
-        if node.realm_level > prev_realm_level + 1 and prev_realm_level > 0:
+        # --- Bridge gap if realm skips (DAG-aware check) ---
+        if _realm_gap_exists(prev_realm_level, node.realm_level, realm_topo_index):
             bridge = _create_bridge_event(
                 client, kb, node, protagonist_desc, realm_system, prev_realm_level
             )
@@ -72,6 +76,57 @@ def reassemble_plot(
     print(f"[Step 5] Reassembled {len(reassembled)} events "
           f"(including {sum(1 for e in reassembled if e.is_bridge)} bridges)")
     return reassembled
+
+
+# ── DAG-aware realm gap helpers ───────────────────────────────────────────────
+
+def _build_realm_topo_index(fused_world: FusedWorld) -> Dict[int, int]:
+    """
+    Return a mapping {realm_level: topological_position} derived from the
+    cultivation-system DAG.
+
+    networkx.is_directed_acyclic_graph() and networkx.topological_sort() are
+    the sole validators – we never send the graph to the LLM to ask whether it
+    is valid.  If the DAG is absent or invalid the function falls back to a
+    simple level-equals-position mapping.
+    """
+    dag = fused_world.realm_dag
+    if dag is None or not nx.is_directed_acyclic_graph(dag):
+        # Fallback: treat each realm's numeric level as its own index.
+        # Duplicate levels are resolved by keeping the first occurrence so
+        # that the mapping is deterministic (realms are already level-sorted).
+        index: Dict[int, int] = {}
+        for r in fused_world.cultivation_realms:
+            index.setdefault(r.level, r.level)
+        return index
+
+    topo_order = list(nx.topological_sort(dag))
+    realm_name_to_level = {r.name: r.level for r in fused_world.cultivation_realms}
+    index: Dict[int, int] = {}
+    for topo_pos, name in enumerate(topo_order):
+        if name in realm_name_to_level:
+            index[realm_name_to_level[name]] = topo_pos
+    return index
+
+
+def _realm_gap_exists(
+    prev_level: int, next_level: int, topo_index: Dict[int, int]
+) -> bool:
+    """
+    Return True when the skeleton skips at least one intermediate realm level,
+    meaning a bridge event is needed.
+
+    Uses the topological-position index built from the DAG (not LLM logic).
+    Falls back to simple arithmetic when either level is missing from the index.
+    """
+    if prev_level == 0:
+        return False
+    prev_pos = topo_index.get(prev_level)
+    next_pos = topo_index.get(next_level)
+    if prev_pos is None or next_pos is None:
+        # Unknown realm level – fall back to simple arithmetic
+        return next_level > prev_level + 1
+    return next_pos > prev_pos + 1
 
 
 # ── Internal helpers ──────────────────────────────────────────────────────────
