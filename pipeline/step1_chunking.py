@@ -1,9 +1,13 @@
 """
-step1_chunking.py – Semantic Chunking & Arc Anchoring
+step1_chunking.py – Physical Chunking & Arc Anchoring
 
 Responsibilities:
-  - Identify major cultivation realm transitions to split text into Volume Arcs.
-  - Merge 3-5 related chapters into a single "Narrative Event" using DeepSeek.
+  - Read raw .txt files from input_dir.
+  - Use regex to split text into chapters (e.g., matching "第.*章").
+  - Detect major cultivation realm transitions to split text into Volume Arcs.
+  - Group every N chapters (based on semantic_chunk_min_chapters from config)
+    into a physical chunk (NarrativeEvent).
+  - No LLM calls – this step is purely deterministic Python logic.
 
 Output:
   List[VolumeArc], where each VolumeArc holds a list of NarrativeEvent objects.
@@ -19,10 +23,7 @@ from dataclasses import dataclass, field, asdict
 from pathlib import Path
 from typing import List
 
-from tenacity import retry, stop_after_attempt, wait_exponential
-
 import config
-from pipeline.utils import get_deepseek_client, chat_completion_json
 
 # ── Cultivation realm keywords used to detect arc boundaries ─────────────────
 REALM_KEYWORDS: List[str] = [
@@ -56,7 +57,11 @@ class VolumeArc:
 def process_novel(novel_path: str | Path) -> List[VolumeArc]:
     """
     Read a single novel file, detect realm arcs, and return a list of VolumeArcs
-    each containing semantically chunked NarrativeEvents.
+    each containing physically chunked NarrativeEvents.
+
+    No LLM calls are made. Chapters are split by regex and grouped into chunks
+    of size between ``SEMANTIC_CHUNK_MIN_CHAPTERS`` and
+    ``SEMANTIC_CHUNK_MAX_CHAPTERS`` (from config) using pure Python logic.
     """
     novel_path = Path(novel_path)
     text = novel_path.read_text(encoding="utf-8")
@@ -65,9 +70,8 @@ def process_novel(novel_path: str | Path) -> List[VolumeArc]:
     arc_boundaries = _detect_arc_boundaries(chapters)
     arcs = _build_volume_arcs(chapters, arc_boundaries)
 
-    client = get_deepseek_client()
     for arc in arcs:
-        arc.events = _semantic_chunk_arc(client, arc.arc_name, arc.events)
+        arc.events = _physical_chunk_arc(arc.arc_name, arc.events)
 
     return arcs
 
@@ -217,12 +221,14 @@ def _build_volume_arcs(
     return arcs
 
 
-def _semantic_chunk_arc(
-    client, arc_name: str, raw_events: List[NarrativeEvent]
+def _physical_chunk_arc(
+    arc_name: str, raw_events: List[NarrativeEvent]
 ) -> List[NarrativeEvent]:
     """
-    Merge consecutive raw chapter events into semantic Narrative Events
-    (groups of MIN_CHAPTERS to MAX_CHAPTERS) and generate a summary for each.
+    Merge consecutive raw chapter events into physical NarrativeEvent chunks.
+    Groups between MIN_CHAPTERS and MAX_CHAPTERS chapters together.
+    No LLM is used – the summary field is left empty so that Step 2 reads
+    the raw chapter text directly.
     """
     min_ch = config.SEMANTIC_CHUNK_MIN_CHAPTERS
     max_ch = config.SEMANTIC_CHUNK_MAX_CHAPTERS
@@ -240,38 +246,15 @@ def _semantic_chunk_arc(
             i += len(group)
             continue
 
-        combined_text = "\n\n".join(
-            ch for ev in group for ch in ev.chapters
-        )
-        summary = _summarise_event(client, arc_name, combined_text)
         merged.append(
             NarrativeEvent(
                 event_id=f"{arc_name}_event{event_counter}",
                 arc_name=arc_name,
                 chapters=[ch for ev in group for ch in ev.chapters],
-                summary=summary,
+                summary="",
             )
         )
         event_counter += 1
         i += len(group)
 
     return merged
-
-
-@retry(stop=stop_after_attempt(3), wait=wait_exponential(min=2, max=10))
-def _summarise_event(client, arc_name: str, text: str) -> str:
-    """Call DeepSeek to produce a concise summary for a narrative event."""
-    prompt = (
-        f"你是一位修仙小说情节分析师。\n"
-        f"当前境界弧：{arc_name}\n\n"
-        f"请为以下章节内容撰写一段简洁的情节摘要（200字以内），"
-        f"重点保留：境界突破、核心机缘、主要冲突、关键人物行动。\n\n"
-        f"章节内容：\n{text[:config.MAX_TEXT_CHUNK_LENGTH]}"
-    )
-    result = chat_completion_json(
-        client,
-        system="你是专业的修仙小说情节摘要生成助手。",
-        user=prompt,
-        json_mode=False,
-    )
-    return result.strip()
