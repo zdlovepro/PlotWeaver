@@ -5,7 +5,10 @@ Chains the 7-step pipeline for fusing multiple Xianxia novel outlines into a
 new, highly coherent, plagiarism-resistant novel outline.
 
 Usage:
-    python main.py
+    python main.py                  # run full pipeline from Step 1
+    python main.py --start-step 2   # skip Step 1, load step1_chunks.json and resume from Step 2
+    python main.py --start-step 3   # skip Steps 1-2, load step2_extracted_plots.json and resume
+    python main.py --help           # show usage
 
 Configuration is loaded from config.yaml (or environment variables).
 Place source novel .txt files in the INPUT_DIR configured in config.yaml.
@@ -13,6 +16,7 @@ Place source novel .txt files in the INPUT_DIR configured in config.yaml.
 
 from __future__ import annotations
 
+import argparse
 import sys
 from pathlib import Path
 
@@ -28,10 +32,43 @@ from pipeline import (
 )
 
 
-def run_pipeline() -> None:
-    """Execute the full 7-step PlotWeaver pipeline."""
+def _parse_args() -> argparse.Namespace:
+    parser = argparse.ArgumentParser(
+        prog="python main.py",
+        description="PlotWeaver V2.0 – Xianxia Novel Outline Fusion Pipeline",
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog="""
+Resume examples:
+  python main.py                  Run the full pipeline from Step 1.
+  python main.py --start-step 2   Load intermediate_data/step1_chunks.json and
+                                  start from Step 2 (skip Step 1).
+  python main.py --start-step 3   Load intermediate_data/step2_extracted_plots.json
+                                  and start from Step 3 (skip Steps 1-2).
+
+Intermediate files are stored in the directory configured as ``paths.intermediate_dir``
+in config.yaml (default: ./intermediate_data).
+        """,
+    )
+    parser.add_argument(
+        "--start-step",
+        type=int,
+        default=1,
+        choices=range(1, 8),
+        metavar="N",
+        help="Step number to start from (1-7). Steps before N are skipped and "
+             "their outputs are loaded from intermediate_data/. "
+             "Steps 1-2 save intermediate JSON files; steps 3-7 always run in full. "
+             "Default: 1 (full run).",
+    )
+    return parser.parse_args()
+
+
+def run_pipeline(start_step: int = 1) -> None:
+    """Execute the PlotWeaver pipeline, optionally resuming from *start_step*."""
     print("=" * 60)
     print("  PlotWeaver V2.0 – Xianxia Novel Outline Fusion Pipeline")
+    if start_step > 1:
+        print(f"  Resuming from Step {start_step}")
     print("=" * 60)
 
     # Validate configuration
@@ -41,21 +78,32 @@ def run_pipeline() -> None:
     output_dir = Path(config.OUTPUT_DIR)
 
     # ── Step 1: Semantic Chunking & Arc Anchoring ─────────────────────────────
-    print("\n[Pipeline] ── Step 1: Semantic Chunking & Arc Anchoring ──")
-    novel_arcs = step1_chunking.process_all_novels(input_dir)
-    if not novel_arcs:
-        print(
-            f"ERROR: No source novels found in '{input_dir}'. "
-            "Please place .txt files there and retry."
-        )
-        sys.exit(1)
-    print(f"[Pipeline] Processed {len(novel_arcs)} novel(s).")
+    if start_step <= 1:
+        print("\n[Pipeline] ── Step 1: Semantic Chunking & Arc Anchoring ──")
+        novel_arcs = step1_chunking.process_all_novels(input_dir)
+        if not novel_arcs:
+            print(
+                f"ERROR: No source novels found in '{input_dir}'. "
+                "Please place .txt files there and retry."
+            )
+            sys.exit(1)
+        print(f"[Pipeline] Processed {len(novel_arcs)} novel(s).")
+    else:
+        print("\n[Pipeline] ── Step 1 skipped – loading from intermediate file ──")
+        novel_arcs = step1_chunking.load_step1_output()
+        print(f"[Pipeline] Loaded {len(novel_arcs)} novel(s) from intermediate data.")
 
     # ── Step 2: Dual-stage Plot Extraction ───────────────────────────────────
-    print("\n[Pipeline] ── Step 2: Dual-stage Plot Extraction ──")
-    all_atoms = step2_extraction.extract_all(novel_arcs)
-    total_atoms = sum(len(v) for v in all_atoms.values())
-    print(f"[Pipeline] Total plot atoms extracted: {total_atoms}")
+    if start_step <= 2:
+        print("\n[Pipeline] ── Step 2: Dual-stage Plot Extraction ──")
+        all_atoms = step2_extraction.extract_all(novel_arcs)
+        total_atoms = sum(len(v) for v in all_atoms.values())
+        print(f"[Pipeline] Total plot atoms extracted: {total_atoms}")
+    else:
+        print("\n[Pipeline] ── Step 2 skipped – loading from intermediate file ──")
+        all_atoms = step2_extraction.load_step2_output()
+        total_atoms = sum(len(v) for v in all_atoms.values())
+        print(f"[Pipeline] Loaded {total_atoms} plot atoms from intermediate data.")
 
     # ── Step 3: RAG Knowledge Base & World Building ───────────────────────────
     print("\n[Pipeline] ── Step 3: RAG Knowledge Base & World Building ──")
@@ -133,4 +181,5 @@ def _load_source_texts(input_dir: Path) -> dict[str, str]:
 
 
 if __name__ == "__main__":
-    run_pipeline()
+    args = _parse_args()
+    run_pipeline(start_step=args.start_step)

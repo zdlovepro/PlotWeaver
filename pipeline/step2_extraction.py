@@ -7,12 +7,15 @@ Uses DeepSeek API (JSON mode) in two passes:
 
 Output:
   List[PlotAtom] – enriched, structured plot atoms ready for ChromaDB ingestion.
+  The result is also persisted to ``intermediate_dir/step2_extracted_plots.json``
+  for pipeline resume capability.
 """
 
 from __future__ import annotations
 
 import json
-from dataclasses import dataclass, field
+from dataclasses import dataclass, field, asdict
+from pathlib import Path
 from typing import Any, Dict, List
 
 from tenacity import retry, stop_after_attempt, wait_exponential
@@ -57,6 +60,8 @@ def extract_all(
 
     Returns:
         {novel_filename: [PlotAtom, ...]}
+
+    The result is saved to ``intermediate_dir/step2_extracted_plots.json``.
     """
     client = get_deepseek_client()
     result: dict[str, List[PlotAtom]] = {}
@@ -69,6 +74,45 @@ def extract_all(
                 atoms.append(atom)
         result[novel_name] = atoms
         print(f"[Step 2]   → {len(atoms)} atoms extracted from {novel_name}")
+    save_step2_output(result)
+    return result
+
+
+# ── Intermediate I/O ──────────────────────────────────────────────────────────
+
+_STEP2_FILENAME = "step2_extracted_plots.json"
+
+
+def save_step2_output(all_atoms: dict[str, List[PlotAtom]]) -> Path:
+    """Serialise *all_atoms* to ``intermediate_dir/step2_extracted_plots.json``."""
+    out_dir = Path(config.INTERMEDIATE_DIR)
+    out_dir.mkdir(parents=True, exist_ok=True)
+    out_path = out_dir / _STEP2_FILENAME
+    serialisable = {
+        novel_name: [asdict(atom) for atom in atoms]
+        for novel_name, atoms in all_atoms.items()
+    }
+    with open(out_path, "w", encoding="utf-8") as f:
+        json.dump(serialisable, f, ensure_ascii=False, indent=2)
+    print(f"[Step 2] Intermediate output saved → {out_path}")
+    return out_path
+
+
+def load_step2_output(intermediate_dir: str | Path | None = None) -> dict[str, List[PlotAtom]]:
+    """Load previously saved Step 2 output from ``intermediate_dir/step2_extracted_plots.json``."""
+    inter_dir = Path(intermediate_dir or config.INTERMEDIATE_DIR)
+    in_path = inter_dir / _STEP2_FILENAME
+    if not in_path.exists():
+        raise FileNotFoundError(
+            f"Step 2 intermediate file not found: {in_path}\n"
+            "Run the pipeline from Step 1 or Step 2 first to generate it."
+        )
+    with open(in_path, "r", encoding="utf-8") as f:
+        raw = json.load(f)
+    result: dict[str, List[PlotAtom]] = {}
+    for novel_name, atoms_data in raw.items():
+        result[novel_name] = [PlotAtom(**d) for d in atoms_data]
+    print(f"[Step 2] Loaded intermediate output from {in_path}")
     return result
 
 

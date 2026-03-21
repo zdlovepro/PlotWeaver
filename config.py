@@ -52,6 +52,7 @@ CHROMADB_PORT: int = int(_get("chromadb", "port", "CHROMADB_PORT", 8000))
 # ── Paths ─────────────────────────────────────────────────────────────────────
 INPUT_DIR: str = _get("paths", "input_dir", "INPUT_DIR", "./input")
 OUTPUT_DIR: str = _get("paths", "output_dir", "OUTPUT_DIR", "./output")
+INTERMEDIATE_DIR: str = _get("paths", "intermediate_dir", "INTERMEDIATE_DIR", "./intermediate_data")
 
 # ── Pipeline tuning ───────────────────────────────────────────────────────────
 _pipe = _yaml.get("pipeline", {})
@@ -103,3 +104,4 @@ def validate():
         )
     Path(INPUT_DIR).mkdir(parents=True, exist_ok=True)
     Path(OUTPUT_DIR).mkdir(parents=True, exist_ok=True)
+    Path(INTERMEDIATE_DIR).mkdir(parents=True, exist_ok=True)
