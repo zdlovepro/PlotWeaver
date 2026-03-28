@@ -15,9 +15,13 @@ from __future__ import annotations
 
 import json
 import re
+import warnings
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Set
+
+# Suppress pkg_resources deprecation warning emitted by jieba at import time.
+warnings.filterwarnings("ignore", category=UserWarning, module="jieba")
 
 from tenacity import retry, stop_after_attempt, wait_exponential
 

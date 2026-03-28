@@ -19,6 +19,7 @@ from pathlib import Path
 from typing import Any, Dict, List
 
 from tenacity import retry, stop_after_attempt, wait_exponential
+from tqdm import tqdm
 
 import config
 from pipeline.step1_chunking import NarrativeEvent, VolumeArc
@@ -66,14 +67,14 @@ def extract_all(
     client = get_deepseek_client()
     result: dict[str, List[PlotAtom]] = {}
     for novel_name, arcs in novel_arcs.items():
-        print(f"[Step 2] Extracting plot atoms from: {novel_name}")
+        print(f"[Step 2] Extracting plot atoms from: {novel_name}", flush=True)
         atoms: List[PlotAtom] = []
-        for arc in arcs:
-            for event in arc.events:
-                atom = _extract_event(client, novel_name, event)
-                atoms.append(atom)
+        all_events = [event for arc in arcs for event in arc.events]
+        for event in tqdm(all_events, desc=f"[Step 2] {novel_name}", unit="event"):
+            atom = _extract_event(client, novel_name, event)
+            atoms.append(atom)
         result[novel_name] = atoms
-        print(f"[Step 2]   → {len(atoms)} atoms extracted from {novel_name}")
+        print(f"[Step 2]   → {len(atoms)} atoms extracted from {novel_name}", flush=True)
     save_step2_output(result)
     return result
 
@@ -94,7 +95,7 @@ def save_step2_output(all_atoms: dict[str, List[PlotAtom]]) -> Path:
     }
     with open(out_path, "w", encoding="utf-8") as f:
         json.dump(serialisable, f, ensure_ascii=False, indent=2)
-    print(f"[Step 2] Intermediate output saved → {out_path}")
+    print(f"[Step 2] Intermediate output saved → {out_path}", flush=True)
     return out_path
 
 
