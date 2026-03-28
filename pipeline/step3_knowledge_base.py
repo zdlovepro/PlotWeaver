@@ -18,6 +18,7 @@ Output:
 from __future__ import annotations
 
 import json
+import uuid
 from dataclasses import dataclass, field
 from typing import Any, Dict, List, Optional
 
@@ -69,10 +70,11 @@ class KnowledgeBase:
         if not atoms:
             return
         self._events.add(
-            ids=[a.atom_id for a in atoms],
+            ids=[f"{a.atom_id}_{uuid.uuid4().hex[:8]}" for a in atoms],
             documents=[a.summary or a.core_action for a in atoms],
             metadatas=[
                 {
+                    "original_id": a.atom_id,
                     "novel_source": a.novel_source,
                     "arc_name": a.arc_name,
                     "conflict_type": a.conflict_type,
