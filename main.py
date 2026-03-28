@@ -211,5 +211,6 @@ def _load_source_texts(input_dir: Path) -> dict[str, str]:
 
 if __name__ == "__main__":
     args = _parse_args()
+    args.start_step=3
     run_pipeline(start_step=args.start_step)
 
