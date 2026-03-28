@@ -54,6 +54,11 @@ INPUT_DIR: str = _get("paths", "input_dir", "INPUT_DIR", "./input")
 OUTPUT_DIR: str = _get("paths", "output_dir", "OUTPUT_DIR", "./output")
 INTERMEDIATE_DIR: str = _get("paths", "intermediate_dir", "INTERMEDIATE_DIR", "./intermediate_data")
 
+# Derived state-file paths for Steps 3-5 (used by save/load helpers).
+STEP3_STATE_FILE: str = str(Path(INTERMEDIATE_DIR) / "step3_fused_world.json")
+STEP4_STATE_FILE: str = str(Path(INTERMEDIATE_DIR) / "step4_protagonist.json")
+STEP5_STATE_FILE: str = str(Path(INTERMEDIATE_DIR) / "step5_reassembled_plot.json")
+
 # ── Pipeline tuning ───────────────────────────────────────────────────────────
 _pipe = _yaml.get("pipeline", {})
 MAX_RETRY_STEPS: int = int(

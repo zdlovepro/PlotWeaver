@@ -16,12 +16,14 @@ Output:
 from __future__ import annotations
 
 import json
-from dataclasses import dataclass, field
+from dataclasses import dataclass, field, asdict
+from pathlib import Path
 from typing import Any, Dict, List, Optional
 
 import networkx as nx
 from tenacity import retry, stop_after_attempt, wait_exponential
 
+import config
 from pipeline.step3_knowledge_base import KnowledgeBase, FusedWorld
 from pipeline.step4_role_casting import NarrativeSkeleton, SkeletonNode, Character
 from pipeline.utils import get_deepseek_client, chat_completion_json
@@ -76,6 +78,37 @@ def reassemble_plot(
     print(f"[Step 5] Reassembled {len(reassembled)} events "
           f"(including {sum(1 for e in reassembled if e.is_bridge)} bridges)")
     return reassembled
+
+
+# ── Step 5 persistence ────────────────────────────────────────────────────────
+
+_STEP5_FILENAME = "step5_reassembled_plot.json"
+
+
+def save_step5_output(reassembled: List[ReassembledEvent]) -> Path:
+    """Serialise *reassembled* to ``intermediate_dir/step5_reassembled_plot.json``."""
+    out_dir = Path(config.INTERMEDIATE_DIR)
+    out_dir.mkdir(parents=True, exist_ok=True)
+    out_path = out_dir / _STEP5_FILENAME
+    with open(out_path, "w", encoding="utf-8") as f:
+        json.dump([asdict(e) for e in reassembled], f, ensure_ascii=False, indent=2)
+    print(f"[Step 5] Intermediate output saved → {out_path}")
+    return out_path
+
+
+def load_step5_output(intermediate_dir: str | Path | None = None) -> List[ReassembledEvent]:
+    """Load previously saved Step 5 output from ``intermediate_dir/step5_reassembled_plot.json``."""
+    inter_dir = Path(intermediate_dir or config.INTERMEDIATE_DIR)
+    in_path = inter_dir / _STEP5_FILENAME
+    if not in_path.exists():
+        raise FileNotFoundError(
+            f"Step 5 intermediate file not found: {in_path}\n"
+            "Run the pipeline from Step 5 first to generate it."
+        )
+    with open(in_path, "r", encoding="utf-8") as f:
+        data = json.load(f)
+    print(f"[Step 5] Loaded intermediate output from {in_path}")
+    return [ReassembledEvent(**e) for e in data]
 
 
 # ── DAG-aware realm gap helpers ───────────────────────────────────────────────

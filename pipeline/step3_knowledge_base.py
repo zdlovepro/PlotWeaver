@@ -19,7 +19,8 @@ from __future__ import annotations
 
 import json
 import uuid
-from dataclasses import dataclass, field
+from dataclasses import dataclass, field, asdict
+from pathlib import Path
 from typing import Any, Dict, List, Optional
 
 import networkx as nx
@@ -59,10 +60,25 @@ class KnowledgeBase:
 
     def __init__(self):
         self._chroma = get_chromadb_client()
+        self._initialize_collections()
+
+    def _initialize_collections(self) -> None:
+        """Create or open the four ChromaDB collections."""
         self._events = self._chroma.get_or_create_collection(COL_EVENTS)
         self._chars = self._chroma.get_or_create_collection(COL_CHARACTER_TRAITS)
         self._breakthroughs = self._chroma.get_or_create_collection(COL_BREAKTHROUGH)
         self._cultivation = self._chroma.get_or_create_collection(COL_CULTIVATION)
+
+    # ── Collection management ──────────────────────────────────────────────────
+
+    def clear_collections(self) -> None:
+        """Delete and recreate all collections to avoid duplicates on rebuild."""
+        for name in (COL_EVENTS, COL_CHARACTER_TRAITS, COL_BREAKTHROUGH, COL_CULTIVATION):
+            try:
+                self._chroma.delete_collection(name)
+            except Exception:
+                pass
+        self._initialize_collections()
 
     # ── Ingestion ─────────────────────────────────────────────────────────────
 
@@ -157,12 +173,22 @@ class KnowledgeBase:
 
 def build_knowledge_base(
     all_atoms: dict[str, List[PlotAtom]],
+    clear_existing: bool = True,
 ) -> tuple[KnowledgeBase, FusedWorld]:
     """
     Populate the ChromaDB knowledge base from all extracted plot atoms,
     then fuse a new cultivation system and build the world.
+
+    Args:
+        all_atoms:      Extracted plot atoms keyed by novel filename.
+        clear_existing: When True (default) the four ChromaDB collections are
+                        deleted and recreated before ingestion so that a Step-3
+                        restart never produces duplicate documents.
     """
     kb = KnowledgeBase()
+    if clear_existing:
+        print("[Step 3] Clearing existing ChromaDB collections to prevent duplicates...")
+        kb.clear_collections()
     client = get_deepseek_client()
 
     all_atoms_flat: List[PlotAtom] = [
@@ -189,6 +215,73 @@ def build_knowledge_base(
 
     print(f"[Step 3] Global theme: {fused_world.global_theme}")
     return kb, fused_world
+
+
+# ── Step 3 persistence ────────────────────────────────────────────────────────
+
+_STEP3_FILENAME = "step3_fused_world.json"
+
+
+def save_step3_output(fused_world: FusedWorld) -> Path:
+    """Serialise *fused_world* to ``intermediate_dir/step3_fused_world.json``."""
+    out_dir = Path(config.INTERMEDIATE_DIR)
+    out_dir.mkdir(parents=True, exist_ok=True)
+    out_path = out_dir / _STEP3_FILENAME
+    data = {
+        "world_name": fused_world.world_name,
+        "global_theme": fused_world.global_theme,
+        "raw_system_text": fused_world.raw_system_text,
+        "cultivation_realms": [asdict(r) for r in fused_world.cultivation_realms],
+    }
+    with open(out_path, "w", encoding="utf-8") as f:
+        json.dump(data, f, ensure_ascii=False, indent=2)
+    print(f"[Step 3] Intermediate output saved → {out_path}")
+    return out_path
+
+
+def load_step3_output(intermediate_dir: str | Path | None = None) -> FusedWorld:
+    """Load previously saved Step 3 output from ``intermediate_dir/step3_fused_world.json``.
+
+    The ``realm_dag`` field is reconstructed deterministically from the stored
+    ``cultivation_realms`` list (same logic as the original build step).
+    """
+    inter_dir = Path(intermediate_dir or config.INTERMEDIATE_DIR)
+    in_path = inter_dir / _STEP3_FILENAME
+    if not in_path.exists():
+        raise FileNotFoundError(
+            f"Step 3 intermediate file not found: {in_path}\n"
+            "Run the pipeline from Step 3 first to generate it."
+        )
+    with open(in_path, "r", encoding="utf-8") as f:
+        data = json.load(f)
+
+    realms = [
+        CultivationRealm(
+            name=r["name"],
+            level=int(r["level"]),
+            breakthrough_condition=r["breakthrough_condition"],
+            special_abilities=r.get("special_abilities", []),
+        )
+        for r in data.get("cultivation_realms", [])
+    ]
+    realms.sort(key=lambda r: r.level)
+
+    # Rebuild the DAG deterministically from the sorted realm list.
+    dag = nx.DiGraph()
+    for realm in realms:
+        dag.add_node(realm.name, level=realm.level)
+    for i in range(len(realms) - 1):
+        dag.add_edge(realms[i].name, realms[i + 1].name)
+
+    fused_world = FusedWorld(
+        cultivation_realms=realms,
+        realm_dag=dag,
+        global_theme=data.get("global_theme", ""),
+        world_name=data.get("world_name", ""),
+        raw_system_text=data.get("raw_system_text", ""),
+    )
+    print(f"[Step 3] Loaded intermediate output from {in_path}")
+    return fused_world
 
 
 # ── Internal helpers ──────────────────────────────────────────────────────────
