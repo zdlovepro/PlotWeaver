@@ -97,6 +97,24 @@ def validate_and_output(
 
 # ── NER exact-match check ─────────────────────────────────────────────────────
 
+# Common xianxia vocabulary that appears in virtually every cultivation novel
+# and should not count as unique named-entity overlap.
+# Standard realm names (炼气, 金丹, 元婴 …) are included because step3 always
+# generates ORIGINAL realm names for the new world, so their presence in the
+# generated outline merely reflects generic cultivation vocabulary, not a
+# copy of the source novels' specific naming.
+_XIANXIA_STOPWORDS: Set[str] = {
+    "灵石", "宗门", "长老", "弟子", "师父", "师兄", "师弟", "师妹", "师姐",
+    "功法", "神通", "法宝", "飞剑", "丹药", "灵根", "修士", "修仙", "修炼",
+    "天才", "废材", "宗主", "掌门", "内门", "外门", "核心", "炼丹", "炼器",
+    "阵法", "秘境", "洞府", "天地", "灵气", "元气", "真气", "神识", "法力",
+    "突破", "境界", "修为", "大道", "神魂", "道心", "道侣", "同门", "炉鼎",
+    "上古", "祖地", "散修", "妖兽", "妖族", "魔族", "仙器", "灵药", "天材",
+    "地宝", "仙草", "灵脉", "灵田", "炼体", "元婴", "化神", "金丹", "筑基",
+    "炼气", "渡劫", "合体", "大乘", "真仙", "金仙", "大罗", "混元",
+}
+
+
 def _extract_named_entities(text: str) -> Set[str]:
     """
     Pure-Python NER for Chinese text using jieba (if installed) with a regex
@@ -105,7 +123,9 @@ def _extract_named_entities(text: str) -> Set[str]:
 
     jieba POS tags used:
       nr – person name, ns – place name, nt – organisation,
-      nz – other proper noun, n  – common noun (kept for technique terms)
+      nz – other proper noun
+    Note: common nouns (flag "n") are intentionally excluded to avoid counting
+    generic xianxia vocabulary (e.g. 灵石, 宗门, 长老) as unique NER terms.
     """
     entities: Set[str] = set()
 
@@ -113,7 +133,7 @@ def _extract_named_entities(text: str) -> Set[str]:
     try:
         import jieba.posseg as pseg  # type: ignore[import]
         for word, flag in pseg.cut(text):
-            if len(word) >= 2 and flag in ("nr", "ns", "nt", "nz", "n"):
+            if len(word) >= 2 and flag in ("nr", "ns", "nt", "nz"):
                 entities.add(word)
     except ImportError:
         pass  # jieba not installed; rely on regex below
@@ -124,6 +144,10 @@ def _extract_named_entities(text: str) -> Set[str]:
     entities.update(re.findall(r"[A-Z][a-zA-Z]{2,}", text))
     suffixes = r"(?:功|诀|剑|刀|拳|掌|宗|门|宫|殿|界|境|峰|山|城|洞|府|道|法|经|典|丹|器|符|阵)"
     entities.update(re.findall(rf"[\u4e00-\u9fff]{{1,5}}{suffixes}", text))
+
+    # Remove common xianxia stop-words that appear in virtually every novel
+    # and therefore inflate overlap ratios without indicating true plagiarism.
+    entities -= _XIANXIA_STOPWORDS
     return entities
 
 

@@ -66,7 +66,7 @@ MAX_RETRY_STEPS: int = int(
 )
 PLAGIARISM_NER_THRESHOLD: float = float(
     os.environ.get(
-        "PLAGIARISM_NER_THRESHOLD", _pipe.get("plagiarism_ner_threshold", 0.05)
+        "PLAGIARISM_NER_THRESHOLD", _pipe.get("plagiarism_ner_threshold", 0.15)
     )
 )
 SEMANTIC_CHUNK_MIN_CHAPTERS: int = int(

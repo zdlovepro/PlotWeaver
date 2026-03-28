@@ -83,7 +83,15 @@ def _group_events_into_volumes(
     groups: Dict[str, List[ReassembledEvent]] = {}
     for event in events:
         groups.setdefault(event.arc_name, []).append(event)
-    return groups
+    # Sort volume groups by their minimum realm_level so volumes are always
+    # generated in the correct cultivation-progression order regardless of the
+    # order in which arc boundaries were first detected in the source text.
+    return dict(
+        sorted(
+            groups.items(),
+            key=lambda item: min((e.realm_level for e in item[1]), default=0),
+        )
+    )
 
 
 def _build_system_context(
@@ -153,7 +161,8 @@ def _generate_single_volume(
         "2. 每章摘要100-150字\n"
         "3. 伏笔与揭示节点明确标注\n"
         "4. 每章说明服务于全局主题的方式\n"
-        "5. 张力曲线呈现起伏变化（不能一直高潮）\n\n"
+        "5. 张力曲线呈现起伏变化（不能一直高潮）\n"
+        "6. 严禁使用原著人名、宗门名、功法名等专有名词——所有专有名词必须原创，与原著完全区分\n\n"
         f"请严格按照以下JSON Schema输出：\n{_VOLUME_SCHEMA}"
     )
 

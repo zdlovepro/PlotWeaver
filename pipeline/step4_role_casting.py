@@ -230,9 +230,11 @@ def _infer_pacing_role(
 
 
 def _realm_level_from_arc(arc_name: str) -> int:
+    # Order must match the full REALM_KEYWORDS list in step1_chunking.py
     order = [
         "炼气", "筑基", "金丹", "元婴", "化神",
         "炼虚", "合体", "大乘", "渡劫", "真仙",
+        "金仙", "太乙", "大罗", "混元",
     ]
     for i, realm in enumerate(order):
         if realm in arc_name:
