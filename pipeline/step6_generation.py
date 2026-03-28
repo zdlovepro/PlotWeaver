@@ -13,6 +13,7 @@ Output:
 from __future__ import annotations
 
 import json
+import re
 from dataclasses import dataclass, field
 from typing import Any, Dict, List, Optional
 
@@ -81,20 +82,38 @@ def generate_volumes(
 
 # ── Internal helpers ──────────────────────────────────────────────────────────
 
+def _arc_volume_order(arc_name: str) -> int:
+    """Extract the integer from a sequential "卷N" label (returns 0 if not found)."""
+    m = re.match(r"卷(\d+)", arc_name)
+    return int(m.group(1)) if m else 0
+
+
 def _group_events_into_volumes(
     events: List[ReassembledEvent],
 ) -> Dict[str, List[ReassembledEvent]]:
-    # First, sort events by realm_level so that arc groups appear in
-    # chronological cultivation order (e.g. 炼气 → 筑基 → 金丹 → 元婴)
-    # and not in arbitrary dict-key insertion order.
-    sorted_events = sorted(events, key=lambda e: e.realm_level)
+    # Sort events using the sequential "卷N" label produced by Step 1.
+    # This guarantees strict physical-text order (卷1 → 卷2 → 卷3…) and
+    # is immune to realm_level being 0 for hallucinated / unknown realms.
+    # For legacy data without a "卷N" label, fall back to realm_level so
+    # existing intermediate files remain usable.
+    def _sort_key(e: ReassembledEvent) -> int:
+        vol = _arc_volume_order(e.arc_name)
+        return vol if vol > 0 else e.realm_level
+
+    sorted_events = sorted(events, key=_sort_key)
     groups: Dict[str, List[ReassembledEvent]] = {}
     for event in sorted_events:
         groups.setdefault(event.arc_name, []).append(event)
-    # Sort groups by the minimum realm_level of events within each arc so
-    # volumes are always generated in strict ascending cultivation order.
+    # Order arc groups by the same key so volume iteration is also deterministic.
     ordered: Dict[str, List[ReassembledEvent]] = dict(
-        sorted(groups.items(), key=lambda kv: min(e.realm_level for e in kv[1]))
+        sorted(
+            groups.items(),
+            key=lambda kv: (
+                _arc_volume_order(kv[0])
+                if _arc_volume_order(kv[0]) > 0
+                else min(e.realm_level for e in kv[1])
+            ),
+        )
     )
     return ordered
 

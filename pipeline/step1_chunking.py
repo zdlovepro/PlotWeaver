@@ -194,25 +194,34 @@ def _build_volume_arcs(
     """
     Given chapter list and arc boundary positions, group chapters into VolumeArcs.
     Each VolumeArc initially holds raw NarrativeEvents (one per chapter group).
+
+    arc_name is assigned as a sequential label ("卷1", "卷2", …) based on the
+    physical order of the arc in the source text.  This avoids hallucinated or
+    mis-labelled realm names propagating through the pipeline.  The actual
+    detected realm keyword is preserved in realm_start / realm_end so that
+    downstream steps can still display meaningful cultivation-level context.
     """
     arcs: List[VolumeArc] = []
     for i, (start_idx, realm_name) in enumerate(boundaries):
         end_idx = boundaries[i + 1][0] if i + 1 < len(boundaries) else len(chapters)
         next_realm = boundaries[i + 1][1] if i + 1 < len(boundaries) else "终境"
 
+        # Sequential volume label – guaranteed to be ordered and collision-free.
+        seq_arc_name = f"卷{i + 1}"
+
         arc_chapters = chapters[start_idx:end_idx]
         # Create one raw NarrativeEvent per chapter (will be merged in next step)
         raw_events = [
             NarrativeEvent(
-                event_id=f"{realm_name}_ch{start_idx + j}",
-                arc_name=realm_name,
+                event_id=f"{seq_arc_name}_ch{start_idx + j}",
+                arc_name=seq_arc_name,
                 chapters=[ch],
             )
             for j, ch in enumerate(arc_chapters)
         ]
         arcs.append(
             VolumeArc(
-                arc_name=realm_name,
+                arc_name=seq_arc_name,
                 realm_start=realm_name,
                 realm_end=next_realm,
                 events=raw_events,

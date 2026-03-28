@@ -16,6 +16,7 @@ Output:
 from __future__ import annotations
 
 import json
+import re
 from dataclasses import dataclass, field, asdict
 from pathlib import Path
 from typing import Any, Dict, List, Optional
@@ -64,12 +65,19 @@ def reassemble_plot(
     reassembled: List[ReassembledEvent] = []
     prev_realm_level = 0
 
-    # Sort nodes by topological realm position so volumes are generated in
-    # strict cultivation-level order (炼气 → 筑基 → 金丹 → 元婴, etc.) and
-    # never scrambled by dict/set iteration order.
+    # Sort nodes in strict physical text order using the sequential "卷N" label
+    # written by Step 1.  This guarantees 卷1 → 卷2 → 卷3 regardless of any
+    # realm_level mapping issues.  For legacy data that still uses realm keyword
+    # labels, the topological-position index is used as a fallback so that the
+    # cultivation-progression order (炼气 → 筑基 → 金丹 → 元婴, etc.) is still
+    # preserved even without the sequential labels.
     sorted_nodes = sorted(
         skeleton.nodes,
-        key=lambda n: realm_topo_index.get(n.realm_level, n.realm_level),
+        key=lambda n: (
+            _arc_volume_order(n.arc_name)
+            if _arc_volume_order(n.arc_name) > 0
+            else realm_topo_index.get(n.realm_level, n.realm_level)
+        ),
     )
 
     for node in tqdm(sorted_nodes, desc="[Step 5] Reassembling plot", unit="node"):
@@ -89,6 +97,14 @@ def reassemble_plot(
         f"(including {sum(1 for e in reassembled if e.is_bridge)} bridges)"
     )
     return reassembled
+
+
+# ── Arc-order helpers ─────────────────────────────────────────────────────────
+
+def _arc_volume_order(arc_name: str) -> int:
+    """Extract the integer from a sequential "卷N" label (returns 0 if not found)."""
+    m = re.match(r"卷(\d+)", arc_name)
+    return int(m.group(1)) if m else 0
 
 
 # ── DAG-aware realm gap helpers ───────────────────────────────────────────────
