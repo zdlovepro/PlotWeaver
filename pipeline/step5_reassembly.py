@@ -22,6 +22,7 @@ from typing import Any, Dict, List, Optional
 
 import networkx as nx
 from tenacity import retry, stop_after_attempt, wait_exponential
+from tqdm import tqdm
 
 import config
 from pipeline.step3_knowledge_base import KnowledgeBase, FusedWorld
@@ -71,7 +72,7 @@ def reassemble_plot(
         key=lambda n: realm_topo_index.get(n.realm_level, n.realm_level),
     )
 
-    for node in sorted_nodes:
+    for node in tqdm(sorted_nodes, desc="[Step 5] Reassembling plot", unit="node"):
         # --- Bridge gap if realm skips (DAG-aware check) ---
         if _realm_gap_exists(prev_realm_level, node.realm_level, realm_topo_index):
             bridge = _create_bridge_event(
@@ -83,8 +84,10 @@ def reassemble_plot(
         reassembled.append(adapted)
         prev_realm_level = max(prev_realm_level, node.realm_level)
 
-    print(f"[Step 5] Reassembled {len(reassembled)} events "
-          f"(including {sum(1 for e in reassembled if e.is_bridge)} bridges)")
+    tqdm.write(
+        f"[Step 5] Reassembled {len(reassembled)} events "
+        f"(including {sum(1 for e in reassembled if e.is_bridge)} bridges)"
+    )
     return reassembled
 
 
@@ -284,7 +287,7 @@ def save_step5_output(events: List[ReassembledEvent]) -> Path:
     out_path = out_dir / _STEP5_FILENAME
     with open(out_path, "w", encoding="utf-8") as f:
         json.dump([asdict(e) for e in events], f, ensure_ascii=False, indent=2)
-    print(f"[Step 5] Intermediate output saved → {out_path}")
+    print(f"[Step 5] Intermediate output saved → {out_path}", flush=True)
     return out_path
 
 

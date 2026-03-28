@@ -67,11 +67,11 @@ in config.yaml (default: ./intermediate_data).
 
 def run_pipeline(start_step: int = 1) -> None:
     """Execute the PlotWeaver pipeline, optionally resuming from *start_step*."""
-    print("=" * 60)
-    print("  PlotWeaver V2.0 – Xianxia Novel Outline Fusion Pipeline")
+    print("=" * 60, flush=True)
+    print("  PlotWeaver V2.0 – Xianxia Novel Outline Fusion Pipeline", flush=True)
     if start_step > 1:
-        print(f"  Resuming from Step {start_step}")
-    print("=" * 60)
+        print(f"  Resuming from Step {start_step}", flush=True)
+    print("=" * 60, flush=True)
 
     # Validate configuration
     config.validate()
@@ -81,61 +81,63 @@ def run_pipeline(start_step: int = 1) -> None:
 
     # ── Step 1: Semantic Chunking & Arc Anchoring ─────────────────────────────
     if start_step <= 1:
-        print("\n[Pipeline] ── Step 1: Semantic Chunking & Arc Anchoring ──")
+        print("\n[Pipeline] ── Step 1: Semantic Chunking & Arc Anchoring ──", flush=True)
         novel_arcs = step1_chunking.process_all_novels(input_dir)
         if not novel_arcs:
             print(
                 f"ERROR: No source novels found in '{input_dir}'. "
-                "Please place .txt files there and retry."
+                "Please place .txt files there and retry.",
+                flush=True,
             )
             sys.exit(1)
-        print(f"[Pipeline] Processed {len(novel_arcs)} novel(s).")
+        print(f"[Pipeline] Processed {len(novel_arcs)} novel(s).", flush=True)
     else:
-        print("\n[Pipeline] ── Step 1 skipped – loading from intermediate file ──")
+        print("\n[Pipeline] ── Step 1 skipped – loading from intermediate file ──", flush=True)
         novel_arcs = step1_chunking.load_step1_output()
-        print(f"[Pipeline] Loaded {len(novel_arcs)} novel(s) from intermediate data.")
+        print(f"[Pipeline] Loaded {len(novel_arcs)} novel(s) from intermediate data.", flush=True)
 
     # ── Step 2: Dual-stage Plot Extraction ───────────────────────────────────
     if start_step <= 2:
-        print("\n[Pipeline] ── Step 2: Dual-stage Plot Extraction ──")
+        print("\n[Pipeline] ── Step 2: Dual-stage Plot Extraction ──", flush=True)
         all_atoms = step2_extraction.extract_all(novel_arcs)
         total_atoms = sum(len(v) for v in all_atoms.values())
-        print(f"[Pipeline] Total plot atoms extracted: {total_atoms}")
+        print(f"[Pipeline] Total plot atoms extracted: {total_atoms}", flush=True)
     else:
-        print("\n[Pipeline] ── Step 2 skipped – loading from intermediate file ──")
+        print("\n[Pipeline] ── Step 2 skipped – loading from intermediate file ──", flush=True)
         all_atoms = step2_extraction.load_step2_output()
         total_atoms = sum(len(v) for v in all_atoms.values())
-        print(f"[Pipeline] Loaded {total_atoms} plot atoms from intermediate data.")
+        print(f"[Pipeline] Loaded {total_atoms} plot atoms from intermediate data.", flush=True)
 
     # ── Step 3: RAG Knowledge Base & World Building ───────────────────────────
     if start_step <= 3:
-        print("\n[Pipeline] ── Step 3: RAG Knowledge Base & World Building ──")
+        print("\n[Pipeline] ── Step 3: RAG Knowledge Base & World Building ──", flush=True)
         kb, fused_world = step3_knowledge_base.build_knowledge_base(all_atoms)
         step3_knowledge_base.save_step3_output(fused_world)
-        print(f"[Pipeline] Fused world: {fused_world.world_name}")
-        print(f"[Pipeline] Cultivation realms: {len(fused_world.cultivation_realms)}")
+        print(f"[Pipeline] Fused world: {fused_world.world_name}", flush=True)
+        print(f"[Pipeline] Cultivation realms: {len(fused_world.cultivation_realms)}", flush=True)
     else:
         # Connect to ChromaDB in read-only mode (no insertion) to prevent
         # DuplicateIDError when resuming from Step 4 or later.
-        print("\n[Pipeline] ── Step 3 skipped – loading from intermediate file ──")
+        print("\n[Pipeline] ── Step 3 skipped – loading from intermediate file ──", flush=True)
         fused_world = step3_knowledge_base.load_step3_output()
         kb = step3_knowledge_base.connect_knowledge_base()
-        print(f"[Pipeline] Loaded fused world: {fused_world.world_name}")
-        print(f"[Pipeline] Cultivation realms: {len(fused_world.cultivation_realms)}")
+        print(f"[Pipeline] Loaded fused world: {fused_world.world_name}", flush=True)
+        print(f"[Pipeline] Cultivation realms: {len(fused_world.cultivation_realms)}", flush=True)
 
     # ── Step 4: Skeleton Extraction & Role Casting ────────────────────────────
     if start_step <= 4:
-        print("\n[Pipeline] ── Step 4: Skeleton Extraction & Role Casting ──")
+        print("\n[Pipeline] ── Step 4: Skeleton Extraction & Role Casting ──", flush=True)
         skeleton = step4_role_casting.build_skeleton(
             novel_arcs, all_atoms, kb, fused_world
         )
         step4_role_casting.save_step4_output(skeleton)
-        print(f"[Pipeline] Skeleton nodes: {len(skeleton.nodes)}")
+        print(f"[Pipeline] Skeleton nodes: {len(skeleton.nodes)}", flush=True)
     else:
-        print("\n[Pipeline] ── Step 4 skipped – loading from intermediate file ──")
+        print("\n[Pipeline] ── Step 4 skipped – loading from intermediate file ──", flush=True)
         skeleton = step4_role_casting.load_step4_output()
         print(f"[Pipeline] Loaded skeleton: {len(skeleton.nodes)} nodes, "
-              f"protagonist: {skeleton.character_sheet.protagonist.name if skeleton.character_sheet else 'N/A'}")
+              f"protagonist: {skeleton.character_sheet.protagonist.name if skeleton.character_sheet else 'N/A'}",
+              flush=True)
 
     # ── Step 5 + 7 loop (retry up to MAX_RETRY_STEPS times) ──────────────────
     max_retries = config.MAX_RETRY_STEPS
@@ -146,29 +148,29 @@ def run_pipeline(start_step: int = 1) -> None:
         run_step5 = (start_step <= 5) or (attempt > 0)
 
         if attempt > 0:
-            print(f"\n[Pipeline] ── Step 5 Retry (attempt {attempt}) ──")
+            print(f"\n[Pipeline] ── Step 5 Retry (attempt {attempt}) ──", flush=True)
         elif run_step5:
-            print("\n[Pipeline] ── Step 5: Character-driven Plot Reassembly ──")
+            print("\n[Pipeline] ── Step 5: Character-driven Plot Reassembly ──", flush=True)
 
         if run_step5:
             reassembled = step5_reassembly.reassemble_plot(skeleton, kb, fused_world)
             if attempt == 0:
                 step5_reassembly.save_step5_output(reassembled)
         else:
-            print("\n[Pipeline] ── Step 5 skipped – loading from intermediate file ──")
+            print("\n[Pipeline] ── Step 5 skipped – loading from intermediate file ──", flush=True)
             reassembled = step5_reassembly.load_step5_output()
-            print(f"[Pipeline] Loaded {len(reassembled)} reassembled events.")
+            print(f"[Pipeline] Loaded {len(reassembled)} reassembled events.", flush=True)
 
         # ── Step 6: Sliding Window Volume Generation ──────────────────────────
         if attempt == 0:
-            print("\n[Pipeline] ── Step 6: Sliding Window Volume Generation ──")
+            print("\n[Pipeline] ── Step 6: Sliding Window Volume Generation ──", flush=True)
         volumes = step6_generation.generate_volumes(
             reassembled, fused_world, skeleton.character_sheet
         )
 
         # ── Step 7: Adversarial Plagiarism Check & Output ─────────────────────
         if attempt == 0:
-            print("\n[Pipeline] ── Step 7: Adversarial Plagiarism Check & Output ──")
+            print("\n[Pipeline] ── Step 7: Adversarial Plagiarism Check & Output ──", flush=True)
 
         source_texts = _load_source_texts(input_dir)
         validation_result = step7_validation.validate_and_output(
@@ -186,19 +188,21 @@ def run_pipeline(start_step: int = 1) -> None:
         if attempt < max_retries:
             print(
                 f"[Pipeline] Validation failed – retrying Step 5 for "
-                f"{len(validation_result.flagged_event_ids)} flagged events..."
+                f"{len(validation_result.flagged_event_ids)} flagged events...",
+                flush=True,
             )
             flagged_ids = validation_result.flagged_event_ids
         else:
             print(
                 "[Pipeline] Warning: validation did not fully pass after "
-                f"{max_retries} retries. Review the validation_report.md in output."
+                f"{max_retries} retries. Review the validation_report.md in output.",
+                flush=True,
             )
 
     # ── Done ──────────────────────────────────────────────────────────────────
-    print("\n" + "=" * 60)
-    print(f"  Pipeline complete! Output files in: {output_dir.resolve()}")
-    print("=" * 60)
+    print("\n" + "=" * 60, flush=True)
+    print(f"  Pipeline complete! Output files in: {output_dir.resolve()}", flush=True)
+    print("=" * 60, flush=True)
 
 
 def _load_source_texts(input_dir: Path) -> dict[str, str]:

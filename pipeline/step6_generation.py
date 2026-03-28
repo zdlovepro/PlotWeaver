@@ -17,6 +17,7 @@ from dataclasses import dataclass, field
 from typing import Any, Dict, List, Optional
 
 from tenacity import retry, stop_after_attempt, wait_exponential
+from tqdm import tqdm
 
 from pipeline.step3_knowledge_base import FusedWorld
 from pipeline.step4_role_casting import CharacterSheet
@@ -57,8 +58,11 @@ def generate_volumes(
     volumes: List[VolumeOutline] = []
     previous_ending = ""
 
-    for vol_idx, (arc_name, events) in enumerate(volume_groups.items(), start=1):
-        print(f"[Step 6] Generating volume {vol_idx}: {arc_name}...")
+    for vol_idx, (arc_name, events) in enumerate(
+        tqdm(volume_groups.items(), desc="[Step 6] Generating volumes", unit="vol"),
+        start=1,
+    ):
+        tqdm.write(f"[Step 6] Generating volume {vol_idx}: {arc_name}...")
         outline = _generate_single_volume(
             client=client,
             volume_number=vol_idx,
@@ -71,7 +75,7 @@ def generate_volumes(
         volumes.append(outline)
         previous_ending = outline.ending_state
 
-    print(f"[Step 6] All {len(volumes)} volumes generated.")
+    tqdm.write(f"[Step 6] All {len(volumes)} volumes generated.")
     return volumes
 
 
