@@ -80,10 +80,19 @@ def generate_volumes(
 def _group_events_into_volumes(
     events: List[ReassembledEvent],
 ) -> Dict[str, List[ReassembledEvent]]:
+    # First, sort events by realm_level so that arc groups appear in
+    # chronological cultivation order (e.g. 炼气 → 筑基 → 金丹 → 元婴)
+    # and not in arbitrary dict-key insertion order.
+    sorted_events = sorted(events, key=lambda e: e.realm_level)
     groups: Dict[str, List[ReassembledEvent]] = {}
-    for event in events:
+    for event in sorted_events:
         groups.setdefault(event.arc_name, []).append(event)
-    return groups
+    # Sort groups by the minimum realm_level of events within each arc so
+    # volumes are always generated in strict ascending cultivation order.
+    ordered: Dict[str, List[ReassembledEvent]] = dict(
+        sorted(groups.items(), key=lambda kv: min(e.realm_level for e in kv[1]))
+    )
+    return ordered
 
 
 def _build_system_context(
@@ -159,6 +168,9 @@ def _generate_single_volume(
 
     system_prompt = (
         "你是专业的修仙小说大纲生成专家。\n"
+        "CRITICAL: DO NOT use original character names, sect names, or specific "
+        "technique names from the input context. You MUST create NEW names adapted "
+        "to the new protagonist and new world.\n\n"
         "以下是本次写作的世界圣经和角色设定，在整个创作过程中保持一致：\n\n"
         f"{system_context}\n\n"
         "只输出合法JSON，不要有其他文字。"
