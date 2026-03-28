@@ -29,6 +29,19 @@ from pipeline.step4_role_casting import NarrativeSkeleton, SkeletonNode, Charact
 from pipeline.utils import get_deepseek_client, chat_completion_json
 
 
+# ── Retry logging callback ────────────────────────────────────────────────────
+
+def _log_retry(retry_state) -> None:
+    """Tenacity before_sleep callback: log each retry attempt with reason."""
+    exc = retry_state.outcome.exception()
+    exc_msg = str(exc) if exc else "unknown error"
+    print(
+        f"[Step 5] ⚠️ Failed attempt {retry_state.attempt_number}/3 ({exc_msg}). "
+        f"Retrying...",
+        flush=True,
+    )
+
+
 @dataclass
 class ReassembledEvent:
     event_id: str
@@ -62,10 +75,23 @@ def reassemble_plot(
 
     reassembled: List[ReassembledEvent] = []
     prev_realm_level = 0
+    total_nodes = len(skeleton.nodes)
+    print(f"[Step 5] Starting reassembly of {total_nodes} skeleton node(s)...", flush=True)
 
-    for node in skeleton.nodes:
+    for idx, node in enumerate(skeleton.nodes, 1):
+        print(
+            f"[Step 5] Processing node {idx}/{total_nodes}: "
+            f"{node.arc_name} (realm level {node.realm_level}) – {node.pacing_role}",
+            flush=True,
+        )
+
         # --- Bridge gap if realm skips (DAG-aware check) ---
         if _realm_gap_exists(prev_realm_level, node.realm_level, realm_topo_index):
+            print(
+                f"[Step 5]   → Realm gap detected (level {prev_realm_level} → "
+                f"{node.realm_level}). Generating bridge event...",
+                flush=True,
+            )
             bridge = _create_bridge_event(
                 client, kb, node, protagonist_desc, realm_system, prev_realm_level
             )
@@ -75,8 +101,11 @@ def reassemble_plot(
         reassembled.append(adapted)
         prev_realm_level = max(prev_realm_level, node.realm_level)
 
-    print(f"[Step 5] Reassembled {len(reassembled)} events "
-          f"(including {sum(1 for e in reassembled if e.is_bridge)} bridges)")
+    print(
+        f"[Step 5] Reassembled {len(reassembled)} events "
+        f"(including {sum(1 for e in reassembled if e.is_bridge)} bridges).",
+        flush=True,
+    )
     return reassembled
 
 
@@ -92,7 +121,7 @@ def save_step5_output(reassembled: List[ReassembledEvent]) -> Path:
     out_path = out_dir / _STEP5_FILENAME
     with open(out_path, "w", encoding="utf-8") as f:
         json.dump([asdict(e) for e in reassembled], f, ensure_ascii=False, indent=2)
-    print(f"[Step 5] Intermediate output saved → {out_path}")
+    print(f"[Step 5] Intermediate output saved → {out_path}", flush=True)
     return out_path
 
 
@@ -107,7 +136,7 @@ def load_step5_output(intermediate_dir: str | Path | None = None) -> List[Reasse
         )
     with open(in_path, "r", encoding="utf-8") as f:
         data = json.load(f)
-    print(f"[Step 5] Loaded intermediate output from {in_path}")
+    print(f"[Step 5] Loaded intermediate output from {in_path}", flush=True)
     return [ReassembledEvent(**e) for e in data]
 
 
@@ -181,7 +210,11 @@ def _format_realm_system(fused_world: FusedWorld) -> str:
     return "\n".join(lines)
 
 
-@retry(stop=stop_after_attempt(3), wait=wait_exponential(min=2, max=10))
+@retry(
+    stop=stop_after_attempt(3),
+    wait=wait_exponential(min=2, max=10),
+    before_sleep=_log_retry,
+)
 def _adapt_node(
     client,
     kb: KnowledgeBase,
@@ -189,17 +222,30 @@ def _adapt_node(
     protagonist_desc: str,
     realm_system: str,
 ) -> ReassembledEvent:
+    query_text = node.original_summary or node.pacing_role
+    print(
+        f"[Step 5]   Retrieving matching plot atoms for realm '{node.arc_name}' "
+        f"(query: '{query_text[:60]}{'...' if len(query_text) > 60 else ''}')...",
+        flush=True,
+    )
     # Retrieve similar events from other novels as inspiration
     similar_events = kb.query_events(
-        query=node.original_summary or node.pacing_role,
+        query=query_text,
         n_results=3,
         arc_filter=node.arc_name if node.arc_name else None,
     )
+    print(f"[Step 5]   Found {len(similar_events)} candidate(s).", flush=True)
     retrieved_text = "\n".join(
         f"参考事件{i+1}：{e['document']}" for i, e in enumerate(similar_events)
     )
     source_ids = [e["id"] for e in similar_events]
 
+    short_summary = (node.original_summary or node.pacing_role)[:60]
+    print(
+        f"[Step 5]   Calling LLM to adapt plot atom '{short_summary}...' "
+        f"to the new protagonist...",
+        flush=True,
+    )
     prompt = (
         "你是修仙小说情节改写专家，负责将原有情节骨架适配到新主角和新体系。\n\n"
         f"【新主角设定】\n{protagonist_desc}\n\n"
@@ -237,7 +283,11 @@ def _adapt_node(
     )
 
 
-@retry(stop=stop_after_attempt(3), wait=wait_exponential(min=2, max=10))
+@retry(
+    stop=stop_after_attempt(3),
+    wait=wait_exponential(min=2, max=10),
+    before_sleep=_log_retry,
+)
 def _create_bridge_event(
     client,
     kb: KnowledgeBase,
@@ -247,14 +297,26 @@ def _create_bridge_event(
     current_realm_level: int,
 ) -> ReassembledEvent:
     """Generate a breakthrough bridge event to fill a realm gap."""
+    bridge_query = f"从第{current_realm_level}境突破到更高境界"
+    print(
+        f"[Step 5]   Retrieving breakthrough opportunities "
+        f"(realm {current_realm_level} → {next_node.realm_level})...",
+        flush=True,
+    )
     breakthrough_results = kb.query_breakthrough_opportunities(
-        query=f"从第{current_realm_level}境突破到更高境界",
+        query=bridge_query,
         n_results=3,
     )
+    print(f"[Step 5]   Found {len(breakthrough_results)} breakthrough candidate(s).", flush=True)
     breakthrough_text = "\n".join(
         f"参考机缘{i+1}：{r['document']}" for i, r in enumerate(breakthrough_results)
     )
 
+    print(
+        f"[Step 5]   Calling LLM to generate bridge event "
+        f"(realm {current_realm_level} → {next_node.realm_level})...",
+        flush=True,
+    )
     prompt = (
         "你是修仙小说过渡情节设计师。\n\n"
         f"【新主角设定】\n{protagonist_desc}\n\n"
