@@ -73,4 +73,6 @@ config.yaml
 
 input/
 output/
+novels/
+intermediate_data/
 
