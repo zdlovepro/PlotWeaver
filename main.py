@@ -8,6 +8,9 @@ Usage:
     python main.py                  # run full pipeline from Step 1
     python main.py --start-step 2   # skip Step 1, load step1_chunks.json and resume from Step 2
     python main.py --start-step 3   # skip Steps 1-2, load step2_extracted_plots.json and resume
+    python main.py --start-step 4   # skip Steps 1-3, load step3_fused_world.json and resume
+    python main.py --start-step 5   # skip Steps 1-4, load step4_protagonist.json and resume
+    python main.py --start-step 6   # skip Steps 1-5, load step5_reassembled_plot.json and resume
     python main.py --help           # show usage
 
 Configuration is loaded from config.yaml (or environment variables).
@@ -44,6 +47,11 @@ Resume examples:
                                   start from Step 2 (skip Step 1).
   python main.py --start-step 3   Load intermediate_data/step2_extracted_plots.json
                                   and start from Step 3 (skip Steps 1-2).
+                                  ChromaDB collections are cleared and rebuilt.
+  python main.py --start-step 4   Load step3_fused_world.json + connect to the
+                                  existing ChromaDB; skip Steps 1-3.
+  python main.py --start-step 5   Load step4_protagonist.json; skip Steps 1-4.
+  python main.py --start-step 6   Load step5_reassembled_plot.json; skip Steps 1-5.
 
 Intermediate files are stored in the directory configured as ``paths.intermediate_dir``
 in config.yaml (default: ./intermediate_data).
@@ -57,14 +65,22 @@ in config.yaml (default: ./intermediate_data).
         metavar="N",
         help="Step number to start from (1-7). Steps before N are skipped and "
              "their outputs are loaded from intermediate_data/. "
-             "Steps 1-2 save intermediate JSON files; steps 3-7 always run in full. "
+             "Each step saves its output so subsequent runs can resume from it: "
+             "Steps 1-2 save intermediate JSON files; "
+             "Steps 3-5 also save intermediate JSON files. "
              "Default: 1 (full run).",
     )
     return parser.parse_args()
 
 
 def run_pipeline(start_step: int = 1) -> None:
-    """Execute the PlotWeaver pipeline, optionally resuming from *start_step*."""
+    """Execute the PlotWeaver pipeline, optionally resuming from *start_step*.
+
+    Each step persists its output to ``intermediate_data/`` so subsequent runs
+    can skip already-completed steps.  ChromaDB is cleared and rebuilt whenever
+    Step 3 is executed (``start_step <= 3``); if Step 3 is skipped the pipeline
+    only connects to the existing collection without re-ingesting events.
+    """
     print("=" * 60)
     print("  PlotWeaver V2.0 – Xianxia Novel Outline Fusion Pipeline")
     if start_step > 1:
@@ -106,29 +122,62 @@ def run_pipeline(start_step: int = 1) -> None:
         print(f"[Pipeline] Loaded {total_atoms} plot atoms from intermediate data.")
 
     # ── Step 3: RAG Knowledge Base & World Building ───────────────────────────
-    print("\n[Pipeline] ── Step 3: RAG Knowledge Base & World Building ──")
-    kb, fused_world = step3_knowledge_base.build_knowledge_base(all_atoms)
-    print(f"[Pipeline] Fused world: {fused_world.world_name}")
-    print(f"[Pipeline] Cultivation realms: {len(fused_world.cultivation_realms)}")
+    if start_step <= 3:
+        print("\n[Pipeline] ── Step 3: RAG Knowledge Base & World Building ──")
+        # clear_existing=True ensures no duplicate documents when rebuilding.
+        kb, fused_world = step3_knowledge_base.build_knowledge_base(
+            all_atoms, clear_existing=True
+        )
+        step3_knowledge_base.save_step3_output(fused_world)
+        print(f"[Pipeline] Fused world: {fused_world.world_name}")
+        print(f"[Pipeline] Cultivation realms: {len(fused_world.cultivation_realms)}")
+    else:
+        print("\n[Pipeline] ── Step 3 skipped – loading from intermediate file ──")
+        fused_world = step3_knowledge_base.load_step3_output()
+        # Only connect to the existing ChromaDB; do NOT re-ingest events.
+        kb = step3_knowledge_base.KnowledgeBase()
+        print(f"[Pipeline] Loaded fused world: {fused_world.world_name}")
+        print(f"[Pipeline] Cultivation realms: {len(fused_world.cultivation_realms)}")
 
     # ── Step 4: Skeleton Extraction & Role Casting ────────────────────────────
-    print("\n[Pipeline] ── Step 4: Skeleton Extraction & Role Casting ──")
-    skeleton = step4_role_casting.build_skeleton(
-        novel_arcs, all_atoms, kb, fused_world
-    )
-    print(f"[Pipeline] Skeleton nodes: {len(skeleton.nodes)}")
+    if start_step <= 4:
+        print("\n[Pipeline] ── Step 4: Skeleton Extraction & Role Casting ──")
+        skeleton = step4_role_casting.build_skeleton(
+            novel_arcs, all_atoms, kb, fused_world
+        )
+        step4_role_casting.save_step4_output(skeleton)
+        print(f"[Pipeline] Skeleton nodes: {len(skeleton.nodes)}")
+    else:
+        print("\n[Pipeline] ── Step 4 skipped – loading from intermediate file ──")
+        skeleton = step4_role_casting.load_step4_output()
+        protagonist_name = (
+            skeleton.character_sheet.protagonist.name
+            if skeleton.character_sheet else "unknown"
+        )
+        print(
+            f"[Pipeline] Loaded skeleton: {len(skeleton.nodes)} nodes, "
+            f"protagonist: {protagonist_name}"
+        )
 
     # ── Step 5 + 7 loop (retry up to MAX_RETRY_STEPS times) ──────────────────
     max_retries = config.MAX_RETRY_STEPS
     flagged_ids: list[str] = []
+    source_texts = _load_source_texts(input_dir)
 
     for attempt in range(max_retries + 1):
+        # ── Step 5: Character-driven Plot Reassembly ──────────────────────────
         if attempt > 0:
+            # Retry: always re-run Step 5 to fix flagged events.
             print(f"\n[Pipeline] ── Step 5 Retry (attempt {attempt}) ──")
-        else:
+            reassembled = step5_reassembly.reassemble_plot(skeleton, kb, fused_world)
+        elif start_step <= 5:
             print("\n[Pipeline] ── Step 5: Character-driven Plot Reassembly ──")
-
-        reassembled = step5_reassembly.reassemble_plot(skeleton, kb, fused_world)
+            reassembled = step5_reassembly.reassemble_plot(skeleton, kb, fused_world)
+            step5_reassembly.save_step5_output(reassembled)
+        else:
+            print("\n[Pipeline] ── Step 5 skipped – loading from intermediate file ──")
+            reassembled = step5_reassembly.load_step5_output()
+            print(f"[Pipeline] Loaded {len(reassembled)} reassembled events.")
 
         # ── Step 6: Sliding Window Volume Generation ──────────────────────────
         if attempt == 0:
@@ -141,7 +190,6 @@ def run_pipeline(start_step: int = 1) -> None:
         if attempt == 0:
             print("\n[Pipeline] ── Step 7: Adversarial Plagiarism Check & Output ──")
 
-        source_texts = _load_source_texts(input_dir)
         validation_result = step7_validation.validate_and_output(
             volumes=volumes,
             reassembled_events=reassembled,
