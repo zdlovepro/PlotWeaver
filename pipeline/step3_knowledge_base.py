@@ -420,7 +420,8 @@ def _fuse_cultivation_system(
         "要求：\n"
         "1. 境界名称必须原创（不直接沿用任何现有小说的境界名）\n"
         "2. 每个境界的突破条件要有逻辑递进\n"
-        "3. 整体体系要有独特的世界观背景\n\n"
+        "3. 整体体系要有独特的世界观背景\n"
+        "4. realms数组必须按境界高低从低到高排列，level字段从1开始连续递增\n\n"
         f"请严格按照以下JSON Schema输出：\n{_CULTIVATION_SYSTEM_SCHEMA}"
     )
     raw = chat_completion_json(
