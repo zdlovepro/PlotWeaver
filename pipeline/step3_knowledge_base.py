@@ -20,6 +20,7 @@ from __future__ import annotations
 import json
 import uuid
 from dataclasses import dataclass, field
+from pathlib import Path
 from typing import Any, Dict, List, Optional
 
 import networkx as nx
@@ -189,6 +190,87 @@ def build_knowledge_base(
 
     print(f"[Step 3] Global theme: {fused_world.global_theme}")
     return kb, fused_world
+
+
+def connect_knowledge_base() -> KnowledgeBase:
+    """
+    Connect to an existing ChromaDB knowledge base without inserting any data.
+
+    Use this when resuming from Step 4 or later so that ChromaDB collections
+    are accessible for queries but no new data is added (prevents DuplicateIDError).
+    """
+    return KnowledgeBase()
+
+
+# ── Intermediate I/O ──────────────────────────────────────────────────────────
+
+_STEP3_FILENAME = "step3_fused_world.json"
+
+
+def save_step3_output(fused_world: FusedWorld) -> Path:
+    """Serialise *fused_world* to ``intermediate_dir/step3_fused_world.json``."""
+    out_dir = Path(config.INTERMEDIATE_DIR)
+    out_dir.mkdir(parents=True, exist_ok=True)
+    out_path = out_dir / _STEP3_FILENAME
+    data = {
+        "world_name": fused_world.world_name,
+        "global_theme": fused_world.global_theme,
+        "raw_system_text": fused_world.raw_system_text,
+        "cultivation_realms": [
+            {
+                "name": r.name,
+                "level": r.level,
+                "breakthrough_condition": r.breakthrough_condition,
+                "special_abilities": r.special_abilities,
+            }
+            for r in fused_world.cultivation_realms
+        ],
+    }
+    with open(out_path, "w", encoding="utf-8") as f:
+        json.dump(data, f, ensure_ascii=False, indent=2)
+    print(f"[Step 3] Intermediate output saved → {out_path}")
+    return out_path
+
+
+def load_step3_output(intermediate_dir: str | Path | None = None) -> FusedWorld:
+    """Load previously saved Step 3 output from ``intermediate_dir/step3_fused_world.json``."""
+    inter_dir = Path(intermediate_dir or config.INTERMEDIATE_DIR)
+    in_path = inter_dir / _STEP3_FILENAME
+    if not in_path.exists():
+        raise FileNotFoundError(
+            f"Step 3 intermediate file not found: {in_path}\n"
+            "Run the pipeline from Step 3 or earlier first to generate it."
+        )
+    with open(in_path, "r", encoding="utf-8") as f:
+        data = json.load(f)
+
+    realms = [
+        CultivationRealm(
+            name=r["name"],
+            level=int(r["level"]),
+            breakthrough_condition=r["breakthrough_condition"],
+            special_abilities=r.get("special_abilities", []),
+        )
+        for r in data.get("cultivation_realms", [])
+    ]
+    realms.sort(key=lambda r: r.level)
+
+    # Reconstruct the DAG from the sorted realm list (always a linear chain)
+    dag = nx.DiGraph()
+    for realm in realms:
+        dag.add_node(realm.name, level=realm.level)
+    for i in range(len(realms) - 1):
+        dag.add_edge(realms[i].name, realms[i + 1].name)
+
+    fused_world = FusedWorld(
+        cultivation_realms=realms,
+        realm_dag=dag,
+        global_theme=data.get("global_theme", ""),
+        world_name=data.get("world_name", "新世界"),
+        raw_system_text=data.get("raw_system_text", ""),
+    )
+    print(f"[Step 3] Loaded intermediate output from {in_path}")
+    return fused_world
 
 
 # ── Internal helpers ──────────────────────────────────────────────────────────

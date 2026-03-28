@@ -15,11 +15,13 @@ Output:
 from __future__ import annotations
 
 import json
-from dataclasses import dataclass, field
+from dataclasses import dataclass, field, asdict
+from pathlib import Path
 from typing import Any, Dict, List, Optional
 
 from tenacity import retry, stop_after_attempt, wait_exponential
 
+import config
 from pipeline.step1_chunking import VolumeArc
 from pipeline.step2_extraction import PlotAtom
 from pipeline.step3_knowledge_base import KnowledgeBase, FusedWorld
@@ -279,3 +281,63 @@ def _cast_characters(
         supporting=supporting,
         relationship_summary=data.get("relationship_summary", ""),
     )
+
+
+# ── Intermediate I/O ──────────────────────────────────────────────────────────
+
+_STEP4_FILENAME = "step4_protagonist.json"
+
+
+def save_step4_output(skeleton: NarrativeSkeleton) -> Path:
+    """Serialise *skeleton* to ``intermediate_dir/step4_protagonist.json``."""
+    out_dir = Path(config.INTERMEDIATE_DIR)
+    out_dir.mkdir(parents=True, exist_ok=True)
+    out_path = out_dir / _STEP4_FILENAME
+    data = {
+        "base_novel": skeleton.base_novel,
+        "nodes": [asdict(node) for node in skeleton.nodes],
+        "character_sheet": {
+            "protagonist": asdict(skeleton.character_sheet.protagonist),
+            "supporting": [asdict(c) for c in skeleton.character_sheet.supporting],
+            "relationship_summary": skeleton.character_sheet.relationship_summary,
+        } if skeleton.character_sheet else None,
+    }
+    with open(out_path, "w", encoding="utf-8") as f:
+        json.dump(data, f, ensure_ascii=False, indent=2)
+    print(f"[Step 4] Intermediate output saved → {out_path}")
+    return out_path
+
+
+def load_step4_output(intermediate_dir: str | Path | None = None) -> NarrativeSkeleton:
+    """Load previously saved Step 4 output from ``intermediate_dir/step4_protagonist.json``."""
+    inter_dir = Path(intermediate_dir or config.INTERMEDIATE_DIR)
+    in_path = inter_dir / _STEP4_FILENAME
+    if not in_path.exists():
+        raise FileNotFoundError(
+            f"Step 4 intermediate file not found: {in_path}\n"
+            "Run the pipeline from Step 4 or earlier first to generate it."
+        )
+    with open(in_path, "r", encoding="utf-8") as f:
+        data = json.load(f)
+
+    nodes = [SkeletonNode(**n) for n in data.get("nodes", [])]
+
+    char_data = data.get("character_sheet")
+    if char_data:
+        protagonist = Character(**char_data["protagonist"])
+        supporting = [Character(**c) for c in char_data.get("supporting", [])]
+        character_sheet = CharacterSheet(
+            protagonist=protagonist,
+            supporting=supporting,
+            relationship_summary=char_data.get("relationship_summary", ""),
+        )
+    else:
+        character_sheet = None
+
+    skeleton = NarrativeSkeleton(
+        base_novel=data.get("base_novel", ""),
+        nodes=nodes,
+        character_sheet=character_sheet,
+    )
+    print(f"[Step 4] Loaded intermediate output from {in_path}")
+    return skeleton

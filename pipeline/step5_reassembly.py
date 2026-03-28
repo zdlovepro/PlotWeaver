@@ -16,12 +16,14 @@ Output:
 from __future__ import annotations
 
 import json
-from dataclasses import dataclass, field
+from dataclasses import dataclass, field, asdict
+from pathlib import Path
 from typing import Any, Dict, List, Optional
 
 import networkx as nx
 from tenacity import retry, stop_after_attempt, wait_exponential
 
+import config
 from pipeline.step3_knowledge_base import KnowledgeBase, FusedWorld
 from pipeline.step4_role_casting import NarrativeSkeleton, SkeletonNode, Character
 from pipeline.utils import get_deepseek_client, chat_completion_json
@@ -61,7 +63,15 @@ def reassemble_plot(
     reassembled: List[ReassembledEvent] = []
     prev_realm_level = 0
 
-    for node in skeleton.nodes:
+    # Sort nodes by topological realm position so volumes are generated in
+    # strict cultivation-level order (炼气 → 筑基 → 金丹 → 元婴, etc.) and
+    # never scrambled by dict/set iteration order.
+    sorted_nodes = sorted(
+        skeleton.nodes,
+        key=lambda n: realm_topo_index.get(n.realm_level, n.realm_level),
+    )
+
+    for node in sorted_nodes:
         # --- Bridge gap if realm skips (DAG-aware check) ---
         if _realm_gap_exists(prev_realm_level, node.realm_level, realm_topo_index):
             bridge = _create_bridge_event(
@@ -169,6 +179,9 @@ def _adapt_node(
 
     prompt = (
         "你是修仙小说情节改写专家，负责将原有情节骨架适配到新主角和新体系。\n\n"
+        "**CRITICAL: DO NOT use original character names, sect names, or specific "
+        "technique names from the input context. You MUST create NEW names adapted "
+        "to the new protagonist.**\n\n"
         f"【新主角设定】\n{protagonist_desc}\n\n"
         f"【新修炼体系】\n{realm_system}\n\n"
         f"【当前节奏定位】境界弧：{node.arc_name}，叙事功能：{node.pacing_role}\n\n"
@@ -257,3 +270,35 @@ def _create_bridge_event(
         source_atom_ids=[r["id"] for r in breakthrough_results],
         is_bridge=True,
     )
+
+
+# ── Intermediate I/O ──────────────────────────────────────────────────────────
+
+_STEP5_FILENAME = "step5_reassembled_plot.json"
+
+
+def save_step5_output(events: List[ReassembledEvent]) -> Path:
+    """Serialise *events* to ``intermediate_dir/step5_reassembled_plot.json``."""
+    out_dir = Path(config.INTERMEDIATE_DIR)
+    out_dir.mkdir(parents=True, exist_ok=True)
+    out_path = out_dir / _STEP5_FILENAME
+    with open(out_path, "w", encoding="utf-8") as f:
+        json.dump([asdict(e) for e in events], f, ensure_ascii=False, indent=2)
+    print(f"[Step 5] Intermediate output saved → {out_path}")
+    return out_path
+
+
+def load_step5_output(intermediate_dir: str | Path | None = None) -> List[ReassembledEvent]:
+    """Load previously saved Step 5 output from ``intermediate_dir/step5_reassembled_plot.json``."""
+    inter_dir = Path(intermediate_dir or config.INTERMEDIATE_DIR)
+    in_path = inter_dir / _STEP5_FILENAME
+    if not in_path.exists():
+        raise FileNotFoundError(
+            f"Step 5 intermediate file not found: {in_path}\n"
+            "Run the pipeline from Step 5 or earlier first to generate it."
+        )
+    with open(in_path, "r", encoding="utf-8") as f:
+        data = json.load(f)
+    events = [ReassembledEvent(**e) for e in data]
+    print(f"[Step 5] Loaded intermediate output from {in_path}")
+    return events

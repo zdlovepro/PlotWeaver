@@ -97,7 +97,35 @@ def validate_and_output(
 
 # ── NER exact-match check ─────────────────────────────────────────────────────
 
-def _extract_named_entities(text: str) -> Set[str]:
+# Common Xianxia vocabulary that appears universally across all cultivation
+# novels and should NOT be counted as plagiarism indicators.  These are
+# generic genre terms, not unique proper nouns owned by any single work.
+_XIANXIA_STOPWORDS: frozenset[str] = frozenset({
+    # Cultivation stages (generic names used everywhere)
+    "炼气", "筑基", "金丹", "元婴", "化神", "炼虚", "合体", "大乘", "渡劫",
+    "真仙", "金仙", "太乙", "大罗", "混元",
+    # Common resources / items
+    "灵气", "灵石", "灵力", "法力", "真气", "元气", "灵根",
+    "飞剑", "法宝", "法器", "灵器", "神器",
+    "丹药", "灵丹", "仙丹", "炼丹",
+    "符箓", "阵法", "阵纹", "禁制",
+    "储物袋", "储物戒", "玉简", "传音符",
+    # Sect / social roles
+    "宗门", "宗主", "长老", "弟子", "内门", "外门", "核心", "执事",
+    "师尊", "师父", "师傅", "师兄", "师弟", "师姐", "师妹",
+    "道友", "道兄", "前辈", "晚辈", "散修",
+    # Generic locations
+    "洞府", "灵山", "仙山", "秘境", "天地", "大陆", "界域",
+    # Common cultivation concepts
+    "突破", "境界", "天劫", "功法", "秘籍", "传承", "感悟", "领悟",
+    "神识", "精神", "肉身", "灵魂", "魂魄", "道心", "天赋",
+    "机缘", "造化", "气运", "因果", "天道",
+    # Narrative / genre staples
+    "修炼", "修仙", "修行", "闭关", "出关", "历练",
+})
+
+
+def _extract_named_entities(text: str) -> set[str]:
     """
     Pure-Python NER for Chinese text using jieba (if installed) with a regex
     fallback.  Extracts person names, place names, and cultivation-specific
@@ -130,13 +158,13 @@ def _extract_named_entities(text: str) -> Set[str]:
 def _ner_exact_check(
     outline_text: str, source_texts: Dict[str, str]
 ) -> tuple[float, List[str]]:
-    new_entities = _extract_named_entities(outline_text)
+    new_entities = _extract_named_entities(outline_text) - _XIANXIA_STOPWORDS
     if not new_entities:
         return 0.0, []
 
     source_entities: Set[str] = set()
     for src_text in source_texts.values():
-        source_entities.update(_extract_named_entities(src_text))
+        source_entities.update(_extract_named_entities(src_text) - _XIANXIA_STOPWORDS)
 
     overlap = new_entities & source_entities
     ratio = len(overlap) / len(new_entities)
