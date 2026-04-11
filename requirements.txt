@@ -1,3 +1,4 @@
+
 # PlotWeaver V2.0 – Python dependencies
 # Install with:  pip install -r requirements.txt
 
@@ -21,3 +22,4 @@ tenacity>=8.2
 
 # Progress bars for long-running loops
 tqdm>=4.66
+
