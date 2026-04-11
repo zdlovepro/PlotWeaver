@@ -65,5 +65,16 @@ __pycache__/
 *.suo
 *.tox
 
-outputs/
-data/
+# PlotWeaver runtime data
+input/
+output/
+chroma_data/
+
+config.yaml
+
+input/
+output/
+novels/
+intermediate_data/
+
+

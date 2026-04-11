@@ -1,212 +1,234 @@
-import os
+
+"""
+main.py – PlotWeaver V2.0 Main Orchestrator
+
+Chains the 7-step pipeline for fusing multiple Xianxia novel outlines into a
+new, highly coherent, plagiarism-resistant novel outline.
+
+Usage:
+    python main.py                  # run full pipeline from Step 1
+    python main.py --start-step 2   # skip Step 1, load step1_chunks.json and resume from Step 2
+    python main.py --start-step 3   # skip Steps 1-2, load step2_extracted_plots.json and resume
+    python main.py --start-step 5   # skip Steps 1-4, load saved state JSONs and resume from Step 5
+    python main.py --help           # show usage
+
+Configuration is loaded from config.yaml (or environment variables).
+Place source novel .txt files in the INPUT_DIR configured in config.yaml.
+"""
+
+from __future__ import annotations
+
+import argparse
 import sys
 from pathlib import Path
-from datetime import datetime
-from typing import Dict, Any  # 添加类型导入
 
-# 添加项目根目录到Python路径
-project_root = Path(__file__).parent
-sys.path.insert(0, str(project_root))
-
-# 现在可以正确导入src模块
-from src.core.cgan_fusion import CGANFusionEngine
-from src.core.logic_checker import LogicChecker
-from src.utils.preprocessor import OutlinePreprocessor
-from src.utils.evaluator import OutlineEvaluator
-from src.utils.file_utils import FileManager
-from src.config.setting import Config
+import config
+from pipeline import (
+    step1_chunking,
+    step2_extraction,
+    step3_knowledge_base,
+    step4_role_casting,
+    step5_reassembly,
+    step6_generation,
+    step7_validation,
+)
 
 
-class NovelOutlineFusionApp:
-    """小说大纲融合应用"""
+def _parse_args() -> argparse.Namespace:
+    parser = argparse.ArgumentParser(
+        prog="python main.py",
+        description="PlotWeaver V2.0 – Xianxia Novel Outline Fusion Pipeline",
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog="""
+Resume examples:
+  python main.py                  Run the full pipeline from Step 1.
+  python main.py --start-step 2   Load intermediate_data/step1_chunks.json and
+                                  start from Step 2 (skip Step 1).
+  python main.py --start-step 3   Load intermediate_data/step2_extracted_plots.json
+                                  and start from Step 3 (skip Steps 1-2).
+  python main.py --start-step 5   Load saved state for Steps 1-4 and resume
+                                  from Step 5 (skips ChromaDB re-insertion).
 
-    def __init__(self, model_type: str = None):
-        if model_type is None:
-            model_type = Config.CURRENT_MODEL_TYPE
+Intermediate files are stored in the directory configured as ``paths.intermediate_dir``
+in config.yaml (default: ./intermediate_data).
+        """,
+    )
+    parser.add_argument(
+        "--start-step",
+        type=int,
+        default=1,
+        choices=range(1, 8),
+        metavar="N",
+        help="Step number to start from (1-7). Steps before N are skipped and "
+             "their outputs are loaded from intermediate_data/. "
+             "Default: 1 (full run).",
+    )
+    return parser.parse_args()
 
-        self.fusion_engine = CGANFusionEngine(model_type=model_type)
-        self.logic_checker = LogicChecker(model_type=model_type)
-        self.preprocessor = OutlinePreprocessor()
-        self.evaluator = OutlineEvaluator(model_type=model_type)
-        self.file_manager = FileManager()
-        self.config = Config()
-        self.model_type = model_type
 
-    def run_fusion_pipeline(self, outline_a: str = None, outline_b: str = None,
-                            input_file_a: Path = None, input_file_b: Path = None,
-                            enable_logic_check: bool = True,
-                            enable_evaluation: bool = True) -> Dict[str, Any]:  # 修复类型注解
-        """运行完整的大纲融合管道"""
+def run_pipeline(start_step: int = 1) -> None:
+    """Execute the PlotWeaver pipeline, optionally resuming from *start_step*."""
+    print("=" * 60, flush=True)
+    print("  PlotWeaver V2.0 – Xianxia Novel Outline Fusion Pipeline", flush=True)
+    if start_step > 1:
+        print(f"  Resuming from Step {start_step}", flush=True)
+    print("=" * 60, flush=True)
 
-        print("开始处理大纲融合...")
+    # Validate configuration
+    config.validate()
 
-        # 获取输入数据
-        if outline_a is None or outline_b is None:
-            input_data = self.file_manager.read_input_files(input_file_a, input_file_b)
-            outline_a = input_data["outline_a"]
-            outline_b = input_data["outline_b"]
+    input_dir = Path(config.INPUT_DIR)
+    output_dir = Path(config.OUTPUT_DIR)
 
-        # 预处理
-        outline_a_clean = self.preprocessor.clean_outline(outline_a)
-        outline_b_clean = self.preprocessor.clean_outline(outline_b)
+    # ── Step 1: Semantic Chunking & Arc Anchoring ─────────────────────────────
+    if start_step <= 1:
+        print("\n[Pipeline] ── Step 1: Semantic Chunking & Arc Anchoring ──", flush=True)
+        novel_arcs = step1_chunking.process_all_novels(input_dir)
+        if not novel_arcs:
+            print(
+                f"ERROR: No source novels found in '{input_dir}'. "
+                "Please place .txt files there and retry.",
+                flush=True,
+            )
+            sys.exit(1)
+        print(f"[Pipeline] Processed {len(novel_arcs)} novel(s).", flush=True)
+    else:
+        print("\n[Pipeline] ── Step 1 skipped – loading from intermediate file ──", flush=True)
+        novel_arcs = step1_chunking.load_step1_output()
+        print(f"[Pipeline] Loaded {len(novel_arcs)} novel(s) from intermediate data.", flush=True)
 
-        print("步骤1: 使用CoT技术进行大纲融合...")
-        fusion_result = self.fusion_engine.generate_fused_outline(
-            outline_a_clean, outline_b_clean, use_cot=True
+    # ── Step 2: Dual-stage Plot Extraction ───────────────────────────────────
+    if start_step <= 2:
+        print("\n[Pipeline] ── Step 2: Dual-stage Plot Extraction ──", flush=True)
+        all_atoms = step2_extraction.extract_all(novel_arcs)
+        total_atoms = sum(len(v) for v in all_atoms.values())
+        print(f"[Pipeline] Total plot atoms extracted: {total_atoms}", flush=True)
+    else:
+        print("\n[Pipeline] ── Step 2 skipped – loading from intermediate file ──", flush=True)
+        all_atoms = step2_extraction.load_step2_output()
+        total_atoms = sum(len(v) for v in all_atoms.values())
+        print(f"[Pipeline] Loaded {total_atoms} plot atoms from intermediate data.", flush=True)
+
+    # ── Step 3: RAG Knowledge Base & World Building ───────────────────────────
+    if start_step <= 3:
+        print("\n[Pipeline] ── Step 3: RAG Knowledge Base & World Building ──", flush=True)
+        kb, fused_world = step3_knowledge_base.build_knowledge_base(all_atoms)
+        step3_knowledge_base.save_step3_output(fused_world)
+        print(f"[Pipeline] Fused world: {fused_world.world_name}", flush=True)
+        print(f"[Pipeline] Cultivation realms: {len(fused_world.cultivation_realms)}", flush=True)
+    else:
+        print("\n[Pipeline] ── Step 3 skipped – loading from intermediate file ──", flush=True)
+        fused_world = step3_knowledge_base.load_step3_output()
+        kb = step3_knowledge_base.connect_knowledge_base()
+        print(f"[Pipeline] Loaded fused world: {fused_world.world_name}", flush=True)
+        print(f"[Pipeline] Cultivation realms: {len(fused_world.cultivation_realms)}", flush=True)
+
+    # ── Step 4: Skeleton Extraction & Role Casting ────────────────────────────
+    if start_step <= 4:
+        print("\n[Pipeline] ── Step 4: Skeleton Extraction & Role Casting ──", flush=True)
+        skeleton = step4_role_casting.build_skeleton(
+            novel_arcs, all_atoms, kb, fused_world
+        )
+        step4_role_casting.save_step4_output(skeleton)
+        print(f"[Pipeline] Skeleton nodes: {len(skeleton.nodes)}", flush=True)
+    else:
+        print("\n[Pipeline] ── Step 4 skipped – loading from intermediate file ──", flush=True)
+        skeleton = step4_role_casting.load_step4_output()
+        print(f"[Pipeline] Loaded skeleton: {len(skeleton.nodes)} nodes, "
+              f"protagonist: {skeleton.character_sheet.protagonist.name if skeleton.character_sheet else 'N/A'}",
+              flush=True)
+
+    # ── Step 5 + 7 loop (retry up to MAX_RETRY_STEPS times) ──────────────────
+    max_retries = config.MAX_RETRY_STEPS
+    flagged_ids: list[str] = []
+    reassembled: list[step5_reassembly.ReassembledEvent] = []
+
+    for attempt in range(max_retries + 1):
+        run_step5 = (start_step <= 5) or (attempt > 0)
+
+        if attempt > 0:
+            print(f"\n[Pipeline] ── Step 5 Retry (attempt {attempt}) – 局部重写涉嫌抄袭的节点 ──", flush=True)
+        elif run_step5:
+            print("\n[Pipeline] ── Step 5: Character-driven Plot Reassembly ──", flush=True)
+
+        if run_step5:
+            # 核心修复点：将前一次生成的事件和需要重写的节点ID传给 Step 5 进行局部精准重写！
+            reassembled = step5_reassembly.reassemble_plot(
+                skeleton=skeleton,
+                kb=kb,
+                fused_world=fused_world,
+                only_event_ids=set(flagged_ids) if flagged_ids else None,
+                previous_events=reassembled if flagged_ids else None
+            )
+            if attempt == 0:
+                step5_reassembly.save_step5_output(reassembled)
+        else:
+            print("\n[Pipeline] ── Step 5 skipped – loading from intermediate file ──", flush=True)
+            reassembled = step5_reassembly.load_step5_output()
+            print(f"[Pipeline] Loaded {len(reassembled)} reassembled events.", flush=True)
+
+        # ── Step 6: Sliding Window Volume Generation ──────────────────────────
+        if attempt == 0:
+            print("\n[Pipeline] ── Step 6: Sliding Window Volume Generation ──", flush=True)
+        else:
+            print("\n[Pipeline] ── Step 6: 局部剧情修正后，重新生成大纲 ──", flush=True)
+
+        volumes = step6_generation.generate_volumes(
+            reassembled, fused_world, skeleton.character_sheet
         )
 
-        result = {
-            "timestamp": datetime.now().isoformat(),
-            "original_outlines": {
-                "outline_a": outline_a_clean,
-                "outline_b": outline_b_clean
-            },
-            "fusion_result": fusion_result
-        }
-
-        if enable_logic_check and Config.LOGIC_CHECK_ENABLED:
-            print("步骤2: 进行逻辑一致性检查...")
-            logic_result = self.logic_checker.full_logic_check_and_revise(
-                fusion_result["fused_outline"]
-            )
-            result["logic_check_result"] = logic_result
-            final_outline = logic_result["final_outline"]
+        # ── Step 7: Adversarial Plagiarism Check & Output ─────────────────────
+        if attempt == 0:
+            print("\n[Pipeline] ── Step 7: Adversarial Plagiarism Check & Output ──", flush=True)
         else:
-            result["logic_check_result"] = {
-                "final_outline": fusion_result["fused_outline"],
-                "checked_and_revised": False
-            }
-            final_outline = fusion_result["fused_outline"]
+            print(f"\n[Pipeline] ── Step 7: 再次检测是否存在抄袭 (第 {attempt} 次重试) ──", flush=True)
 
-        if enable_evaluation:
-            print("步骤3: 进行融合质量评估...")
-            evaluation_report = self.evaluator.generate_comprehensive_report(
-                outline_a_clean, outline_b_clean, final_outline,
-                revision_history=result.get("logic_check_result", {}).get("revisions", [])
+        source_texts = _load_source_texts(input_dir)
+        validation_result = step7_validation.validate_and_output(
+            volumes=volumes,
+            reassembled_events=reassembled,
+            skeleton=skeleton,
+            fused_world=fused_world,
+            source_texts=source_texts,
+            output_dir=output_dir,
+        )
+
+        if validation_result.passed:
+            break
+
+        if attempt < max_retries:
+            print(
+                f"[Pipeline] Validation failed – retrying Step 5 for "
+                f"{len(validation_result.flagged_event_ids)} flagged events...",
+                flush=True,
             )
-            result["evaluation_report"] = evaluation_report
+            flagged_ids = validation_result.flagged_event_ids
+            if not flagged_ids:
+                print("[Pipeline] Warning: Check failed but no specific events flagged. Breaking loop.")
+                break
+        else:
+            print(
+                "[Pipeline] Warning: validation did not fully pass after "
+                f"{max_retries} retries. Review the validation_report.md in output.",
+                flush=True,
+            )
 
-        print("处理完成!")
-        return result
-
-    def display_results(self, result: Dict[str, Any]):  # 修复类型注解
-        """显示处理结果"""
-        print("\n" + "=" * 60)
-        print("大纲融合结果")
-        print("=" * 60)
-
-        final_outline = result["logic_check_result"]["final_outline"]
-
-        print("\n融合后的大纲:")
-        print("-" * 40)
-        print(final_outline)
-
-        if "revisions" in result["logic_check_result"]:
-            revisions = result["logic_check_result"]["revisions"]
-            print(f"\n修订次数: {len(revisions)}")
-
-            for i, revision in enumerate(revisions, 1):
-                print(f"\n修订 {i}:")
-                print(f"问题: {revision['issues'][0] if revision['issues'] else '无'}")
-
-        if "reasoning_steps" in result["fusion_result"]:
-            print("\nCoT推理摘要:")
-            print("分析完成 → 策略制定 → 融合执行 → 逻辑检查")
-
-        if "evaluation_report" in result:
-            self._display_evaluation_results(result["evaluation_report"])
-
-    def _display_evaluation_results(self, evaluation_report: Dict[str, Any]):  # 修复类型注解
-        """显示评估结果"""
-        print("\n" + "=" * 60)
-        print("融合质量评估报告")
-        print("=" * 60)
-
-        metrics = evaluation_report["evaluation_metrics"]
-        qualitative = evaluation_report["qualitative_analysis"]
-
-        print(f"\n综合评分: {metrics['overall']:.1f}/10.0 ({evaluation_report['quality_level']})")
-        print("\n详细评分:")
-        print(f"  连贯性: {metrics['coherence']:.1f}/10.0")
-        print(f"  逻辑性: {metrics['logic']:.1f}/10.0")
-        print(f"  创意性: {metrics['creativity']:.1f}/10.0")
-        print(f"  融合质量: {metrics['fusion_quality']:.1f}/10.0")
-        print(f"  可读性: {metrics['readability']:.1f}/10.0")
-
-        print("\n主要优点:")
-        for strength in qualitative['strengths'][:3]:
-            print(f"  ✓ {strength}")
-
-        print("\n待改进问题:")
-        for issue in qualitative['issues'][:3]:
-            print(f"  ✗ {issue}")
-
-        print("\n改进建议:")
-        for suggestion in qualitative['suggestions'][:3]:
-            print(f"  💡 {suggestion}")
-
-    def save_all_results(self, result: Dict[str, Any], base_filename: str = None) -> Dict[str, Path]:  # 修复类型注解
-        """保存所有结果"""
-        if base_filename is None:
-            timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-            base_filename = f"fusion_result_{timestamp}"
-
-        json_file = self.file_manager.save_result(result, f"{base_filename}.json")
-        final_outline = result["logic_check_result"]["final_outline"]
-        txt_file = self.file_manager.save_outline_text(final_outline, f"{base_filename}.txt")
-
-        print(f"\n所有结果已保存:")
-        print(f"  JSON文件: {json_file}")
-        print(f"  文本文件: {txt_file}")
-
-        return {
-            "json_file": json_file,
-            "txt_file": txt_file
-        }
+    # ── Done ───────────────────────────────────────────────────────────
+    print("\n" + "=" * 60, flush=True)
+    print(f"  Pipeline complete! Output files in: {output_dir.resolve()}", flush=True)
+    print("=" * 60, flush=True)
 
 
-def main():
-    """主函数"""
-    app = NovelOutlineFusionApp()
-
-    print("小说大纲融合AI系统")
-    print("=" * 40)
-    print(f"输入目录: {app.config.INPUTS_DIR}")
-    print(f"输出目录: {app.config.RESULTS_DIR}")
-    print("=" * 40)
-
-    input_files = app.config.DEFAULT_INPUT_FILES
-    if input_files["outline_a"].exists() and input_files["outline_b"].exists():
-        print("检测到输入文件，使用文件输入模式")
-        use_file_input = True
-    else:
-        print("未找到输入文件，使用控制台输入模式")
-        use_file_input = False
-
-    if use_file_input:
-        result = app.run_fusion_pipeline()
-    else:
-        outline_a = input("请输入大纲A（主体）: ") or """
-        主角李明是一个普通的程序员，某天发现自己能看见别人的情绪颜色。
-        他利用这个能力帮助同事解决心理问题，但逐渐发现这个能力有副作用。
-        最终他学会了控制这个能力，并找到了真正的自我。
-        """
-
-        outline_b = input("请输入大纲B（插入情节）: ") or """
-        一个神秘组织"色彩猎手"在追捕有特殊能力的人。
-        他们试图控制李明，利用他的能力进行犯罪。
-        李明在对抗中发现组织的惊天秘密。
-        """
-
-        result = app.run_fusion_pipeline(outline_a, outline_b)
-
-    app.display_results(result)
-
-    saved_files = app.save_all_results(result)
-    print(f"\n您可以在以下位置查看结果:")
-    print(f"  完整结果: {saved_files['json_file']}")
-    print(f"  纯文本大纲: {saved_files['txt_file']}")
+def _load_source_texts(input_dir: Path) -> dict[str, str]:
+    """Load all source .txt files into a dict for plagiarism checking."""
+    texts: dict[str, str] = {}
+    for p in sorted(input_dir.glob("*.txt")):
+        texts[p.name] = p.read_text(encoding="utf-8")
+    return texts
 
 
 if __name__ == "__main__":
-    main()
+    args = _parse_args()
+    args.start_step=3
+    run_pipeline(start_step=args.start_step)
+
