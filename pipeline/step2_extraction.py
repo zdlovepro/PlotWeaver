@@ -5,10 +5,7 @@ Uses DeepSeek API (JSON mode) in two passes:
   Pass 1 – Objective elements: characters, core actions, cultivation elements.
   Pass 2 – Subjective logic:   causality, motivations, conflict types, tension.
 
-Output:
-  List[PlotAtom] – enriched, structured plot atoms ready for ChromaDB ingestion.
-  The result is also persisted to ``intermediate_dir/step2_extracted_plots.json``
-  for pipeline resume capability.
+Features Long-Context full text processing and Entity State Tracking (Character Memory).
 """
 
 from __future__ import annotations
@@ -40,52 +37,54 @@ class PlotAtom:
     causality_precondition: str = ""
     causality_consequence: str = ""
     motivation: str = ""
-    conflict_type: str = ""      # e.g. 宗门争斗 / 天劫 / 机缘争夺
-    narrative_function: str = "" # e.g. 打脸 / 传承 / 复仇
+    conflict_type: str = ""
+    narrative_function: str = ""
     emotion: str = ""
-    tension_level: int = 5       # 1-10
-    # Original text summary
+    tension_level: int = 5
     summary: str = ""
 
 
-# ── Public API ────────────────────────────────────────────────────────────────
+# ── Public API ──────────────────────────────────────────────────────────────
 
 def extract_all(
     novel_arcs: dict[str, List[VolumeArc]]
 ) -> dict[str, List[PlotAtom]]:
-    """
-    Run dual-stage extraction for every novel's events.
-
-    Args:
-        novel_arcs: {novel_filename: [VolumeArc, ...]}
-
-    Returns:
-        {novel_filename: [PlotAtom, ...]}
-
-    The result is saved to ``intermediate_dir/step2_extracted_plots.json``.
-    """
     client = get_deepseek_client()
     result: dict[str, List[PlotAtom]] = {}
     for novel_name, arcs in novel_arcs.items():
         print(f"[Step 2] Extracting plot atoms from: {novel_name}", flush=True)
         atoms: List[PlotAtom] = []
         all_events = [event for arc in arcs for event in arc.events]
+
+        # 核心改动：初始化一本小说的全局人物记忆字典 { "角色名": "关系" }
+        character_memory: dict[str, str] = {}
+
         for event in tqdm(all_events, desc=f"[Step 2] {novel_name}", unit="event"):
-            atom = _extract_event(client, novel_name, event)
+            atom = _extract_event(client, novel_name, event, character_memory)
             atoms.append(atom)
+
+            # 动态更新人物记忆库
+            for char_str in atom.characters:
+                # 尝试解析 "姓名(关系)" 的格式
+                if "(" in char_str and ")" in char_str:
+                    name = char_str.split("(")[0].strip()
+                    rel = char_str.split("(")[1].split(")")[0].strip()
+
+                    # 如果是一个新人物，或者之前是"陌生人"但现在关系明确了，就更新记忆
+                    if name not in character_memory or (rel != "陌生人" and "陌生人" in character_memory.get(name, "")):
+                        character_memory[name] = rel
+
         result[novel_name] = atoms
         print(f"[Step 2]   → {len(atoms)} atoms extracted from {novel_name}", flush=True)
     save_step2_output(result)
     return result
 
 
-# ── Intermediate I/O ──────────────────────────────────────────────────────────
+# ── Intermediate I/O ────────────────────────────────────────────────────────
 
 _STEP2_FILENAME = "step2_extracted_plots.json"
 
-
 def save_step2_output(all_atoms: dict[str, List[PlotAtom]]) -> Path:
-    """Serialise *all_atoms* to ``intermediate_dir/step2_extracted_plots.json``."""
     out_dir = Path(config.INTERMEDIATE_DIR)
     out_dir.mkdir(parents=True, exist_ok=True)
     out_path = out_dir / _STEP2_FILENAME
@@ -100,7 +99,6 @@ def save_step2_output(all_atoms: dict[str, List[PlotAtom]]) -> Path:
 
 
 def load_step2_output(intermediate_dir: str | Path | None = None) -> dict[str, List[PlotAtom]]:
-    """Load previously saved Step 2 output from ``intermediate_dir/step2_extracted_plots.json``."""
     inter_dir = Path(intermediate_dir or config.INTERMEDIATE_DIR)
     in_path = inter_dir / _STEP2_FILENAME
     if not in_path.exists():
@@ -117,12 +115,14 @@ def load_step2_output(intermediate_dir: str | Path | None = None) -> dict[str, L
     return result
 
 
-# ── Internal helpers ──────────────────────────────────────────────────────────
+# ── Internal helpers ────────────────────────────────────────────────────────
 
-def _extract_event(client, novel_name: str, event: NarrativeEvent) -> PlotAtom:
-    text = event.summary or "\n".join(event.chapters[:1])[:config.MAX_TEXT_CHUNK_LENGTH]
+def _extract_event(client, novel_name: str, event: NarrativeEvent, character_memory: dict[str, str]) -> PlotAtom:
+    # 完整读取事件内的所有章节文本
+    text = event.summary or "\n".join(event.chapters)
 
-    pass1 = _pass1_objective(client, event.arc_name, text)
+    # Pass 1 传入人物记忆库
+    pass1 = _pass1_objective(client, event.arc_name, text, character_memory)
     pass2 = _pass2_subjective(client, event.arc_name, text, pass1)
 
     atom = PlotAtom(
@@ -132,13 +132,11 @@ def _extract_event(client, novel_name: str, event: NarrativeEvent) -> PlotAtom:
         summary=event.summary,
     )
 
-    # Populate from Pass 1
     atom.characters = pass1.get("characters", [])
     atom.core_action = pass1.get("core_action", "")
     atom.cultivation_elements = pass1.get("cultivation_elements", [])
     atom.location = pass1.get("location", "")
 
-    # Populate from Pass 2
     atom.causality_precondition = pass2.get("causality_precondition", "")
     atom.causality_consequence = pass2.get("causality_consequence", "")
     atom.motivation = pass2.get("motivation", "")
@@ -149,10 +147,10 @@ def _extract_event(client, novel_name: str, event: NarrativeEvent) -> PlotAtom:
 
     return atom
 
-
+# 修改 Schema：要求输出格式必须为 姓名(关系)
 _PASS1_SCHEMA = """\
 {
-  "characters": ["角色名列表"],
+  "characters": ["角色名(与主角的关系，如：主角/师尊/敌人/朋友/陌生人/路人等。若前文已有，请尽量保持一致，若本章出现新身份则更新)"],
   "core_action": "本事件最核心的一个动作/行为（字符串）",
   "cultivation_elements": ["涉及的境界/功法/灵宝/丹药列表"],
   "location": "事件发生地点"
@@ -171,12 +169,17 @@ _PASS2_SCHEMA = """\
 
 
 @retry(stop=stop_after_attempt(3), wait=wait_exponential(min=2, max=10))
-def _pass1_objective(client, arc_name: str, text: str) -> Dict[str, Any]:
+def _pass1_objective(client, arc_name: str, text: str, character_memory: dict[str, str]) -> Dict[str, Any]:
+    # 将前文记忆格式化输出到提示词中
+    mem_str = json.dumps(character_memory, ensure_ascii=False) if character_memory else "暂无，本卷为起始阶段。"
+
     prompt = (
         f"你是修仙小说情节客观要素抽取专家。\n"
-        f"当前境界弧：{arc_name}\n\n"
+        f"当前卷目进度：{arc_name}\n"
+        f"前文已积累的人物关系记忆库：{mem_str}\n\n"
         f"请仅从以下情节摘要中，提取客观事实性信息，严格按照JSON Schema输出：\n"
         f"Schema:\n{_PASS1_SCHEMA}\n\n"
+        f"注意：提取人物时，请尽量参考前文关系。如果本章看不出人物关系，可填'陌生人'。\n\n"
         f"情节内容：\n{text}"
     )
     raw = chat_completion_json(
@@ -194,7 +197,7 @@ def _pass2_subjective(
 ) -> Dict[str, Any]:
     prompt = (
         f"你是修仙小说情节逻辑分析专家。\n"
-        f"当前境界弧：{arc_name}\n\n"
+        f"当前卷目进度：{arc_name}\n\n"
         f"已知客观要素：{json.dumps(pass1_result, ensure_ascii=False)}\n\n"
         f"请结合以下原文，分析主观逻辑信息，严格按照JSON Schema输出：\n"
         f"Schema:\n{_PASS2_SCHEMA}\n\n"

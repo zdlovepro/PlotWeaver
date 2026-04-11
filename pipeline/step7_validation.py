@@ -42,7 +42,7 @@ class ValidationResult:
     notes: str = ""
 
 
-# ── Public API ────────────────────────────────────────────────────────────────
+# ── Public API ──────────────────────────────────────────────────────────────
 
 def validate_and_output(
     volumes: List[VolumeOutline],
@@ -99,60 +99,37 @@ def validate_and_output(
     return result
 
 
-# ── NER exact-match check ─────────────────────────────────────────────────────
+# ── NER exact-match check ───────────────────────────────────────────────────
 
-# Common Xianxia vocabulary that appears universally across all cultivation
-# novels and should NOT be counted as plagiarism indicators.  These are
-# generic genre terms, not unique proper nouns owned by any single work.
 _XIANXIA_STOPWORDS: frozenset[str] = frozenset({
-    # Cultivation stages (generic names used everywhere)
     "炼气", "筑基", "金丹", "元婴", "化神", "炼虚", "合体", "大乘", "渡劫",
     "真仙", "金仙", "太乙", "大罗", "混元",
-    # Common resources / items
     "灵气", "灵石", "灵力", "法力", "真气", "元气", "灵根",
     "飞剑", "法宝", "法器", "灵器", "神器",
     "丹药", "灵丹", "仙丹", "炼丹",
     "符箓", "阵法", "阵纹", "禁制",
     "储物袋", "储物戒", "玉简", "传音符",
-    # Sect / social roles
     "宗门", "宗主", "长老", "弟子", "内门", "外门", "核心", "执事",
     "师尊", "师父", "师傅", "师兄", "师弟", "师姐", "师妹",
     "道友", "道兄", "前辈", "晚辈", "散修",
-    # Generic locations
     "洞府", "灵山", "仙山", "秘境", "天地", "大陆", "界域",
-    # Common cultivation concepts
     "突破", "境界", "天劫", "功法", "秘籍", "传承", "感悟", "领悟",
     "神识", "精神", "肉身", "灵魂", "魂魄", "道心", "天赋",
     "机缘", "造化", "气运", "因果", "天道",
-    # Narrative / genre staples
     "修炼", "修仙", "修行", "闭关", "出关", "历练",
 })
 
 
 def _extract_named_entities(text: str) -> set[str]:
-    """
-    Pure-Python NER for Chinese text using jieba (if installed) with a regex
-    fallback.  Extracts person names, place names, and cultivation-specific
-    technique/item names without calling any LLM.
-
-    jieba POS tags used:
-      nr – person name, ns – place name, nt – organisation,
-      nz – other proper noun, n  – common noun (kept for technique terms)
-    """
     entities: Set[str] = set()
-
-    # Primary: jieba part-of-speech tagging (richer than pure regex)
     try:
-        import jieba.posseg as pseg  # type: ignore[import]
+        import jieba.posseg as pseg
         for word, flag in pseg.cut(text):
             if len(word) >= 2 and flag in ("nr", "ns", "nt", "nz", "n"):
                 entities.add(word)
     except ImportError:
-        pass  # jieba not installed; rely on regex below
+        pass
 
-    # Fallback / supplement: regex patterns always applied so that
-    # cultivation-specific terms (功法, 门派, 境界…) are captured even when
-    # jieba's generic noun tagger misses them.
     entities.update(re.findall(r"[A-Z][a-zA-Z]{2,}", text))
     suffixes = r"(?:功|诀|剑|刀|拳|掌|宗|门|宫|殿|界|境|峰|山|城|洞|府|道|法|经|典|丹|器|符|阵)"
     entities.update(re.findall(rf"[\u4e00-\u9fff]{{1,5}}{suffixes}", text))
@@ -172,7 +149,7 @@ def _ner_exact_check(
 
     overlap = new_entities & source_entities
     ratio = len(overlap) / len(new_entities)
-    flagged: List[str] = []  # NER check flags the whole outline, not specific events
+    flagged: List[str] = []
 
     if ratio >= config.PLAGIARISM_NER_THRESHOLD:
         flagged = ["global_ner_overlap"]
@@ -180,7 +157,7 @@ def _ner_exact_check(
     return ratio, flagged
 
 
-# ── Adversarial DeepSeek check ────────────────────────────────────────────────
+# ── Adversarial DeepSeek check ──────────────────────────────────────────────
 
 @retry(stop=stop_after_attempt(3), wait=wait_exponential(min=2, max=10))
 def _adversarial_check(
@@ -189,20 +166,13 @@ def _adversarial_check(
     source_texts: Dict[str, str],
     events: List[ReassembledEvent],
 ) -> tuple[List[str], List[str]]:
-    """
-    Run an adversarial 'anti-plagiarism editor' DeepSeek session.
-    Returns (similar_tropes_list, flagged_event_ids).
-    """
-    # Build a compact representation of source summaries
     source_summaries: List[str] = []
     for novel_name, src_text in source_texts.items():
-        # Use configurable number of chars as a synopsis proxy
         source_summaries.append(
             f"原作《{novel_name}》摘要：{src_text[:config.PLAGIARISM_SOURCE_SYNOPSIS_LENGTH]}"
         )
     source_summary_text = "\n".join(source_summaries[:5])
 
-    # Use configurable chars of new outline for the check
     new_outline_excerpt = outline_text[:config.PLAGIARISM_OUTLINE_EXCERPT_LENGTH]
 
     prompt = (
@@ -240,14 +210,13 @@ def _adversarial_check(
 
     flagged_ids: List[str] = []
     if needs_rewrite and events:
-        # Flag the last N events for re-generation (heuristic: high-tension events)
         high_tension = sorted(events, key=lambda e: e.realm_level, reverse=True)[:3]
         flagged_ids = [e.event_id for e in high_tension]
 
     return similar_tropes, flagged_ids
 
 
-# ── Output writers ────────────────────────────────────────────────────────────
+# ── Output writers ──────────────────────────────────────────────────────────
 
 def _compile_outline_text(volumes: List[VolumeOutline]) -> str:
     parts = []
@@ -289,25 +258,35 @@ def _write_world_bible(
         f"**战斗风格：** {character_sheet.protagonist.combat_style}",
         f"**性格缺陷：** {character_sheet.protagonist.personality_flaw}",
         f"**背景：** {character_sheet.protagonist.background}",
-        f"**特质：** {', '.join(character_sheet.protagonist.traits)}",
         "",
-        "## 配角一览",
+        "## 角色图鉴（群像）",
         "",
     ]
     for char in character_sheet.supporting:
         lines += [
             f"### {char.name}（{char.role}）",
-            f"- 起始境界：{char.realm_start}",
-            f"- 道心：{char.dao_heart}",
-            f"- 战斗风格：{char.combat_style}",
-            f"- 缺陷：{char.personality_flaw}",
+            f"- **羁绊定位：** {char.bond_depth}",
+            f"- **登场节点：** {char.entry_event}",
+            f"- **退场节点：** {char.exit_event}",
+            f"- **返场节点：** {char.return_event}",
+            f"- **执念/道心：** {char.dao_heart}",
+            f"- **战斗风格：** {char.combat_style}",
+            f"- **性格缺陷：** {char.personality_flaw}",
+            f"- **背景简述：** {char.background}",
             "",
         ]
+
     lines += [
-        "## 角色关系",
+        "## 动态群像局势与关系网",
         "",
-        character_sheet.relationship_summary,
     ]
+    for stage_net in character_sheet.relationship_networks:
+        lines += [
+            f"### {stage_net.stage}",
+            f"**活跃角色：** {', '.join(stage_net.active_characters)}",
+            f"**局势与恩怨：** {stage_net.relationship_status}",
+            "",
+        ]
 
     output_path = output_dir / "novel_world_bible.md"
     output_path.write_text("\n".join(lines), encoding="utf-8")
@@ -337,8 +316,8 @@ def _write_volume_outline(
         ]
         for ch_summary in vol.chapter_summaries:
             lines.append(f"{ch_summary}")
-            lines.append("")
         lines += [
+            "",
             f"**卷末状态：** {vol.ending_state}",
             "",
         ]

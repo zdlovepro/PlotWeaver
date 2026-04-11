@@ -116,8 +116,6 @@ def run_pipeline(start_step: int = 1) -> None:
         print(f"[Pipeline] Fused world: {fused_world.world_name}", flush=True)
         print(f"[Pipeline] Cultivation realms: {len(fused_world.cultivation_realms)}", flush=True)
     else:
-        # Connect to ChromaDB in read-only mode (no insertion) to prevent
-        # DuplicateIDError when resuming from Step 4 or later.
         print("\n[Pipeline] ── Step 3 skipped – loading from intermediate file ──", flush=True)
         fused_world = step3_knowledge_base.load_step3_output()
         kb = step3_knowledge_base.connect_knowledge_base()
@@ -142,18 +140,25 @@ def run_pipeline(start_step: int = 1) -> None:
     # ── Step 5 + 7 loop (retry up to MAX_RETRY_STEPS times) ──────────────────
     max_retries = config.MAX_RETRY_STEPS
     flagged_ids: list[str] = []
+    reassembled: list[step5_reassembly.ReassembledEvent] = []
 
     for attempt in range(max_retries + 1):
-        # On the first pass, honour start_step; on retries always re-run Step 5.
         run_step5 = (start_step <= 5) or (attempt > 0)
 
         if attempt > 0:
-            print(f"\n[Pipeline] ── Step 5 Retry (attempt {attempt}) ──", flush=True)
+            print(f"\n[Pipeline] ── Step 5 Retry (attempt {attempt}) – 局部重写涉嫌抄袭的节点 ──", flush=True)
         elif run_step5:
             print("\n[Pipeline] ── Step 5: Character-driven Plot Reassembly ──", flush=True)
 
         if run_step5:
-            reassembled = step5_reassembly.reassemble_plot(skeleton, kb, fused_world)
+            # 核心修复点：将前一次生成的事件和需要重写的节点ID传给 Step 5 进行局部精准重写！
+            reassembled = step5_reassembly.reassemble_plot(
+                skeleton=skeleton,
+                kb=kb,
+                fused_world=fused_world,
+                only_event_ids=set(flagged_ids) if flagged_ids else None,
+                previous_events=reassembled if flagged_ids else None
+            )
             if attempt == 0:
                 step5_reassembly.save_step5_output(reassembled)
         else:
@@ -164,6 +169,9 @@ def run_pipeline(start_step: int = 1) -> None:
         # ── Step 6: Sliding Window Volume Generation ──────────────────────────
         if attempt == 0:
             print("\n[Pipeline] ── Step 6: Sliding Window Volume Generation ──", flush=True)
+        else:
+            print("\n[Pipeline] ── Step 6: 局部剧情修正后，重新生成大纲 ──", flush=True)
+
         volumes = step6_generation.generate_volumes(
             reassembled, fused_world, skeleton.character_sheet
         )
@@ -171,6 +179,8 @@ def run_pipeline(start_step: int = 1) -> None:
         # ── Step 7: Adversarial Plagiarism Check & Output ─────────────────────
         if attempt == 0:
             print("\n[Pipeline] ── Step 7: Adversarial Plagiarism Check & Output ──", flush=True)
+        else:
+            print(f"\n[Pipeline] ── Step 7: 再次检测是否存在抄袭 (第 {attempt} 次重试) ──", flush=True)
 
         source_texts = _load_source_texts(input_dir)
         validation_result = step7_validation.validate_and_output(
@@ -192,6 +202,9 @@ def run_pipeline(start_step: int = 1) -> None:
                 flush=True,
             )
             flagged_ids = validation_result.flagged_event_ids
+            if not flagged_ids:
+                print("[Pipeline] Warning: Check failed but no specific events flagged. Breaking loop.")
+                break
         else:
             print(
                 "[Pipeline] Warning: validation did not fully pass after "
@@ -199,7 +212,7 @@ def run_pipeline(start_step: int = 1) -> None:
                 flush=True,
             )
 
-    # ── Done ──────────────────────────────────────────────────────────────────
+    # ── Done ───────────────────────────────────────────────────────────
     print("\n" + "=" * 60, flush=True)
     print(f"  Pipeline complete! Output files in: {output_dir.resolve()}", flush=True)
     print("=" * 60, flush=True)
@@ -217,4 +230,3 @@ if __name__ == "__main__":
     args = _parse_args()
     args.start_step=3
     run_pipeline(start_step=args.start_step)
-

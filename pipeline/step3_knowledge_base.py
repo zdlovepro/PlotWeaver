@@ -1,18 +1,11 @@
 """
-step3_knowledge_base.py – RAG Knowledge Base & World Building
+step3_knowledge_base.py – RAG Knowledge Base & World Building (With Deep Templates)
 
 Responsibilities:
-  - Populate four ChromaDB collections:
-      * events          – PlotAtoms from all source novels
-      * character_traits – Character role archetypes
-      * breakthrough_opportunities – Realm breakthrough / bridge events
-      * cultivation_systems – Realm names, rules, breakthroughs
+  - Populate ChromaDB collections (Events, Characters, Breakthroughs, Cultivation).
+  - EXTRACT AND ACCUMULATE Deep Narrative Templates using MULTIPLE PASSES over the novel.
   - Use DeepSeek to fuse a new unified Cultivation System.
-  - Build a NetworkX DAG for realm progression (topological ordering).
-  - Extract a one-sentence global theme.
-
-Output:
-  KnowledgeBase object exposing query helpers and the fused world data.
+  - Build a NetworkX DAG for realm progression.
 """
 
 from __future__ import annotations
@@ -36,6 +29,7 @@ COL_EVENTS = "events"
 COL_CHARACTER_TRAITS = "character_traits"
 COL_BREAKTHROUGH = "breakthrough_opportunities"
 COL_CULTIVATION = "cultivation_systems"
+COL_TEMPLATES = "narrative_templates"
 
 
 @dataclass
@@ -52,123 +46,88 @@ class FusedWorld:
     realm_dag: Optional[nx.DiGraph] = None
     global_theme: str = ""
     world_name: str = ""
+    world_background: str = ""
+    power_source: str = ""
+    major_factions: List[str] = field(default_factory=list)
     raw_system_text: str = ""
+    narrative_templates: List[Dict[str, str]] = field(default_factory=list)
 
 
 class KnowledgeBase:
-    """Thin wrapper around ChromaDB collections with convenience query methods."""
-
     def __init__(self):
         self._chroma = get_chromadb_client()
         self._events = self._chroma.get_or_create_collection(COL_EVENTS)
         self._chars = self._chroma.get_or_create_collection(COL_CHARACTER_TRAITS)
         self._breakthroughs = self._chroma.get_or_create_collection(COL_BREAKTHROUGH)
         self._cultivation = self._chroma.get_or_create_collection(COL_CULTIVATION)
-
-    # ── Ingestion ─────────────────────────────────────────────────────────────
+        self._templates = self._chroma.get_or_create_collection(COL_TEMPLATES)
 
     def add_events(self, atoms: List[PlotAtom]) -> None:
-        if not atoms:
-            return
+        if not atoms: return
         self._events.add(
             ids=[f"{a.atom_id}_{uuid.uuid4().hex[:8]}" for a in atoms],
             documents=[a.summary or a.core_action for a in atoms],
-            metadatas=[
-                {
-                    "original_id": a.atom_id,
-                    "novel_source": a.novel_source,
-                    "arc_name": a.arc_name,
-                    "conflict_type": a.conflict_type,
-                    "narrative_function": a.narrative_function,
-                    "tension_level": str(a.tension_level),
-                    "cultivation_elements": json.dumps(
-                        a.cultivation_elements, ensure_ascii=False
-                    ),
-                }
-                for a in atoms
-            ],
+            metadatas=[{
+                "original_id": a.atom_id, "novel_source": a.novel_source,
+                "arc_name": a.arc_name, "conflict_type": a.conflict_type,
+                "narrative_function": a.narrative_function, "tension_level": str(a.tension_level),
+            } for a in atoms],
         )
 
     def add_character_traits(self, traits: List[Dict[str, Any]]) -> None:
-        """traits: list of dicts with keys 'id', 'text', 'metadata'."""
-        if not traits:
-            return
+        if not traits: return
         self._chars.add(
-            ids=[t["id"] for t in traits],
-            documents=[t["text"] for t in traits],
-            metadatas=[t.get("metadata", {}) for t in traits],
+            ids=[t["id"] for t in traits], documents=[t["text"] for t in traits], metadatas=[t.get("metadata", {}) for t in traits],
         )
 
     def add_breakthrough_opportunities(self, items: List[Dict[str, Any]]) -> None:
-        if not items:
-            return
+        if not items: return
         self._breakthroughs.add(
-            ids=[i["id"] for i in items],
-            documents=[i["text"] for i in items],
-            metadatas=[i.get("metadata", {}) for i in items],
+            ids=[i["id"] for i in items], documents=[i["text"] for i in items], metadatas=[i.get("metadata", {}) for i in items],
         )
 
     def add_cultivation_system(self, realms: List[CultivationRealm]) -> None:
-        if not realms:
-            return
+        if not realms: return
         self._cultivation.add(
             ids=[f"realm_{r.level}" for r in realms],
-            documents=[
-                f"{r.name}（第{r.level}境）：{r.breakthrough_condition}"
-                for r in realms
-            ],
-            metadatas=[
-                {
-                    "name": r.name,
-                    "level": str(r.level),
-                    "abilities": json.dumps(r.special_abilities, ensure_ascii=False),
-                }
-                for r in realms
-            ],
+            documents=[f"{r.name}（第{r.level}境）：{r.breakthrough_condition}" for r in realms],
+            metadatas=[{"name": r.name, "level": str(r.level)} for r in realms],
         )
 
-    # ── Query helpers ─────────────────────────────────────────────────────────
+    def add_narrative_templates(self, templates: List[Dict[str, str]]) -> None:
+        if not templates: return
+        self._templates.add(
+            ids=[f"template_{uuid.uuid4().hex[:8]}" for _ in templates],
+            documents=[f"【{t.get('name', '未知')}】\n{t.get('description', '')}" for t in templates],
+            metadatas=[{"name": t.get("name", "未知")} for t in templates]
+        )
 
-    def query_events(
-        self, query: str, n_results: int = 5, arc_filter: Optional[str] = None
-    ) -> List[Dict[str, Any]]:
+    def query_events(self, query: str, n_results: int = 5, arc_filter: Optional[str] = None) -> List[Dict[str, Any]]:
         where = {"arc_name": arc_filter} if arc_filter else None
         kwargs: Dict[str, Any] = {"query_texts": [query], "n_results": n_results}
-        if where:
-            kwargs["where"] = where
-        res = self._events.query(**kwargs)
-        return _format_results(res)
+        if where: kwargs["where"] = where
+        return _format_results(self._events.query(**kwargs))
 
     def query_character_traits(self, query: str, n_results: int = 5) -> List[Dict[str, Any]]:
-        res = self._chars.query(query_texts=[query], n_results=n_results)
-        return _format_results(res)
+        return _format_results(self._chars.query(query_texts=[query], n_results=n_results))
 
-    def query_breakthrough_opportunities(
-        self, query: str, n_results: int = 3
-    ) -> List[Dict[str, Any]]:
-        res = self._breakthroughs.query(query_texts=[query], n_results=n_results)
-        return _format_results(res)
+    def query_breakthrough_opportunities(self, query: str, n_results: int = 3) -> List[Dict[str, Any]]:
+        return _format_results(self._breakthroughs.query(query_texts=[query], n_results=n_results))
 
     def query_cultivation(self, query: str, n_results: int = 5) -> List[Dict[str, Any]]:
-        res = self._cultivation.query(query_texts=[query], n_results=n_results)
-        return _format_results(res)
+        return _format_results(self._cultivation.query(query_texts=[query], n_results=n_results))
+
+    def query_narrative_templates(self, query: str, n_results: int = 3) -> List[Dict[str, Any]]:
+        return _format_results(self._templates.query(query_texts=[query], n_results=n_results))
 
 
-# ── Public API ────────────────────────────────────────────────────────────────
+# ── Public API ──────────────────────────────────────────────────────────
 
-def build_knowledge_base(
-    all_atoms: dict[str, List[PlotAtom]],
-) -> tuple[KnowledgeBase, FusedWorld]:
-    """
-    Populate the ChromaDB knowledge base from all extracted plot atoms,
-    then fuse a new cultivation system and build the world.
-    """
+def build_knowledge_base(all_atoms: dict[str, List[PlotAtom]]) -> tuple[KnowledgeBase, FusedWorld]:
     kb = KnowledgeBase()
     client = get_deepseek_client()
 
-    all_atoms_flat: List[PlotAtom] = [
-        atom for atoms in all_atoms.values() for atom in atoms
-    ]
+    all_atoms_flat: List[PlotAtom] = [atom for atoms in all_atoms.values() for atom in atoms]
 
     print(f"[Step 3] Adding {len(all_atoms_flat)} events to ChromaDB...")
     kb.add_events(all_atoms_flat)
@@ -188,378 +147,230 @@ def build_knowledge_base(
     print("[Step 3] Extracting global theme...")
     fused_world.global_theme = _extract_global_theme(client, all_atoms_flat)
 
+    print("[Step 3] Extracting Deep Narrative Templates in Multiple Passes...")
+    fused_world.narrative_templates = _extract_narrative_templates(client, all_atoms_flat)
+    kb.add_narrative_templates(fused_world.narrative_templates)
+
     print(f"[Step 3] Global theme: {fused_world.global_theme}")
     return kb, fused_world
 
 
 def connect_knowledge_base() -> KnowledgeBase:
-    """
-    Connect to an existing ChromaDB knowledge base without inserting any data.
-
-    Use this when resuming from Step 4 or later so that ChromaDB collections
-    are accessible for queries but no new data is added (prevents DuplicateIDError).
-    """
     return KnowledgeBase()
 
 
-# ── Intermediate I/O ──────────────────────────────────────────────────────────
+# ── Intermediate I/O ────────────────────────────────────────────────────────
 
-_STEP3_FILENAME = "step3_fused_world.json"
+_STEP3_WORLD_FILENAME = "step3_fused_world.json"
+_STEP3_TEMPLATES_FILENAME = "step3_narrative_templates.json"
 
 
 def save_step3_output(fused_world: FusedWorld) -> Path:
-    """Serialise *fused_world* to ``intermediate_dir/step3_fused_world.json``."""
     out_dir = Path(config.INTERMEDIATE_DIR)
     out_dir.mkdir(parents=True, exist_ok=True)
-    out_path = out_dir / _STEP3_FILENAME
-    data = {
+
+    world_path = out_dir / _STEP3_WORLD_FILENAME
+    world_data = {
         "world_name": fused_world.world_name,
         "global_theme": fused_world.global_theme,
         "raw_system_text": fused_world.raw_system_text,
         "cultivation_realms": [
-            {
-                "name": r.name,
-                "level": r.level,
-                "breakthrough_condition": r.breakthrough_condition,
-                "special_abilities": r.special_abilities,
-            }
+            {"name": r.name, "level": r.level, "breakthrough_condition": r.breakthrough_condition, "special_abilities": r.special_abilities}
             for r in fused_world.cultivation_realms
         ],
     }
-    with open(out_path, "w", encoding="utf-8") as f:
-        json.dump(data, f, ensure_ascii=False, indent=2)
-    print(f"[Step 3] Intermediate output saved → {out_path}")
-    return out_path
+    with open(world_path, "w", encoding="utf-8") as f:
+        json.dump(world_data, f, ensure_ascii=False, indent=2)
+
+    # Append-only logic for templates
+    templates_path = out_dir / _STEP3_TEMPLATES_FILENAME
+    existing_templates = []
+    if templates_path.exists():
+        try:
+            with open(templates_path, "r", encoding="utf-8") as f:
+                existing_templates = json.load(f).get("templates", [])
+        except Exception:
+            pass
+
+    merged_dict = {t["name"]: t for t in existing_templates}
+    for t in fused_world.narrative_templates:
+        if t.get("name"): merged_dict[t["name"]] = t
+
+    final_templates = list(merged_dict.values())
+
+    with open(templates_path, "w", encoding="utf-8") as f:
+        json.dump({"total_count": len(final_templates), "templates": final_templates}, f, ensure_ascii=False, indent=2)
+
+    print(f"[Step 3] Intermediate outputs saved → {world_path.name} & {templates_path.name} (Total Templates: {len(final_templates)})")
+    return world_path
 
 
 def load_step3_output(intermediate_dir: str | Path | None = None) -> FusedWorld:
-    """Load previously saved Step 3 output from ``intermediate_dir/step3_fused_world.json``."""
     inter_dir = Path(intermediate_dir or config.INTERMEDIATE_DIR)
-    in_path = inter_dir / _STEP3_FILENAME
-    if not in_path.exists():
-        raise FileNotFoundError(
-            f"Step 3 intermediate file not found: {in_path}\n"
-            "Run the pipeline from Step 3 or earlier first to generate it."
-        )
-    with open(in_path, "r", encoding="utf-8") as f:
-        data = json.load(f)
 
-    realms = [
-        CultivationRealm(
-            name=r["name"],
-            level=int(r["level"]),
-            breakthrough_condition=r["breakthrough_condition"],
-            special_abilities=r.get("special_abilities", []),
-        )
-        for r in data.get("cultivation_realms", [])
-    ]
+    world_path = inter_dir / _STEP3_WORLD_FILENAME
+    if not world_path.exists(): raise FileNotFoundError(f"Step 3 file not found: {world_path}")
+    with open(world_path, "r", encoding="utf-8") as f: data = json.load(f)
+
+    realms = [CultivationRealm(name=r["name"], level=int(r["level"]), breakthrough_condition=r["breakthrough_condition"], special_abilities=r.get("special_abilities", [])) for r in data.get("cultivation_realms", [])]
     realms.sort(key=lambda r: r.level)
 
-    # Reconstruct the DAG from the sorted realm list (always a linear chain)
     dag = nx.DiGraph()
-    for realm in realms:
-        dag.add_node(realm.name, level=realm.level)
-    for i in range(len(realms) - 1):
-        dag.add_edge(realms[i].name, realms[i + 1].name)
+    for realm in realms: dag.add_node(realm.name, level=realm.level)
+    for i in range(len(realms) - 1): dag.add_edge(realms[i].name, realms[i + 1].name)
+
+    templates_path = inter_dir / _STEP3_TEMPLATES_FILENAME
+    loaded_templates = []
+    if templates_path.exists():
+        with open(templates_path, "r", encoding="utf-8") as f:
+            loaded_templates = json.load(f).get("templates", [])
 
     fused_world = FusedWorld(
-        cultivation_realms=realms,
-        realm_dag=dag,
-        global_theme=data.get("global_theme", ""),
-        world_name=data.get("world_name", "新世界"),
-        raw_system_text=data.get("raw_system_text", ""),
+        cultivation_realms=realms, realm_dag=dag, global_theme=data.get("global_theme", ""),
+        world_name=data.get("world_name", "新世界"), raw_system_text=data.get("raw_system_text", ""),
+        narrative_templates=loaded_templates
     )
-    print(f"[Step 3] Loaded intermediate output from {in_path}")
     return fused_world
 
 
-# ── Internal helpers ──────────────────────────────────────────────────────────
+# ── Internal helpers ────────────────────────────────────────────────────────
+
+def _extract_narrative_templates(client, atoms: List[PlotAtom]) -> List[Dict[str, str]]:
+    """将故事切分为多段，分批次调用大模型提炼模板"""
+    conflict_atoms = [a for a in atoms if a.summary and len(a.summary) > 20]
+    if not conflict_atoms: return []
+
+    # 最多分3次调用（例如：前期、中期、后期），每次取60个事件
+    chunk_size = 60
+    max_passes = 3
+    chunks = []
+
+    if len(conflict_atoms) <= chunk_size:
+        chunks.append(conflict_atoms)
+    else:
+        step = len(conflict_atoms) // max_passes
+        for i in range(max_passes):
+            start = i * step
+            end = start + chunk_size if i < max_passes - 1 else len(conflict_atoms)
+            chunks.append(conflict_atoms[start:min(start+chunk_size, len(conflict_atoms))])
+
+    all_templates = []
+    seen_names = set()
+
+    for idx, chunk in enumerate(chunks):
+        print(f"[Step 3] Extracting templates pass {idx+1}/{len(chunks)}...")
+        summaries = "\n".join(f"- {a.summary[:150]}" for a in chunk)
+        templates_from_chunk = _call_llm_for_templates(client, summaries)
+
+        for t in templates_from_chunk:
+            name = t.get("name", "").strip()
+            if name and name not in seen_names:
+                seen_names.add(name)
+                all_templates.append(t)
+
+    return all_templates
+
 
 @retry(stop=stop_after_attempt(3), wait=wait_exponential(min=2, max=10))
-def _extract_character_traits(
-    client, atoms: List[PlotAtom]
-) -> List[Dict[str, Any]]:
+def _call_llm_for_templates(client, summaries: str) -> List[Dict[str, str]]:
+    prompt = (
+        "你是顶尖的网文大纲拆解专家与心理学大师。\n"
+        "任务：从以下原著片段中，提炼出 5 到 8 个【深度情节交互模板】。\n\n"
+        "【标杆级模板示范：藏锋者】\n"
+        "描述：藏锋者一开始主动收敛锋芒，外表平庸、举止谦卑，引诱轻视者上钩。轻视者变本加厉当众羞辱，设局逼其出丑，旁人附和嘲笑。藏锋者照单全收，暗中观察弱点。直到触及底线，藏锋者眼神突变，用远超预期的实力碾压展示。轻视者苍白崩溃，围观者惊恐献媚。形成极致的“弱变强”反差爽感。\n\n"
+        "请参照以上标杆的【起承转合、交互心理、张力反转】，提炼这批情节中的交互模式。\n"
+        "只以JSON数组形式输出，格式如：\n"
+        '[{"name": "模板名称", "description": "详细的交互博弈与情绪拉扯过程..."}]\n\n'
+        f"【情节片段】：\n{summaries}"
+    )
+    raw = chat_completion_json(client, system="你是网文架构大师，只输出JSON数组。", user=prompt, json_mode=True)
+    try:
+        data = json.loads(raw)
+        return data if isinstance(data, list) else data.get("templates", [])
+    except Exception:
+        return []
+
+
+@retry(stop=stop_after_attempt(3), wait=wait_exponential(min=2, max=10))
+def _extract_character_traits(client, atoms: List[PlotAtom]) -> List[Dict[str, Any]]:
     all_chars: Dict[str, List[str]] = {}
     for atom in atoms:
         for ch in atom.characters:
-            if ch not in all_chars:
-                all_chars[ch] = []
+            if ch not in all_chars: all_chars[ch] = []
             all_chars[ch].append(atom.core_action)
 
-    char_summaries = [
-        f"{name}：主要行动包括 {', '.join(actions[:3])}"
-        for name, actions in list(all_chars.items())[:50]
-    ]
+    char_summaries = [f"{name}：主要行动包括 {', '.join(actions[:3])}" for name, actions in list(all_chars.items())[:50]]
     char_text = "\n".join(char_summaries)
 
     prompt = (
-        "你是修仙小说角色分析师。\n"
-        "以下是多本小说中出现的角色及其主要行动。\n"
-        "请为每类角色提炼一个原型特质描述（50字以内），以JSON数组输出：\n"
+        "你是修仙小说角色分析师。\n请为每类角色提炼一个原型特质描述（50字以内），以JSON数组输出：\n"
         '[{"archetype": "冷傲天才型", "description": "...", "traits": ["冷漠","自负","天赋异禀"]}, ...]\n\n'
         f"角色行动数据：\n{char_text[:config.MAX_TEXT_CHUNK_LENGTH]}"
     )
-    raw = chat_completion_json(
-        client,
-        system="你是修仙小说角色原型分析师，只输出合法JSON数组。",
-        user=prompt,
-        json_mode=True,
-    )
+    raw = chat_completion_json(client, system="只输出合法JSON数组。", user=prompt, json_mode=True)
     try:
         archetypes = json.loads(raw)
-        if not isinstance(archetypes, list):
-            archetypes = archetypes.get("archetypes", [])
-    except (json.JSONDecodeError, AttributeError):
-        archetypes = []
+        if not isinstance(archetypes, list): archetypes = archetypes.get("archetypes", [])
+    except Exception: archetypes = []
 
-    return [
-        {
-            "id": f"archetype_{i}",
-            "text": f"{a.get('archetype', '')}：{a.get('description', '')}",
-            "metadata": {
-                "archetype": a.get("archetype", ""),
-                "traits": json.dumps(a.get("traits", []), ensure_ascii=False),
-            },
-        }
-        for i, a in enumerate(archetypes)
-    ]
+    return [{"id": f"archetype_{i}", "text": f"{a.get('archetype', '')}：{a.get('description', '')}", "metadata": {"archetype": a.get("archetype", ""), "traits": json.dumps(a.get("traits", []), ensure_ascii=False)}} for i, a in enumerate(archetypes)]
 
 
 @retry(stop=stop_after_attempt(3), wait=wait_exponential(min=2, max=10))
-def _extract_breakthroughs(
-    client, atoms: List[PlotAtom]
-) -> List[Dict[str, Any]]:
-    breakthrough_atoms = [
-        a for a in atoms
-        if any(kw in (a.narrative_function + a.cultivation_elements.__str__())
-               for kw in ["突破", "晋级", "机缘", "传承", "天劫"])
-    ][:30]
-
-    summaries = "\n".join(
-        f"- [{a.arc_name}] {a.summary[:100]}" for a in breakthrough_atoms
-    )
+def _extract_breakthroughs(client, atoms: List[PlotAtom]) -> List[Dict[str, Any]]:
+    breakthrough_atoms = [a for a in atoms if any(kw in (a.narrative_function + a.cultivation_elements.__str__()) for kw in ["突破", "晋级", "机缘", "传承", "天劫"])][:30]
+    summaries = "\n".join(f"- [{a.arc_name}] {a.summary[:100]}" for a in breakthrough_atoms)
     prompt = (
-        "以下是多本修仙小说中与境界突破相关的情节片段。\n"
-        "请提炼出10条最具代表性的'突破机缘模板'，每条包含：\n"
-        "触发条件（前置状态）、机缘内容、突破方式。\n"
-        "以JSON数组输出：\n"
-        '[{"id": "breakthrough_0", "trigger": "主角被追杀、身受重伤", '
-        '"opportunity": "坠入古墓发现前辈遗留传承", '
-        '"breakthrough_method": "参悟传承感悟突破"}, ...]\n\n'
-        f"情节片段：\n{summaries}"
+        "请提炼出10条最具代表性的'突破机缘模板'，每条包含触发条件、机缘、突破方式。\n"
+        '以JSON数组输出：[{"id": "bt_0", "trigger": "重伤", "opportunity": "古墓", "breakthrough_method": "参悟"}]\n\n'
+        f"情节：\n{summaries}"
     )
-    raw = chat_completion_json(
-        client,
-        system="你是修仙小说突破机缘模板提炼专家，只输出合法JSON数组。",
-        user=prompt,
-        json_mode=True,
-    )
+    raw = chat_completion_json(client, system="只输出合法JSON数组。", user=prompt, json_mode=True)
     try:
         items = json.loads(raw)
-        if not isinstance(items, list):
-            items = items.get("breakthroughs", [])
-    except (json.JSONDecodeError, AttributeError):
-        items = []
+        if not isinstance(items, list): items = items.get("breakthroughs", [])
+    except Exception: items = []
 
-    return [
-        {
-            "id": item.get("id", f"breakthrough_{i}"),
-            "text": (
-                f"触发条件：{item.get('trigger', '')}；"
-                f"机缘：{item.get('opportunity', '')}；"
-                f"突破方式：{item.get('breakthrough_method', '')}"
-            ),
-            "metadata": {
-                "trigger": item.get("trigger", ""),
-                "opportunity": item.get("opportunity", ""),
-                "breakthrough_method": item.get("breakthrough_method", ""),
-            },
-        }
-        for i, item in enumerate(items)
-    ]
+    return [{"id": item.get("id", f"breakthrough_{i}"), "text": f"触发：{item.get('trigger', '')}；机缘：{item.get('opportunity', '')}；方式：{item.get('breakthrough_method', '')}", "metadata": {"trigger": item.get("trigger", ""), "opportunity": item.get("opportunity", ""), "breakthrough_method": item.get("breakthrough_method", "")}} for i, item in enumerate(items)]
 
 
-_CULTIVATION_SYSTEM_SCHEMA = """\
-{
-  "world_name": "新世界名称",
-  "realms": [
-    {
-      "name": "境界名（原创，非直接抄袭）",
-      "level": 1,
-      "breakthrough_condition": "突破所需条件",
-      "special_abilities": ["能力1", "能力2"]
-    }
-  ]
+_CULTIVATION_SYSTEM_SCHEMA = """{
+  "world_name": "新世界",
+  "realms": [ {"name": "境界名", "level": 1, "breakthrough_condition": "条件", "special_abilities": ["能力"]} ]
 }"""
 
-
 @retry(stop=stop_after_attempt(3), wait=wait_exponential(min=2, max=10))
-def _fuse_cultivation_system(
-    client, atoms: List[PlotAtom]
-) -> FusedWorld:
-    all_elements: List[str] = []
-    for atom in atoms:
-        all_elements.extend(atom.cultivation_elements)
+def _fuse_cultivation_system(client, atoms: List[PlotAtom]) -> FusedWorld:
+    all_elements = []
+    for atom in atoms: all_elements.extend(atom.cultivation_elements)
     unique_elements = list(dict.fromkeys(all_elements))[:60]
 
     prompt = (
-        "你是一位世界观设计大师。\n"
-        f"以下是从多本修仙小说中收集的修炼元素：\n{unique_elements}\n\n"
-        "请融合这些元素，设计一套全新的、内部逻辑自洽的修炼体系（至少8个境界）。\n"
-        "要求：\n"
-        "1. 境界名称必须原创（不直接沿用任何现有小说的境界名）\n"
-        "2. 每个境界的突破条件要有逻辑递进\n"
-        "3. 整体体系要有独特的世界观背景\n\n"
-        f"请严格按照以下JSON Schema输出：\n{_CULTIVATION_SYSTEM_SCHEMA}"
+        f"修仙元素：\n{unique_elements}\n\n请设计一套全新修炼体系（至少8境）。\n"
+        f"以JSON输出：\n{_CULTIVATION_SYSTEM_SCHEMA}"
     )
-    raw = chat_completion_json(
-        client,
-        system="你是创意世界观设计师，只输出合法JSON。",
-        user=prompt,
-        json_mode=True,
-    )
-    try:
-        data = json.loads(raw)
-    except (json.JSONDecodeError, AttributeError):
-        data = {}
+    raw = chat_completion_json(client, system="你是世界观设计师，只输出JSON。", user=prompt, json_mode=True)
+    try: data = json.loads(raw)
+    except Exception: data = {}
 
-    realms_data = data.get("realms", [])
-    realms = [
-        CultivationRealm(
-            name=r.get("name", f"境界{r.get('level', i)}"),
-            level=int(r.get("level", i + 1)),
-            breakthrough_condition=r.get("breakthrough_condition", ""),
-            special_abilities=r.get("special_abilities", []),
-        )
-        for i, r in enumerate(realms_data)
-    ]
+    realms = [CultivationRealm(name=r.get("name", f"境界{i+1}"), level=int(r.get("level", i + 1)), breakthrough_condition=r.get("breakthrough_condition", ""), special_abilities=r.get("special_abilities", [])) for i, r in enumerate(data.get("realms", []))]
     realms.sort(key=lambda r: r.level)
-
-    # Build DAG
     dag = nx.DiGraph()
-    for realm in realms:
-        dag.add_node(realm.name, level=realm.level)
-    for i in range(len(realms) - 1):
-        dag.add_edge(realms[i].name, realms[i + 1].name)
+    for realm in realms: dag.add_node(realm.name, level=realm.level)
+    for i in range(len(realms) - 1): dag.add_edge(realms[i].name, realms[i + 1].name)
 
-    # ── NetworkX validation: no LLM for graph-validity checks ─────────────────
-    # LLM is only called here if networkx detects a cycle (broken link).
-    if not nx.is_directed_acyclic_graph(dag):
-        cycles = list(nx.simple_cycles(dag))
-        print(f"[Step 3] WARNING: cultivation DAG has cycles {cycles}; using LLM to fix.")
-        realms, dag = _fix_realm_dag_cycles(client, realms, cycles)
-    else:
-        # topological_sort confirms a valid linear progression; re-order realms
-        # to match the canonical topological ordering from the graph.
-        topo_names = list(nx.topological_sort(dag))
-        realm_map = {r.name: r for r in realms}
-        ordered = [realm_map[n] for n in topo_names if n in realm_map]
-        if len(ordered) == len(realms):
-            realms = ordered
-        else:
-            print(
-                f"[Step 3] WARNING: topological ordering returned {len(ordered)} realms "
-                f"but expected {len(realms)}; keeping level-sorted order."
-            )
-
-    return FusedWorld(
-        cultivation_realms=realms,
-        realm_dag=dag,
-        world_name=data.get("world_name", "新世界"),
-        raw_system_text=raw,
-    )
-
-
-@retry(stop=stop_after_attempt(3), wait=wait_exponential(min=2, max=10))
-def _fix_realm_dag_cycles(
-    client,
-    realms: List[CultivationRealm],
-    cycles: List[List[str]],
-) -> tuple[List[CultivationRealm], nx.DiGraph]:
-    """
-    Called ONLY when networkx.is_directed_acyclic_graph() returns False.
-    Sends the specific broken-link information to the LLM and asks it to
-    reassign level numbers so the progression is linear.  Validation itself
-    is always done by networkx – we never ask the LLM "is this a DAG?".
-    """
-    cycle_desc = json.dumps(cycles, ensure_ascii=False)
-    realm_desc = json.dumps(
-        [{"name": r.name, "level": r.level} for r in realms],
-        ensure_ascii=False,
-    )
-    prompt = (
-        "以下修炼体系的境界进阶存在循环（由图论检测发现）：\n"
-        f"循环路径：{cycle_desc}\n\n"
-        f"当前境界列表：{realm_desc}\n\n"
-        "请重新分配每个境界的level编号，消除循环，使境界进阶成为线性无回路序列（level从1开始递增）。\n"
-        '以JSON数组输出修正后的列表：[{"name": "境界名", "level": 1}, ...]'
-    )
-    raw = chat_completion_json(
-        client,
-        system="你是修炼体系设计师，负责修正境界进阶图中的逻辑错误，只输出合法JSON。",
-        user=prompt,
-        json_mode=True,
-    )
-    try:
-        fixed_data = json.loads(raw)
-        if isinstance(fixed_data, dict):
-            fixed_data = fixed_data.get("realms", fixed_data.get("levels", []))
-    except (json.JSONDecodeError, AttributeError):
-        fixed_data = []
-
-    # Apply fixed levels back onto the existing realm objects
-    fixed_levels: Dict[str, int] = {
-        item["name"]: int(item["level"])
-        for item in fixed_data
-        if isinstance(item, dict) and "name" in item and "level" in item
-    }
-    for realm in realms:
-        if realm.name in fixed_levels:
-            realm.level = fixed_levels[realm.name]
-    realms.sort(key=lambda r: r.level)
-
-    # Rebuild a clean linear DAG from the fixed ordering
-    dag = nx.DiGraph()
-    for realm in realms:
-        dag.add_node(realm.name, level=realm.level)
-    for i in range(len(realms) - 1):
-        dag.add_edge(realms[i].name, realms[i + 1].name)
-
-    return realms, dag
+    return FusedWorld(cultivation_realms=realms, realm_dag=dag, world_name=data.get("world_name", "新世界"), raw_system_text=raw)
 
 
 @retry(stop=stop_after_attempt(3), wait=wait_exponential(min=2, max=10))
 def _extract_global_theme(client, atoms: List[PlotAtom]) -> str:
     motivations = list({a.motivation for a in atoms if a.motivation})[:20]
-    prompt = (
-        "以下是从多本修仙小说中提炼的角色动机列表：\n"
-        f"{motivations}\n\n"
-        "请从中提炼出一句话的全局核心主题（20字以内），"
-        "要求富有哲理性，可以作为整部小说的精神内核。\n"
-        "只输出这一句话，不要其他内容。"
-    )
-    result = chat_completion_json(
-        client,
-        system="你是文学主题提炼专家。",
-        user=prompt,
-        json_mode=False,
-    )
+    result = chat_completion_json(client, system="你是文学专家。", user=f"角色动机：{motivations}\n提炼一句全局核心主题（20字内）。只输出这句话。", json_mode=False)
     return result.strip().strip('"').strip("'")
 
 
 def _format_results(chroma_result: Dict[str, Any]) -> List[Dict[str, Any]]:
     items = []
-    docs = chroma_result.get("documents", [[]])[0]
-    metas = chroma_result.get("metadatas", [[]])[0]
-    ids = chroma_result.get("ids", [[]])[0]
-    distances = chroma_result.get("distances", [[]])[0]
-    for i, doc in enumerate(docs):
-        items.append(
-            {
-                "id": ids[i] if i < len(ids) else "",
-                "document": doc,
-                "metadata": metas[i] if i < len(metas) else {},
-                "distance": distances[i] if i < len(distances) else None,
-            }
-        )
+    docs, metas, ids, dists = chroma_result.get("documents", [[]])[0], chroma_result.get("metadatas", [[]])[0], chroma_result.get("ids", [[]])[0], chroma_result.get("distances", [[]])[0]
+    for i, doc in enumerate(docs): items.append({"id": ids[i] if i < len(ids) else "", "document": doc, "metadata": metas[i] if i < len(metas) else {}, "distance": dists[i] if i < len(dists) else None})
     return items
