@@ -16,7 +16,8 @@ Place source novel .txt files in the INPUT_DIR configured in config.yaml.
 """
 
 from __future__ import annotations
-
+import shutil
+from datetime import datetime
 import argparse
 import sys
 from pathlib import Path
@@ -218,6 +219,30 @@ def run_pipeline(start_step: int = 1) -> None:
     print("=" * 60, flush=True)
 
 
+def archive_current_run():
+    """将本次运行的中间件和最终产物打包归档，防止被下次运行覆盖"""
+    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+    archive_dir = Path(f"history/run_{timestamp}")
+
+    print(f"\n==================================================")
+    print(f"📦 正在将本次运行的所有产物永久归档...")
+
+    # 创建归档文件夹
+    archive_dir.mkdir(parents=True, exist_ok=True)
+
+    inter_dir = Path(config.INTERMEDIATE_DIR)
+    out_dir = Path(config.OUTPUT_DIR)
+
+    # 拷贝中间件 (Step 1 ~ Step 5)
+    if inter_dir.exists():
+        shutil.copytree(inter_dir, archive_dir / "intermediate", dirs_exist_ok=True)
+
+    # 拷贝最终输出 (Step 6 ~ Step 7 世界圣经、分卷大纲)
+    if out_dir.exists():
+        shutil.copytree(out_dir, archive_dir / "output", dirs_exist_ok=True)
+
+    print(f"归档完成！本次所有中间件与最终大纲已安全保存在: {archive_dir}")
+    print(f"==================================================\n")
 def _load_source_texts(input_dir: Path) -> dict[str, str]:
     """Load all source .txt files into a dict for plagiarism checking."""
     texts: dict[str, str] = {}
@@ -228,5 +253,6 @@ def _load_source_texts(input_dir: Path) -> dict[str, str]:
 
 if __name__ == "__main__":
     args = _parse_args()
-    args.start_step=3
+    args.start_step=2
     run_pipeline(start_step=args.start_step)
+    archive_current_run()

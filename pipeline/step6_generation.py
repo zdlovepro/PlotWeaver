@@ -1,10 +1,8 @@
 """
-step6_generation.py – Sliding Window Volume Generation (Event to Chapters Expansion)
+step6_generation.py - Sliding Window Volume Generation.
 
-Responsibilities:
-  - Generate a detailed outline volume by volume.
-  - EXPANDS each Plot Event into MULTIPLE chapters (1 Event -> 3~6 Chapters) to match true web novel pacing.
-  - Enforces power scaling and "Show, don't tell" rules.
+Expands reassembled plot events into per-volume chapter outlines while keeping
+power scaling, continuity, and intra-volume variety under control.
 """
 
 from __future__ import annotations
@@ -21,13 +19,25 @@ from pipeline.step4_role_casting import CharacterSheet
 from pipeline.step5_reassembly import ReassembledEvent
 from pipeline.utils import get_deepseek_client, chat_completion_json
 
+_GENERIC_VOLUME_MOTIFS = (
+    "神秘珠子",
+    "暗中守护",
+    "设局",
+    "识破",
+    "逆袭",
+    "引爆",
+    "试炼",
+    "拍卖会",
+    "秘境",
+)
+
 
 @dataclass
 class VolumeOutline:
     volume_number: int
     volume_title: str
     realm_range: str
-    chapter_summaries: List[str] = field(default_factory=list)  # Flattened list of chapter strings
+    chapter_summaries: List[str] = field(default_factory=list)
     tension_curve: str = ""
     ending_state: str = ""
     raw_text: str = ""
@@ -44,18 +54,21 @@ def generate_volumes(
     print(f"[Step 6] Generating {total_volumes} volumes. Expanding Events into Chapters...")
 
     volumes: List[VolumeOutline] = []
-
-    # 因为现在章节数变多了，我们只传上一卷最后的一个事件块（最后约3-5章）作为衔接
     previous_tail_chapters: List[str] = []
     previous_ending_state = ""
 
     for vol_idx, (arc_name, events) in enumerate(
-        tqdm(volume_groups.items(), desc="[Step 6] Generating volumes", unit="vol"), start=1
+        tqdm(volume_groups.items(), desc="[Step 6] Generating volumes", unit="vol"),
+        start=1,
     ):
         tqdm.write(f"[Step 6] Generating volume {vol_idx}: {arc_name} (Events: {len(events)})...")
 
-        current_stage_network = _get_stage_network_for_volume(character_sheet, vol_idx, total_volumes)
-        system_context = _build_system_context(fused_world, character_sheet, current_stage_network)
+        current_stage_network = _get_stage_network_for_volume(
+            character_sheet, vol_idx, total_volumes
+        )
+        system_context = _build_system_context(
+            fused_world, character_sheet, current_stage_network
+        )
 
         outline = _generate_single_volume(
             client=client,
@@ -65,16 +78,16 @@ def generate_volumes(
             system_context=system_context,
             previous_ending_state=previous_ending_state,
             previous_tail_chapters=previous_tail_chapters,
-            fused_world=fused_world
+            fused_world=fused_world,
         )
         volumes.append(outline)
 
         previous_ending_state = outline.ending_state
-        # 提取本卷最后生成的5章作为下一卷的绝对前置剧情
-        if len(outline.chapter_summaries) >= 5:
-            previous_tail_chapters = outline.chapter_summaries[-5:]
-        else:
-            previous_tail_chapters = outline.chapter_summaries
+        previous_tail_chapters = (
+            outline.chapter_summaries[-5:]
+            if len(outline.chapter_summaries) >= 5
+            else outline.chapter_summaries
+        )
 
     tqdm.write(f"[Step 6] All {len(volumes)} volumes generated.")
     return volumes
@@ -86,22 +99,54 @@ def _group_events_into_volumes(events: List[ReassembledEvent]) -> Dict[str, List
         groups.setdefault(event.arc_name, []).append(event)
     return groups
 
-def _get_stage_network_for_volume(char_sheet: CharacterSheet, vol_idx: int, total_vols: int) -> str:
-    if not char_sheet.relationship_networks: return "暂无关系网。"
+
+def _get_stage_network_for_volume(
+    char_sheet: CharacterSheet, vol_idx: int, total_vols: int
+) -> str:
+    if not char_sheet.relationship_networks:
+        return "暂无关系网。"
+
     ratio = (vol_idx - 1) / total_vols if total_vols > 1 else 0
     stage_idx = int(ratio * len(char_sheet.relationship_networks))
-    active_net = char_sheet.relationship_networks[min(stage_idx, len(char_sheet.relationship_networks) - 1)]
-    return f"【本卷时期：{active_net.stage}】\n活跃角色：{', '.join(active_net.active_characters)}\n局势状态：{active_net.relationship_status}"
-
-def _build_system_context(fused_world: FusedWorld, character_sheet: CharacterSheet, current_stage_network: str) -> str:
-    protagonist = character_sheet.protagonist
-    realms_text = "\n".join(f"  {r.name}（第{r.level}境）：{r.breakthrough_condition}" for r in fused_world.cultivation_realms)
-    supporting_text = "\n".join(f"  - [{c.role}] {c.name}：{c.dao_heart} | 背景：{c.background}" for c in character_sheet.supporting)
+    active_net = char_sheet.relationship_networks[
+        min(stage_idx, len(char_sheet.relationship_networks) - 1)
+    ]
     return (
-        f"===== 世界圣经 =====\n世界名：{fused_world.world_name}\n全局主题：{fused_world.global_theme}\n"
-        f"力量本源：{fused_world.power_source}\n世界背景：{fused_world.world_background}\n\n修炼体系：\n{realms_text}\n\n"
-        f"===== 角色全图鉴 =====\n主角：{protagonist.name}\n  执念：{protagonist.dao_heart}\n  战斗：{protagonist.combat_style}\n  缺陷：{protagonist.personality_flaw}\n"
-        f"配角：\n{supporting_text}\n\n===== 本卷动态人物关系 =====\n{current_stage_network}\n"
+        f"【本卷时段：{active_net.stage}】\n"
+        f"活跃角色：{', '.join(active_net.active_characters)}\n"
+        f"局势状态：{active_net.relationship_status}"
+    )
+
+
+def _build_system_context(
+    fused_world: FusedWorld,
+    character_sheet: CharacterSheet,
+    current_stage_network: str,
+) -> str:
+    protagonist = character_sheet.protagonist
+    realms_text = "\n".join(
+        f"  {realm.name}（第{realm.level}境）：{realm.breakthrough_condition}"
+        for realm in fused_world.cultivation_realms
+    )
+    supporting_text = "\n".join(
+        f"  - [{char.role}] {char.name}：{char.dao_heart} | 背景：{char.background}"
+        for char in character_sheet.supporting
+    )
+    return (
+        "===== 世界圣经 =====\n"
+        f"世界名：{fused_world.world_name}\n"
+        f"全局主题：{fused_world.global_theme}\n"
+        f"力量来源：{fused_world.power_source}\n"
+        f"世界背景：{fused_world.world_background}\n\n"
+        f"修炼体系：\n{realms_text}\n\n"
+        "===== 角色图鉴 =====\n"
+        f"主角：{protagonist.name}\n"
+        f"  执念：{protagonist.dao_heart}\n"
+        f"  战斗：{protagonist.combat_style}\n"
+        f"  缺陷：{protagonist.personality_flaw}\n"
+        f"配角：\n{supporting_text}\n\n"
+        "===== 本卷动态关系 =====\n"
+        f"{current_stage_network}\n"
     )
 
 
@@ -111,59 +156,72 @@ _VOLUME_SCHEMA = """\
   "realm_range": "本卷境界跨度",
   "expanded_events": [
     {
-      "event_name": "事件的简短标题（如：坊市捡漏反杀）",
+      "event_name": "事件短标题",
       "chapters": [
-        "第X章：(80-100字，描写具体行为与起承转合)",
-        "第X+1章：(80-100字，矛盾爆发)",
-        "第X+2章：(80-100字，解决与收尾)"
+        "第1章：80-120字中文剧情摘要",
+        "第2章：80-120字中文剧情摘要",
+        "第3章：80-120字中文剧情摘要"
       ]
     }
   ],
   "tension_curve": "张力曲线描述",
-  "ending_state": "本卷结尾主角状态摘要（用于下卷绝对起点）"
+  "ending_state": "本卷结尾状态"
 }"""
 
 
 @retry(stop=stop_after_attempt(3), wait=wait_exponential(min=2, max=10))
 def _generate_single_volume(
-    client, volume_number: int, arc_name: str, events: List[ReassembledEvent],
-    system_context: str, previous_ending_state: str, previous_tail_chapters: List[str],
-    fused_world: FusedWorld
+    client,
+    volume_number: int,
+    arc_name: str,
+    events: List[ReassembledEvent],
+    system_context: str,
+    previous_ending_state: str,
+    previous_tail_chapters: List[str],
+    fused_world: FusedWorld,
 ) -> VolumeOutline:
+    del fused_world  # kept in signature for compatibility with existing callers
 
-    events_lines = []
-    max_realm_level = max([e.realm_level for e in events] + [1])
+    events_lines: List[str] = []
+    max_realm_level = max([event.realm_level for event in events] + [1])
 
-    for i, e in enumerate(events):
-        trope_tag = f" 【化用套路：{e.used_trope}】" if e.used_trope and e.used_trope != "无" else ""
-        events_lines.append(f"核心事件{i+1}. [{e.pacing_role}]{trope_tag} {e.adapted_summary}")
+    for idx, event in enumerate(events, start=1):
+        trope_tag = f" [微模板:{event.used_trope}]" if event.used_trope else ""
+        events_lines.append(
+            f"核心事件{idx}. [{event.pacing_role}]{trope_tag} {event.adapted_summary}"
+        )
     events_text = "\n".join(events_lines)
+    diversity_brief = _build_volume_diversity_brief(events)
 
-    transition_text = ""
+    transition_parts: List[str] = []
     if previous_tail_chapters:
-        transition_text += "【上一卷末尾剧情（必须顺滑承接）】\n" + "\n".join(previous_tail_chapters) + "\n"
+        transition_parts.append("【上卷末尾剧情】\n" + "\n".join(previous_tail_chapters))
     if previous_ending_state:
-        transition_text += f"【上一卷结尾局势】\n{previous_ending_state}\n"
+        transition_parts.append(f"【上卷结尾状态】\n{previous_ending_state}")
+    transition_text = "\n\n".join(transition_parts)
 
     user_prompt = (
-        f"你正在为修仙大作撰写第 {volume_number} 卷（{arc_name}）的详细章回大纲。\n\n"
-        f"{transition_text}\n"
-        f"【本卷必须推演的核心事件骨架】\n{events_text}\n\n"
-        "【大纲倍增扩写纪律】（极其重要）：\n"
-        "1. 事件 ➔ 章节的扩写：上面提供的是“大事件骨架”。在网文中，1个事件绝不可能1章写完。你必须将【每一个核心事件】详细拆解为 3 到 6 个具体章节！\n"
-        "   （例如：如果本卷有10个事件，你的 JSON 中的 chapters 总数必须达到 30 到 60 章！）\n"
-        "2. 拆分逻辑：一个事件应拆分为“铺垫(发现端倪/遭遇挑衅) -> 发展(应对/遇险) -> 高潮(底牌尽出/反杀) -> 收尾(摸尸/境界突破)”。\n"
-        f"3. 战力红线：本卷最高战力限制在【第{max_realm_level}境】上下，严格限制破坏力表现！\n"
-        "4. 隐性人设 (Show, don't tell)：禁止直接复制人物的性格标签，用具体的行为、对话、阴招来体现他们的性格。\n"
-        "5. 精炼���因为总章节数很多，每章摘要保持在 80-120 字即可，剔除废话，直击动作与剧情发展。\n\n"
-        f"请严格按以下JSON Schema输出：\n{_VOLUME_SCHEMA}"
+        f"请为第{volume_number}卷（{arc_name}）生成详细中文章节大纲。\n\n"
+        f"{transition_text}\n\n"
+        "【本卷必须推演的核心事件骨架】\n"
+        f"{events_text}\n\n"
+        "Rules:\n"
+        "1. Expand each core event into 3 to 6 concrete chapters.\n"
+        "2. Each event needs a distinct setup, escalation, reversal, and temporary resolution.\n"
+        f"3. Keep combat scaling within roughly realm level {max_realm_level}.\n"
+        "4. Write all chapter summaries in Chinese and keep each chapter around 80 to 120 Chinese characters.\n"
+        "5. Show personality through tactics, choices, and dialogue instead of labels.\n"
+        f"{diversity_brief}\n"
+        "6. Volume-level anti-repetition: each expanded event must have a distinct trigger, obstacle, and payoff.\n"
+        "7. Do not reuse the same combo of trap, secret help, clue spotting, and sudden reversal across multiple events in the same volume unless the skeleton explicitly requires it.\n\n"
+        f"Return valid JSON only using this schema:\n{_VOLUME_SCHEMA}"
     )
 
     system_prompt = (
-        "你是白金级修仙大纲总编剧，精通网文的“节奏注水”与“爽点拆解”技术。\n"
-        "你绝不会把一个大高潮事件一笔带过，而是懂得将其拆解为连续数章的压迫与释放。\n"
-        "CRITICAL: 严禁使用其他小说的原名。必须保持章节序号的连续递增（如 第1章, 第2章... 第40章）。\n\n"
-        f"{system_context}\n\n只输出合法JSON。"
+        "You are an expert Chinese web-novel outliner. "
+        "Write concise but vivid Chinese chapter summaries. "
+        "Keep chapter numbers continuous and avoid reusing names from unrelated novels.\n\n"
+        f"{system_context}"
     )
 
     raw = chat_completion_json(client, system=system_prompt, user=user_prompt, json_mode=True)
@@ -172,27 +230,115 @@ def _generate_single_volume(
     except Exception:
         data = {}
 
-    # 将大模型生成的事件嵌套结构 (expanded_events) 扁平化，转换为 markdown 友好的列表
-    flattened_chapters = []
-    global_ch_idx = 1
+    expanded_events = data.get("expanded_events", [])
+    if not _is_volume_payload_usable(expanded_events, events):
+        expanded_events = _build_fallback_expanded_events(events)
 
-    for evt in data.get("expanded_events", []):
-        event_name = evt.get("event_name", "主线进展")
+    flattened_chapters: List[str] = []
+    global_chapter_idx = 1
+
+    for event_block in expanded_events:
+        event_name = event_block.get("event_name", "主线推进")
         flattened_chapters.append(f"#### 剧情点：{event_name}")
-        for ch_text in evt.get("chapters", []):
-            # 过滤掉模型可能自己带的“第X章：”，由我们统一编号保证连续性
-            clean_text = ch_text.split("：", 1)[-1] if "：" in ch_text else ch_text
-            flattened_chapters.append(f"**第{global_ch_idx}章**：{clean_text.strip()}")
-            global_ch_idx += 1
-
-        flattened_chapters.append("") # 加个空行分隔
+        for chapter_text in event_block.get("chapters", []):
+            clean_text = _strip_leading_chapter_label(str(chapter_text or "").strip())
+            flattened_chapters.append(f"**第{global_chapter_idx}章**：{clean_text}")
+            global_chapter_idx += 1
+        flattened_chapters.append("")
 
     return VolumeOutline(
         volume_number=volume_number,
         volume_title=data.get("volume_title", f"第{volume_number}卷"),
         realm_range=data.get("realm_range", arc_name),
         chapter_summaries=flattened_chapters,
-        tension_curve=data.get("tension_curve", ""),
-        ending_state=data.get("ending_state", ""),
+        tension_curve=data.get("tension_curve", "本卷张力持续上升。"),
+        ending_state=data.get("ending_state", _build_fallback_ending_state(events)),
         raw_text=raw,
     )
+
+
+def _build_volume_diversity_brief(events: List[ReassembledEvent]) -> str:
+    motif_hits = []
+    for motif in _GENERIC_VOLUME_MOTIFS:
+        count = sum(1 for event in events if motif in event.adapted_summary)
+        if count >= 2:
+            motif_hits.append(f"{motif} x{count}")
+
+    repeated_tropes = [event.used_trope for event in events if event.used_trope]
+    duplicate_tropes = sorted(
+        {trope for trope in repeated_tropes if repeated_tropes.count(trope) > 1}
+    )
+
+    lines = ["Volume anti-repetition briefing:"]
+    lines.append("- Every event needs a visibly different dramatic engine.")
+    if motif_hits:
+        lines.append(
+            "- These motifs are already repeated in the skeleton and should not become the default solution again: "
+            + ", ".join(motif_hits)
+        )
+    if duplicate_tropes:
+        lines.append(
+            "- Reused micro templates detected in skeleton: "
+            + ", ".join(duplicate_tropes)
+        )
+    if len(lines) == 2:
+        lines.append("- No obvious repeated motif detected in the event skeleton.")
+    return "\n".join(lines)
+
+
+def _is_volume_payload_usable(
+    expanded_events: Any,
+    source_events: List[ReassembledEvent],
+) -> bool:
+    if not isinstance(expanded_events, list) or not expanded_events:
+        return False
+
+    valid_blocks = 0
+    for block in expanded_events:
+        if not isinstance(block, dict):
+            continue
+        chapters = block.get("chapters", [])
+        if isinstance(chapters, list) and chapters:
+            valid_blocks += 1
+
+    return valid_blocks >= max(1, len(source_events) // 2)
+
+
+def _build_fallback_expanded_events(events: List[ReassembledEvent]) -> List[Dict[str, Any]]:
+    fallback_events: List[Dict[str, Any]] = []
+    for event in events:
+        event_name = _build_fallback_event_name(event)
+        chapters = [
+            f"铺垫当前目标与阻碍：{event.adapted_summary}",
+            f"冲突升级并迫使主角调整策略：围绕[{event.pacing_role}]展开新的代价、选择与对抗。",
+            "阶段性收束但留下后续压力：延续当前事件后果，并把卷内主线推向下一步。",
+        ]
+        fallback_events.append({"event_name": event_name, "chapters": chapters})
+    return fallback_events
+
+
+def _build_fallback_event_name(event: ReassembledEvent) -> str:
+    summary = (event.adapted_summary or "").strip()
+    if not summary:
+        return "主线推进"
+    compact = summary.replace("；", "，").replace("。", "，")
+    return compact.split("，", 1)[0][:18] or "主线推进"
+
+
+def _build_fallback_ending_state(events: List[ReassembledEvent]) -> str:
+    if not events:
+        return "本卷完成阶段性推进。"
+    return f"本卷收束于：{events[-1].adapted_summary}"
+
+
+def _strip_leading_chapter_label(text: str) -> str:
+    if not text:
+        return "主线推进。"
+
+    if text.startswith("第") and "：" in text[:12]:
+        return text.split("：", 1)[1].strip()
+    if text.startswith("第") and ":" in text[:12]:
+        return text.split(":", 1)[1].strip()
+    if text.lower().startswith("chapter") and ":" in text[:16]:
+        return text.split(":", 1)[1].strip()
+    return text

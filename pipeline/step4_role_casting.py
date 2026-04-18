@@ -20,7 +20,7 @@ from typing import Any, Dict, List, Optional
 from tenacity import retry, stop_after_attempt, wait_exponential
 
 import config
-from pipeline.step1_chunking import VolumeArc
+from pipeline.step1_chunking import VolumeArc, NarrativeEvent
 from pipeline.step2_extraction import PlotAtom
 from pipeline.step3_knowledge_base import KnowledgeBase, FusedWorld
 from pipeline.utils import get_deepseek_client, chat_completion_json
@@ -136,11 +136,60 @@ def _extract_skeleton_nodes(arcs: List[VolumeArc], atoms: List[PlotAtom]) -> Lis
                 SkeletonNode(
                     node_id=event.event_id, arc_name=arc.arc_name,
                     realm_level=realm_level, pacing_role=pacing_role,
-                    original_summary=event.summary,
+                    original_summary=_select_node_summary(event, atom),
                 )
             )
             global_idx += 1
     return nodes
+
+
+def _select_node_summary(event: NarrativeEvent, atom: Optional[PlotAtom]) -> str:
+    candidates = [
+        atom.summary if atom else "",
+        _compose_atom_summary(atom),
+        event.summary,
+        _fallback_event_summary(event),
+    ]
+    for candidate in candidates:
+        summary = (candidate or "").strip()
+        if summary:
+            return summary[:240]
+    return f"{event.arc_name} event"
+
+
+def _compose_atom_summary(atom: Optional[PlotAtom]) -> str:
+    if not atom:
+        return ""
+
+    fragments: List[str] = []
+    if atom.core_action:
+        fragments.append(atom.core_action.strip())
+    if atom.conflict_type:
+        fragments.append(f"冲突为{atom.conflict_type.strip()}")
+    if atom.motivation:
+        fragments.append(f"动机是{atom.motivation.strip()}")
+    if atom.causality_consequence:
+        fragments.append(f"结果导致{atom.causality_consequence.strip()}")
+
+    unique: List[str] = []
+    for fragment in fragments:
+        if fragment and fragment not in unique:
+            unique.append(fragment)
+    return "；".join(unique)
+
+
+def _fallback_event_summary(event: NarrativeEvent) -> str:
+    chapter_titles: List[str] = []
+    for chapter in event.chapters[:2]:
+        for line in chapter.splitlines():
+            line = line.strip()
+            if line:
+                chapter_titles.append(line)
+                break
+    if chapter_titles:
+        return " / ".join(dict.fromkeys(chapter_titles))
+    preview = " ".join(chapter.strip().replace("\n", " ") for chapter in event.chapters[:2]).strip()
+    return preview[:240]
 
 
 def _infer_pacing_role(global_idx: int, total_events: int, atom: Optional[PlotAtom]) -> str:

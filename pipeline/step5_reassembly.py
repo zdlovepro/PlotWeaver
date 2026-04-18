@@ -2,15 +2,17 @@
 step5_reassembly.py – Character-driven Plot Reassembly (With Macro & Micro Dynamics)
 
 Key improvements:
-1) Short-term Coherence: Rolling window of the last 3 events.
+1) Character Spillage Fixed: Only characters explicitly valid for the current event index are injected into the LLM prompt.
 2) Long-term Coherence: Maps current progress (%) to the corresponding stage of Macro-Tropes and Plot Threads.
 3) Micro Dynamics: Injects Director-level psychological push-and-pull templates.
 """
 
 from __future__ import annotations
 
+from collections import Counter
 import json
 import random
+import re
 from dataclasses import dataclass, field, asdict
 from pathlib import Path
 from typing import Dict, List, Optional, Set, Any
@@ -20,8 +22,20 @@ from tqdm import tqdm
 
 import config
 from pipeline.step3_knowledge_base import KnowledgeBase, FusedWorld
-from pipeline.step4_role_casting import NarrativeSkeleton, SkeletonNode, CharacterSheet
+from pipeline.step4_role_casting import NarrativeSkeleton, SkeletonNode, CharacterSheet, Character
 from pipeline.utils import get_deepseek_client, chat_completion_json
+
+_GENERIC_REPEAT_MOTIFS = (
+    "神秘珠子",
+    "暗中守护",
+    "设局",
+    "识破",
+    "逆袭",
+    "引爆",
+    "试炼",
+    "拍卖会",
+    "秘境",
+)
 
 
 @dataclass
@@ -48,6 +62,7 @@ def reassemble_plot(
     realm_system = _format_realm_system(fused_world)
 
     recent_context: List[str] = []
+    recent_micro_names: List[str] = []
     prev_event_map = {e.event_id: e for e in (previous_events or [])}
     reassembled: List[ReassembledEvent] = []
     total_nodes = len(skeleton.nodes)
@@ -55,7 +70,6 @@ def reassemble_plot(
     for i, node in enumerate(tqdm(skeleton.nodes, desc="[Step 5] Reassembling plot", unit="node")):
         base_event_id = f"adapted_{node.node_id}"
 
-        # 增量生成逻辑
         if only_event_ids and node.node_id not in only_event_ids:
             if base_event_id in prev_event_map:
                 reused = prev_event_map[base_event_id]
@@ -63,16 +77,19 @@ def reassemble_plot(
                 _update_rolling_context(recent_context, reused.adapted_summary)
                 continue
 
-        # 1. 中期连贯：当前活跃角色与恩怨局势
-        current_stage_network = _get_current_stage_network(char_sheet, i, total_nodes)
-        characters_desc = _format_characters_for_stage(char_sheet, current_stage_network)
+        # 1. 精确的角色控制（过滤掉还没登场和已经退场的人）
+        characters_desc = _format_characters_for_stage(char_sheet, i)
 
-        # 2. 长期连贯：计算当前进度，映射宏观套路与长线剧情的“当前阶段”
+        # 2. 长期连贯
         progress_ratio = i / total_nodes if total_nodes > 1 else 0
         active_macro_stages = _get_active_macro_stages(fused_world.macro_tropes, fused_world.plot_threads, progress_ratio)
 
-        # 3. 微观连贯：随��抽取一个极其细腻的微观博弈模板作为手法参考
-        suggested_micro = random.choice(fused_world.micro_interactions) if getattr(fused_world, "micro_interactions", None) else None
+        # 3. 微观连贯
+        suggested_micro = _pick_micro_interaction(
+            getattr(fused_world, "micro_interactions", None),
+            recent_micro_names,
+        )
+        anti_repeat_rules = _build_anti_repetition_rules(recent_context, recent_micro_names)
 
         adapted = _adapt_node(
             client=client,
@@ -82,55 +99,56 @@ def reassemble_plot(
             realm_system=realm_system,
             recent_context=recent_context,
             active_macro_stages=active_macro_stages,
-            suggested_micro=suggested_micro
+            suggested_micro=suggested_micro,
+            anti_repeat_rules=anti_repeat_rules,
         )
         reassembled.append(adapted)
-
-        # 更新短期连贯窗口
         _update_rolling_context(recent_context, adapted.adapted_summary)
+        _update_recent_micro_names(recent_micro_names, adapted.used_trope)
 
-    tqdm.write(f"[Step 5] Reassembled {len(reassembled)} coherent events with macro/micro tracking.")
+    tqdm.write(f"[Step 5] Reassembled {len(reassembled)} coherent events with strict character entry/exit limits.")
     return reassembled
 
 
-# ── Long-term Coherence Tracking ─────────────────────────────────────────────
+def _is_char_active(char: Character, current_idx: int) -> bool:
+    """根据 entry_event 和 exit_event 中的数字，判断角色在当前事件是否可见"""
+    entry_match = re.search(r'\d+', char.entry_event)
+    entry_idx = int(entry_match.group()) - 1 if entry_match else 0
+
+    exit_match = re.search(r'\d+', char.exit_event)
+    exit_idx = int(exit_match.group()) - 1 if exit_match else 9999
+
+    return entry_idx <= current_idx <= exit_idx
+
+
+def _format_characters_for_stage(char_sheet: CharacterSheet, current_idx: int) -> str:
+    """只向 LLM 暴露本章有资格登场的角色，严格控制泄漏"""
+    proto = char_sheet.protagonist
+    active_chars = [f"[主角] {proto.name} | 执念：{proto.dao_heart} | 缺陷：{proto.personality_flaw} | 战斗：{proto.combat_style}"]
+
+    for s in char_sheet.supporting:
+        if _is_char_active(s, current_idx):
+            active_chars.append(f"[{s.role}] {s.name} | 执念：{s.dao_heart}")
+
+    return "【当前事件可调用的活跃角色池（严格限制，未列出的人物绝不应出场）】\n" + "\n".join(active_chars)
+
 
 def _get_active_macro_stages(macro_tropes: List[Dict], plot_threads: List[Dict], progress_ratio: float) -> str:
-    """根据全书进度百分比，精准定位长线剧情当前该写哪个阶段"""
     lines = []
-
-    # 追踪套路主轴
     if macro_tropes:
-        trope = macro_tropes[0] # 取第一主轴
+        trope = macro_tropes[0]
         stages = trope.get("stages", [])
         if stages:
             idx = min(int(progress_ratio * len(stages)), len(stages) - 1)
             lines.append(f"【主线套路】：{trope.get('name')} -> 当前处于：{stages[idx]}")
-
-    # 追踪感情/支线主轴
     if plot_threads:
-        thread = plot_threads[0] # 取第一支线
+        thread = plot_threads[0]
         stages = thread.get("stages", [])
         if stages:
             idx = min(int(progress_ratio * len(stages)), len(stages) - 1)
-            lines.append(f"【支线剧情（{thread.get('thread_type','')}）】：{thread.get('name')} -> 当前处于：{stages[idx]}")
-
+            lines.append(f"【支线剧情】：{thread.get('name')} -> 当前处于：{stages[idx]}")
     return "\n".join(lines) if lines else "无特殊长线约束。"
 
-
-def _get_current_stage_network(char_sheet: CharacterSheet, current_idx: int, total_nodes: int) -> str:
-    if not char_sheet.relationship_networks: return "暂无阶段关系网。"
-    ratio = current_idx / total_nodes if total_nodes > 0 else 0
-    stage_idx = int(ratio * len(char_sheet.relationship_networks))
-    active_net = char_sheet.relationship_networks[min(stage_idx, len(char_sheet.relationship_networks) - 1)]
-    return f"【近期群像局势（{active_net.stage}）】：\n活跃角色：{', '.join(active_net.active_characters)}\n局势与恩怨：{active_net.relationship_status}"
-
-def _format_characters_for_stage(char_sheet: CharacterSheet, stage_desc: str) -> str:
-    proto = char_sheet.protagonist
-    proto_str = f"[主角] {proto.name} | 执念：{proto.dao_heart} | 缺陷：{proto.personality_flaw} | 战斗：{proto.combat_style}"
-    supp_strs = [f"[{s.role}] {s.name} | 执念：{s.dao_heart}" for s in char_sheet.supporting]
-    all_chars = proto_str + "\n" + "\n".join(supp_strs)
-    return f"【角色图鉴】\n{all_chars}\n\n{stage_desc}"
 
 def _format_realm_system(fused_world: FusedWorld) -> str:
     return "\n".join([f"世界名：{fused_world.world_name}"] + [f"  {r.name}（第{r.level}境）：{r.breakthrough_condition}" for r in fused_world.cultivation_realms])
@@ -141,16 +159,69 @@ def _update_rolling_context(context_list: List[str], new_summary: str, max_histo
         if len(context_list) > max_history: context_list.pop(0)
 
 
-# ── Core Generation Helpers ──────────────────────────────────────────────────
+def _pick_micro_interaction(
+    interactions: Optional[List[Dict[str, Any]]],
+    recent_micro_names: List[str],
+) -> Optional[Dict[str, Any]]:
+    if not interactions:
+        return None
+
+    recent_name = recent_micro_names[-1] if recent_micro_names else ""
+    candidates = [
+        interaction
+        for interaction in interactions
+        if interaction.get("interaction_name", "") != recent_name
+    ]
+    pool = candidates or interactions
+    return random.choice(pool)
+
+
+def _update_recent_micro_names(recent_micro_names: List[str], used_trope: str, max_history: int = 3) -> None:
+    trope = (used_trope or "").strip()
+    if trope:
+        recent_micro_names.append(trope)
+        if len(recent_micro_names) > max_history:
+            recent_micro_names.pop(0)
+
+
+def _build_anti_repetition_rules(
+    recent_context: List[str],
+    recent_micro_names: List[str],
+) -> str:
+    if not recent_context and not recent_micro_names:
+        return "No recent repetition pressure yet."
+
+    motif_counter: Counter[str] = Counter()
+    for summary in recent_context[-3:]:
+        for motif in _GENERIC_REPEAT_MOTIFS:
+            if motif in summary:
+                motif_counter[motif] += 1
+
+    repeated_motifs = [motif for motif, count in motif_counter.items() if count >= 2]
+    recent_micro_text = ", ".join(recent_micro_names[-2:]) or "none"
+
+    rules = [
+        "Anti-repetition rules:",
+        "- The next event must use a different obstacle, clue, reversal, and payoff from the last 3 events.",
+        "- Do not repeat the exact combo of villain trap -> protagonist spots it -> ally secretly helps -> sudden reversal.",
+        f"- Recently used micro templates: {recent_micro_text}. Pick a fresh interaction rhythm.",
+    ]
+    if repeated_motifs:
+        rules.append(
+            "- These motifs are already overused recently and should be avoided unless the current event summary explicitly demands them: "
+            + ", ".join(repeated_motifs)
+        )
+    return "\n".join(rules)
+
 
 @retry(stop=stop_after_attempt(3), wait=wait_exponential(min=2, max=10))
 def _adapt_node(
     client, kb: KnowledgeBase, node: SkeletonNode, characters_desc: str,
     realm_system: str, recent_context: List[str],
-    active_macro_stages: str, suggested_micro: Optional[Dict[str, Any]]
+    active_macro_stages: str, suggested_micro: Optional[Dict[str, Any]],
+    anti_repeat_rules: str,
 ) -> ReassembledEvent:
 
-    # 跨卷无死角检索灵感
     similar_events = kb.query_events(query=node.original_summary or node.pacing_role, n_results=2)
     retrieved_text = "\n".join(f"- 灵感{i+1}：{e['document']}" for i, e in enumerate(similar_events))
     source_ids = [e["id"] for e in similar_events]
@@ -164,18 +235,19 @@ def _adapt_node(
     user_prompt = (
         "你是白金级修仙大纲总编剧，精通网文的草蛇灰线与情绪推拉。\n\n"
         "【当前任务】：将当前的骨架节点重组为一段连贯、有张力的剧情摘要（约150字）。\n"
-        "你必须综合考虑【短期前情连贯】和【长线宏观进度】！\n\n"
         "=======================================\n"
         f"【全书长线进度追踪】（极度重要，你的剧情必须推动或符合这个阶段）：\n{active_macro_stages}\n\n"
-        f"【本卷微观群像图鉴与局势】：\n{characters_desc}\n\n"
+        f"{characters_desc}\n\n"
         f"【微观导演级推拉参考】（选用，用来刻画心理博弈）：\n{micro_text}\n\n"
         f"【过去三章短期前情】（必须顺滑承接！）：\n{context_str}\n\n"
         f"【当前骨架必须发生的核心事件】：{node.original_summary}\n"
         f"【可汲取的全书灵感碎片】：\n{retrieved_text}\n"
+        f"{anti_repeat_rules}\n"
         "=======================================\n\n"
         "【排雷红线】：\n"
-        f"1. 战力红线：主角目前仅在【第{node.realm_level}境】，严禁出现越阶太夸张的毁天灭地描写！\n"
-        "2. 不要流水账：不要只写“主角去了哪里，得到了什么”，要写出人与人的利益冲突和阴谋拆招。\n\n"
+        f"1. 战力红线：主角目前仅在【第{node.realm_level}境】。\n"
+        "2. 不要流水账：要写出人与人的利益冲突和阴谋拆招。\n"
+        "3. 严禁让未在【当前事件可调用的活跃角色池】中列出的人物出场！\n\n"
         "仅输出JSON：\n"
         "{"
         "\"adapted_summary\":\"具体剧情摘要...\""
@@ -195,11 +267,12 @@ def _adapt_node(
         event_id=f"adapted_{node.node_id}", arc_name=node.arc_name,
         realm_level=node.realm_level, pacing_role=node.pacing_role,
         adapted_summary=adapted_summary,
+        used_trope=(suggested_micro or {}).get("interaction_name", ""),
         source_atom_ids=source_ids, is_bridge=False
     )
 
 
-# ── Intermediate I/O ────────────────────────────────────────────────────────
+# ── Intermediate I/O ──
 
 _STEP5_FILENAME = "step5_reassembled_plot.json"
 

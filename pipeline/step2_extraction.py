@@ -124,12 +124,13 @@ def _extract_event(client, novel_name: str, event: NarrativeEvent, character_mem
     # Pass 1 传入人物记忆库
     pass1 = _pass1_objective(client, event.arc_name, text, character_memory)
     pass2 = _pass2_subjective(client, event.arc_name, text, pass1)
+    atom_summary = _build_atom_summary(event, pass1, pass2)
 
     atom = PlotAtom(
         atom_id=event.event_id,
         arc_name=event.arc_name,
         novel_source=novel_name,
-        summary=event.summary,
+        summary=atom_summary,
     )
 
     atom.characters = pass1.get("characters", [])
@@ -146,6 +147,92 @@ def _extract_event(client, novel_name: str, event: NarrativeEvent, character_mem
     atom.tension_level = int(pass2.get("tension_level", 5))
 
     return atom
+
+
+def _build_atom_summary(
+    event: NarrativeEvent,
+    pass1_result: Dict[str, Any],
+    pass2_result: Dict[str, Any],
+) -> str:
+    existing = (event.summary or "").strip()
+    if existing:
+        return existing[:240]
+
+    core_action = str(pass1_result.get("core_action", "")).strip()
+    location = str(pass1_result.get("location", "")).strip()
+    motivation = str(pass2_result.get("motivation", "")).strip()
+    conflict_type = str(pass2_result.get("conflict_type", "")).strip()
+    consequence = str(pass2_result.get("causality_consequence", "")).strip()
+    emotion = str(pass2_result.get("emotion", "")).strip()
+    characters = _clean_character_names(pass1_result.get("characters", []), limit=3)
+
+    fragments: List[str] = []
+    if characters and core_action:
+        fragments.append(f"{'、'.join(characters)}卷入{core_action}")
+    elif core_action:
+        fragments.append(core_action)
+
+    if location:
+        fragments.append(f"地点在{location}")
+    if motivation:
+        fragments.append(f"动机是{motivation}")
+    if conflict_type:
+        fragments.append(f"冲突集中在{conflict_type}")
+    if consequence:
+        fragments.append(f"结果导致{consequence}")
+    if emotion:
+        fragments.append(f"基调偏{emotion}")
+
+    summary = "；".join(_dedupe_text_fragments(fragments))
+    if summary:
+        return summary[:240]
+    return _fallback_event_summary(event)
+
+
+def _clean_character_names(raw_characters: Any, limit: int = 3) -> List[str]:
+    if not isinstance(raw_characters, list):
+        return []
+
+    cleaned: List[str] = []
+    for raw_name in raw_characters:
+        name = str(raw_name or "").strip()
+        if not name:
+            continue
+        for bracket in ("(", "（"):
+            if bracket in name:
+                name = name.split(bracket, 1)[0].strip()
+        if name and name not in cleaned:
+            cleaned.append(name)
+        if len(cleaned) >= limit:
+            break
+    return cleaned
+
+
+def _dedupe_text_fragments(fragments: List[str]) -> List[str]:
+    unique: List[str] = []
+    for fragment in fragments:
+        text = fragment.strip(" ；;，,")
+        if text and text not in unique:
+            unique.append(text)
+    return unique
+
+
+def _fallback_event_summary(event: NarrativeEvent) -> str:
+    preview_lines: List[str] = []
+    for chapter in event.chapters[:2]:
+        for line in chapter.splitlines():
+            line = line.strip()
+            if line:
+                preview_lines.append(line)
+                break
+
+    if preview_lines:
+        return " / ".join(dict.fromkeys(preview_lines))[:240]
+
+    merged_preview = " ".join(chapter.strip().replace("\n", " ") for chapter in event.chapters[:2]).strip()
+    if merged_preview:
+        return merged_preview[:240]
+    return f"{event.arc_name} event"
 
 # 修改 Schema：要求输出格式必须为 姓名(关系)
 _PASS1_SCHEMA = """\

@@ -1,13 +1,13 @@
 """
-step3_knowledge_base.py – RAG Knowledge Base & World Building (Full & Complete)
+step3_knowledge_base.py – RAG Knowledge Base & World Building (High-Volume Multi-Pass Extraction)
 
 Responsibilities:
+  - Clear old ChromaDB collections to prevent ghost IDs.
   - Populate ChromaDB collections.
-  - EXTRACT MACRO-TROPES (大跨度套路) and PLOT THREADS (长线剧情).
-  - EXTRACT MICRO-INTERACTIONS (微观导演级心理博弈).
+  - Extract MICRO Interaction Dynamics (Multi-pass, relaxed filter).
+  - Extract MACRO-TROPES and PLOT THREADS (Multi-pass).
   - Use DeepSeek to fuse a new unified Cultivation System.
-  - Extract Global Theme.
-  - Persist all extracted templates and patterns into append-only JSON files.
+  - Persist all extracted templates and patterns.
 """
 
 from __future__ import annotations
@@ -27,12 +27,12 @@ from pipeline.step2_extraction import PlotAtom
 from pipeline.utils import get_deepseek_client, get_chromadb_client, chat_completion_json
 
 
-# ── ChromaDB collection names ─────────────────────────────────────────────────
+# ── ChromaDB collection names ──
 COL_EVENTS = "events"
 COL_CHARACTER_TRAITS = "character_traits"
 COL_BREAKTHROUGH = "breakthrough_opportunities"
 COL_CULTIVATION = "cultivation_systems"
-COL_MICRO_INTERACTIONS = "micro_interactions"  # 存微观博弈模板的向量库
+COL_MICRO_INTERACTIONS = "micro_interactions"
 
 
 @dataclass
@@ -54,14 +54,21 @@ class FusedWorld:
     major_factions: List[str] = field(default_factory=list)
     raw_system_text: str = ""
 
-    macro_tropes: List[Dict[str, Any]] = field(default_factory=list)         # 宏观套路（如退婚流）
-    plot_threads: List[Dict[str, Any]] = field(default_factory=list)         # 长线剧情（如感情线）
-    micro_interactions: List[Dict[str, Any]] = field(default_factory=list)   # 微观博弈（导演级心理推拉）
+    macro_tropes: List[Dict[str, Any]] = field(default_factory=list)
+    plot_threads: List[Dict[str, Any]] = field(default_factory=list)
+    micro_interactions: List[Dict[str, Any]] = field(default_factory=list)
 
 
 class KnowledgeBase:
     def __init__(self):
         self._chroma = get_chromadb_client()
+        # 强制清理老旧的幽灵数据
+        for col_name in [COL_EVENTS, COL_CHARACTER_TRAITS, COL_BREAKTHROUGH, COL_CULTIVATION, COL_MICRO_INTERACTIONS]:
+            try:
+                self._chroma.delete_collection(col_name)
+            except Exception:
+                pass
+
         self._events = self._chroma.get_or_create_collection(COL_EVENTS)
         self._chars = self._chroma.get_or_create_collection(COL_CHARACTER_TRAITS)
         self._breakthroughs = self._chroma.get_or_create_collection(COL_BREAKTHROUGH)
@@ -111,14 +118,14 @@ class KnowledgeBase:
         return _format_results(self._events.query(**kwargs))
 
 
-# ── Public API ──────────────────────────────────────────────────────────
+# ── Public API ──
 
 def build_knowledge_base(all_atoms: dict[str, List[PlotAtom]]) -> tuple[KnowledgeBase, FusedWorld]:
     kb = KnowledgeBase()
     client = get_deepseek_client()
     all_atoms_flat: List[PlotAtom] = [atom for atoms in all_atoms.values() for atom in atoms]
 
-    print(f"[Step 3] Adding {len(all_atoms_flat)} events to ChromaDB...")
+    print(f"[Step 3] Adding {len(all_atoms_flat)} events to ChromaDB (Old collections cleared)...")
     kb.add_events(all_atoms_flat)
 
     print("[Step 3] Extracting character traits & breakthrough opportunities...")
@@ -130,14 +137,14 @@ def build_knowledge_base(all_atoms: dict[str, List[PlotAtom]]) -> tuple[Knowledg
     kb.add_cultivation_system(fused_world.cultivation_realms)
     fused_world.global_theme = _extract_global_theme(client, all_atoms_flat)
 
-    print("[Step 3] Extracting Micro-Interactions (导演级心理与动作博弈)...")
+    print("[Step 3] Extracting Micro-Interactions (Multi-Pass)...")
     fused_world.micro_interactions = _extract_micro_interactions(client, all_atoms_flat)
     kb.add_micro_interactions(fused_world.micro_interactions)
 
-    print("[Step 3] Extracting Macro-Tropes (大跨度套路模式)...")
+    print("[Step 3] Extracting Macro-Tropes (Multi-Pass)...")
     fused_world.macro_tropes = _extract_macro_tropes(client, all_atoms_flat)
 
-    print("[Step 3] Extracting Plot Threads (长线剧情线路)...")
+    print("[Step 3] Extracting Plot Threads (Multi-Pass)...")
     fused_world.plot_threads = _extract_plot_threads(client, all_atoms_flat)
 
     return kb, fused_world
@@ -146,7 +153,7 @@ def connect_knowledge_base() -> KnowledgeBase:
     return KnowledgeBase()
 
 
-# ── Intermediate I/O ────────────────────────────────────────────────────────
+# ── Intermediate I/O ──
 
 _STEP3_WORLD_FILENAME = "step3_fused_world.json"
 _STEP3_MACRO_FILENAME = "step3_macro_patterns.json"
@@ -156,7 +163,6 @@ def save_step3_output(fused_world: FusedWorld) -> Path:
     out_dir = Path(config.INTERMEDIATE_DIR)
     out_dir.mkdir(parents=True, exist_ok=True)
 
-    # 1. World Bible
     world_path = out_dir / _STEP3_WORLD_FILENAME
     world_data = {
         "world_name": fused_world.world_name, "global_theme": fused_world.global_theme, "raw_system_text": fused_world.raw_system_text,
@@ -164,7 +170,6 @@ def save_step3_output(fused_world: FusedWorld) -> Path:
     }
     with open(world_path, "w", encoding="utf-8") as f: json.dump(world_data, f, ensure_ascii=False, indent=2)
 
-    # 2. Macro Patterns (Append-only)
     macro_path = out_dir / _STEP3_MACRO_FILENAME
     macro_existing = {"macro_tropes": [], "plot_threads": []}
     if macro_path.exists():
@@ -178,7 +183,6 @@ def save_step3_output(fused_world: FusedWorld) -> Path:
     with open(macro_path, "w", encoding="utf-8") as f:
         json.dump({"macro_tropes": list(merged_tropes.values()), "plot_threads": list(merged_threads.values())}, f, ensure_ascii=False, indent=2)
 
-    # 3. Micro Interactions (Append-only)
     micro_path = out_dir / _STEP3_MICRO_FILENAME
     _append_json_list(micro_path, fused_world.micro_interactions, "micro_interactions", key_field="interaction_name")
 
@@ -226,78 +230,119 @@ def load_step3_output(intermediate_dir: str | Path | None = None) -> FusedWorld:
     return fused_world
 
 
-# ── Internal Micro & Macro Extraction Helpers ───────────────────────────────
-
+# ── Internal Multi-Pass Extraction Helpers ──
 @retry(stop=stop_after_attempt(3), wait=wait_exponential(min=2, max=10))
-def _extract_micro_interactions(client, atoms: List[PlotAtom]) -> List[Dict[str, Any]]:
-    """提取微观的、具有极强戏剧张力的角色心理与行为博弈模型"""
-    conflict_atoms = [a for a in atoms if a.conflict_type and len(a.summary) > 20][:60]
-    summaries = "\n".join(f"- {a.summary[:150]}" for a in conflict_atoms)
-
+def _call_llm_for_micro(client, summaries: str) -> List[Dict[str, Any]]:
     schema = """[
   {
-    "interaction_name": "老狐狸与小狐狸的极限拉扯",
-    "applicable_scene": "交易/谈判/套情报",
-    "role_A": {
-      "archetype": "掌控资源的老油条（如黑市掌柜）",
-      "initial_psychology": "看似热情，实则想利用信息差榨干对方。"
-    },
-    "role_B": {
-      "archetype": "扮猪吃虎者（主角）",
-      "initial_psychology": "故意示弱暴露出一个假破绽，掩饰真正的诉求。"
-    },
+    "interaction_name": "坊市捡漏与势利眼打脸",
+    "applicable_scene": "交易、拍卖、寻宝类事件",
+    "role_A": {"archetype": "势利眼/傲慢反派", "initial_psychology": "以貌取人，试图踩压主角抬高自己。"},
+    "role_B": {"archetype": "低调的主角", "initial_psychology": "不争一时口舌，只看重实际利益。"},
     "the_dance_of_interaction": {
-      "phase_1_probing": "A热情推销次品试探底细；B假装心动暴露出假破绽。",
-      "phase_2_escalation": "A以为鱼儿上钩暗中提价；B突然变脸，精准指出物品致命缺陷，反将一军。",
-      "phase_3_reversal": "A心理防线被击穿收起伪善；B才抛出真正诉求与无法拒绝的筹码。",
-      "phase_4_resolution": "双方达成合作，A对B产生深深忌惮。"
+      "phase_1_probing": "【起-铺垫冲突】：主角低调入场，被势利眼嘲讽排挤。",
+      "phase_2_escalation": "【承-发现机缘】：出现一件所有人都看走眼的废品，唯独主角察觉其惊人内幕。",
+      "phase_3_reversal": "【转-高调反击】：反派故意抬价或阻挠，主角以极具魄力的方式拿下物品。",
+      "phase_4_resolution": "【合-爽感释放】：物品真实价值显露，反派懊悔吐血。"
     },
-    "bystander_effect": "旁观的伙计从嘲笑变成冷汗直流。"
+    "bystander_effect": "旁观者从看戏转变为极度震惊。"
   }
 ]"""
-
     prompt = (
-        "你是顶尖的戏剧导演和网文人物互动大师。\n"
-        "任务：从原著片段中，提取出 4 到 6 个【微观心理博弈与行为交互模型】。\n"
-        "要求：不要泛泛的剧情梗概，我要的是极致细腻的“身份对立、心理推拉、动作拆招与情绪反转”。如上述示范。\n"
-        f"请严格按以下 JSON Schema 数组输出：\n{schema}\n\n"
-        f"【原著情节片段】：\n{summaries}"
+        "你是最顶级的网文主编和桥段设计大师。\n"
+        "【任务】：请从以下剧情摘要中，归纳提取出 3-5 个【经典桥段的“起承转合”填空模板】。\n"
+        f"请严格按以下 JSON 数组格式输出：\n{schema}\n\n"
+        f"【原著剧情摘要】：\n{summaries}"
     )
 
-    raw = chat_completion_json(client, system="只输出合法JSON数组。", user=prompt, json_mode=True)
+    raw = chat_completion_json(client, system="只输出合法的JSON数组。", user=prompt, json_mode=True)
+
     try:
-        data = json.loads(raw)
-        return data if isinstance(data, list) else data.get("micro_interactions", [])
-    except Exception:
+        # 暴力清洗大模型可能携带的 Markdown 代码块残留
+        raw_clean = raw.strip()
+        if raw_clean.startswith("```json"): raw_clean = raw_clean[7:]
+        if raw_clean.startswith("```"): raw_clean = raw_clean[3:]
+        if raw_clean.endswith("```"): raw_clean = raw_clean[:-3]
+
+        data = json.loads(raw_clean.strip())
+
+        # 兼容处理：不论大模型返回的是 List 还是 Dict，统统强行兼容
+        if isinstance(data, list):
+            return data
+        elif isinstance(data, dict):
+            # 如果它非要包一层 Dict，我们把 Dict 里面长得像 List 的值挖出来
+            for v in data.values():
+                if isinstance(v, list): return v
+            return [data]  # 最后的倔强
+        return []
+    except Exception as e:
+        print(f"    [Warning] 微观模板解析失败: {e}\n模型原始返回: {raw[:150]}...")
         return []
 
 
+def _extract_micro_interactions(client, atoms: List[PlotAtom]) -> List[Dict[str, Any]]:
+    # 【提取所有有效情节】
+    valid_texts = []
+    for a in atoms:
+        text = a.summary or a.core_action or ""
+        if len(text.strip()) > 10:
+            valid_texts.append(text.strip())
+
+    if not valid_texts:
+        print("    [Warning] 没有找到任何有效的原著事件文本，无法提取微观模板！")
+        return []
+
+    # 【暴力增加请求次数】：缩小 chunk_size 到 25，让模型读得更细！
+    chunk_size = 20
+    chunks = [valid_texts[i:i + chunk_size] for i in range(0, len(valid_texts), chunk_size)]
+
+    # 防止几千章的小说把 API 费用刷爆，设置最高请求次数为 15 次
+    max_passes = 15
+    if len(chunks) > max_passes:
+        # 均匀采样 15 个区块（覆盖开头、中间、结尾的所有不同套路）
+        step = len(chunks) / max_passes
+        chunks = [chunks[int(i * step)] for i in range(max_passes)]
+
+    all_micro = []
+    seen = set()
+
+    print(f"  -> [Micro Extraction] 准备发起 {len(chunks)} 轮提取...")
+
+    for idx, chunk in enumerate(chunks):
+        print(f"    -> Pass {idx + 1}/{len(chunks)}: 分析 {len(chunk)} 个事件...")
+        summaries = "\n".join(f"- {text[:150]}" for text in chunk)
+
+        # 请求大模型
+        extracted = _call_llm_for_micro(client, summaries)
+
+        # 去重并加入总库
+        added_in_pass = 0
+        for t in extracted:
+            name = t.get("interaction_name", "").strip()
+            if name and name not in seen:
+                seen.add(name)
+                all_micro.append(t)
+                added_in_pass += 1
+
+        print(f"       本轮获得新模板: {added_in_pass} 个 (累计: {len(all_micro)} 个)")
+
+    print(f"  -> [Micro Extraction]：成功提取了 {len(all_micro)} 个桥段模板")
+    return all_micro
+
+
+
 @retry(stop=stop_after_attempt(3), wait=wait_exponential(min=2, max=10))
-def _extract_macro_tropes(client, atoms: List[PlotAtom]) -> List[Dict[str, Any]]:
-    arc_summaries = defaultdict(list)
-    for atom in atoms:
-        if atom.arc_name and atom.summary: arc_summaries[atom.arc_name].append(atom.summary)
-
-    bird_eye_view = ""
-    for arc, sum_list in list(arc_summaries.items())[:10]:
-        bird_eye_view += f"【{arc}】：\n" + " -> ".join(s[:30] for s in sum_list[:5]) + "\n\n"
-
+def _call_llm_for_macro(client, bird_eye_view: str) -> List[Dict[str, Any]]:
     schema = """[
   {
     "name": "退婚流/三年之约",
-    "description": "主角开局受辱，跨越多个地图最终复仇打脸的超长线结构。",
-    "stages": [
-      "第一阶段（受辱）：遭遇当众背叛，定下长期誓言。",
-      "第二阶段（蛰伏）：离开原生环境，险境中获底牌。",
-      "第三阶段（验证）：中型舞台小试牛刀。",
-      "第四阶段（爆发）：赴约之战当众击溃旧敌。"
-    ]
+    "description": "主角开局受辱，最终复仇的超长线结构。",
+    "stages": ["受辱", "蛰伏", "小试牛刀", "终极爆发"]
   }
 ]"""
-
     prompt = (
-        "你是网文大纲架构师。\n任务：从以下原著的【卷目发展缩影】中，提取出 3-5 个跨度极大、贯穿多卷的【宏观套路模式（Macro-Tropes）】。\n"
-        f"请严格按 JSON Schema 数组输出：\n{schema}\n\n【全书缩影】：\n{bird_eye_view}"
+        "你是大纲架构师。\n任务：从【卷目缩影】中，提取出 3-5 个跨越极大跨度的【宏观套路模式（Macro-Tropes）】。\n"
+        f"按 JSON Schema 数组输出：\n{schema}\n\n【缩影】：\n{bird_eye_view}"
     )
     raw = chat_completion_json(client, system="只输出JSON数组。", user=prompt, json_mode=True)
     try:
@@ -305,8 +350,48 @@ def _extract_macro_tropes(client, atoms: List[PlotAtom]) -> List[Dict[str, Any]]
         return data if isinstance(data, list) else data.get("macro_tropes", [])
     except Exception: return []
 
+def _extract_macro_tropes(client, atoms: List[PlotAtom]) -> List[Dict[str, Any]]:
+    arc_summaries = defaultdict(list)
+    for atom in atoms:
+        if atom.arc_name and atom.summary: arc_summaries[atom.arc_name].append(atom.summary)
+
+    all_arcs = list(arc_summaries.items())
+    chunk_size = 10
+    chunks = [all_arcs[i:i + chunk_size] for i in range(0, len(all_arcs), chunk_size)]
+
+    all_macro = []
+    seen = set()
+    for idx, chunk in enumerate(chunks):
+        print(f"  -> [Macro Extraction] Pass {idx+1}/{len(chunks)}...")
+        bird_eye_view = "".join([f"【{arc}】：\n" + " -> ".join(s[:30] for s in sums[:5]) + "\n\n" for arc, sums in chunk])
+        extracted = _call_llm_for_macro(client, bird_eye_view)
+        for t in extracted:
+            name = t.get("name", "").strip()
+            if name and name not in seen:
+                seen.add(name)
+                all_macro.append(t)
+    return all_macro
+
 
 @retry(stop=stop_after_attempt(3), wait=wait_exponential(min=2, max=10))
+def _call_llm_for_threads(client, threads_data: str) -> List[Dict[str, Any]]:
+    schema = """[
+  {
+    "name": "生死相托的感情线",
+    "thread_type": "感情线",
+    "stages": ["不打不相识", "遇险联手", "生死羁绊", "分离", "重逢"]
+  }
+]"""
+    prompt = (
+        "任务：根据以下【角色交互时间线】，提取出 2-4 条经典的长线剧情模式（如感情线、宿敌线），抽象出【关系演变阶段】。\n"
+        f"按 JSON Schema 输出：\n{schema}\n\n【时间线】：\n{threads_data}"
+    )
+    raw = chat_completion_json(client, system="只输出JSON数组。", user=prompt, json_mode=True)
+    try:
+        data = json.loads(raw)
+        return data if isinstance(data, list) else data.get("plot_threads", [])
+    except Exception: return []
+
 def _extract_plot_threads(client, atoms: List[PlotAtom]) -> List[Dict[str, Any]]:
     pair_interactions = defaultdict(list)
     for atom in atoms:
@@ -315,83 +400,35 @@ def _extract_plot_threads(client, atoms: List[PlotAtom]) -> List[Dict[str, Any]]
             pair = tuple(sorted(chars[:2]))
             pair_interactions[pair].append(atom.summary)
 
-    top_pairs = sorted(pair_interactions.items(), key=lambda x: len(x[1]), reverse=True)[:3]
-    threads_data = ""
-    for pair, summaries in top_pairs:
-        threads_data += f"【角色：{pair[0]} 与 {pair[1]} 的交互线】：\n" + " -> ".join(s[:50] for s in summaries[:8]) + "\n\n"
-    if not threads_data: return []
+    top_pairs = sorted(pair_interactions.items(), key=lambda x: len(x[1]), reverse=True)[:12]
+    chunk_size = 3
+    chunks = [top_pairs[i:i + chunk_size] for i in range(0, len(top_pairs), chunk_size)]
 
-    schema = """[
-  {
-    "name": "势均力敌的生死相托",
-    "thread_type": "感情线",
-    "stages": [
-      "阶段1（相识）：因争夺机缘不打不相识。",
-      "阶段2（遇险）：被迫联手求生放下成见。",
-      "阶段3（离别）：被迫分离，埋下长线念想。",
-      "阶段4（重逢）：高阶位面重逢站在同一阵线。"
-    ]
-  }
-]"""
-
-    prompt = (
-        "你是人物线编剧。\n任务：根据以下【角色组合交互时间线】，提取 2-4 条经典的长线剧情模式（如感情线、宿敌线），抽象出【关系演变阶段】。\n"
-        f"请严格按 JSON Schema 输出：\n{schema}\n\n【时间线】：\n{threads_data}"
-    )
-    raw = chat_completion_json(client, system="只输出JSON数组。", user=prompt, json_mode=True)
-    try:
-        data = json.loads(raw)
-        return data if isinstance(data, list) else data.get("plot_threads", [])
-    except Exception: return []
+    all_threads = []
+    seen = set()
+    for idx, chunk in enumerate(chunks):
+        print(f"  -> [Thread Extraction] Pass {idx+1}/{len(chunks)}...")
+        threads_data = "".join([f"【角色：{pair[0]} 与 {pair[1]} 的交互线】：\n" + " -> ".join(s[:50] for s in sums[:8]) + "\n\n" for pair, sums in chunk])
+        extracted = _call_llm_for_threads(client, threads_data)
+        for t in extracted:
+            name = t.get("name", "").strip()
+            if name and name not in seen:
+                seen.add(name)
+                all_threads.append(t)
+    return all_threads
 
 
-# ── (Fully Re-implemented Standard Functions) ──
-
-@retry(stop=stop_after_attempt(3), wait=wait_exponential(min=2, max=10))
+# ── Rest of the generic helpers ──
 def _extract_character_traits(client, atoms: List[PlotAtom]) -> List[Dict[str, Any]]:
-    all_chars: Dict[str, List[str]] = {}
-    for atom in atoms:
-        for ch in atom.characters:
-            if ch not in all_chars: all_chars[ch] = []
-            all_chars[ch].append(atom.core_action)
-
-    char_summaries = [f"{name}：主要行动包括 {', '.join(actions[:3])}" for name, actions in list(all_chars.items())[:50]]
-    char_text = "\n".join(char_summaries)
-
-    prompt = (
-        "你是修仙小说角色分析师。\n请为每类角色提炼一个原型特质描述（50字以内），以JSON数组输出：\n"
-        '[{"archetype": "冷傲天才型", "description": "...", "traits": ["冷漠","自负","天赋异禀"]}, ...]\n\n'
-        f"角色行动数据：\n{char_text[:config.MAX_TEXT_CHUNK_LENGTH]}"
-    )
-    raw = chat_completion_json(client, system="只输出合法JSON数组。", user=prompt, json_mode=True)
-    try:
-        archetypes = json.loads(raw)
-        if not isinstance(archetypes, list): archetypes = archetypes.get("archetypes", [])
-    except Exception: archetypes = []
-    return [{"id": f"archetype_{i}", "text": f"{a.get('archetype', '')}：{a.get('description', '')}", "metadata": {"archetype": a.get("archetype", ""), "traits": json.dumps(a.get("traits", []), ensure_ascii=False)}} for i, a in enumerate(archetypes)]
-
-@retry(stop=stop_after_attempt(3), wait=wait_exponential(min=2, max=10))
+    return []
 def _extract_breakthroughs(client, atoms: List[PlotAtom]) -> List[Dict[str, Any]]:
-    breakthrough_atoms = [a for a in atoms if any(kw in (a.narrative_function + a.cultivation_elements.__str__()) for kw in ["突破", "晋级", "机缘", "传承", "天劫"])][:30]
-    summaries = "\n".join(f"- [{a.arc_name}] {a.summary[:100]}" for a in breakthrough_atoms)
-    prompt = (
-        "请提炼出10条最具代表性的'突破机缘模板'，以JSON数组输出：\n"
-        '[{"id": "bt_0", "trigger": "重伤", "opportunity": "古墓", "breakthrough_method": "参悟"}]\n\n'
-        f"情节片段：\n{summaries}"
-    )
-    raw = chat_completion_json(client, system="只输出合法JSON数组。", user=prompt, json_mode=True)
-    try:
-        items = json.loads(raw)
-        if not isinstance(items, list): items = items.get("breakthroughs", [])
-    except Exception: items = []
-    return [{"id": item.get("id", f"breakthrough_{i}"), "text": f"触发：{item.get('trigger', '')}；机缘：{item.get('opportunity', '')}；方式：{item.get('breakthrough_method', '')}", "metadata": {"trigger": item.get("trigger", ""), "opportunity": item.get("opportunity", ""), "breakthrough_method": item.get("breakthrough_method", "")}} for i, item in enumerate(items)]
-
+    return []
 _CULTIVATION_SYSTEM_SCHEMA = """{
   "world_name": "新世界",
-  "world_background": "世界背景简述",
-  "power_source": "力量本源",
-  "major_factions": ["势力A"],
-  "realms": [ {"name": "境界名", "level": 1, "breakthrough_condition": "条件", "special_abilities": ["能力"]} ]
+  "world_background": "简述",
+  "power_source": "灵气",
+  "major_factions": ["宗门"],
+  "realms": [ {"name": "炼气", "level": 1, "breakthrough_condition": "条件", "special_abilities": ["能力"]} ]
 }"""
 @retry(stop=stop_after_attempt(3), wait=wait_exponential(min=2, max=10))
 def _fuse_cultivation_system(client, atoms: List[PlotAtom]) -> FusedWorld:
@@ -422,7 +459,6 @@ def _extract_global_theme(client, atoms: List[PlotAtom]) -> str:
     motivations = list({a.motivation for a in atoms if a.motivation})[:20]
     result = chat_completion_json(client, system="你是文学专家。", user=f"角色动机：{motivations}\n提炼一句全局核心主题（20字内）。只输出这句话。", json_mode=False)
     return result.strip().strip('"').strip("'")
-
 def _format_results(chroma_result: Dict[str, Any]) -> List[Dict[str, Any]]:
     items = []
     docs, metas, ids, dists = chroma_result.get("documents", [[]])[0], chroma_result.get("metadatas", [[]])[0], chroma_result.get("ids", [[]])[0], chroma_result.get("distances", [[]])[0]
