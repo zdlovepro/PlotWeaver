@@ -31,16 +31,34 @@ def _get(section: str, key: str, env_var: str, default=None):
     return _yaml.get(section, {}).get(key, default)
 
 
+def _as_bool(value, default: bool = False) -> bool:
+    if value is None:
+        return default
+    if isinstance(value, bool):
+        return value
+    return str(value).strip().lower() in {"1", "true", "yes", "on"}
+
+
 # ── DeepSeek ──────────────────────────────────────────────────────────────────
 DEEPSEEK_API_KEY: str = _get("deepseek", "api_key", "DEEPSEEK_API_KEY", "")
 DEEPSEEK_BASE_URL: str = _get("deepseek", "base_url", "DEEPSEEK_BASE_URL",
-                               "https://api.deepseek.com/v1")
-DEEPSEEK_MODEL: str = _get("deepseek", "model", "DEEPSEEK_MODEL", "deepseek-chat")
+                               "https://api.deepseek.com")
+DEEPSEEK_MODEL: str = _get("deepseek", "model", "DEEPSEEK_MODEL", "deepseek-v4-flash")
+DEEPSEEK_LAST_STEPS_MODEL: str = _get(
+    "deepseek", "last_steps_model", "DEEPSEEK_LAST_STEPS_MODEL", "deepseek-v4-pro"
+)
 DEEPSEEK_MAX_TOKENS: int = int(
     _get("deepseek", "max_tokens", "DEEPSEEK_MAX_TOKENS", 8192)
 )
 DEEPSEEK_TEMPERATURE: float = float(
     _get("deepseek", "temperature", "DEEPSEEK_TEMPERATURE", 0.7)
+)
+DEEPSEEK_REASONING_EFFORT: str = str(
+    _get("deepseek", "reasoning_effort", "DEEPSEEK_REASONING_EFFORT", "high")
+)
+DEEPSEEK_THINKING_ENABLED: bool = _as_bool(
+    _get("deepseek", "thinking_enabled", "DEEPSEEK_THINKING_ENABLED", True),
+    default=True,
 )
 
 # ── ChromaDB ──────────────────────────────────────────────────────────────────
@@ -66,12 +84,12 @@ PLAGIARISM_NER_THRESHOLD: float = float(
 )
 SEMANTIC_CHUNK_MIN_CHAPTERS: int = int(
     os.environ.get(
-        "SEMANTIC_CHUNK_MIN_CHAPTERS", _pipe.get("semantic_chunk_min_chapters", 3)
+        "SEMANTIC_CHUNK_MIN_CHAPTERS", _pipe.get("semantic_chunk_min_chapters", 1)
     )
 )
 SEMANTIC_CHUNK_MAX_CHAPTERS: int = int(
     os.environ.get(
-        "SEMANTIC_CHUNK_MAX_CHAPTERS", _pipe.get("semantic_chunk_max_chapters", 5)
+        "SEMANTIC_CHUNK_MAX_CHAPTERS", _pipe.get("semantic_chunk_max_chapters", 2)
     )
 )
 # Maximum characters of text passed to DeepSeek in a single prompt fragment.

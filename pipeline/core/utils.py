@@ -46,6 +46,14 @@ def get_chromadb_client():
     return chromadb.PersistentClient(path=config.CHROMADB_PATH)
 
 
+def _supports_reasoning_mode(model_name: str) -> bool:
+    return str(model_name or "").startswith("deepseek-v4")
+
+
+def _supports_temperature(model_name: str) -> bool:
+    return not _supports_reasoning_mode(model_name)
+
+
 def chat_completion_json(
     client,
     system: str,
@@ -53,6 +61,7 @@ def chat_completion_json(
     json_mode: bool = False,
     max_tokens: Optional[int] = None,
     temperature: Optional[float] = None,
+    model_name: Optional[str] = None,
 ) -> str:
     """
     Call the DeepSeek chat completion API and return the assistant message content.
@@ -68,15 +77,21 @@ def chat_completion_json(
     Returns:
         String content of the assistant reply.
     """
+    model_name = model_name or config.DEEPSEEK_MODEL
     kwargs = {
-        "model": config.DEEPSEEK_MODEL,
+        "model": model_name,
         "messages": [
             {"role": "system", "content": system},
             {"role": "user", "content": user},
         ],
         "max_tokens": max_tokens or config.DEEPSEEK_MAX_TOKENS,
-        "temperature": temperature if temperature is not None else config.DEEPSEEK_TEMPERATURE,
     }
+    if _supports_temperature(model_name):
+        kwargs["temperature"] = temperature if temperature is not None else config.DEEPSEEK_TEMPERATURE
+    if _supports_reasoning_mode(model_name):
+        kwargs["reasoning_effort"] = config.DEEPSEEK_REASONING_EFFORT
+        if config.DEEPSEEK_THINKING_ENABLED:
+            kwargs["extra_body"] = {"thinking": {"type": "enabled"}}
     if json_mode:
         kwargs["response_format"] = {"type": "json_object"}
 
