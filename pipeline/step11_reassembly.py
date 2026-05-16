@@ -313,6 +313,38 @@ def _select_event_template_brief(fused_world: FusedWorld, node: SkeletonNode, si
         lines.append(f"骨架模板: {node.template_hint}")
     if node.conflict_hint or node.function_hint:
         lines.append(f"骨架冲突/功能: {node.conflict_hint} / {node.function_hint}")
+    executable_template = _match_executable_template(fused_world, node)
+    if executable_template:
+        lines.append(f"可执行模板: {executable_template.get('template_name', '')} | 层级 {executable_template.get('level', 'event')}")
+        lines.append(f"模板功能: {executable_template.get('abstract_function', '')}")
+        lines.append(f"冲突发动机: {executable_template.get('conflict_engine', '')}")
+        lines.append("角色槽位: " + json.dumps(executable_template.get("role_slots", {}), ensure_ascii=False))
+        preconditions = executable_template.get("required_preconditions", []) or []
+        if preconditions:
+            lines.append("触发前提: " + "；".join(str(item).strip() for item in preconditions[:4] if str(item).strip()))
+        beat_lines = []
+        for beat in executable_template.get("beat_sequence", [])[:4]:
+            beat_index = beat.get("beat_index", "")
+            beat_func = beat.get("function", "")
+            beat_purpose = beat.get("purpose", "")
+            beat_lines.append(f"{beat_index}.{beat_func}:{beat_purpose}")
+        if beat_lines:
+            lines.append("事件流程: " + " | ".join(beat_lines))
+        state_delta = executable_template.get("state_delta", {}) or {}
+        if state_delta:
+            lines.append("状态变化: " + json.dumps(state_delta, ensure_ascii=False))
+        variation_axes = executable_template.get("variation_axes", {}) or {}
+        if variation_axes:
+            compact_axes = {
+                key: [str(item).strip() for item in values[:4]]
+                for key, values in variation_axes.items()
+                if isinstance(values, list) and values
+            }
+            lines.append("变形轴: " + json.dumps(compact_axes, ensure_ascii=False))
+        forbidden = [str(item).strip() for item in executable_template.get("forbidden_source_details", []) if str(item).strip()]
+        if forbidden:
+            lines.append("禁用来源细节: " + "；".join(forbidden[:8]))
+        lines.append("使用约束: 只能使用模板功能和槽位，不要复用 forbidden_source_details 中的具体设定。")
     for template in fused_world.event_templates or []:
         if node.conflict_hint and template.get("conflict_type") != node.conflict_hint:
             continue
@@ -343,6 +375,7 @@ def _plan_event(client, node: SkeletonNode, role_plan: Optional[EventRolePlan], 
         f"前序事件:\n{recent_story_brief}\n"
         f"状态账本:\n{state_brief}\n"
         f"模板提示:\n{template_brief}\n"
+        "只能抽象复用模板功能和角色槽位，禁止照搬禁用来源细节中的人物名、地点名、功法名、法宝名和标志性桥段。\n"
         f"检索灵感:\n{json.dumps(retrieved_events[:2], ensure_ascii=False)}\n"
         f"{anti_repeat_rules}\n"
         "请只返回 JSON，包含 story_purpose, target_chapter_count, trigger, goal, obstacle, choice, reversal, outcome, cost, required_roles, preconditions, state_updates, chapter_blueprint, summary_seed。"
@@ -380,6 +413,45 @@ def _fallback_event_plan(node: SkeletonNode, role_plan: Optional[EventRolePlan])
 
 def _empty_state_updates() -> Dict[str, List[str]]:
     return {key: [] for key in _LEDGER_KEYS}
+
+
+def _match_executable_template(fused_world: FusedWorld, node: SkeletonNode) -> Dict[str, Any] | None:
+    templates = fused_world.executable_templates or []
+    if not templates:
+        return None
+
+    best_template: Dict[str, Any] | None = None
+    best_score = -999.0
+    template_hint = str(node.template_hint or "").strip()
+    conflict_hint = str(node.conflict_hint or "").strip()
+    function_hint = str(node.function_hint or "").strip()
+    logic_template_name = str((node.logic_card or {}).get("template_name", "") or "").strip()
+
+    for template in templates:
+        score = 0.0
+        haystack = " ".join(
+            [
+                str(template.get("template_name", "") or ""),
+                str(template.get("abstract_function", "") or ""),
+                str(template.get("conflict_engine", "") or ""),
+                str(template.get("source_pattern_summary", "") or ""),
+            ]
+        )
+        if function_hint and function_hint in haystack:
+            score += 4
+        if conflict_hint and conflict_hint in haystack:
+            score += 4
+        if template_hint and template_hint in haystack:
+            score += 1
+        if logic_template_name and logic_template_name in haystack:
+            score += 1
+        if node.pacing_role and node.pacing_role in haystack:
+            score += 1
+        if score > best_score:
+            best_score = score
+            best_template = template
+
+    return best_template if best_score > 0 else None
 
 
 @retry(stop=stop_after_attempt(3), wait=wait_exponential(min=2, max=10))

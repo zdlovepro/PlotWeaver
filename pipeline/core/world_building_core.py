@@ -109,6 +109,7 @@ class FusedWorld:
     event_templates: List[Dict[str, Any]] = field(default_factory=list)
     role_slot_templates: List[Dict[str, Any]] = field(default_factory=list)
     event_flow_templates: List[Dict[str, Any]] = field(default_factory=list)
+    executable_templates: List[Dict[str, Any]] = field(default_factory=list)
 
 
 class KnowledgeBase:
@@ -200,6 +201,7 @@ def save_world_snapshot(filename: str, fused_world: FusedWorld) -> Path:
         "event_templates": fused_world.event_templates,
         "role_slot_templates": fused_world.role_slot_templates,
         "event_flow_templates": fused_world.event_flow_templates,
+        "executable_templates": fused_world.executable_templates,
     }
     return write_json_file(path, payload)
 
@@ -234,6 +236,7 @@ def load_world_snapshot(filename: str) -> FusedWorld:
         event_templates=data.get("event_templates", []),
         role_slot_templates=data.get("role_slot_templates", []),
         event_flow_templates=data.get("event_flow_templates", []),
+        executable_templates=data.get("executable_templates", []),
     )
 
 

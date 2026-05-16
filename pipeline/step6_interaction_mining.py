@@ -8,10 +8,13 @@ from __future__ import annotations
 
 import json
 from collections import defaultdict
+from pathlib import Path
 from typing import Dict, List
 
 from tenacity import retry, stop_after_attempt, wait_exponential
 
+import config
+from pipeline.core.artifacts import interaction_patterns_from_fused_world, save_json_artifact
 from pipeline.core.utils import chat_completion_json, get_deepseek_client
 from pipeline.core.world_building_core import (
     FusedWorld,
@@ -25,6 +28,7 @@ from pipeline.step2_extraction import PlotAtom
 
 
 _STEP6_FILENAME = "step6_interaction_mining.json"
+_STEP6_PATTERNS_FILENAME = "step6_interaction_patterns.json"
 
 
 def mine_story_patterns(
@@ -49,7 +53,11 @@ def mine_story_patterns(
 
 def save_step6_output(fused_world: FusedWorld):
     path = save_world_snapshot(_STEP6_FILENAME, fused_world)
-    print(f"[Step 6] Intermediate output saved -> {path.name}")
+    artifact_path = save_json_artifact(
+        Path(config.INTERMEDIATE_DIR) / _STEP6_PATTERNS_FILENAME,
+        interaction_patterns_from_fused_world(fused_world),
+    )
+    print(f"[Step 6] Intermediate output saved -> {path.name}; interaction patterns -> {artifact_path.name}")
     return path
 
 

@@ -9,11 +9,14 @@ from __future__ import annotations
 import json
 import uuid
 from collections import defaultdict
+from pathlib import Path
 from typing import Any, Dict, List
 
 import networkx as nx
 from tenacity import retry, stop_after_attempt, wait_exponential
 
+import config
+from pipeline.core.artifacts import save_json_artifact, world_base_from_fused_world
 from pipeline.core.utils import chat_completion_json, get_deepseek_client
 from pipeline.core.world_building_core import (
     CultivationRealm,
@@ -29,6 +32,7 @@ from pipeline.step2_extraction import PlotAtom
 
 
 _STEP5_FILENAME = "step5_world_fusion.json"
+_STEP5_WORLD_BASE_FILENAME = "step5_world_base.json"
 _CULTIVATION_SYSTEM_SCHEMA = {
     "world_name": "融合修真世界",
     "world_background": "一句话世界背景",
@@ -64,7 +68,8 @@ def build_world_base(all_atoms: Dict[str, List[PlotAtom]], kb: KnowledgeBase) ->
 
 def save_step5_output(fused_world: FusedWorld):
     path = save_world_snapshot(_STEP5_FILENAME, fused_world)
-    print(f"[Step 5] Intermediate output saved -> {path.name}")
+    artifact_path = save_json_artifact(Path(config.INTERMEDIATE_DIR) / _STEP5_WORLD_BASE_FILENAME, world_base_from_fused_world(fused_world))
+    print(f"[Step 5] Intermediate output saved -> {path.name}; world base -> {artifact_path.name}")
     return path
 
 
