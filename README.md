@@ -36,38 +36,58 @@ novel outlines into a new, highly coherent novel outline.
    python main.py
    ```
 
-## Resuming the Pipeline (`--start-step`)
+## Running the Pipeline (`--start-step`, `--end-step`, `--only-step`)
 
 After early steps finish, their outputs are written into `intermediate_data`
-and can be reused with `--start-step`.
+and can be reused with `--start-step`. You can also stop after a specific
+step with `--end-step`, or run a single step with `--only-step`.
 
-### Resume examples
+### Common commands
 
 ```bash
 # Full run
 python main.py
 
-# Resume from Step 2
-python main.py --start-step 2
+# Resume from Step 3
+python main.py --start-step 3
 
-# Resume from Step 5
-python main.py --start-step 5
+# Run only the material-building phase
+python main.py --start-step 1 --end-step 4
 
-# Resume from Step 8
-python main.py --start-step 8
+# Run only Step 2
+python main.py --only-step 2
 
-# Resume from Step 11
-python main.py --start-step 11
+# Run the world/pattern/template phase
+python main.py --start-step 5 --end-step 7
+
+# Regenerate only Step 7 templates
+python main.py --only-step 7
 ```
+
+### Phase notes
+
+Steps 1-4 are the source-material accumulation stage:
+
+- Step 1: physical chunking
+- Step 2: plot atom extraction
+- Step 3: event induction
+- Step 4: RAG knowledge base
+
+Steps 5 onward move into synthesis and outline generation:
+
+- world fusion
+- pattern/template mining
+- skeleton fusion
+- outline generation
 
 ## Pipeline Steps
 
 | Step | Module | Description |
 |------|--------|-------------|
-| 1 | `pipeline/step1_chunking.py` | Semantic chunking and arc anchoring |
-| 2 | `pipeline/step2_extraction.py` | Dual-stage plot extraction |
-| 3 | `pipeline/step3_event_induction.py` | Link atoms into multi-atom events |
-| 4 | `pipeline/step4_knowledge_base.py` | Build the retrieval index |
+| 1 | `pipeline/step1_chunking.py` | Physical chunking and arc anchoring |
+| 2 | `pipeline/step2_extraction.py` | Plot atom extraction |
+| 3 | `pipeline/step3_event_induction.py` | Event induction from plot atoms |
+| 4 | `pipeline/step4_knowledge_base.py` | Build the RAG knowledge base |
 | 5 | `pipeline/step5_world_fusion.py` | Build the fused world base |
 | 6 | `pipeline/step6_interaction_mining.py` | Mine reusable interactions and long threads |
 | 7 | `pipeline/step7_template_mining.py` | Derive event, volume, and chapter-flow templates |

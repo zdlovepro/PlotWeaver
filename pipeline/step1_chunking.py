@@ -4,11 +4,12 @@ step1_chunking.py – Physical Chunking & Arc Anchoring
 Responsibilities:
   - Read raw .txt files from input_dir.
   - Use regex to split text into chapters (e.g., matching "第.*章").
-  - Group every 100 chapters into a physical chunk (NarrativeEvent) representing a Volume (卷01, 卷02).
-  - No LLM calls – this step is purely deterministic Python logic.
+  - Further split oversized chapters into deterministic physical subchunks.
+  - Merge nearby subchunks into stable physical NarrativeEvent windows.
+  - No LLM calls – this step does not decide PlotAtom boundaries or event completeness.
 
 Output:
-  List[VolumeArc], where each VolumeArc holds a list of NarrativeEvent objects.
+  List[VolumeArc], where each VolumeArc holds a list of physical NarrativeEvent chunks.
   The result is also persisted to ``intermediate_dir/step1_chunks.json`` for
   pipeline resume capability.
 """
@@ -34,6 +35,9 @@ class NarrativeEvent:
     chapter_end: int = 0
     subchunk_index: int = 1
     subchunk_total: int = 1
+    source_chunk_id: str = ""
+    chunk_type: str = "physical"
+    char_count: int = 0
 
 
 @dataclass
@@ -174,11 +178,11 @@ def _build_volume_arcs(chapters: List[str], chapters_per_volume: int = 100) -> L
         arc_name = f"卷{vol_num:02d}"
         arc_chapters = chapters[i:i + chapters_per_volume]
 
-        # 构造临时的 NarrativeEvent：默认以较小原子段为单位，长章节会先按段落切开。
+        # Step 1 只产生物理窗口：长章节会先按长度拆成可追踪的稳定子块。
         raw_events: List[NarrativeEvent] = []
         for j, ch in enumerate(arc_chapters):
             chapter_no = i + j + 1
-            raw_events.extend(_chapter_to_atomic_events(arc_name, ch, chapter_no))
+            raw_events.extend(_chapter_to_physical_subchunks(arc_name, ch, chapter_no))
 
         arcs.append(
             VolumeArc(
@@ -247,12 +251,16 @@ def _physical_chunk_arc(
             merged[-1].chapter_end = group[-1].chapter_end
             merged[-1].subchunk_index = 1
             merged[-1].subchunk_total = 1
+            merged[-1].source_chunk_id = merged[-1].source_chunk_id or merged[-1].event_id
+            merged[-1].chunk_type = "physical"
+            merged[-1].char_count = _event_char_count(merged[-1])
             i += len(group)
             continue
 
+        event_id = f"{arc_name}_event{event_counter}"
         merged.append(
             NarrativeEvent(
-                event_id=f"{arc_name}_event{event_counter}",
+                event_id=event_id,
                 arc_name=arc_name,
                 chapters=[ch for ev in group for ch in ev.chapters],
                 summary="",
@@ -260,6 +268,9 @@ def _physical_chunk_arc(
                 chapter_end=group[-1].chapter_end if group else 0,
                 subchunk_index=1,
                 subchunk_total=1,
+                source_chunk_id=event_id,
+                chunk_type="physical",
+                char_count=sum(_event_char_count(ev) for ev in group),
             )
         )
         event_counter += 1
@@ -268,7 +279,7 @@ def _physical_chunk_arc(
     return merged
 
 
-def _chapter_to_atomic_events(
+def _chapter_to_physical_subchunks(
     arc_name: str,
     chapter_text: str,
     chapter_no: int,
@@ -287,6 +298,9 @@ def _chapter_to_atomic_events(
                 chapter_end=chapter_no,
                 subchunk_index=idx,
                 subchunk_total=total,
+                source_chunk_id=f"{arc_name}_ch{chapter_no}{suffix}",
+                chunk_type="physical",
+                char_count=len(segment),
             )
         )
     return events

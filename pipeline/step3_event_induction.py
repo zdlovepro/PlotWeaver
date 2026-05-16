@@ -46,6 +46,12 @@ def induce_all(all_atoms: Dict[str, List[PlotAtom]]) -> Dict[str, List[InducedEv
     for novel_name, atoms in all_atoms.items():
         grouped: Dict[str, List[PlotAtom]] = defaultdict(list)
         for atom in atoms:
+            if not bool(getattr(atom, "is_complete", True)):
+                print(
+                    f"[Step 3] Warning: skipping incomplete PlotAtom {atom.atom_id} "
+                    f"(semantic_window_id={getattr(atom, 'semantic_window_id', '')})"
+                )
+                continue
             grouped[atom.arc_name or "未命名卷"].append(atom)
 
         induced_events: List[InducedEvent] = []
