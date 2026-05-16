@@ -40,6 +40,13 @@ class InteractionPatternsArtifact:
     macro_tropes: List[Dict[str, Any]] = field(default_factory=list)
     plot_threads: List[Dict[str, Any]] = field(default_factory=list)
     micro_interactions: List[Dict[str, Any]] = field(default_factory=list)
+    micro_interaction_candidates: List[Dict[str, Any]] = field(default_factory=list)
+    macro_trope_candidates: List[Dict[str, Any]] = field(default_factory=list)
+    plot_thread_candidates: List[Dict[str, Any]] = field(default_factory=list)
+    micro_interaction_clusters: List[Dict[str, Any]] = field(default_factory=list)
+    macro_trope_clusters: List[Dict[str, Any]] = field(default_factory=list)
+    plot_thread_clusters: List[Dict[str, Any]] = field(default_factory=list)
+    coverage_report: Dict[str, Any] = field(default_factory=dict)
 
 
 @dataclass
@@ -49,6 +56,9 @@ class TemplateMiningArtifact:
     volume_templates: List[Dict[str, Any]] = field(default_factory=list)
     event_flow_templates: List[Dict[str, Any]] = field(default_factory=list)
     executable_templates: List[Dict[str, Any]] = field(default_factory=list)
+    template_candidates: List[Dict[str, Any]] = field(default_factory=list)
+    template_clusters: List[Dict[str, Any]] = field(default_factory=list)
+    coverage_report: Dict[str, Any] = field(default_factory=dict)
 
 
 @dataclass
@@ -84,6 +94,13 @@ def interaction_patterns_from_fused_world(fused_world: Any) -> InteractionPatter
         macro_tropes=_normalize_dict_list(getattr(fused_world, "macro_tropes", [])),
         plot_threads=_normalize_dict_list(getattr(fused_world, "plot_threads", [])),
         micro_interactions=_normalize_dict_list(getattr(fused_world, "micro_interactions", [])),
+        micro_interaction_candidates=_normalize_dict_list(getattr(fused_world, "micro_interaction_candidates", [])),
+        macro_trope_candidates=_normalize_dict_list(getattr(fused_world, "macro_trope_candidates", [])),
+        plot_thread_candidates=_normalize_dict_list(getattr(fused_world, "plot_thread_candidates", [])),
+        micro_interaction_clusters=_normalize_dict_list(getattr(fused_world, "micro_interaction_clusters", [])),
+        macro_trope_clusters=_normalize_dict_list(getattr(fused_world, "macro_trope_clusters", [])),
+        plot_thread_clusters=_normalize_dict_list(getattr(fused_world, "plot_thread_clusters", [])),
+        coverage_report=_normalize_dict(getattr(fused_world, "interaction_pattern_coverage_report", {})),
     )
 
 
@@ -94,6 +111,9 @@ def template_mining_from_fused_world(fused_world: Any) -> TemplateMiningArtifact
         volume_templates=_normalize_dict_list(getattr(fused_world, "volume_templates", [])),
         event_flow_templates=_normalize_dict_list(getattr(fused_world, "event_flow_templates", [])),
         executable_templates=_normalize_dict_list(getattr(fused_world, "executable_templates", [])),
+        template_candidates=_normalize_dict_list(getattr(fused_world, "template_candidates", [])),
+        template_clusters=_normalize_dict_list(getattr(fused_world, "template_clusters", [])),
+        coverage_report=_normalize_dict(getattr(fused_world, "template_mining_coverage_report", {})),
     )
 
 
@@ -120,6 +140,16 @@ def _normalize_dict_list(values: Any) -> List[Dict[str, Any]]:
     return normalized
 
 
+def _normalize_dict(value: Any) -> Dict[str, Any]:
+    if isinstance(value, dict):
+        return dict(value)
+    if is_dataclass(value):
+        return asdict(value)
+    if hasattr(value, "__dict__"):
+        return dict(vars(value))
+    return {}
+
+
 def _as_list(value: Any) -> List[Any]:
     if isinstance(value, list):
         return list(value)
@@ -136,4 +166,3 @@ def _to_serializable(value: Any) -> Any:
     if isinstance(value, list):
         return [_to_serializable(item) for item in value]
     return value
-

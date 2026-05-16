@@ -105,11 +105,21 @@ class FusedWorld:
     macro_tropes: List[Dict[str, Any]] = field(default_factory=list)
     plot_threads: List[Dict[str, Any]] = field(default_factory=list)
     micro_interactions: List[Dict[str, Any]] = field(default_factory=list)
+    micro_interaction_candidates: List[Dict[str, Any]] = field(default_factory=list)
+    macro_trope_candidates: List[Dict[str, Any]] = field(default_factory=list)
+    plot_thread_candidates: List[Dict[str, Any]] = field(default_factory=list)
+    micro_interaction_clusters: List[Dict[str, Any]] = field(default_factory=list)
+    macro_trope_clusters: List[Dict[str, Any]] = field(default_factory=list)
+    plot_thread_clusters: List[Dict[str, Any]] = field(default_factory=list)
+    interaction_pattern_coverage_report: Dict[str, Any] = field(default_factory=dict)
     volume_templates: List[Dict[str, Any]] = field(default_factory=list)
     event_templates: List[Dict[str, Any]] = field(default_factory=list)
     role_slot_templates: List[Dict[str, Any]] = field(default_factory=list)
     event_flow_templates: List[Dict[str, Any]] = field(default_factory=list)
     executable_templates: List[Dict[str, Any]] = field(default_factory=list)
+    template_candidates: List[Dict[str, Any]] = field(default_factory=list)
+    template_clusters: List[Dict[str, Any]] = field(default_factory=list)
+    template_mining_coverage_report: Dict[str, Any] = field(default_factory=dict)
 
 
 class KnowledgeBase:
@@ -197,11 +207,21 @@ def save_world_snapshot(filename: str, fused_world: FusedWorld) -> Path:
         "macro_tropes": fused_world.macro_tropes,
         "plot_threads": fused_world.plot_threads,
         "micro_interactions": fused_world.micro_interactions,
+        "micro_interaction_candidates": fused_world.micro_interaction_candidates,
+        "macro_trope_candidates": fused_world.macro_trope_candidates,
+        "plot_thread_candidates": fused_world.plot_thread_candidates,
+        "micro_interaction_clusters": fused_world.micro_interaction_clusters,
+        "macro_trope_clusters": fused_world.macro_trope_clusters,
+        "plot_thread_clusters": fused_world.plot_thread_clusters,
+        "interaction_pattern_coverage_report": fused_world.interaction_pattern_coverage_report,
         "volume_templates": fused_world.volume_templates,
         "event_templates": fused_world.event_templates,
         "role_slot_templates": fused_world.role_slot_templates,
         "event_flow_templates": fused_world.event_flow_templates,
         "executable_templates": fused_world.executable_templates,
+        "template_candidates": fused_world.template_candidates,
+        "template_clusters": fused_world.template_clusters,
+        "template_mining_coverage_report": fused_world.template_mining_coverage_report,
     }
     return write_json_file(path, payload)
 
@@ -232,11 +252,21 @@ def load_world_snapshot(filename: str) -> FusedWorld:
         macro_tropes=data.get("macro_tropes", []),
         plot_threads=data.get("plot_threads", []),
         micro_interactions=data.get("micro_interactions", []),
+        micro_interaction_candidates=data.get("micro_interaction_candidates", []),
+        macro_trope_candidates=data.get("macro_trope_candidates", []),
+        plot_thread_candidates=data.get("plot_thread_candidates", []),
+        micro_interaction_clusters=data.get("micro_interaction_clusters", []),
+        macro_trope_clusters=data.get("macro_trope_clusters", []),
+        plot_thread_clusters=data.get("plot_thread_clusters", []),
+        interaction_pattern_coverage_report=data.get("interaction_pattern_coverage_report", {}),
         volume_templates=data.get("volume_templates", []),
         event_templates=data.get("event_templates", []),
         role_slot_templates=data.get("role_slot_templates", []),
         event_flow_templates=data.get("event_flow_templates", []),
         executable_templates=data.get("executable_templates", []),
+        template_candidates=data.get("template_candidates", []),
+        template_clusters=data.get("template_clusters", []),
+        template_mining_coverage_report=data.get("template_mining_coverage_report", {}),
     )
 
 
