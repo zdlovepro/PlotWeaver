@@ -14,6 +14,9 @@ from tqdm import tqdm
 import config
 from pipeline.core.common_json import read_json_file, safe_json_load
 from pipeline.core.story_models import Character, CharacterSheet, EventRolePlan, NarrativeSkeleton, SkeletonNode
+from pipeline.core.state_repair import repair_reassembled_events, rewrite_overpowered_win_text_by_rule
+from pipeline.core.state_validator import build_forbidden_stage_terms, validate_reassembled_events
+from pipeline.core.story_state import ProgressionStage, StateIssue, build_progression_stages, extract_max_stage_from_text, infer_stage_from_node, normalize_stage_name, stage_value
 from pipeline.core.utils import chat_completion_json, get_deepseek_client
 from pipeline.core.world_building_core import FusedWorld, KnowledgeBase
 
@@ -46,6 +49,8 @@ class ReassembledEvent:
     active_characters: List[str] = field(default_factory=list)
     state_updates: Dict[str, Any] = field(default_factory=dict)
     logic_notes: List[str] = field(default_factory=list)
+    state_validation_issues: List[Dict[str, Any]] = field(default_factory=list)
+    repair_notes: List[str] = field(default_factory=list)
 
 
 _LEDGER_KEYS = [
@@ -168,7 +173,6 @@ def reassemble_plot(
             used_trope = candidates[winner_index].get("used_trope", used_trope)
 
         state_updates = event_plan.get("state_updates", {}) if isinstance(event_plan, dict) else {}
-        _apply_state_updates(ledger, state_updates)
         logic_notes = [note for note in (plan_logic_notes + summary_logic_notes) if note]
 
         event = ReassembledEvent(
@@ -185,7 +189,10 @@ def reassemble_plot(
             state_updates=state_updates,
             logic_notes=logic_notes,
         )
+        previous_event = reassembled[-1] if reassembled else None
+        event = _validate_and_repair_reassembled_event(event, node, fused_world, previous_event)
         reassembled.append(event)
+        _apply_state_updates(ledger, event.state_updates)
         _update_rolling_context(recent_context, event.adapted_summary)
         _update_recent_micro_names(recent_micro_names, event.used_trope)
 
@@ -349,6 +356,258 @@ def _apply_state_updates(ledger: Dict[str, List[str]], state_updates: Dict[str, 
         values = raw_values if isinstance(raw_values, list) else [raw_values]
         ledger[key].extend(str(value).strip() for value in values if str(value).strip())
         ledger[key] = ledger[key][-8:]
+
+
+def _issue_to_dict(issue: StateIssue) -> Dict[str, Any]:
+    return {
+        "severity": issue.severity,
+        "issue_type": issue.issue_type,
+        "message": issue.message,
+        "node_id": issue.node_id,
+        "suggested_action": issue.suggested_action,
+    }
+
+
+def _sorted_progression_stages(stages: List[ProgressionStage]) -> List[ProgressionStage]:
+    return sorted(stages, key=lambda item: (item.stage_index, item.name))
+
+
+def _stage_position(stage_name: str, stages: List[ProgressionStage]) -> int:
+    canonical = normalize_stage_name(stage_name, stages)
+    if not canonical:
+        return -1
+    for index, stage in enumerate(_sorted_progression_stages(stages)):
+        if stage.name == canonical:
+            return index
+    return -1
+
+
+def _stage_from_level_hint(level_hint: Any, stages: List[ProgressionStage]) -> str:
+    if isinstance(level_hint, bool):
+        return ""
+    if isinstance(level_hint, (int, float)):
+        numeric = int(level_hint)
+        for stage in stages:
+            if stage.stage_index == numeric:
+                return stage.name
+    return ""
+
+
+def _next_stage_name(stage_name: str, stages: List[ProgressionStage]) -> str:
+    ordered = _sorted_progression_stages(stages)
+    position = _stage_position(stage_name, stages)
+    if position < 0 or not ordered:
+        return stage_name
+    return ordered[min(len(ordered) - 1, position + 1)].name
+
+
+def _build_event_allowed_state(
+    node: SkeletonNode,
+    previous_event: Optional[ReassembledEvent],
+    fused_world: FusedWorld,
+) -> tuple[Dict[str, Any], List[ProgressionStage]]:
+    stages = build_progression_stages(fused_world)
+    protagonist_stage = ""
+    if previous_event:
+        protagonist_stage = (
+            str(previous_event.state_updates.get("power_state", "")).strip()
+            if isinstance(previous_event.state_updates, dict)
+            else ""
+        )
+        if not protagonist_stage:
+            protagonist_stage = infer_stage_from_node(previous_event, stages)
+    if not protagonist_stage:
+        protagonist_stage = str((node.logic_card or {}).get("power_state", "") or "").strip()
+    if not protagonist_stage:
+        protagonist_stage = infer_stage_from_node(node, stages)
+    if not protagonist_stage:
+        protagonist_stage = _stage_from_level_hint(node.realm_level, stages)
+
+    max_stage = protagonist_stage or _stage_from_level_hint(node.realm_level, stages)
+    if not max_stage and stages:
+        max_stage = _sorted_progression_stages(stages)[0].name
+
+    forbidden_terms = build_forbidden_stage_terms(max_stage, stages, margin=1)
+    if "凝气" in max_stage:
+        forbidden_terms.extend(["金丹", "元婴", "结婴", "化神", "古神传承"])
+    elif "筑基" in max_stage:
+        forbidden_terms.extend(["元婴", "结婴", "化神", "古神传承"])
+
+    deduped_terms: List[str] = []
+    for term in forbidden_terms:
+        clean = str(term or "").strip()
+        if clean and clean not in deduped_terms:
+            deduped_terms.append(clean)
+
+    return {
+        "max_realm": node.realm_level,
+        "max_stage": max_stage,
+        "stage_ceiling": max_stage,
+        "protagonist_realm": protagonist_stage or max_stage,
+        "allowed_opponent_stage": _next_stage_name(protagonist_stage or max_stage, stages),
+        "forbidden_terms": deduped_terms,
+    }, stages
+
+
+def _collect_event_validation_issues(
+    event: ReassembledEvent,
+    fused_world: FusedWorld,
+    allowed_state: Dict[str, Any],
+    stages: List[ProgressionStage],
+) -> List[StateIssue]:
+    issues = list(validate_reassembled_events([event], fused_world))
+    text_parts = [
+        event.adapted_summary,
+        json.dumps(event.event_plan, ensure_ascii=False) if isinstance(event.event_plan, dict) else str(event.event_plan or ""),
+        json.dumps(event.state_updates, ensure_ascii=False) if isinstance(event.state_updates, dict) else str(event.state_updates or ""),
+    ]
+    combined_text = " ".join(part for part in text_parts if part).strip()
+    max_stage = str(allowed_state.get("max_stage", "") or "").strip()
+    max_position = _stage_position(max_stage, stages)
+    protagonist_stage = str(allowed_state.get("protagonist_realm", "") or max_stage).strip()
+
+    if max_stage and combined_text:
+        detected_max = extract_max_stage_from_text(combined_text, stages)
+        detected_position = _stage_position(detected_max, stages)
+        if detected_max and max_position >= 0 and detected_position > max_position + 1:
+            severity = "fatal" if detected_position > max_position + 2 else "major"
+            issues.append(
+                StateIssue(
+                    severity=severity,
+                    issue_type="event_stage_overflow",
+                    message=f"Event references stage {detected_max}, which exceeds current allowed stage {max_stage}.",
+                    node_id=event.event_id,
+                    suggested_action="降低敌方/外部威胁阶段，或改写为压迫、逃脱、借力与外围线索。",
+                )
+            )
+
+    current_stage = infer_stage_from_node(event, stages)
+    current_position = _stage_position(current_stage, stages)
+    if current_stage and max_position >= 0 and current_position > max_position:
+        issues.append(
+            StateIssue(
+                severity="major",
+                issue_type="event_protagonist_stage_overflow",
+                message=f"Event protagonist stage {current_stage} exceeds allowed stage ceiling {max_stage}.",
+                node_id=event.event_id,
+                suggested_action="将事件的主角成长状态压回当前阶段上限。",
+            )
+        )
+
+    for forbidden_term in allowed_state.get("forbidden_terms", []):
+        if forbidden_term and forbidden_term in combined_text:
+            issues.append(
+                StateIssue(
+                    severity="major",
+                    issue_type="forbidden_stage_term",
+                    message=f"Event text contains forbidden term beyond current stage band: {forbidden_term}.",
+                    node_id=event.event_id,
+                    suggested_action="替换超阶术语，或改写为当前阶段可接触的外围压力与线索。",
+                )
+            )
+            break
+
+    if protagonist_stage and stage_value(protagonist_stage, stages) == -1 and max_stage:
+        issues.append(
+            StateIssue(
+                severity="minor",
+                issue_type="unknown_protagonist_stage",
+                message=f"Unable to normalize protagonist stage from allowed state: {protagonist_stage}.",
+                node_id=event.event_id,
+                suggested_action="补充 node.logic_card.power_state 或上一个事件的 power_state。",
+            )
+        )
+
+    return issues
+
+
+def _apply_rule_based_event_repairs(
+    event: ReassembledEvent,
+    allowed_state: Dict[str, Any],
+    stages: List[ProgressionStage],
+) -> bool:
+    changed = False
+    protagonist_stage = str(allowed_state.get("protagonist_realm", "") or allowed_state.get("max_stage", "")).strip()
+    rewritten_summary = rewrite_overpowered_win_text_by_rule(event.adapted_summary, protagonist_stage, stages)
+    if rewritten_summary and rewritten_summary != event.adapted_summary:
+        event.adapted_summary = rewritten_summary
+        event.repair_notes.append("rule_rewrite_overpowered_summary")
+        changed = True
+
+    if isinstance(event.event_plan, dict):
+        for key in ("summary_seed", "outcome", "reversal", "cost"):
+            value = event.event_plan.get(key)
+            if isinstance(value, str):
+                rewritten_value = rewrite_overpowered_win_text_by_rule(value, protagonist_stage, stages)
+                if rewritten_value and rewritten_value != value:
+                    event.event_plan[key] = rewritten_value
+                    changed = True
+        state_updates = event.event_plan.get("state_updates")
+        if isinstance(state_updates, dict) and protagonist_stage:
+            power_state = str(state_updates.get("power_state", "") or "").strip()
+            if power_state and _stage_position(power_state, stages) > _stage_position(str(allowed_state.get("max_stage", "") or ""), stages):
+                state_updates["power_state"] = allowed_state.get("max_stage", protagonist_stage)
+                event.event_plan["state_updates"] = state_updates
+                event.repair_notes.append("rule_cap_event_plan_power_state")
+                changed = True
+
+    if isinstance(event.state_updates, dict) and protagonist_stage:
+        power_state = str(event.state_updates.get("power_state", "") or "").strip()
+        if power_state and _stage_position(power_state, stages) > _stage_position(str(allowed_state.get("max_stage", "") or ""), stages):
+            event.state_updates["power_state"] = allowed_state.get("max_stage", protagonist_stage)
+            event.repair_notes.append("rule_cap_state_updates_power_state")
+            changed = True
+
+    return changed
+
+
+def _apply_repaired_record_to_event(event: ReassembledEvent, record: Dict[str, Any]) -> ReassembledEvent:
+    if not isinstance(record, dict):
+        return event
+    for field_name in ReassembledEvent.__dataclass_fields__:
+        if field_name in record:
+            setattr(event, field_name, record[field_name])
+    if isinstance(record.get("summary"), str) and not event.adapted_summary:
+        event.adapted_summary = record["summary"]
+    return event
+
+
+def _validate_and_repair_reassembled_event(
+    event: ReassembledEvent,
+    node: SkeletonNode,
+    fused_world: FusedWorld,
+    previous_event: Optional[ReassembledEvent],
+) -> ReassembledEvent:
+    allowed_state, stages = _build_event_allowed_state(node, previous_event, fused_world)
+    issues = _collect_event_validation_issues(event, fused_world, allowed_state, stages)
+    event.state_validation_issues = [_issue_to_dict(issue) for issue in issues]
+
+    if any(issue.severity in {"fatal", "major"} for issue in issues):
+        _apply_rule_based_event_repairs(event, allowed_state, stages)
+        issues = _collect_event_validation_issues(event, fused_world, allowed_state, stages)
+        if any(issue.severity in {"fatal", "major"} for issue in issues):
+            repaired_events, _remaining = repair_reassembled_events(
+                [event],
+                world=fused_world,
+                allowed_state=allowed_state,
+                max_rounds=2,
+            )
+            if repaired_events:
+                repaired_record = repaired_events[-1]
+                event = _apply_repaired_record_to_event(event, repaired_record if isinstance(repaired_record, dict) else {})
+            issues = _collect_event_validation_issues(event, fused_world, allowed_state, stages)
+
+    event.state_validation_issues = [_issue_to_dict(issue) for issue in issues]
+    if any(issue.severity == "fatal" for issue in issues):
+        fatal_labels = [f"[{issue.issue_type}] {issue.message}" for issue in issues if issue.severity == "fatal"]
+        event.logic_notes.extend(label for label in fatal_labels if label not in event.logic_notes)
+        if "fatal_state_validation_after_repair" not in event.repair_notes:
+            event.repair_notes.append("fatal_state_validation_after_repair")
+        raise RuntimeError(
+            f"Step11 aborted: event {event.event_id} still has fatal state issues after repair: "
+            + " | ".join(fatal_labels)
+        )
+    return event
 
 
 def _format_recent_story_context(recent_context: List[str]) -> str:
