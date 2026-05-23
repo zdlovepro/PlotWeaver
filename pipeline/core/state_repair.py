@@ -133,6 +133,14 @@ def rewrite_overpowered_win_text_by_rule(
     return _replace_direct_win_phrases(raw_text, external_max_stage) or _RESIDUAL_REWRITE
 
 
+def downgrade_overpowered_enemy_text(
+    text: str,
+    protagonist_stage: str,
+    stages: List[ProgressionStage],
+) -> str:
+    return rewrite_overpowered_win_text_by_rule(text, protagonist_stage, stages)
+
+
 def build_rewrite_prompt(
     node_or_event: Any,
     issues: List[StateIssue],
@@ -793,6 +801,7 @@ __all__ = [
     "classify_issue_action",
     "get_allowed_opponent_stage",
     "rewrite_overpowered_win_text_by_rule",
+    "downgrade_overpowered_enemy_text",
     "build_rewrite_prompt",
     "repair_event_with_ai",
     "make_bridge_node",

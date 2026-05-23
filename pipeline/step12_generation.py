@@ -11,9 +11,14 @@ from tqdm import tqdm
 
 import config
 from pipeline.core.common_json import read_json_file, safe_json_load, write_json_file
-from pipeline.core.state_repair import get_allowed_opponent_stage, repair_volume_outline
+from pipeline.core.state_repair import (
+    downgrade_overpowered_enemy_text,
+    get_allowed_opponent_stage,
+    repair_event_with_ai,
+    repair_volume_outline,
+)
 from pipeline.core.state_validator import build_forbidden_stage_terms, validate_volume_outline
-from pipeline.core.story_state import ProgressionStage, build_progression_stages, extract_max_stage_from_text, infer_stage_from_node, normalize_stage_name, stage_value
+from pipeline.core.story_state import ProgressionStage, StateIssue, build_progression_stages, extract_max_stage_from_text, infer_stage_from_node, normalize_stage_name, stage_value
 from pipeline.core.story_models import CharacterSheet
 from pipeline.core.utils import chat_completion_json, get_deepseek_client
 from pipeline.core.world_building_core import FusedWorld
@@ -44,6 +49,8 @@ class VolumeOutline:
     validation_notes: List[str] = field(default_factory=list)
     state_validation_issues: List[Dict[str, Any]] = field(default_factory=list)
     repair_notes: List[str] = field(default_factory=list)
+    state_validation_failed: bool = False
+    fatal_issues: List[Dict[str, Any]] = field(default_factory=list)
 
 
 def generate_volumes(reassembled_events: List[ReassembledEvent], fused_world: FusedWorld, character_sheet: CharacterSheet) -> List[VolumeOutline]:
@@ -71,7 +78,7 @@ def generate_volumes(reassembled_events: List[ReassembledEvent], fused_world: Fu
             previous_tail_chapters=previous_tail_chapters,
             allowed_state=allowed_state,
         )
-        outline = _validate_and_repair_generated_volume_with_allowed_state(outline, events, fused_world, allowed_state)
+        outline = _postprocess_generated_volume_outline(outline, events, fused_world, allowed_state)
         volumes.append(outline)
         previous_ending_state = outline.ending_state
         previous_tail_chapters = outline.chapter_summaries[-5:] if len(outline.chapter_summaries) >= 5 else outline.chapter_summaries
@@ -471,6 +478,232 @@ def _validate_and_repair_generated_volume_with_allowed_state(
             f"Step12 aborted: volume {outline.volume_number} still has fatal state issues after repair: "
             + " | ".join(fatal_labels)
         )
+    return outline
+
+
+def _extract_chapter_issue_number(node_id: str) -> Optional[int]:
+    match = re.search(r"_chapter_(\d+)$", str(node_id or ""))
+    if not match:
+        return None
+    return int(match.group(1))
+
+
+def _non_empty_summary_positions(chapter_summaries: List[str]) -> List[int]:
+    positions: List[int] = []
+    for index, summary in enumerate(chapter_summaries):
+        if str(summary or "").strip():
+            positions.append(index)
+    return positions
+
+
+def _failure_term_for_volume_max(volume_max_realm: str) -> str:
+    text = str(volume_max_realm or "")
+    if "凝气" in text:
+        return "筑基失败"
+    if "筑基" in text:
+        return "结丹失败"
+    return f"{text}突破失败" if text else "突破失败"
+
+
+def _repair_volume_text_by_rule(
+    text: str,
+    volume_max_realm: str,
+    forbidden_terms: List[str],
+    stages: List[ProgressionStage],
+) -> str:
+    rewritten = downgrade_overpowered_enemy_text(str(text or ""), volume_max_realm, stages)
+    replacements = {
+        "反杀金丹追兵": "借禁制拖住筑基追兵并趁乱逃脱",
+        "击杀金丹追兵": "借禁制拖住筑基追兵并趁乱逃脱",
+        "斩杀金丹追兵": "借禁制拖住筑基追兵并趁乱逃脱",
+    }
+    for source, target in replacements.items():
+        if source in rewritten:
+            rewritten = rewritten.replace(source, target)
+    if any(token in rewritten for token in ("击杀元婴残魂", "斩杀元婴残魂", "反杀元婴残魂", "正面击败元婴残魂")):
+        rewritten = "避开元婴残魂残念锁定，获得外围线索"
+    if "结婴失败" in rewritten and "结婴" in forbidden_terms:
+        rewritten = rewritten.replace("结婴失败", _failure_term_for_volume_max(volume_max_realm))
+    return rewritten
+
+
+def _apply_rule_repairs_to_volume_outline(
+    outline: VolumeOutline,
+    fused_world: FusedWorld,
+    allowed_state: Dict[str, Any],
+) -> bool:
+    stages = build_progression_stages(fused_world)
+    volume_max_realm = str(allowed_state.get("volume_max_realm", "") or allowed_state.get("max_stage", "")).strip()
+    forbidden_terms = [str(item).strip() for item in allowed_state.get("forbidden_terms", []) if str(item).strip()]
+    changed = False
+
+    repaired_chapters: List[str] = []
+    for chapter in outline.chapter_summaries:
+        repaired = _repair_volume_text_by_rule(chapter, volume_max_realm, forbidden_terms, stages)
+        if repaired != chapter:
+            changed = True
+        repaired_chapters.append(repaired)
+    outline.chapter_summaries = repaired_chapters
+
+    repaired_ending_state = _repair_volume_text_by_rule(outline.ending_state, volume_max_realm, forbidden_terms, stages)
+    if repaired_ending_state != outline.ending_state:
+        outline.ending_state = repaired_ending_state
+        changed = True
+
+    repaired_raw_text = _repair_volume_text_by_rule(outline.raw_text, volume_max_realm, forbidden_terms, stages)
+    if repaired_raw_text != outline.raw_text:
+        outline.raw_text = repaired_raw_text
+        changed = True
+
+    if changed:
+        outline.repair_notes.append("rule_repaired_volume_outline")
+    return changed
+
+
+def _repair_volume_outline_with_ai(
+    outline: VolumeOutline,
+    issues: List[Any],
+    allowed_state: Dict[str, Any],
+    fused_world: FusedWorld,
+) -> VolumeOutline:
+    stages = build_progression_stages(fused_world)
+    chapter_positions = _non_empty_summary_positions(outline.chapter_summaries)
+    grouped_by_chapter: Dict[int, List[Any]] = {}
+    volume_level_issues: List[Any] = []
+    for issue in issues:
+        chapter_no = _extract_chapter_issue_number(getattr(issue, "node_id", ""))
+        if chapter_no is None:
+            volume_level_issues.append(issue)
+            continue
+        grouped_by_chapter.setdefault(chapter_no, []).append(issue)
+
+    for chapter_no, chapter_issues in grouped_by_chapter.items():
+        chapter_index = chapter_no - 1
+        if chapter_index < 0 or chapter_index >= len(chapter_positions):
+            continue
+        actual_index = chapter_positions[chapter_index]
+        pseudo_record = {
+            "event_id": f"volume_{outline.volume_number}_chapter_{chapter_no}",
+            "summary": outline.chapter_summaries[actual_index],
+            "raw_text": outline.raw_text,
+            "chapter_summaries": outline.chapter_summaries,
+            "ending_state": outline.ending_state,
+            "state_updates": {"power_state": allowed_state.get("volume_max_realm", "")},
+        }
+        repaired = repair_event_with_ai(pseudo_record, chapter_issues, {
+            "max_stage": allowed_state.get("volume_max_realm", ""),
+            "forbidden_terms": allowed_state.get("forbidden_terms", []),
+            "allowed_opponent_stage": allowed_state.get("allowed_opponent_stage", ""),
+        }, stages)
+        rewritten_summary = str(repaired.get("summary", "") or repaired.get("rewritten_summary", "") or "").strip()
+        if rewritten_summary:
+            outline.chapter_summaries[actual_index] = rewritten_summary
+        for note in repaired.get("repair_notes", []):
+            clean = str(note).strip()
+            if clean and clean not in outline.repair_notes:
+                outline.repair_notes.append(clean)
+
+    if volume_level_issues:
+        pseudo_record = {
+            "event_id": f"volume_{outline.volume_number}",
+            "summary": outline.ending_state or "\n".join(outline.chapter_summaries),
+            "raw_text": outline.raw_text,
+            "chapter_summaries": outline.chapter_summaries,
+            "ending_state": outline.ending_state,
+            "state_updates": {"power_state": allowed_state.get("volume_max_realm", "")},
+        }
+        repaired = repair_event_with_ai(pseudo_record, volume_level_issues, {
+            "max_stage": allowed_state.get("volume_max_realm", ""),
+            "forbidden_terms": allowed_state.get("forbidden_terms", []),
+            "allowed_opponent_stage": allowed_state.get("allowed_opponent_stage", ""),
+        }, stages)
+        rewritten_summary = str(repaired.get("summary", "") or repaired.get("rewritten_summary", "") or "").strip()
+        if rewritten_summary:
+            outline.ending_state = rewritten_summary
+        for note in repaired.get("repair_notes", []):
+            clean = str(note).strip()
+            if clean and clean not in outline.repair_notes:
+                outline.repair_notes.append(clean)
+        outline.repair_notes.append("ai_repaired_volume_outline")
+
+    return outline
+
+
+def _postprocess_generated_volume_outline(
+    outline: VolumeOutline,
+    source_events: List[ReassembledEvent],
+    fused_world: FusedWorld,
+    allowed_state: Dict[str, Any],
+) -> VolumeOutline:
+    effective_allowed_state = _merge_allowed_state(
+        allowed_state,
+        _build_volume_allowed_state(outline.realm_range, source_events, outline.ending_state, fused_world),
+    )
+    _refresh_outline_state_fields(outline, effective_allowed_state, fused_world)
+    raw_trigger_terms = _find_forbidden_terms_used(
+        _collect_volume_texts(outline, include_raw_text=True),
+        list(effective_allowed_state.get("forbidden_terms", [])),
+    )
+
+    issues = list(validate_volume_outline(asdict(outline), fused_world))
+    if raw_trigger_terms:
+        outline.validation_notes.append(
+            "forbidden_terms_detected_before_save: " + "、".join(raw_trigger_terms)
+        )
+    outline.state_validation_issues = [_issue_to_dict(issue) for issue in issues]
+    if not issues and not raw_trigger_terms:
+        outline.state_validation_failed = False
+        outline.fatal_issues = []
+        return outline
+
+    blocking_issues = [issue for issue in issues if getattr(issue, "severity", "") in {"major", "fatal"}]
+    if blocking_issues or raw_trigger_terms:
+        _apply_rule_repairs_to_volume_outline(outline, fused_world, effective_allowed_state)
+        _refresh_outline_state_fields(outline, effective_allowed_state, fused_world)
+        issues = list(validate_volume_outline(asdict(outline), fused_world))
+        raw_trigger_terms = _find_forbidden_terms_used(
+            _collect_volume_texts(outline, include_raw_text=True),
+            list(effective_allowed_state.get("forbidden_terms", [])),
+        )
+        blocking_issues = [issue for issue in issues if getattr(issue, "severity", "") in {"major", "fatal"}]
+
+    ai_issues = list(blocking_issues)
+    if raw_trigger_terms:
+        ai_issues.append(
+            StateIssue(
+                severity="fatal",
+                issue_type="forbidden_terms_remaining",
+                message="Volume still contains forbidden terms after rule repair: " + "、".join(raw_trigger_terms),
+                node_id=f"volume_{outline.volume_number}",
+                suggested_action="只修正违规章节中的高阶内容，不改写整卷主线。",
+            )
+        )
+
+    if any(getattr(issue, "severity", "") == "fatal" for issue in blocking_issues) or raw_trigger_terms:
+        outline = _repair_volume_outline_with_ai(outline, ai_issues, effective_allowed_state, fused_world)
+        _refresh_outline_state_fields(outline, effective_allowed_state, fused_world)
+        issues = list(validate_volume_outline(asdict(outline), fused_world))
+        raw_trigger_terms = _find_forbidden_terms_used(
+            _collect_volume_texts(outline, include_raw_text=True),
+            list(effective_allowed_state.get("forbidden_terms", [])),
+        )
+
+    outline.state_validation_issues = [_issue_to_dict(issue) for issue in issues]
+    fatal_issues = [issue for issue in issues if getattr(issue, "severity", "") == "fatal"]
+    outline.fatal_issues = [_issue_to_dict(issue) for issue in fatal_issues]
+    if raw_trigger_terms:
+        outline.fatal_issues.append(
+            {
+                "severity": "fatal",
+                "issue_type": "forbidden_terms_remaining",
+                "message": "Volume still contains forbidden terms after repair: " + "、".join(raw_trigger_terms),
+                "node_id": f"volume_{outline.volume_number}",
+                "suggested_action": "继续降低违规章节中的高阶设定或改写为外围威胁。",
+            }
+        )
+    outline.state_validation_failed = bool(fatal_issues or raw_trigger_terms)
+    if outline.state_validation_failed:
+        outline.validation_notes.append("volume_outline_still_has_fatal_state_issues")
     return outline
 
 
