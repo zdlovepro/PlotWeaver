@@ -347,7 +347,7 @@ def _load_source_texts(input_dir: Path) -> Dict[str, str]:
 
 if __name__ == "__main__":
     args = _parse_args()
-    args.start_step = 4
+    args.start_step = 6
     args.end_step = 7
     completed_full = run_pipeline(start_step=args.start_step, end_step=args.end_step)
 

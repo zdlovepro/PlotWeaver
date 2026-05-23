@@ -480,7 +480,10 @@ def _cluster_candidates(
         best_index = -1
         best_score = 0.0
         for index, cluster in enumerate(clusters):
-            score = similarity_fn(candidate, cluster["representative_candidate"])
+            representative = _resolve_cluster_representative(cluster)
+            if not representative:
+                continue
+            score = similarity_fn(candidate, representative)
             if score > best_score:
                 best_score = score
                 best_index = index
@@ -491,12 +494,18 @@ def _cluster_candidates(
                 {
                     "cluster_id": f"{prefix}_{len(clusters) + 1:04d}",
                     "cluster_key": key_builder(candidate),
+                    "representative_candidate": candidate,
                     "members": [candidate],
                 }
             )
     normalized: List[Dict[str, Any]] = []
     for cluster in clusters:
-        members = cluster.pop("members")
+        members = list(cluster.pop("members", []) or [])
+        if not members:
+            representative = _resolve_cluster_representative(cluster)
+            if not representative:
+                continue
+            members = [representative]
         representative = _pick_representative_candidate(members)
         normalized.append(
             {
@@ -515,6 +524,19 @@ def _cluster_candidates(
             }
         )
     return normalized
+
+
+def _resolve_cluster_representative(cluster: Dict[str, Any]) -> Dict[str, Any]:
+    representative = cluster.get("representative_candidate")
+    if isinstance(representative, dict) and representative:
+        return representative
+    for key in ("candidates", "items", "members", "examples"):
+        collection = cluster.get(key, [])
+        if isinstance(collection, list) and collection:
+            first = collection[0]
+            if isinstance(first, dict) and first:
+                return first
+    return {}
 
 
 def _select_clusters(

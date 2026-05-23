@@ -435,7 +435,10 @@ def _cluster_template_candidates(candidates: List[Dict[str, Any]]) -> List[Dict[
         best_index = -1
         best_score = 0.0
         for index, cluster in enumerate(clusters):
-            score = _template_similarity(candidate, cluster["representative_candidate"])
+            representative = _resolve_template_cluster_representative(cluster)
+            if not representative:
+                continue
+            score = _template_similarity(candidate, representative)
             if score > best_score:
                 best_score = score
                 best_index = index
@@ -446,12 +449,18 @@ def _cluster_template_candidates(candidates: List[Dict[str, Any]]) -> List[Dict[
                 {
                     "cluster_id": f"template_cluster_{len(clusters) + 1:04d}",
                     "cluster_key": _template_cluster_key(candidate),
+                    "representative_candidate": candidate,
                     "members": [candidate],
                 }
             )
     normalized: List[Dict[str, Any]] = []
     for cluster in clusters:
-        members = cluster.pop("members")
+        members = list(cluster.pop("members", []) or [])
+        if not members:
+            representative = _resolve_template_cluster_representative(cluster)
+            if not representative:
+                continue
+            members = [representative]
         representative = _pick_representative_candidate(members)
         merged_beats = _merge_tag_lists(item.get("beat_signature", []) for item in members)
         merged_state = _merge_tag_lists(item.get("state_delta_signature", []) for item in members)
@@ -484,6 +493,19 @@ def _cluster_template_candidates(candidates: List[Dict[str, Any]]) -> List[Dict[
             }
         )
     return normalized
+
+
+def _resolve_template_cluster_representative(cluster: Dict[str, Any]) -> Dict[str, Any]:
+    representative = cluster.get("representative_candidate")
+    if isinstance(representative, dict) and representative:
+        return representative
+    for key in ("candidates", "items", "members", "examples"):
+        collection = cluster.get(key, [])
+        if isinstance(collection, list) and collection:
+            first = collection[0]
+            if isinstance(first, dict) and first:
+                return first
+    return {}
 
 
 def _consolidate_template_clusters(clusters: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
