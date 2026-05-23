@@ -267,7 +267,7 @@ def _mine_plot_thread_candidates(client, atoms: List[PlotAtom]) -> List[Dict[str
             {
                 "candidate_id": f"thread_candidate_{len(candidates) + 1:04d}",
                 "source_refs": [atom.atom_id for atom in atoms_for_pair],
-                "novel_sources": _dedupe_text_values([atom.novel_source for atom in atoms_for_pair]),
+                "novel_sources": dedupe_text_values([atom.novel_source for atom in atoms_for_pair]),
                 "character_keys": pair["character_keys"],
                 "display_characters": pair["display_characters"],
                 "thread_type": thread_type,
@@ -503,11 +503,11 @@ def _cluster_candidates(
                 "cluster_id": cluster["cluster_id"],
                 "cluster_key": cluster["cluster_key"],
                 "candidate_ids": [item.get("candidate_id", "") for item in members],
-                "source_refs": _dedupe_text_values(
+                "source_refs": dedupe_text_values(
                     [ref for item in members for ref in flatten_text_values([item.get("source_refs", [])])]
                 ),
                 "support_count": len(members),
-                "novel_sources": _dedupe_text_values(
+                "novel_sources": dedupe_text_values(
                     [source for item in members for source in flatten_text_values([item.get("novel_sources", [])])]
                 ),
                 "representative_candidate": representative,

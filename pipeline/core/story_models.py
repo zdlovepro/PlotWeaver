@@ -27,6 +27,12 @@ class SkeletonNode:
     selection_source_index: int = -1
     logic_card: Dict[str, Any] = field(default_factory=dict)
     logic_notes: List[str] = field(default_factory=list)
+    source_induced_event_ids: List[str] = field(default_factory=list)
+    source_atom_ids: List[str] = field(default_factory=list)
+    source_refs: List[Dict[str, Any]] = field(default_factory=list)
+    stage: str = ""
+    power_stage: str = ""
+    metadata: Dict[str, Any] = field(default_factory=dict)
 
 
 @dataclass
