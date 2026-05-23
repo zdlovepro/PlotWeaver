@@ -44,8 +44,8 @@ def build_skeleton(
             if nodes:
                 per_novel_nodes[novel_name] = nodes
 
-    fused_nodes = core._blend_source_skeleton_nodes(base_novel, per_novel_nodes)
-    fused_nodes = core._refine_skeleton_sequence(base_novel, fused_nodes, per_novel_nodes)
+    fused_nodes = core._blend_source_skeleton_nodes(base_novel, per_novel_nodes, fused_world)
+    fused_nodes = core._refine_skeleton_sequence(base_novel, fused_nodes, per_novel_nodes, fused_world)
     print(
         f"[Step 9] Skeleton generated with {len(fused_nodes)} paced slots filled from "
         f"{len(per_novel_nodes)} source novel(s); the base novel only provides pacing."

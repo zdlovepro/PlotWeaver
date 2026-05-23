@@ -12,6 +12,13 @@ from tenacity import retry, stop_after_attempt, wait_exponential
 from pipeline.core.common_json import read_json_file, safe_json_load, write_json_file
 from pipeline.core.common_text import dedupe_texts, flatten_text_values
 from pipeline.core.story_models import Character, CharacterSheet, EventRolePlan, NarrativeSkeleton, SkeletonNode, StageNetwork
+from pipeline.core.story_state import (
+    ProgressionStage,
+    build_progression_stages,
+    extract_max_stage_from_text,
+    infer_stage_from_node,
+    stage_value,
+)
 from pipeline.core.utils import chat_completion_json, get_deepseek_client
 from pipeline.core.world_building_core import FusedWorld
 from pipeline.step1_chunking import VolumeArc
@@ -22,6 +29,53 @@ from pipeline.step3_event_induction import InducedEvent
 _DEFAULT_ROLE_SLOTS = ["阻碍者", "消息提供者", "短期盟友", "旁观者"]
 _SKELETON_BEAM_WIDTH = 6
 _SKELETON_SLOT_CANDIDATE_LIMIT = 6
+
+_STATE_BRIDGE_KEYWORDS = (
+    "误入",
+    "传送",
+    "被俘",
+    "潜入",
+    "任务",
+    "追杀",
+    "调查",
+    "册封",
+    "继承仪式",
+    "远征",
+    "护送",
+    "开启入口",
+)
+
+_WEAK_CONTACT_KEYWORDS = (
+    "远景威胁",
+    "传闻",
+    "压迫",
+    "追杀",
+    "逃脱",
+    "脱身",
+    "被救",
+    "周旋",
+    "险些被杀",
+    "逼退",
+    "拖住",
+    "禁制",
+    "外力",
+)
+
+_OVERPOWER_WIN_KEYWORDS = (
+    "击杀",
+    "反杀",
+    "斩杀",
+    "正面击败",
+    "碾压",
+    "单独击败",
+)
+
+_LOW_IDENTITY_HINTS = ("普通成员", "底层成员", "学徒", "杂役", "新人", "外门", "记名", "普通弟子")
+_HIGH_IDENTITY_HINTS = ("核心成员", "传承者", "掌权者", "圣子", "首领", "亲传", "长老", "内门", "执事")
+_OPPOSITION_IDENTITY_HINTS = ("敌方", "敌营", "叛军", "魔教", "邪教", "总部", "宿敌阵营")
+
+_REGULAR_LOCATION_HINTS = ("宗门", "学院", "基地", "城市", "村镇", "安全区", "营地", "城池")
+_EXTREME_LOCATION_HINTS = ("敌方总部", "敌营", "秘境", "异界", "古遗迹", "遗迹", "禁区", "深渊", "星域", "总部")
 
 
 @dataclass
@@ -410,13 +464,18 @@ def _extract_skeleton_nodes(arcs: List[VolumeArc], atoms: List[PlotAtom], fused_
     return extract_impl(arcs, atoms, fused_world)
 
 
-def _blend_source_skeleton_nodes(base_novel: str, per_novel_nodes: Dict[str, List[SkeletonNode]]) -> List[SkeletonNode]:
+def _blend_source_skeleton_nodes(
+    base_novel: str,
+    per_novel_nodes: Dict[str, List[SkeletonNode]],
+    fused_world: Optional[FusedWorld] = None,
+) -> List[SkeletonNode]:
     if not per_novel_nodes:
         return []
     base_nodes = per_novel_nodes.get(base_novel) or next(iter(per_novel_nodes.values()))
     candidate_pool = _flatten_node_candidates(per_novel_nodes)
     if not candidate_pool:
         return base_nodes
+    progression_stages = build_progression_stages(fused_world)
 
     slots = [
         _build_pacing_slot(
@@ -440,6 +499,7 @@ def _blend_source_skeleton_nodes(base_novel: str, per_novel_nodes: Dict[str, Lis
                 candidate_pool=candidate_pool,
                 path=path,
                 source_limits=source_limits,
+                progression_stages=progression_stages,
                 limit=_SKELETON_SLOT_CANDIDATE_LIMIT,
             )
             if not ranked_candidates:
@@ -497,6 +557,7 @@ def _top_path_candidates(
     candidate_pool: List[Dict[str, Any]],
     path: _SkeletonSearchPath,
     source_limits: Dict[str, int],
+    progression_stages: List[ProgressionStage],
     limit: int,
 ) -> List[tuple[float, Dict[str, Any]]]:
     ranked: List[tuple[float, Dict[str, Any]]] = []
@@ -504,7 +565,14 @@ def _top_path_candidates(
         candidate_ref = _candidate_ref(candidate)
         if candidate_ref in path.used_refs:
             continue
-        base_score = _score_candidate_for_slot(slot, candidate, path.recent_picks, path.usage_counts, source_limits)
+        base_score = _score_candidate_for_slot(
+            slot,
+            candidate,
+            path.recent_picks,
+            path.usage_counts,
+            source_limits,
+            progression_stages=progression_stages,
+        )
         if base_score <= -1e8:
             continue
         total_score = base_score + _state_ledger_score(path, candidate["node"])
@@ -641,6 +709,9 @@ def _build_pacing_slot(
         "source_novel_count": source_novel_count,
         "arc_name": base_node.arc_name,
         "realm_level": base_node.realm_level,
+        "stage": getattr(base_node, "stage", ""),
+        "power_stage": getattr(base_node, "power_stage", ""),
+        "summary": base_node.original_summary,
         "pacing_role": base_node.pacing_role,
         "function_hint": base_node.function_hint,
         "conflict_hint": base_node.conflict_hint,
@@ -662,12 +733,20 @@ def _select_candidate_for_slot(
     recent_picks: List[Dict[str, Any]],
     usage_counts: Dict[str, int],
     source_limits: Dict[str, int],
+    progression_stages: Optional[List[ProgressionStage]] = None,
 ) -> Optional[Dict[str, Any]]:
     ranked: List[tuple[float, Dict[str, Any]]] = []
     for candidate in candidate_pool:
         if _candidate_ref(candidate) in used_refs:
             continue
-        score = _score_candidate_for_slot(slot, candidate, recent_picks, usage_counts, source_limits)
+        score = _score_candidate_for_slot(
+            slot,
+            candidate,
+            recent_picks,
+            usage_counts,
+            source_limits,
+            progression_stages=progression_stages or build_progression_stages(None),
+        )
         if score <= -1e8:
             continue
         ranked.append((score, candidate))
@@ -692,15 +771,22 @@ def _score_candidate_for_slot(
     recent_picks: List[Dict[str, Any]],
     usage_counts: Dict[str, int],
     source_limits: Dict[str, int],
+    progression_stages: Optional[List[ProgressionStage]] = None,
 ) -> float:
     node: SkeletonNode = candidate["node"]
     novel_name = str(candidate["novel"])
     source_index = int(candidate["index"])
+    stages = progression_stages or build_progression_stages(None)
 
     if novel_name == slot["reference_novel"] and node.node_id == slot["excluded_node_id"]:
         return -1e9
     if slot["excluded_event_ids"] and any(event_id in slot["excluded_event_ids"] for event_id in node.source_event_ids):
         return -1e9
+
+    # LLM can handle rhetoric and scene phrasing, but state continuity is enforced here by code.
+    state_gate_score = _state_continuity_gate_score(slot, node, recent_picks, stages)
+    if state_gate_score <= -1e8:
+        return state_gate_score
 
     score = 0.0
     if slot["pacing_role"] and node.pacing_role == slot["pacing_role"]:
@@ -752,7 +838,163 @@ def _score_candidate_for_slot(
     elif slot["source_novel_count"] > 1:
         score += 0.8
 
+    score += state_gate_score
     return score
+
+
+def _state_continuity_gate_score(
+    slot: Dict[str, Any],
+    node: SkeletonNode,
+    recent_picks: List[Dict[str, Any]],
+    stages: List[ProgressionStage],
+) -> float:
+    score = 0.0
+    candidate_text = _node_state_text(node)
+    slot_allowed_stage = _infer_stage_for_scoring(slot, stages)
+    previous_node = recent_picks[-1]["node"] if recent_picks else None
+    previous_stage = _infer_stage_for_scoring(previous_node, stages) if previous_node else ""
+    candidate_stage = _infer_stage_for_scoring(node, stages)
+
+    allowed_rank = max(_stage_rank(slot_allowed_stage, stages), _stage_rank(previous_stage, stages))
+    previous_rank = _stage_rank(previous_stage, stages)
+    candidate_rank = _stage_rank(candidate_stage, stages)
+
+    if previous_rank >= 0 and candidate_rank >= 0 and candidate_rank < previous_rank:
+        return -1e9
+
+    text_stage = extract_max_stage_from_text(candidate_text, stages)
+    text_rank = _stage_rank(text_stage, stages)
+    weak_contact = _contains_keyword(candidate_text, _WEAK_CONTACT_KEYWORDS)
+
+    if allowed_rank >= 0 and text_rank > allowed_rank + 1 and not weak_contact:
+        return -1e9
+
+    protagonist_rank = previous_rank if previous_rank >= 0 else _stage_rank(slot_allowed_stage, stages)
+    if protagonist_rank >= 0 and text_rank > protagonist_rank + 1 and _contains_keyword(candidate_text, _OVERPOWER_WIN_KEYWORDS):
+        return -1e9
+
+    if previous_node:
+        prev_identity = _identity_state_from_node(previous_node)
+        current_identity = _identity_state_from_node(node)
+        if _identity_conflict(prev_identity, current_identity) and not _contains_keyword(candidate_text, _STATE_BRIDGE_KEYWORDS):
+            score -= 12.0
+
+        prev_location_band = _location_band(_node_state_text(previous_node))
+        current_location_band = _location_band(candidate_text)
+        if prev_location_band == "regular" and current_location_band == "extreme" and not _contains_keyword(candidate_text, _STATE_BRIDGE_KEYWORDS):
+            score -= 10.0
+
+    return score
+
+
+def _node_state_text(node: Any) -> str:
+    if not node:
+        return ""
+    logic_card = getattr(node, "logic_card", {}) or {}
+    return " ".join(
+        _flatten_text_values(
+            [
+                getattr(node, "original_summary", ""),
+                getattr(node, "conflict_hint", ""),
+                getattr(node, "function_hint", ""),
+                getattr(node, "stage", ""),
+                getattr(node, "power_stage", ""),
+                logic_card.get("power_state", ""),
+                logic_card.get("identity_state", ""),
+                logic_card.get("state_outputs", []),
+                logic_card.get("hook_open", []),
+                logic_card.get("hook_close", []),
+            ]
+        )
+    )
+
+
+def _infer_stage_for_scoring(node: Any, stages: List[ProgressionStage]) -> str:
+    if not node:
+        return ""
+    if isinstance(node, dict):
+        logic_card = node.get("logic_card", {}) or {}
+        summary = node.get("summary", "") or node.get("original_summary", "")
+        stage_probe = {
+            "stage": node.get("stage", ""),
+            "power_stage": node.get("power_stage", ""),
+            "power_state": node.get("power_state", ""),
+            "logic_card": {"power_state": logic_card.get("power_state", "") if isinstance(logic_card, dict) else ""},
+            "original_summary": summary,
+            "summary": summary,
+        }
+    else:
+        logic_card = getattr(node, "logic_card", {}) or {}
+        summary = getattr(node, "original_summary", "")
+        stage_probe = {
+            "stage": getattr(node, "stage", ""),
+            "power_stage": getattr(node, "power_stage", ""),
+            "power_state": getattr(node, "power_state", ""),
+            "logic_card": {"power_state": logic_card.get("power_state", "") if isinstance(logic_card, dict) else ""},
+            "original_summary": summary,
+            "summary": summary,
+        }
+    inferred = infer_stage_from_node(stage_probe, stages)
+    if inferred:
+        return inferred
+    return infer_stage_from_node(node, stages)
+
+
+def _identity_state_from_node(node: Any) -> str:
+    if not node:
+        return ""
+    logic_card = getattr(node, "logic_card", {}) or {}
+    return str(logic_card.get("identity_state", "") or "").strip()
+
+
+def _stage_rank(stage_name: str, stages: List[ProgressionStage]) -> int:
+    if not stage_name or not stages:
+        return -1
+    numeric = stage_value(stage_name, stages)
+    if numeric < 0:
+        numeric = stage_value(extract_max_stage_from_text(stage_name, stages), stages)
+    if numeric < 0:
+        return -1
+    ordered_values = sorted({stage.stage_index for stage in stages})
+    try:
+        return ordered_values.index(numeric)
+    except ValueError:
+        return -1
+
+
+def _identity_conflict(previous_identity: str, next_identity: str) -> bool:
+    prev_text = str(previous_identity or "").strip()
+    next_text = str(next_identity or "").strip()
+    if not prev_text or not next_text:
+        return False
+    prev_terms = _extract_logic_terms([prev_text])
+    next_terms = _extract_logic_terms([next_text])
+    if prev_terms and next_terms and not prev_terms.isdisjoint(next_terms):
+        return False
+    prev_low = _contains_keyword(prev_text, _LOW_IDENTITY_HINTS)
+    next_low = _contains_keyword(next_text, _LOW_IDENTITY_HINTS)
+    prev_high = _contains_keyword(prev_text, _HIGH_IDENTITY_HINTS)
+    next_high = _contains_keyword(next_text, _HIGH_IDENTITY_HINTS)
+    prev_enemy = _contains_keyword(prev_text, _OPPOSITION_IDENTITY_HINTS)
+    next_enemy = _contains_keyword(next_text, _OPPOSITION_IDENTITY_HINTS)
+    return (
+        (prev_low and (next_high or next_enemy))
+        or (prev_enemy and next_low)
+        or (prev_terms and next_terms and prev_terms.isdisjoint(next_terms) and (next_high or next_enemy))
+    )
+
+
+def _location_band(text: str) -> str:
+    if _contains_keyword(text, _EXTREME_LOCATION_HINTS):
+        return "extreme"
+    if _contains_keyword(text, _REGULAR_LOCATION_HINTS):
+        return "regular"
+    return ""
+
+
+def _contains_keyword(text: str, keywords: Tuple[str, ...]) -> bool:
+    haystack = str(text or "")
+    return any(keyword in haystack for keyword in keywords)
 
 
 def _fallback_candidate_for_slot(
@@ -924,6 +1166,9 @@ def _slot_from_existing_node(
         "source_novel_count": source_novel_count,
         "arc_name": node.arc_name,
         "realm_level": node.realm_level,
+        "stage": getattr(node, "stage", ""),
+        "power_stage": getattr(node, "power_stage", ""),
+        "summary": node.original_summary,
         "pacing_role": node.pacing_role,
         "function_hint": node.function_hint,
         "conflict_hint": node.conflict_hint,
@@ -945,6 +1190,7 @@ def _top_replacement_candidates(
     recent_picks: List[Dict[str, Any]],
     usage_counts: Dict[str, int],
     source_limits: Dict[str, int],
+    progression_stages: Optional[List[ProgressionStage]] = None,
     limit: int = 4,
 ) -> List[Dict[str, Any]]:
     ranked: List[tuple[float, Dict[str, Any]]] = []
@@ -952,7 +1198,14 @@ def _top_replacement_candidates(
         candidate_ref = _candidate_ref(candidate)
         if candidate_ref in used_refs:
             continue
-        score = _score_candidate_for_slot(slot, candidate, recent_picks, usage_counts, source_limits)
+        score = _score_candidate_for_slot(
+            slot,
+            candidate,
+            recent_picks,
+            usage_counts,
+            source_limits,
+            progression_stages=progression_stages or build_progression_stages(None),
+        )
         if score <= -1e8:
             continue
         ranked.append((score, candidate))
@@ -971,6 +1224,7 @@ def _refine_skeleton_sequence(
     base_novel: str,
     fused_nodes: List[SkeletonNode],
     per_novel_nodes: Dict[str, List[SkeletonNode]],
+    fused_world: Optional[FusedWorld] = None,
 ) -> List[SkeletonNode]:
     if not fused_nodes or not per_novel_nodes:
         return fused_nodes
@@ -978,6 +1232,7 @@ def _refine_skeleton_sequence(
     client = get_deepseek_client()
     candidate_pool = _flatten_node_candidates(per_novel_nodes)
     source_limits = _build_source_target_limits(base_novel, per_novel_nodes, len(fused_nodes))
+    progression_stages = build_progression_stages(fused_world)
 
     refined = [node for node in fused_nodes]
     review_recent: List[Dict[str, Any]] = []
@@ -1013,6 +1268,7 @@ def _refine_skeleton_sequence(
                 recent_picks=replacement_recent,
                 usage_counts=final_usage,
                 source_limits=source_limits,
+                progression_stages=progression_stages,
                 limit=4,
             )
 
