@@ -95,7 +95,13 @@ def reassemble_plot(
                 _apply_state_updates(ledger, existing.state_updates)
                 continue
 
-        characters_desc, active_characters = _format_characters_for_stage(char_sheet, idx, role_plan)
+        characters_desc, active_characters = _format_characters_for_stage(
+            char_sheet,
+            idx + 1,
+            role_plan,
+            current_arc_name=node.arc_name,
+            recent_events=reassembled[-3:],
+        )
         progress_ratio = idx / total_nodes if total_nodes > 1 else 0
         active_macro_stages = _get_active_macro_stages(fused_world, progress_ratio)
         suggested_micro = _pick_micro_interaction(fused_world.micro_interactions, recent_micro_names)
@@ -207,21 +213,105 @@ def load_step11_output(intermediate_dir: str | Path | None = None) -> List[Reass
     return [ReassembledEvent(**item) for item in data]
 
 
-def _format_characters_for_stage(char_sheet: CharacterSheet, current_idx: int, role_plan: Optional[EventRolePlan]) -> Tuple[str, List[str]]:
+def parse_event_index(value: Any) -> Optional[int]:
+    if value is None:
+        return None
+    if isinstance(value, int):
+        return value
+    text = str(value).strip()
+    if not text:
+        return None
+    matches = re.findall(r"(\d+)", text)
+    if not matches:
+        return None
+    return int(matches[-1])
+
+
+def _supporting_character_priority(
+    character: Character,
+    preferred_names: Set[str],
+    required_roles: Set[str],
+    recent_names: Set[str],
+    current_arc_name: str = "",
+) -> Tuple[int, int, int, int, str]:
+    role_slots = {str(slot).strip() for slot in character.role_slots if str(slot).strip()}
+    char_arc_name = str(getattr(character, "primary_arc", "") or getattr(character, "arc_name", "") or "").strip()
+    tier_score = 0
+    if character.tier == "core":
+        tier_score = 3
+    elif character.tier == "volume":
+        tier_score = 2
+    elif character.tier == "transient":
+        tier_score = 1
+    return (
+        int(character.name in preferred_names),
+        int(bool(required_roles and (required_roles & role_slots))),
+        int(character.name in recent_names),
+        tier_score + int(bool(current_arc_name and char_arc_name == current_arc_name)),
+        character.name,
+    )
+
+
+def _format_characters_for_stage(
+    char_sheet: CharacterSheet,
+    current_idx: int,
+    role_plan: Optional[EventRolePlan],
+    current_arc_name: str = "",
+    recent_events: Optional[List[ReassembledEvent]] = None,
+) -> Tuple[str, List[str]]:
     protagonist = char_sheet.protagonist
     lines = [f"[主角] {protagonist.name} | 执念: {protagonist.dao_heart} | 缺陷: {protagonist.personality_flaw} | 战斗: {protagonist.combat_style}"]
     active_names = [protagonist.name]
+    preferred_names = {
+        str(name).strip()
+        for name in (role_plan.candidate_names if role_plan and role_plan.candidate_names else [])
+        if str(name).strip()
+    }
+    required_roles = {
+        str(role).strip()
+        for role in (role_plan.role_slots if role_plan and role_plan.role_slots else [])
+        if str(role).strip()
+    }
+    recent_names: Set[str] = set()
+    for event in recent_events or []:
+        for name in getattr(event, "active_characters", []) or []:
+            text = str(name).strip()
+            if text:
+                recent_names.add(text)
+
+    active_supporting: List[Character] = []
     for character in char_sheet.supporting:
-        if _is_char_active(character, current_idx):
-            lines.append(f"[{character.role}] {character.name} | 功能槽位: {character.role_slots} | 背景: {character.background}")
-            active_names.append(character.name)
+        if _is_char_active(character, current_idx, current_arc_name=current_arc_name):
+            active_supporting.append(character)
+
+    if len(active_supporting) > 11:
+        active_supporting = sorted(
+            active_supporting,
+            key=lambda item: _supporting_character_priority(item, preferred_names, required_roles, recent_names, current_arc_name),
+            reverse=True,
+        )[:11]
+
+    for character in active_supporting:
+        lines.append(f"[{character.role}] {character.name} | 功能槽位: {character.role_slots} | 背景: {character.background}")
+        active_names.append(character.name)
     if role_plan and role_plan.candidate_names:
-        lines.append(f"[优先事件角色] {role_plan.candidate_names}")
+        prioritized = [name for name in role_plan.candidate_names if name in active_names]
+        if prioritized:
+            lines.append(f"[优先事件角色] {prioritized}")
     return "【当前事件可调角色池】\n" + "\n".join(lines), active_names
 
 
-def _is_char_active(character: Character, current_idx: int) -> bool:
-    return True if not character.entry_event else True
+def _is_char_active(character: Character, current_idx: int, current_arc_name: str = "") -> bool:
+    entry = parse_event_index(character.entry_event)
+    exit_ = parse_event_index(character.exit_event)
+    if entry is not None and current_idx < entry:
+        return False
+    if exit_ is not None and current_idx > exit_:
+        return False
+    char_arc_name = str(getattr(character, "primary_arc", "") or getattr(character, "arc_name", "") or "").strip()
+    if current_arc_name and char_arc_name and char_arc_name != current_arc_name:
+        return False
+    return True
 
 
 def _get_active_macro_stages(fused_world: FusedWorld, progress_ratio: float) -> str:
