@@ -736,6 +736,8 @@ def _alias_in_text(alias: str, raw_text: str, normalized_text: str) -> bool:
         return False
     if _contains_cjk(clean_alias):
         return clean_alias in raw_text or _normalize_text(clean_alias) in normalized_text
+    if any(not ch.isalnum() for ch in clean_alias) and clean_alias.casefold() in raw_text.casefold():
+        return True
     if re.search(rf"(?<![A-Za-z0-9_]){re.escape(clean_alias)}(?![A-Za-z0-9_])", raw_text, flags=re.IGNORECASE):
         return True
     return _normalize_text(clean_alias) in normalized_text
@@ -747,4 +749,3 @@ def _normalize_text(text: str) -> str:
 
 def _contains_cjk(text: str) -> bool:
     return any("\u4e00" <= ch <= "\u9fff" for ch in text)
-

@@ -317,6 +317,9 @@ def _alias_in_text(alias: str, raw_text: str, normalized_text: str) -> bool:
     if _contains_cjk(clean_alias):
         return clean_alias in raw_text or _normalize_lookup_key(clean_alias) in normalized_text
 
+    if any(not ch.isalnum() for ch in clean_alias) and clean_alias.casefold() in raw_text.casefold():
+        return True
+
     if re.search(rf"(?<![A-Za-z0-9_]){re.escape(clean_alias)}(?![A-Za-z0-9_])", raw_text, flags=re.IGNORECASE):
         return True
     return _normalize_lookup_key(clean_alias) in normalized_text
