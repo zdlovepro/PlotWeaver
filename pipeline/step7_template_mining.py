@@ -1035,8 +1035,8 @@ def _pseudo_events_from_atoms(atoms: List[PlotAtom]) -> List[Any]:
                 {
                     "arc_name": arc_name,
                     "summary": " / ".join(_clip_text(atom.summary or atom.core_action, 30) for atom in bucket[:3]),
-                    "conflict_hint": coerce_text(_top_values(atom.conflict_type for atom in bucket, limit=2)),
-                    "function_hint": coerce_text(_top_values(atom.narrative_function for atom in bucket, limit=2)),
+                    "conflict_hint": coerce_text(_top_values((atom.conflict_type for atom in bucket), limit=2)),
+                    "function_hint": coerce_text(_top_values((atom.narrative_function for atom in bucket), limit=2)),
                 },
             )()
         )
