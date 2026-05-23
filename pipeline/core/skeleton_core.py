@@ -185,7 +185,12 @@ def save_skeleton_snapshot(filename: str, skeleton: NarrativeSkeleton) -> Path:
     out_dir = Path(config.INTERMEDIATE_DIR)
     out_dir.mkdir(parents=True, exist_ok=True)
     path = out_dir / filename
-    payload = {"base_novel": skeleton.base_novel, "nodes": [asdict(node) for node in skeleton.nodes], "character_sheet": None}
+    payload = {
+        "base_novel": skeleton.base_novel,
+        "nodes": [asdict(node) for node in skeleton.nodes],
+        "character_sheet": None,
+        "metadata": dict(skeleton.metadata or {}),
+    }
     if skeleton.character_sheet:
         payload["character_sheet"] = {
             "protagonist": asdict(skeleton.character_sheet.protagonist),
@@ -214,6 +219,7 @@ def load_skeleton_snapshot(filename: str) -> NarrativeSkeleton:
         base_novel=raw.get("base_novel", ""),
         nodes=[SkeletonNode(**item) for item in raw.get("nodes", [])],
         character_sheet=character_sheet,
+        metadata=raw.get("metadata", {}) if isinstance(raw.get("metadata", {}), dict) else {},
     )
 
 

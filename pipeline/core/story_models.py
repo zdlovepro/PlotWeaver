@@ -83,3 +83,4 @@ class NarrativeSkeleton:
     base_novel: str
     nodes: List[SkeletonNode] = field(default_factory=list)
     character_sheet: Optional[CharacterSheet] = None
+    metadata: Dict[str, Any] = field(default_factory=dict)
