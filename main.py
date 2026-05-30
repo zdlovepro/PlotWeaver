@@ -217,6 +217,7 @@ def run_pipeline(start_step: int = 1, end_step: int | None = None) -> bool:
             all_atoms=all_atoms,
             fused_world=fused_world,
             induced_events_by_novel=induced_events,
+            source_skeletons=source_skeletons,
         )
         step9_skeleton_fusion.save_step9_output(skeleton)
     else:
@@ -347,7 +348,7 @@ def _load_source_texts(input_dir: Path) -> Dict[str, str]:
 
 if __name__ == "__main__":
     args = _parse_args()
-    args.start_step = 8
+    args.start_step = 9
     args.end_step = 12
     completed_full = run_pipeline(start_step=args.start_step, end_step=args.end_step)
 

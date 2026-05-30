@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import os
 import re
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from dataclasses import asdict, dataclass, field
@@ -14,10 +15,19 @@ from pipeline.core.common_text import dedupe_texts, flatten_text_values
 from pipeline.core.story_models import Character, CharacterSheet, EventRolePlan, NarrativeSkeleton, SkeletonNode, StageNetwork
 from pipeline.core.story_state import (
     ProgressionStage,
+    StateIssue,
     build_progression_stages,
     extract_max_stage_from_text,
     infer_stage_from_node,
     stage_value,
+)
+from pipeline.core.state_validator import (
+    build_forbidden_stage_terms,
+    validate_enemy_power,
+    validate_identity_transition,
+    validate_location_transition,
+    validate_stage_transition,
+    validate_skeleton_sequence,
 )
 from pipeline.core.utils import chat_completion_json, get_deepseek_client
 from pipeline.core.world_building_core import FusedWorld
@@ -76,6 +86,19 @@ _OPPOSITION_IDENTITY_HINTS = ("敌方", "敌营", "叛军", "魔教", "邪教", 
 
 _REGULAR_LOCATION_HINTS = ("宗门", "学院", "基地", "城市", "村镇", "安全区", "营地", "城池")
 _EXTREME_LOCATION_HINTS = ("敌方总部", "敌营", "秘境", "异界", "古遗迹", "遗迹", "禁区", "深渊", "星域", "总部")
+
+def _env_flag(name: str, default: bool = False) -> bool:
+    raw = str(os.getenv(name, "1" if default else "0") or "").strip().lower()
+    return raw in {"1", "true", "yes", "on"}
+
+
+def _severity_rank_value(severity: str) -> int:
+    mapping = {"low": 0, "minor": 0, "medium": 1, "major": 1, "high": 2, "critical": 3, "fatal": 3}
+    return mapping.get(str(severity or "").strip().lower(), 0)
+
+
+def _severity_is_high_or_above(severity: str) -> bool:
+    return _severity_rank_value(severity) >= _severity_rank_value("high")
 
 
 @dataclass
@@ -551,8 +574,15 @@ def _blend_source_skeleton_nodes(
     source_limits = _build_source_target_limits(base_novel, per_novel_nodes, len(base_nodes))
     initial_path = _SkeletonSearchPath(usage_counts={novel: 0 for novel in per_novel_nodes})
     beam: List[_SkeletonSearchPath] = [initial_path]
+    progress_interval = 1 if len(slots) <= 20 else 5
 
     for index, slot in enumerate(slots):
+        if index == 0 or (index + 1) % progress_interval == 0 or index + 1 == len(slots):
+            print(
+                f"[Step 9] Slot fusion progress: {index + 1}/{len(slots)} "
+                f"(beam={len(beam)}, slot={slot.get('arc_name', '')}:{slot.get('pacing_role', '')})",
+                flush=True,
+            )
         expanded_paths: List[_SkeletonSearchPath] = []
         for path in beam:
             ranked_candidates = _top_path_candidates(
@@ -564,6 +594,10 @@ def _blend_source_skeleton_nodes(
                 limit=_SKELETON_SLOT_CANDIDATE_LIMIT,
             )
             if not ranked_candidates:
+                print(
+                    f"[Step 9] Slot {index + 1}/{len(slots)} has no ranked candidates; using fallback node.",
+                    flush=True,
+                )
                 fallback_node = _build_slot_fallback_node(slot, base_nodes[index], index)
                 expanded_paths.append(_extend_search_path(path, fallback_node, candidate_score=-0.4))
                 continue
@@ -574,6 +608,12 @@ def _blend_source_skeleton_nodes(
         if not expanded_paths:
             return [_build_slot_fallback_node(slot, base_nodes[idx], idx) for idx, slot in enumerate(slots)]
         beam = _prune_search_paths(expanded_paths, width=_SKELETON_BEAM_WIDTH)
+        if index == 0 or (index + 1) % progress_interval == 0 or index + 1 == len(slots):
+            print(
+                f"[Step 9] Slot {index + 1}/{len(slots)} complete -> "
+                f"expanded_paths={len(expanded_paths)}, beam_after_prune={len(beam)}",
+                flush=True,
+            )
 
     if not beam:
         return base_nodes
@@ -1340,34 +1380,946 @@ def _top_replacement_candidates(
     return [candidate for _score, candidate in ranked[:limit]]
 
 
+def _collect_transition_state_issues(
+    previous_nodes: List[SkeletonNode],
+    node: SkeletonNode,
+    next_node: Optional[SkeletonNode],
+    stages: List[ProgressionStage],
+) -> List[StateIssue]:
+    issues: List[StateIssue] = []
+    prev_node = previous_nodes[-1] if previous_nodes else None
+    context_text = _node_state_text(node)
+    current_stage = _infer_stage_for_scoring(node, stages)
+    prev_stage = _infer_stage_for_scoring(prev_node, stages) if prev_node else ""
+
+    if prev_node:
+        issues.extend(
+            validate_stage_transition(
+                prev_stage,
+                current_stage,
+                stages,
+                node_id=node.node_id,
+                context_text=context_text,
+            )
+        )
+        issues.extend(
+            validate_identity_transition(
+                _identity_state_from_node(prev_node),
+                _identity_state_from_node(node),
+                context_text,
+                node_id=node.node_id,
+            )
+        )
+        issues.extend(
+            validate_location_transition(
+                _location_hint_from_node(prev_node),
+                _location_hint_from_node(node),
+                context_text,
+                node_id=node.node_id,
+            )
+        )
+
+    protagonist_stage = current_stage or prev_stage
+    if protagonist_stage:
+        issues.extend(validate_enemy_power(context_text, protagonist_stage, stages, node_id=node.node_id))
+
+    return issues
+
+
+def _classify_skeleton_mismatch(
+    previous_nodes: List[SkeletonNode],
+    node: SkeletonNode,
+    next_node: Optional[SkeletonNode],
+    assessment: Dict[str, Any],
+    stages: List[ProgressionStage],
+) -> str:
+    state_issues = _collect_transition_state_issues(previous_nodes, node, next_node, stages)
+    if not state_issues and assessment.get("is_consistent", True):
+        return "keep"
+
+    if any(issue.severity == "fatal" for issue in state_issues):
+        return "replace"
+    if any(issue.issue_type in {"identity_jump", "location_jump"} for issue in state_issues):
+        return "bridge"
+    if any(issue.issue_type in {"stage_jump", "power_gap_pressure"} for issue in state_issues):
+        return "replace"
+    if any(issue.issue_type in {"unknown_stage"} for issue in state_issues):
+        return "rewrite"
+
+    if not assessment.get("is_consistent", True):
+        severity = str(assessment.get("severity", "medium")).strip().lower()
+        if severity in {"high", "critical"}:
+            return "replace"
+        if severity in {"medium"}:
+            return "rewrite"
+        return "replace"
+
+    return "keep"
+
+
+def _build_recent_picks_from_nodes(previous_nodes: List[SkeletonNode]) -> List[Dict[str, Any]]:
+    recent: List[Dict[str, Any]] = []
+    for index, node in enumerate(previous_nodes[-3:]):
+        source_novel = node.selection_source_novel or (node.source_novels[0] if node.source_novels else "")
+        source_index = node.selection_source_index if node.selection_source_index >= 0 else index
+        recent.append(
+            {
+                "novel": source_novel,
+                "index": source_index,
+                "progress_ratio": float(index) / max(len(previous_nodes[-3:]) - 1, 1) if len(previous_nodes[-3:]) > 1 else 0.0,
+                "node": node,
+            }
+        )
+    return recent
+
+
+def _location_hint_from_text(text: str) -> str:
+    haystack = str(text or "")
+    for keyword in _EXTREME_LOCATION_HINTS:
+        if keyword in haystack:
+            return keyword
+    for keyword in _REGULAR_LOCATION_HINTS:
+        if keyword in haystack:
+            return keyword
+    return ""
+
+
+def _location_hint_from_node(node: Optional[SkeletonNode]) -> str:
+    if not node:
+        return ""
+    hint = _location_hint_from_text(_node_state_text(node))
+    if hint:
+        return hint
+    return _location_hint_from_text(node.original_summary)
+
+
+def _plot_atom_source_refs(atom: PlotAtom) -> List[Dict[str, Any]]:
+    return _dedupe_source_refs(
+        [
+            {
+                "ref_type": "atom",
+                "ref_id": atom.atom_id,
+                "source_novel": atom.novel_source,
+            }
+        ]
+    )
+
+
+def _skeleton_node_from_induced_event(event: InducedEvent, slot: Dict[str, Any], source_novel: str) -> SkeletonNode:
+    chapter_count = max(1, int(event.chapter_count or slot.get("chapter_count") or 1))
+    chapter_blueprint = _fit_blueprint_to_chapter_count(
+        [dict(beat) for beat in (slot.get("chapter_blueprint", []) or _fallback_chapter_blueprint(chapter_count))],
+        chapter_count,
+    )
+    source_refs = _source_refs_from_induced_event(event)
+    power_state = str(event.power_state or "")
+    identity_state = str(event.identity_state or "")
+    return SkeletonNode(
+        node_id=f"rag_induced_{event.event_id}",
+        arc_name=event.arc_name or str(slot.get("arc_name", "")),
+        realm_level=_realm_level_from_arc(event.arc_name or str(slot.get("arc_name", ""))),
+        pacing_role=str(slot.get("pacing_role", "")),
+        original_summary=str(event.summary or event.raw_summary or ""),
+        conflict_hint=str(event.conflict_hint or ""),
+        function_hint=str(event.function_hint or ""),
+        role_slots=list(slot.get("role_slots", []) or []),
+        template_hint=str(slot.get("template_hint", "") or ""),
+        source_event_ids=[event.event_id] if event.event_id else [],
+        chapter_start=int(event.chapter_start or 0),
+        chapter_end=int(event.chapter_end or 0),
+        chapter_count=chapter_count,
+        chapter_blueprint=chapter_blueprint,
+        character_keys=list(event.character_keys or []),
+        source_novels=[source_novel] if source_novel else [],
+        logic_card={
+            "required_coverage": [],
+            "template_name": "",
+            "preconditions": list(event.state_inputs or []),
+            "state_outputs": list(event.state_outputs or []),
+            "power_state": power_state,
+            "identity_state": identity_state,
+            "relationship_delta": " / ".join(event.relationship_delta[:3]),
+            "timeline_stage": str(slot.get("pacing_role", "") or ""),
+            "hook_open": list(event.hook_open or []),
+            "hook_close": list(event.hook_close or []),
+            "resource_delta": list(event.resource_delta or []),
+        },
+        source_induced_event_ids=[event.event_id] if event.event_id else [],
+        source_atom_ids=list(event.source_atom_ids or []),
+        source_legacy_event_ids=[],
+        source_chunk_ids=[],
+        source_refs=source_refs,
+        stage=power_state,
+        power_stage=power_state,
+    )
+
+
+def _skeleton_node_from_plot_atom(atom: PlotAtom, slot: Dict[str, Any], source_novel: str) -> SkeletonNode:
+    chapter_count = max(1, int(atom.chapter_count or slot.get("chapter_count") or 1))
+    chapter_blueprint = _fit_blueprint_to_chapter_count(
+        [dict(beat) for beat in (slot.get("chapter_blueprint", []) or _fallback_chapter_blueprint(chapter_count))],
+        chapter_count,
+    )
+    summary = str(atom.summary or atom.raw_summary or atom.raw_core_action or "")
+    stage_text = str(atom.outcome or atom.summary or atom.raw_summary or "")
+    return SkeletonNode(
+        node_id=f"rag_atom_{atom.atom_id}",
+        arc_name=atom.arc_name or str(slot.get("arc_name", "")),
+        realm_level=_realm_level_from_arc(atom.arc_name or str(slot.get("arc_name", ""))),
+        pacing_role=str(slot.get("pacing_role", "")),
+        original_summary=summary,
+        conflict_hint=str(atom.conflict_type or ""),
+        function_hint=str(atom.narrative_function or atom.atom_type or ""),
+        role_slots=list(slot.get("role_slots", []) or []),
+        template_hint=str(slot.get("template_hint", "") or ""),
+        source_event_ids=[atom.atom_id] if atom.atom_id else [],
+        chapter_start=int(atom.chapter_start or 0),
+        chapter_end=int(atom.chapter_end or 0),
+        chapter_count=chapter_count,
+        chapter_blueprint=chapter_blueprint,
+        character_keys=list(atom.character_keys or []),
+        source_novels=[source_novel] if source_novel else [],
+        logic_card={
+            "required_coverage": [],
+            "template_name": "",
+            "preconditions": [str(atom.causality_precondition or "")] if atom.causality_precondition else [],
+            "state_outputs": [str(atom.causality_consequence or "")] if atom.causality_consequence else [],
+            "power_state": stage_text,
+            "identity_state": "",
+            "relationship_delta": "",
+            "timeline_stage": str(slot.get("pacing_role", "") or ""),
+            "hook_open": [],
+            "hook_close": [],
+            "resource_delta": _flatten_text_values([atom.state_delta]) if atom.state_delta else [],
+        },
+        source_induced_event_ids=[],
+        source_atom_ids=[atom.atom_id] if atom.atom_id else [],
+        source_legacy_event_ids=[],
+        source_chunk_ids=[],
+        source_refs=_plot_atom_source_refs(atom),
+        stage=stage_text,
+        power_stage=stage_text,
+    )
+
+
+def _to_slot_candidate(
+    node: SkeletonNode,
+    source_novel: str,
+    source_index: int,
+    total: int,
+    progress_ratio: float,
+) -> Dict[str, Any]:
+    return {
+        "novel": source_novel,
+        "index": max(0, int(source_index)),
+        "total": max(1, int(total)),
+        "progress_ratio": max(0.0, min(1.0, float(progress_ratio))),
+        "node": node,
+    }
+
+
+def _candidate_score_with_priority(
+    slot: Dict[str, Any],
+    slot_candidate: Dict[str, Any],
+    recent_picks: List[Dict[str, Any]],
+    usage_counts: Dict[str, int],
+    source_limits: Dict[str, int],
+    stages: List[ProgressionStage],
+    source_type: str,
+    mismatch_type: str,
+) -> float:
+    score = _score_candidate_for_slot(
+        slot,
+        slot_candidate,
+        recent_picks,
+        usage_counts,
+        source_limits,
+        progression_stages=stages,
+    )
+    if score <= -1e8:
+        return score
+    source_bonus = {
+        "skeleton_node": 1.2,
+        "induced_event": 0.7,
+        "plot_atom": 0.2,
+    }.get(source_type, 0.0)
+    score += source_bonus
+    source_refs = _coerce_node_source_refs(slot_candidate["node"], fallback_novel=slot_candidate["novel"])
+    score += 0.3 if source_refs else -0.8
+
+    summary = str(slot_candidate["node"].original_summary or "")
+    if mismatch_type == "bridge" and _contains_keyword(summary, _STATE_BRIDGE_KEYWORDS):
+        score += 1.0
+    if mismatch_type == "rewrite" and source_type == "plot_atom":
+        score -= 0.4
+    return score
+
+
+def _retrieve_repair_candidates_for_slot(
+    slot: Dict[str, Any],
+    previous_nodes: List[SkeletonNode],
+    next_node: Optional[SkeletonNode],
+    per_novel_nodes: Dict[str, List[SkeletonNode]],
+    induced_events_by_novel: Optional[Dict[str, List[InducedEvent]]] = None,
+    all_atoms: Optional[Dict[str, List[PlotAtom]]] = None,
+    progression_stages: Optional[List[ProgressionStage]] = None,
+    usage_counts: Optional[Dict[str, int]] = None,
+    source_limits: Optional[Dict[str, int]] = None,
+    mismatch_type: str = "replace",
+    limit: int = 12,
+) -> List[Dict[str, Any]]:
+    stages = progression_stages or build_progression_stages(None)
+    recent_picks = _build_recent_picks_from_nodes(previous_nodes)
+    usage = dict(usage_counts or {})
+    limits = dict(source_limits or {})
+
+    aggregated: Dict[Tuple[str, str, str], Dict[str, Any]] = {}
+
+    def consider(source_type: str, ref_id: str, source_novel: str, slot_candidate: Dict[str, Any]) -> None:
+        score = _candidate_score_with_priority(
+            slot=slot,
+            slot_candidate=slot_candidate,
+            recent_picks=recent_picks,
+            usage_counts=usage,
+            source_limits=limits,
+            stages=stages,
+            source_type=source_type,
+            mismatch_type=mismatch_type,
+        )
+        if score <= -1e8:
+            return
+        node = slot_candidate["node"]
+        source_refs = _coerce_node_source_refs(node, fallback_novel=source_novel)
+        record = {
+            "source_type": source_type,
+            "ref_id": ref_id,
+            "source_novel": source_novel,
+            "score_hint": score,
+            "summary": node.original_summary,
+            "pacing_role": node.pacing_role,
+            "function_hint": node.function_hint,
+            "conflict_hint": node.conflict_hint,
+            "stage": _infer_stage_for_scoring(node, stages),
+            "identity_state": _identity_state_from_node(node),
+            "location_hint": _location_hint_from_node(node),
+            "source_refs": source_refs,
+            "_slot_candidate": slot_candidate,
+        }
+        key = (source_type, ref_id, source_novel)
+        existing = aggregated.get(key)
+        if existing is None or float(record["score_hint"]) > float(existing["score_hint"]):
+            aggregated[key] = record
+
+    for novel_name, nodes in per_novel_nodes.items():
+        total = max(1, len(nodes))
+        for source_index, node in enumerate(nodes):
+            slot_candidate = _to_slot_candidate(
+                node=node,
+                source_novel=novel_name,
+                source_index=source_index,
+                total=total,
+                progress_ratio=source_index / max(total - 1, 1) if total > 1 else 0.0,
+            )
+            consider("skeleton_node", node.node_id, novel_name, slot_candidate)
+
+    for novel_name, events in (induced_events_by_novel or {}).items():
+        total = max(1, len(events))
+        for event_index, event in enumerate(events):
+            synthetic_node = _skeleton_node_from_induced_event(event, slot, novel_name)
+            source_index = max(0, int(event.chapter_start or event_index))
+            progress_ratio = event_index / max(total - 1, 1) if total > 1 else 0.0
+            slot_candidate = _to_slot_candidate(
+                node=synthetic_node,
+                source_novel=novel_name,
+                source_index=source_index,
+                total=total,
+                progress_ratio=progress_ratio,
+            )
+            consider("induced_event", event.event_id, novel_name, slot_candidate)
+
+    for novel_name, atoms in (all_atoms or {}).items():
+        total = max(1, len(atoms))
+        for atom_index, atom in enumerate(atoms):
+            if not bool(getattr(atom, "is_complete", True)):
+                continue
+            synthetic_node = _skeleton_node_from_plot_atom(atom, slot, novel_name)
+            source_index = max(0, int(atom.chapter_start or atom_index))
+            progress_ratio = atom_index / max(total - 1, 1) if total > 1 else 0.0
+            slot_candidate = _to_slot_candidate(
+                node=synthetic_node,
+                source_novel=novel_name,
+                source_index=source_index,
+                total=total,
+                progress_ratio=progress_ratio,
+            )
+            consider("plot_atom", atom.atom_id, novel_name, slot_candidate)
+
+    ranked = sorted(
+        aggregated.values(),
+        key=lambda item: (
+            -float(item.get("score_hint", 0.0)),
+            item.get("source_type", ""),
+            item.get("source_novel", ""),
+            item.get("ref_id", ""),
+        ),
+    )
+    return ranked[: max(1, int(limit))]
+
+
+def _rerank_slot_candidates_by_rules(
+    slot: Dict[str, Any],
+    candidates: List[Dict[str, Any]],
+    recent_picks: List[Dict[str, Any]],
+    usage_counts: Dict[str, int],
+    source_limits: Dict[str, int],
+    stages: List[ProgressionStage],
+    limit: int = 8,
+) -> List[Dict[str, Any]]:
+    ranked: List[Tuple[float, Dict[str, Any]]] = []
+    seen_refs: set[str] = set()
+    for candidate in candidates:
+        if not isinstance(candidate, dict) or "node" not in candidate:
+            continue
+        try:
+            ref = _candidate_ref(candidate)
+        except Exception:
+            continue
+        if ref in seen_refs:
+            continue
+        seen_refs.add(ref)
+        score = _score_candidate_for_slot(
+            slot,
+            candidate,
+            recent_picks,
+            usage_counts,
+            source_limits,
+            progression_stages=stages,
+        )
+        if score <= -1e8:
+            continue
+        ranked.append((score, candidate))
+    ranked.sort(
+        key=lambda item: (
+            -item[0],
+            usage_counts.get(str(item[1].get("novel", "")), 0),
+            str(item[1].get("novel", "")),
+            str(getattr(item[1].get("node"), "node_id", "")),
+        )
+    )
+    return [candidate for _score, candidate in ranked[: max(1, int(limit))]]
+
+
+def _source_ids_from_refs(source_refs: List[Dict[str, Any]], ref_type: str) -> List[str]:
+    return _dedupe_texts(
+        str(ref.get("ref_id", "")).strip()
+        for ref in (source_refs or [])
+        if str(ref.get("ref_type", "")).strip() == ref_type and str(ref.get("ref_id", "")).strip()
+    )
+
+
+def _build_step9_allowed_state(
+    previous_nodes: List[SkeletonNode],
+    current_node: SkeletonNode,
+    next_node: Optional[SkeletonNode],
+    stages: List[ProgressionStage],
+) -> Dict[str, Any]:
+    prev_node = previous_nodes[-1] if previous_nodes else None
+    prev_stage = _infer_stage_for_scoring(prev_node, stages) if prev_node else ""
+    current_stage = _infer_stage_for_scoring(current_node, stages)
+    next_stage = _infer_stage_for_scoring(next_node, stages) if next_node else ""
+
+    anchor_stage = current_stage or prev_stage or next_stage
+    anchor_rank = _stage_rank(anchor_stage, stages)
+    if anchor_rank >= 0:
+        ordered_indexes = sorted({item.stage_index for item in stages})
+        max_rank = min(len(ordered_indexes) - 1, anchor_rank + 1)
+        target_index = ordered_indexes[max_rank]
+        candidate_names = sorted(item.name for item in stages if item.stage_index == target_index)
+        max_stage = candidate_names[0] if candidate_names else anchor_stage
+    else:
+        max_stage = anchor_stage
+    forbidden_terms = build_forbidden_stage_terms(max_stage, stages, margin=1) if max_stage else []
+
+    return {
+        "prev_stage": prev_stage,
+        "current_stage": current_stage,
+        "next_stage": next_stage,
+        "max_stage": max_stage,
+        "forbidden_terms": forbidden_terms,
+        "max_gap": 1,
+    }
+
+
+def _serialize_state_issue(issue: StateIssue) -> Dict[str, Any]:
+    return {
+        "severity": str(issue.severity or ""),
+        "issue_type": str(issue.issue_type or ""),
+        "message": str(issue.message or ""),
+        "node_id": str(issue.node_id or ""),
+        "suggested_action": str(issue.suggested_action or ""),
+    }
+
+
+def _compact_retrieved_candidate(record: Dict[str, Any]) -> Dict[str, Any]:
+    return {
+        "source_type": str(record.get("source_type", "")),
+        "ref_id": str(record.get("ref_id", "")),
+        "source_novel": str(record.get("source_novel", "")),
+        "score_hint": float(record.get("score_hint", 0.0)),
+        "summary": str(record.get("summary", ""))[:280],
+        "pacing_role": str(record.get("pacing_role", "")),
+        "function_hint": str(record.get("function_hint", "")),
+        "conflict_hint": str(record.get("conflict_hint", "")),
+        "stage": str(record.get("stage", "")),
+        "identity_state": str(record.get("identity_state", "")),
+        "location_hint": str(record.get("location_hint", "")),
+        "source_refs": list(record.get("source_refs", []) or []),
+    }
+
+
+def _build_step9_repair_prompt(
+    previous_nodes: List[SkeletonNode],
+    current_node: SkeletonNode,
+    next_node: Optional[SkeletonNode],
+    issues: List[Dict[str, Any]],
+    mismatch_type: str,
+    allowed_state: Dict[str, Any],
+    progression_stages: List[ProgressionStage],
+    retrieved_candidates: List[Dict[str, Any]],
+    forbidden_terms: List[str],
+) -> str:
+    stage_payload = [
+        {
+            "name": stage.name,
+            "stage_index": stage.stage_index,
+            "aliases": stage.aliases[:5],
+            "category": stage.category,
+        }
+        for stage in sorted(progression_stages, key=lambda item: (item.stage_index, item.name))
+    ]
+    prompt_payload = {
+        "prev_nodes": [asdict(node) for node in previous_nodes[-2:]],
+        "current_node": asdict(current_node),
+        "next_node": asdict(next_node) if next_node else None,
+        "issues": issues,
+        "mismatch_type": mismatch_type,
+        "allowed_state": allowed_state,
+        "progression_stages": stage_payload,
+        "retrieved_candidates": [_compact_retrieved_candidate(item) for item in retrieved_candidates[:10]],
+        "forbidden_terms": forbidden_terms,
+    }
+    schema = {
+        "action": "keep|replace_with_candidate|rewrite_current|insert_bridge_before|insert_bridge_after|manual_review",
+        "chosen_candidate_ref": "",
+        "repaired_node": {},
+        "bridge_node": {},
+        "repair_notes": ["short notes"],
+        "state_checks": {
+            "stage_ok": True,
+            "identity_ok": True,
+            "location_ok": True,
+            "power_ok": True,
+            "hook_ok": True,
+        },
+    }
+    return (
+        "You are a constrained Step9 skeleton repair assistant. "
+        "Do not invent new major storyline. Keep the same narrative purpose and pacing role.\n"
+        "Only use information from current node, nearby nodes, and retrieved candidates.\n"
+        "If action is replace_with_candidate, chosen_candidate_ref must match one retrieved candidate ref_id.\n"
+        "If action is rewrite_current, keep source_refs and preserve source provenance.\n"
+        "If action is insert_bridge_before/insert_bridge_after, bridge must be short and transitional, and include source_refs that link prev/current/next.\n"
+        "Respect allowed_state and forbidden_terms strictly.\n"
+        "Return JSON only with the required schema.\n\n"
+        f"INPUT:\n{json.dumps(prompt_payload, ensure_ascii=False, indent=2)}\n\n"
+        f"OUTPUT_SCHEMA:\n{json.dumps(schema, ensure_ascii=False, indent=2)}"
+    )
+
+
+def _coerce_state_checks(state_checks: Any) -> Dict[str, bool]:
+    raw = state_checks if isinstance(state_checks, dict) else {}
+    return {
+        "stage_ok": bool(raw.get("stage_ok", False)),
+        "identity_ok": bool(raw.get("identity_ok", False)),
+        "location_ok": bool(raw.get("location_ok", False)),
+        "power_ok": bool(raw.get("power_ok", False)),
+        "hook_ok": bool(raw.get("hook_ok", False)),
+    }
+
+
+def _repair_skeleton_node_with_llm(
+    client: Any,
+    previous_nodes: List[SkeletonNode],
+    current_node: SkeletonNode,
+    next_node: Optional[SkeletonNode],
+    issues: List[Dict[str, Any]],
+    mismatch_type: str,
+    allowed_state: Dict[str, Any],
+    progression_stages: List[ProgressionStage],
+    retrieved_candidates: List[Dict[str, Any]],
+    forbidden_terms: List[str],
+) -> Dict[str, Any]:
+    allowed_actions = {
+        "keep",
+        "replace_with_candidate",
+        "rewrite_current",
+        "insert_bridge_before",
+        "insert_bridge_after",
+        "manual_review",
+    }
+    try:
+        prompt = _build_step9_repair_prompt(
+            previous_nodes=previous_nodes,
+            current_node=current_node,
+            next_node=next_node,
+            issues=issues,
+            mismatch_type=mismatch_type,
+            allowed_state=allowed_state,
+            progression_stages=progression_stages,
+            retrieved_candidates=retrieved_candidates,
+            forbidden_terms=forbidden_terms,
+        )
+        raw = _quality_chat_completion_json(
+            client,
+            system="You are a strict JSON repair planner for PlotWeaver Step9. Return JSON only.",
+            user=prompt,
+            json_mode=True,
+            temperature=0.15,
+        )
+        data = _safe_json_load(raw)
+        if not isinstance(data, dict):
+            return {
+                "action": "manual_review",
+                "chosen_candidate_ref": "",
+                "repaired_node": {},
+                "bridge_node": {},
+                "repair_notes": ["llm_repair_invalid_json_payload"],
+                "state_checks": _coerce_state_checks({}),
+            }
+        action = str(data.get("action", "manual_review")).strip()
+        if action not in allowed_actions:
+            action = "manual_review"
+        chosen_candidate_ref = str(data.get("chosen_candidate_ref", "") or "").strip()
+        repaired_node = data.get("repaired_node", {})
+        bridge_node = data.get("bridge_node", {})
+        repair_notes = _dedupe_texts(_flatten_text_values([data.get("repair_notes", [])]))
+        if not repair_notes and action == "manual_review":
+            repair_notes = ["llm_repair_manual_review_fallback"]
+        return {
+            "action": action,
+            "chosen_candidate_ref": chosen_candidate_ref,
+            "repaired_node": repaired_node if isinstance(repaired_node, dict) else {},
+            "bridge_node": bridge_node if isinstance(bridge_node, dict) else {},
+            "repair_notes": repair_notes,
+            "state_checks": _coerce_state_checks(data.get("state_checks", {})),
+        }
+    except Exception as exc:
+        return {
+            "action": "manual_review",
+            "chosen_candidate_ref": "",
+            "repaired_node": {},
+            "bridge_node": {},
+            "repair_notes": [f"llm_repair_failed:{exc}"],
+            "state_checks": _coerce_state_checks({}),
+        }
+
+
+def _coerce_repaired_skeleton_node(
+    repaired_node: Dict[str, Any],
+    fallback_node: SkeletonNode,
+    slot: Dict[str, Any],
+    index: int,
+) -> SkeletonNode:
+    payload = dict(repaired_node or {})
+    base = asdict(fallback_node)
+    base.update({key: value for key, value in payload.items() if key in base})
+
+    chapter_count = max(1, int(base.get("chapter_count") or fallback_node.chapter_count or slot.get("chapter_count") or 1))
+    raw_blueprint = base.get("chapter_blueprint", []) or slot.get("chapter_blueprint", []) or _fallback_chapter_blueprint(chapter_count)
+    chapter_blueprint = _fit_blueprint_to_chapter_count([dict(beat) for beat in raw_blueprint], chapter_count)
+
+    provided_refs = payload.get("source_refs", [])
+    merged_refs = _dedupe_source_refs(
+        list(provided_refs) if isinstance(provided_refs, list) else []
+    ) or _coerce_node_source_refs(fallback_node)
+    source_novels = _dedupe_texts(
+        [str(ref.get("source_novel", "")).strip() for ref in merged_refs if str(ref.get("source_novel", "")).strip()]
+        + list(base.get("source_novels", []) or [])
+        + list(fallback_node.source_novels or [])
+    )
+
+    logic_card = base.get("logic_card", {}) if isinstance(base.get("logic_card", {}), dict) else {}
+    merged_logic_card = _normalize_logic_card(logic_card, str(base.get("pacing_role", "") or fallback_node.pacing_role), chapter_count)
+
+    node_id = str(base.get("node_id", "") or fallback_node.node_id or f"fused_event_{index + 1}")
+    return SkeletonNode(
+        node_id=node_id,
+        arc_name=str(base.get("arc_name", "") or fallback_node.arc_name),
+        realm_level=int(base.get("realm_level", fallback_node.realm_level or 0) or 0),
+        pacing_role=str(base.get("pacing_role", "") or fallback_node.pacing_role),
+        original_summary=str(base.get("original_summary", "") or fallback_node.original_summary),
+        conflict_hint=str(base.get("conflict_hint", "") or fallback_node.conflict_hint),
+        function_hint=str(base.get("function_hint", "") or fallback_node.function_hint),
+        role_slots=_dedupe_texts(base.get("role_slots", []) or fallback_node.role_slots),
+        template_hint=str(base.get("template_hint", "") or fallback_node.template_hint),
+        source_event_ids=_dedupe_texts(base.get("source_event_ids", []) or fallback_node.source_event_ids),
+        chapter_start=int(base.get("chapter_start", fallback_node.chapter_start or 0) or 0),
+        chapter_end=int(base.get("chapter_end", fallback_node.chapter_end or 0) or 0),
+        chapter_count=chapter_count,
+        chapter_blueprint=chapter_blueprint,
+        character_keys=_dedupe_texts(base.get("character_keys", []) or fallback_node.character_keys),
+        source_novels=source_novels,
+        selection_ref=str(base.get("selection_ref", "") or fallback_node.selection_ref),
+        selection_source_novel=str(base.get("selection_source_novel", "") or fallback_node.selection_source_novel),
+        selection_source_index=int(base.get("selection_source_index", fallback_node.selection_source_index or -1) or -1),
+        logic_card=merged_logic_card,
+        logic_notes=_dedupe_texts(base.get("logic_notes", []) or fallback_node.logic_notes),
+        source_induced_event_ids=_source_ids_from_refs(merged_refs, "induced_event")
+        or _dedupe_texts(base.get("source_induced_event_ids", []) or fallback_node.source_induced_event_ids),
+        source_atom_ids=_source_ids_from_refs(merged_refs, "atom")
+        or _dedupe_texts(base.get("source_atom_ids", []) or fallback_node.source_atom_ids),
+        source_legacy_event_ids=_source_ids_from_refs(merged_refs, "legacy_event")
+        or _dedupe_texts(base.get("source_legacy_event_ids", []) or fallback_node.source_legacy_event_ids),
+        source_chunk_ids=_source_ids_from_refs(merged_refs, "chunk")
+        or _dedupe_texts(base.get("source_chunk_ids", []) or fallback_node.source_chunk_ids),
+        source_refs=merged_refs,
+        stage=str(base.get("stage", "") or fallback_node.stage),
+        power_stage=str(base.get("power_stage", "") or fallback_node.power_stage),
+        metadata=base.get("metadata", {}) if isinstance(base.get("metadata", {}), dict) else dict(fallback_node.metadata or {}),
+    )
+
+
+def _coerce_bridge_node_from_llm(
+    bridge_node: Dict[str, Any],
+    previous_nodes: List[SkeletonNode],
+    current_node: SkeletonNode,
+    next_node: Optional[SkeletonNode],
+    index: int,
+) -> SkeletonNode:
+    payload = dict(bridge_node or {})
+    prev_node = previous_nodes[-1] if previous_nodes else None
+    fallback_refs = _dedupe_source_refs(
+        (_coerce_node_source_refs(prev_node) if prev_node else [])
+        + _coerce_node_source_refs(current_node)
+        + (_coerce_node_source_refs(next_node) if next_node else [])
+    )
+    provided_refs = payload.get("source_refs", [])
+    merged_refs = _dedupe_source_refs(
+        list(provided_refs) if isinstance(provided_refs, list) else []
+    ) or fallback_refs
+    source_novels = _dedupe_texts(
+        [str(ref.get("source_novel", "")).strip() for ref in merged_refs if str(ref.get("source_novel", "")).strip()]
+        + list(current_node.source_novels or [])
+    )
+
+    chapter_count = max(1, int(payload.get("chapter_count", 1) or 1))
+    chapter_blueprint = _fit_blueprint_to_chapter_count(_fallback_chapter_blueprint(chapter_count), chapter_count)
+    bridge_id = str(payload.get("node_id", "") or f"bridge_{index + 1}_{current_node.node_id}")
+    summary = str(
+        payload.get("original_summary", "")
+        or payload.get("summary", "")
+        or "Bridge transition node to connect state continuity."
+    ).strip()
+    logic_card = payload.get("logic_card", {}) if isinstance(payload.get("logic_card", {}), dict) else {}
+    normalized_logic_card = _normalize_logic_card(logic_card, str(payload.get("pacing_role", "") or "bridge_transition"), chapter_count)
+    return SkeletonNode(
+        node_id=bridge_id,
+        arc_name=str(payload.get("arc_name", "") or current_node.arc_name),
+        realm_level=int(payload.get("realm_level", current_node.realm_level or 0) or 0),
+        pacing_role=str(payload.get("pacing_role", "") or "bridge_transition"),
+        original_summary=summary,
+        conflict_hint=str(payload.get("conflict_hint", "") or current_node.conflict_hint),
+        function_hint=str(payload.get("function_hint", "") or "bridge"),
+        role_slots=_dedupe_texts(payload.get("role_slots", []) or current_node.role_slots),
+        template_hint=str(payload.get("template_hint", "") or "bridge_transition"),
+        source_event_ids=_dedupe_texts(payload.get("source_event_ids", []) or [bridge_id]),
+        chapter_start=int(payload.get("chapter_start", 0) or 0),
+        chapter_end=int(payload.get("chapter_end", 0) or 0),
+        chapter_count=chapter_count,
+        chapter_blueprint=chapter_blueprint,
+        character_keys=_dedupe_texts(payload.get("character_keys", []) or current_node.character_keys),
+        source_novels=source_novels,
+        selection_ref=str(payload.get("selection_ref", "") or f"bridge::{bridge_id}"),
+        selection_source_novel=str(payload.get("selection_source_novel", "") or current_node.selection_source_novel),
+        selection_source_index=int(payload.get("selection_source_index", current_node.selection_source_index or -1) or -1),
+        logic_card=normalized_logic_card,
+        logic_notes=_dedupe_texts(payload.get("logic_notes", []) or ["bridge_node_from_llm"]),
+        source_induced_event_ids=_source_ids_from_refs(merged_refs, "induced_event"),
+        source_atom_ids=_source_ids_from_refs(merged_refs, "atom"),
+        source_legacy_event_ids=_source_ids_from_refs(merged_refs, "legacy_event"),
+        source_chunk_ids=_source_ids_from_refs(merged_refs, "chunk"),
+        source_refs=merged_refs,
+        stage=str(payload.get("stage", "") or current_node.stage),
+        power_stage=str(payload.get("power_stage", "") or current_node.power_stage),
+        metadata=payload.get("metadata", {}) if isinstance(payload.get("metadata", {}), dict) else {},
+    )
+
+
+def _state_issue_to_payload(issue: StateIssue) -> Dict[str, Any]:
+    return {
+        "severity": str(issue.severity or ""),
+        "issue_type": str(issue.issue_type or ""),
+        "message": str(issue.message or ""),
+        "node_id": str(issue.node_id or ""),
+        "suggested_action": str(issue.suggested_action or ""),
+    }
+
+
+def _heuristic_flags_to_state_issues(flags: List[str], node_id: str) -> List[StateIssue]:
+    issues: List[StateIssue] = []
+    for flag in flags:
+        text = str(flag or "").strip()
+        if not text:
+            continue
+        issues.append(
+            StateIssue(
+                severity="major",
+                issue_type="hook_precondition_gap",
+                message=text,
+                node_id=node_id,
+                suggested_action="补齐前置状态/钩子承接，确保事件过渡连续。",
+            )
+        )
+    return issues
+
+
+def _validate_local_repair_window(
+    previous_nodes: List[SkeletonNode],
+    repaired_nodes: List[SkeletonNode],
+    next_node: Optional[SkeletonNode],
+    fused_world: Optional[FusedWorld],
+) -> List[StateIssue]:
+    if not repaired_nodes:
+        return []
+    window: List[SkeletonNode] = []
+    if previous_nodes:
+        window.append(previous_nodes[-1])
+    window.extend(repaired_nodes)
+    if next_node:
+        window.append(next_node)
+
+    issues: List[StateIssue] = list(validate_skeleton_sequence(window, world=fused_world))
+    start_idx = 1 if previous_nodes else 0
+    end_idx = start_idx + len(repaired_nodes)
+    for idx in range(start_idx, end_idx):
+        node = window[idx]
+        prev_slice = window[max(0, idx - 2):idx]
+        nxt = window[idx + 1] if idx + 1 < len(window) else None
+        flags = _heuristic_transition_flags(prev_slice, node, nxt)
+        issues.extend(_heuristic_flags_to_state_issues(flags, node.node_id))
+    return issues
+
+
+def _attach_repair_fields(
+    node: SkeletonNode,
+    repair_action: str,
+    repair_notes: List[str],
+    repair_candidate_refs: List[str],
+    repair_validation_issues: List[Dict[str, Any]],
+) -> None:
+    metadata = dict(node.metadata or {})
+    metadata["repair_action"] = repair_action
+    metadata["repair_notes"] = _dedupe_texts(repair_notes)
+    metadata["repair_candidate_refs"] = _dedupe_texts(repair_candidate_refs)
+    metadata["repair_validation_issues"] = repair_validation_issues
+    node.metadata = metadata
+
+
 def _refine_skeleton_sequence(
     base_novel: str,
     fused_nodes: List[SkeletonNode],
     per_novel_nodes: Dict[str, List[SkeletonNode]],
     fused_world: Optional[FusedWorld] = None,
+    induced_events_by_novel: Optional[Dict[str, List[InducedEvent]]] = None,
+    all_atoms: Optional[Dict[str, List[PlotAtom]]] = None,
 ) -> List[SkeletonNode]:
     if not fused_nodes or not per_novel_nodes:
         return fused_nodes
 
-    client = get_deepseek_client()
+    client = None
     candidate_pool = _flatten_node_candidates(per_novel_nodes)
     source_limits = _build_source_target_limits(base_novel, per_novel_nodes, len(fused_nodes))
     progression_stages = build_progression_stages(fused_world)
+    enable_rag_repair = _env_flag("PLOTWEAVER_STEP9_ENABLE_RAG_REPAIR", default=False)
+    enable_llm_repair = _env_flag("PLOTWEAVER_STEP9_ENABLE_LLM_REPAIR", default=False)
+    try:
+        repair_budget_limit = max(0, int(str(os.getenv("PLOTWEAVER_STEP9_REPAIR_BUDGET", "10") or "10").strip()))
+    except Exception:
+        repair_budget_limit = 10
+    repair_budget_used = 0
 
     refined = [node for node in fused_nodes]
     review_recent: List[Dict[str, Any]] = []
     final_usage: Dict[str, int] = {}
     final_used_refs: set[str] = set()
     output_nodes: List[SkeletonNode] = []
+    progress_interval = 1 if len(refined) <= 20 else 5
+
+    print(
+        f"[Step 9] Fusing {len(refined)} skeleton slots from {len(candidate_pool)} source candidates...",
+        flush=True,
+    )
+    print(
+        f"[Step 9] Repair switches: RAG={'on' if enable_rag_repair else 'off'}, LLM={'on' if enable_llm_repair else 'off'}",
+        flush=True,
+    )
+    print(f"[Step 9] Repair budget: {repair_budget_used}/{repair_budget_limit} used", flush=True)
 
     for idx, node in enumerate(refined):
-        node.logic_card = _ensure_logic_card(client, node)
+        if idx == 0 or (idx + 1) % progress_interval == 0 or idx + 1 == len(refined):
+            print(
+                f"[Step 9] Refining skeleton transitions: {idx + 1}/{len(refined)} "
+                f"(node={node.node_id}, source={node.selection_source_novel or 'unknown'})",
+                flush=True,
+            )
+        if not (isinstance(node.logic_card, dict) and node.logic_card.get("timeline_stage")) and client is None:
+            try:
+                client = get_deepseek_client()
+            except Exception as exc:
+                node.logic_card = _normalize_logic_card(node.logic_card if isinstance(node.logic_card, dict) else {}, node.pacing_role, node.chapter_count)
+                node.logic_notes = _dedupe_texts(list(node.logic_notes) + [f"logic_card_llm_unavailable:{exc}"])
+        if not (isinstance(node.logic_card, dict) and node.logic_card.get("timeline_stage")) and client is None:
+            node.logic_card = _normalize_logic_card(node.logic_card if isinstance(node.logic_card, dict) else {}, node.pacing_role, node.chapter_count)
+        else:
+            node.logic_card = _ensure_logic_card(client, node)
         next_node = refined[idx + 1] if idx + 1 < len(refined) else None
-        assessment = _assess_skeleton_transition(client, output_nodes[-2:], node, next_node)
+        heuristic_issues = _heuristic_transition_flags(output_nodes[-2:], node, next_node)
+        if heuristic_issues:
+            if client is None:
+                try:
+                    client = get_deepseek_client()
+                except Exception as exc:
+                    assessment = {
+                        "is_consistent": False,
+                        "issues": heuristic_issues + [f"transition_assess_llm_unavailable:{exc}"],
+                        "severity": "high",
+                    }
+            if client is not None:
+                assessment = _assess_skeleton_transition(client, output_nodes[-2:], node, next_node)
+        else:
+            assessment = {"is_consistent": True, "issues": [], "severity": "low"}
         chosen = node
         logic_notes = [str(item).strip() for item in assessment.get("issues", []) if str(item).strip()]
+        mismatch_type = _classify_skeleton_mismatch(
+            previous_nodes=output_nodes[-2:],
+            node=node,
+            next_node=next_node,
+            assessment=assessment,
+            stages=progression_stages,
+        )
+        needs_replacement_review = (not assessment.get("is_consistent", True)) or mismatch_type != "keep"
+        bridge_before_node: Optional[SkeletonNode] = None
+        bridge_after_node: Optional[SkeletonNode] = None
 
-        if not assessment.get("is_consistent", True):
+        if needs_replacement_review:
+            print(
+                f"[Step 9] Node {idx + 1}/{len(refined)} flagged for replacement review "
+                f"(severity={assessment.get('severity', 'unknown')}, issues={len(logic_notes)}).",
+                flush=True,
+            )
+            print(f"[Step 9] Node {idx + 1} mismatch_type={mismatch_type}", flush=True)
+            severity_label = str(assessment.get("severity", "low") or "low").strip().lower()
+            repair_gate_open = mismatch_type in {"replace", "rewrite", "bridge"} and _severity_is_high_or_above(severity_label)
             if chosen.selection_ref:
                 final_used_refs.discard(chosen.selection_ref)
             if chosen.selection_source_novel:
@@ -1391,21 +2343,293 @@ def _refine_skeleton_sequence(
                 progression_stages=progression_stages,
                 limit=4,
             )
+            if enable_rag_repair and repair_gate_open:
+                retrieved_candidates = _retrieve_repair_candidates_for_slot(
+                    slot=slot,
+                    previous_nodes=output_nodes[-2:],
+                    next_node=next_node,
+                    per_novel_nodes=per_novel_nodes,
+                    induced_events_by_novel=induced_events_by_novel,
+                    all_atoms=all_atoms,
+                    progression_stages=progression_stages,
+                    usage_counts=final_usage,
+                    source_limits=source_limits,
+                    mismatch_type=mismatch_type,
+                    limit=12,
+                )
+            else:
+                retrieved_candidates = []
+            print(f"[Step 9] Retrieved repair candidates: {len(retrieved_candidates)}", flush=True)
+            retrieved_slot_candidates = [
+                item.get("_slot_candidate")
+                for item in retrieved_candidates
+                if isinstance(item, dict) and isinstance(item.get("_slot_candidate"), dict)
+            ]
+            merged_candidates = replacement_candidates + retrieved_slot_candidates
+            replacement_candidates = _rerank_slot_candidates_by_rules(
+                slot=slot,
+                candidates=merged_candidates,
+                recent_picks=replacement_recent,
+                usage_counts=final_usage,
+                source_limits=source_limits,
+                stages=progression_stages,
+                limit=8,
+            )
+            print(
+                f"[Step 9] Node {idx + 1}/{len(refined)} replacement candidates: {len(replacement_candidates)}",
+                flush=True,
+            )
 
-            best_candidate_node = chosen
-            best_assessment = assessment
-            for candidate in replacement_candidates:
-                replacement_node = _build_slot_node(slot, candidate, idx)
-                replacement_node.logic_card = _ensure_logic_card(client, replacement_node)
-                replacement_assessment = _assess_skeleton_transition(client, output_nodes[-2:], replacement_node, next_node)
-                if _is_assessment_better(replacement_assessment, best_assessment):
-                    best_candidate_node = replacement_node
-                    best_assessment = replacement_assessment
-            chosen = best_candidate_node
-            logic_notes = [str(item).strip() for item in best_assessment.get("issues", []) if str(item).strip()]
+            repair_candidate_refs = _dedupe_texts(
+                [f"{item.get('source_novel', '')}::{item.get('ref_id', '')}" for item in retrieved_candidates]
+                + [_candidate_ref(item) for item in replacement_candidates if isinstance(item, dict) and "node" in item]
+            )
+            state_issues = _collect_transition_state_issues(output_nodes[-2:], node, next_node, progression_stages)
+            issues_payload: List[Dict[str, Any]] = [
+                {
+                    "severity": str(assessment.get("severity", "low")),
+                    "issue_type": "transition_assessment",
+                    "message": str(item),
+                }
+                for item in (assessment.get("issues", []) or [])
+                if str(item).strip()
+            ]
+            issues_payload.extend(_serialize_state_issue(issue) for issue in state_issues)
+            allowed_state = _build_step9_allowed_state(output_nodes[-2:], node, next_node, progression_stages)
+            forbidden_terms = list(allowed_state.get("forbidden_terms", []) or [])
+
+            repair_action = "rule_based_candidate"
+            llm_applied = False
+            repair_notes: List[str] = []
+            review_assessment = dict(assessment)
+            rule_fallback_node = chosen
+            if replacement_candidates:
+                try:
+                    rule_fallback_node = _build_slot_node(slot, replacement_candidates[0], idx)
+                    if not (isinstance(rule_fallback_node.logic_card, dict) and rule_fallback_node.logic_card.get("timeline_stage")) and client is None:
+                        client = get_deepseek_client()
+                    rule_fallback_node.logic_card = _ensure_logic_card(client, rule_fallback_node)
+                except Exception as exc:
+                    repair_notes.append(f"rule_fallback_build_failed:{exc}")
+
+            repair_validation_payload: List[Dict[str, Any]] = []
+            eligible_for_hybrid_repair = repair_gate_open
+            if not eligible_for_hybrid_repair and mismatch_type in {"replace", "rewrite", "bridge"}:
+                repair_notes.append(f"repair_gate_skipped:severity={severity_label}")
+
+            if eligible_for_hybrid_repair:
+                print(f"[Step 9] Repair budget: {repair_budget_used}/{repair_budget_limit} used", flush=True)
+
+            if eligible_for_hybrid_repair and not enable_llm_repair:
+                repair_notes.append("llm_repair_disabled_by_env")
+
+            if eligible_for_hybrid_repair and enable_llm_repair:
+                if repair_budget_used >= repair_budget_limit:
+                    print(
+                        f"[Step 9] Skipping LLM repair for node {idx + 1} because repair budget exhausted.",
+                        flush=True,
+                    )
+                    repair_notes.append("llm_repair_skipped:budget_exhausted")
+                else:
+                    repair_budget_used += 1
+                    print(f"[Step 9] Repair budget: {repair_budget_used}/{repair_budget_limit} used", flush=True)
+                    llm_client = client
+                    if llm_client is None:
+                        try:
+                            llm_client = get_deepseek_client()
+                            client = llm_client
+                        except Exception as exc:
+                            repair_notes.append(f"llm_client_unavailable:{exc}")
+                    if llm_client is not None:
+                        llm_repair = _repair_skeleton_node_with_llm(
+                            client=llm_client,
+                            previous_nodes=output_nodes[-2:],
+                            current_node=node,
+                            next_node=next_node,
+                            issues=issues_payload,
+                            mismatch_type=mismatch_type,
+                            allowed_state=allowed_state,
+                            progression_stages=progression_stages,
+                            retrieved_candidates=retrieved_candidates,
+                            forbidden_terms=forbidden_terms,
+                        )
+                        repair_action = str(llm_repair.get("action", "manual_review")).strip()
+                        print(f"[Step 9] LLM repair action: {repair_action}", flush=True)
+                        repair_notes = _dedupe_texts(repair_notes + _flatten_text_values([llm_repair.get("repair_notes", [])]))
+
+                        candidate_lookup: Dict[str, Dict[str, Any]] = {}
+                        for item in replacement_candidates:
+                            if isinstance(item, dict) and "node" in item:
+                                try:
+                                    candidate_lookup[_candidate_ref(item)] = item
+                                except Exception:
+                                    continue
+                        for item in retrieved_candidates:
+                            if not isinstance(item, dict):
+                                continue
+                            slot_candidate = item.get("_slot_candidate")
+                            if not isinstance(slot_candidate, dict) or "node" not in slot_candidate:
+                                continue
+                            ref_id = str(item.get("ref_id", "")).strip()
+                            source_novel = str(item.get("source_novel", "")).strip()
+                            if ref_id:
+                                candidate_lookup.setdefault(ref_id, slot_candidate)
+                            if ref_id and source_novel:
+                                candidate_lookup.setdefault(f"{source_novel}::{ref_id}", slot_candidate)
+                            try:
+                                candidate_lookup.setdefault(_candidate_ref(slot_candidate), slot_candidate)
+                            except Exception:
+                                pass
+
+                        proposed_main = chosen
+                        if repair_action == "replace_with_candidate":
+                            chosen_ref = str(llm_repair.get("chosen_candidate_ref", "") or "").strip()
+                            chosen_candidate = candidate_lookup.get(chosen_ref)
+                            if chosen_candidate is None and chosen_ref:
+                                suffix_matches = [
+                                    value
+                                    for key, value in candidate_lookup.items()
+                                    if key.endswith(f"::{chosen_ref}")
+                                ]
+                                if suffix_matches:
+                                    chosen_candidate = suffix_matches[0]
+                            if chosen_candidate is not None:
+                                proposed_main = _build_slot_node(slot, chosen_candidate, idx)
+                                if not (isinstance(proposed_main.logic_card, dict) and proposed_main.logic_card.get("timeline_stage")) and client is None:
+                                    client = get_deepseek_client()
+                                proposed_main.logic_card = _ensure_logic_card(client, proposed_main)
+                                llm_applied = True
+                        elif repair_action == "rewrite_current":
+                            repaired_payload = llm_repair.get("repaired_node", {})
+                            if isinstance(repaired_payload, dict) and repaired_payload:
+                                proposed_main = _coerce_repaired_skeleton_node(
+                                    repaired_node=repaired_payload,
+                                    fallback_node=chosen,
+                                    slot=slot,
+                                    index=idx,
+                                )
+                                if not (isinstance(proposed_main.logic_card, dict) and proposed_main.logic_card.get("timeline_stage")) and client is None:
+                                    client = get_deepseek_client()
+                                proposed_main.logic_card = _ensure_logic_card(client, proposed_main)
+                                llm_applied = True
+                        elif repair_action == "insert_bridge_before":
+                            bridge_payload = llm_repair.get("bridge_node", {})
+                            if isinstance(bridge_payload, dict):
+                                bridge_before_node = _coerce_bridge_node_from_llm(
+                                    bridge_node=bridge_payload,
+                                    previous_nodes=output_nodes[-2:],
+                                    current_node=chosen,
+                                    next_node=next_node,
+                                    index=idx,
+                                )
+                                llm_applied = True
+                        elif repair_action == "insert_bridge_after":
+                            bridge_payload = llm_repair.get("bridge_node", {})
+                            if isinstance(bridge_payload, dict):
+                                bridge_after_node = _coerce_bridge_node_from_llm(
+                                    bridge_node=bridge_payload,
+                                    previous_nodes=output_nodes[-2:],
+                                    current_node=chosen,
+                                    next_node=next_node,
+                                    index=idx,
+                                )
+                                llm_applied = True
+                        elif repair_action == "keep":
+                            llm_applied = True
+
+                        if llm_applied:
+                            chosen = proposed_main
+                            proposed_nodes = [item for item in [bridge_before_node, chosen, bridge_after_node] if item is not None]
+                            repair_validation_issues = _validate_local_repair_window(
+                                previous_nodes=output_nodes[-2:],
+                                repaired_nodes=proposed_nodes,
+                                next_node=next_node,
+                                fused_world=fused_world,
+                            )
+                            fatal_issues = [issue for issue in repair_validation_issues if str(issue.severity).lower() == "fatal"]
+                            print(f"[Step 9] Repair validation fatal issues: {len(fatal_issues)}", flush=True)
+                            if fatal_issues:
+                                print("[Step 9] Falling back to rule-based candidate.", flush=True)
+                                llm_applied = False
+                                repair_notes.extend(
+                                    ["llm_repair_rejected_by_validation"]
+                                    + [f"fatal:{issue.issue_type}:{issue.message}" for issue in fatal_issues]
+                                )
+                                bridge_before_node = None
+                                bridge_after_node = None
+                                chosen = rule_fallback_node
+                                repair_action = "rule_fallback_after_validation_failure"
+                                review_assessment = dict(assessment)
+                                repair_validation_payload = [_state_issue_to_payload(item) for item in repair_validation_issues]
+                            else:
+                                repair_validation_payload = [_state_issue_to_payload(item) for item in repair_validation_issues]
+                                review_assessment = {"severity": str(assessment.get("severity", "low")), "is_consistent": True}
+                                if repair_notes:
+                                    logic_notes = _dedupe_texts(logic_notes + repair_notes)
+                                if bridge_before_node:
+                                    bridge_before_node.logic_notes = _dedupe_texts(list(bridge_before_node.logic_notes) + repair_notes + ["llm_bridge_before"])
+                                if bridge_after_node:
+                                    bridge_after_node.logic_notes = _dedupe_texts(list(bridge_after_node.logic_notes) + repair_notes + ["llm_bridge_after"])
+                    else:
+                        repair_action = "manual_review"
+
+            if not llm_applied:
+                chosen = rule_fallback_node
+                review_assessment = dict(assessment)
+                repair_action = "rule_based_candidate"
+                if repair_notes:
+                    logic_notes = _dedupe_texts(logic_notes + repair_notes)
+                if not repair_validation_payload:
+                    fallback_validation = _validate_local_repair_window(
+                        previous_nodes=output_nodes[-2:],
+                        repaired_nodes=[chosen],
+                        next_node=next_node,
+                        fused_world=fused_world,
+                    )
+                    fatal_fallback = [issue for issue in fallback_validation if str(issue.severity).lower() == "fatal"]
+                    if fatal_fallback:
+                        print(f"[Step 9] Repair validation fatal issues: {len(fatal_fallback)}", flush=True)
+                        repair_notes.extend([f"fallback_fatal:{issue.issue_type}:{issue.message}" for issue in fatal_fallback])
+                    repair_validation_payload = [_state_issue_to_payload(item) for item in fallback_validation]
+
+            _attach_repair_fields(
+                node=chosen,
+                repair_action=repair_action,
+                repair_notes=repair_notes,
+                repair_candidate_refs=repair_candidate_refs,
+                repair_validation_issues=repair_validation_payload,
+            )
+            if bridge_before_node:
+                _attach_repair_fields(
+                    node=bridge_before_node,
+                    repair_action=repair_action,
+                    repair_notes=repair_notes,
+                    repair_candidate_refs=repair_candidate_refs,
+                    repair_validation_issues=repair_validation_payload,
+                )
+            if bridge_after_node:
+                _attach_repair_fields(
+                    node=bridge_after_node,
+                    repair_action=repair_action,
+                    repair_notes=repair_notes,
+                    repair_candidate_refs=repair_candidate_refs,
+                    repair_validation_issues=repair_validation_payload,
+                )
+
+            print(
+                f"[Step 9] Node {idx + 1}/{len(refined)} replacement review complete -> "
+                f"chosen_source={chosen.selection_source_novel or 'unknown'}, "
+                f"severity={review_assessment.get('severity', 'unknown')}, "
+                f"consistent={review_assessment.get('is_consistent', False)}",
+                flush=True,
+            )
 
         chosen.logic_notes = _dedupe_texts(logic_notes)
+        if needs_replacement_review and bridge_before_node:
+            output_nodes.append(bridge_before_node)
         output_nodes.append(chosen)
+        if needs_replacement_review and bridge_after_node:
+            output_nodes.append(bridge_after_node)
         if chosen.selection_ref:
             final_used_refs.add(chosen.selection_ref)
         if chosen.selection_source_novel:

@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from dataclasses import asdict
 from pathlib import Path
 from typing import Dict, List, Optional
 
@@ -27,11 +28,16 @@ def build_skeleton(
     per_novel_nodes = {}
     if source_skeletons:
         for novel_name, nodes in source_skeletons.items():
-            cloned_nodes = [core._slot_from_existing_node(node) for node in nodes]
+            cloned_nodes = [core.SkeletonNode(**asdict(node)) for node in nodes]
             for node in cloned_nodes:
                 node.source_novels = [novel_name]
             if cloned_nodes:
                 per_novel_nodes[novel_name] = cloned_nodes
+        print(
+            f"[Step 9] Using Step 8 segmented skeletons: "
+            f"{sum(len(nodes) for nodes in per_novel_nodes.values())} node(s) across {len(per_novel_nodes)} novel(s).",
+            flush=True,
+        )
     else:
         for novel_name, arcs in novel_arcs.items():
             induced_events = (induced_events_by_novel or {}).get(novel_name, [])
@@ -43,9 +49,21 @@ def build_skeleton(
                 node.source_novels = [novel_name]
             if nodes:
                 per_novel_nodes[novel_name] = nodes
+        print(
+            f"[Step 9] Step 8 skeletons unavailable, rebuilt {sum(len(nodes) for nodes in per_novel_nodes.values())} "
+            f"node(s) from upstream inputs.",
+            flush=True,
+        )
 
     fused_nodes = core._blend_source_skeleton_nodes(base_novel, per_novel_nodes, fused_world)
-    fused_nodes = core._refine_skeleton_sequence(base_novel, fused_nodes, per_novel_nodes, fused_world)
+    fused_nodes = core._refine_skeleton_sequence(
+        base_novel,
+        fused_nodes,
+        per_novel_nodes,
+        fused_world,
+        induced_events_by_novel=induced_events_by_novel,
+        all_atoms=all_atoms,
+    )
     print(
         f"[Step 9] Skeleton generated with {len(fused_nodes)} paced slots filled from "
         f"{len(per_novel_nodes)} source novel(s); the base novel only provides pacing."
