@@ -404,6 +404,53 @@ def _pacing_role_for_induced_event(event: InducedEvent, index: int, total: int) 
     return "主线推进"
 
 
+def _dedupe_source_refs(source_refs: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
+    deduped: List[Dict[str, Any]] = []
+    seen: set[tuple[str, str, str]] = set()
+    for raw_ref in source_refs or []:
+        if not isinstance(raw_ref, dict):
+            continue
+        ref_type = str(raw_ref.get("ref_type", "") or "").strip()
+        ref_id = str(raw_ref.get("ref_id", "") or "").strip()
+        source_novel = str(raw_ref.get("source_novel", "") or "").strip()
+        if not ref_type or not ref_id:
+            continue
+        key = (ref_type, ref_id, source_novel)
+        if key in seen:
+            continue
+        seen.add(key)
+        deduped.append({"ref_type": ref_type, "ref_id": ref_id, "source_novel": source_novel})
+    return deduped
+
+
+def _coerce_node_source_refs(node: SkeletonNode, fallback_novel: str = "") -> List[Dict[str, Any]]:
+    refs = _dedupe_source_refs(list(getattr(node, "source_refs", []) or []))
+    if refs:
+        return refs
+
+    source_novels = _dedupe_texts(getattr(node, "source_novels", []) or [])
+    source_novel = source_novels[0] if source_novels else fallback_novel
+    derived_refs: List[Dict[str, Any]] = []
+    for induced_event_id in getattr(node, "source_induced_event_ids", []) or []:
+        derived_refs.append({"ref_type": "induced_event", "ref_id": induced_event_id, "source_novel": source_novel})
+    for atom_id in getattr(node, "source_atom_ids", []) or []:
+        derived_refs.append({"ref_type": "atom", "ref_id": atom_id, "source_novel": source_novel})
+    for legacy_event_id in getattr(node, "source_legacy_event_ids", []) or []:
+        derived_refs.append({"ref_type": "legacy_event", "ref_id": legacy_event_id, "source_novel": source_novel})
+    for chunk_id in getattr(node, "source_chunk_ids", []) or []:
+        derived_refs.append({"ref_type": "chunk", "ref_id": chunk_id, "source_novel": source_novel})
+    return _dedupe_source_refs(derived_refs)
+
+
+def _source_refs_from_induced_event(event: InducedEvent) -> List[Dict[str, Any]]:
+    refs: List[Dict[str, Any]] = []
+    if event.event_id:
+        refs.append({"ref_type": "induced_event", "ref_id": event.event_id, "source_novel": event.novel_source})
+    for atom_id in event.source_atom_ids:
+        refs.append({"ref_type": "atom", "ref_id": atom_id, "source_novel": event.novel_source})
+    return _dedupe_source_refs(refs)
+
+
 def _nodes_from_induced_events(induced_events: List[InducedEvent], fused_world: FusedWorld) -> List[SkeletonNode]:
     grouped_by_arc: Dict[str, List[InducedEvent]] = {}
     arc_order: List[str] = []
@@ -428,6 +475,7 @@ def _nodes_from_induced_events(induced_events: List[InducedEvent], fused_world: 
         template = _match_template_for_induced_event(event, fused_world)
         template_blueprint = template.get("beat_blueprint") or _fallback_chapter_blueprint(event.chapter_count)
         blueprint = _fit_blueprint_to_chapter_count(template_blueprint, event.chapter_count)
+        source_refs = _source_refs_from_induced_event(event)
         nodes.append(
             SkeletonNode(
                 node_id=event.event_id,
@@ -439,7 +487,7 @@ def _nodes_from_induced_events(induced_events: List[InducedEvent], fused_world: 
                 function_hint=event.function_hint,
                 role_slots=_role_slots_for_induced_event(event, fused_world, template),
                 template_hint=template.get("name", ""),
-                source_event_ids=event.source_atom_ids[:],
+                source_event_ids=[event.event_id],
                 chapter_start=event.chapter_start,
                 chapter_end=event.chapter_end,
                 chapter_count=event.chapter_count,
@@ -459,6 +507,13 @@ def _nodes_from_induced_events(induced_events: List[InducedEvent], fused_world: 
                     "hook_close": event.hook_close[:],
                     "resource_delta": event.resource_delta[:],
                 },
+                source_induced_event_ids=[event.event_id],
+                source_atom_ids=event.source_atom_ids[:],
+                source_legacy_event_ids=[],
+                source_chunk_ids=[],
+                source_refs=source_refs,
+                stage=event.power_state or "",
+                power_stage=event.power_state or "",
             )
         )
     return nodes
@@ -726,6 +781,13 @@ def _build_pacing_slot(
         "chapter_count": chapter_count,
         "chapter_blueprint": chapter_blueprint,
         "character_keys": base_node.character_keys[:],
+        "source_event_ids": list(base_node.source_event_ids),
+        "source_induced_event_ids": list(getattr(base_node, "source_induced_event_ids", []) or []),
+        "source_atom_ids": list(getattr(base_node, "source_atom_ids", []) or []),
+        "source_legacy_event_ids": list(getattr(base_node, "source_legacy_event_ids", []) or []),
+        "source_chunk_ids": list(getattr(base_node, "source_chunk_ids", []) or []),
+        "source_refs": _coerce_node_source_refs(base_node),
+        "source_novels": list(base_node.source_novels),
         "logic_card": dict(base_node.logic_card or {}),
         "excluded_node_id": base_node.node_id,
         "excluded_event_ids": set(base_node.source_event_ids),
@@ -1100,6 +1162,26 @@ def _build_slot_node(slot: Dict[str, Any], candidate: Dict[str, Any], index: int
     chapter_count = slot["chapter_count"] or max(1, node.chapter_count or 1)
     chapter_blueprint = _fit_blueprint_to_chapter_count(raw_blueprint, chapter_count)
     logic_card = _merge_logic_cards(slot.get("logic_card", {}), node.logic_card or {}, slot.get("pacing_role", ""), slot.get("chapter_count", chapter_count))
+    merged_source_event_ids = _dedupe_texts(list(slot.get("source_event_ids", [])) + list(node.source_event_ids))
+    merged_source_induced_event_ids = _dedupe_texts(
+        list(slot.get("source_induced_event_ids", [])) + list(getattr(node, "source_induced_event_ids", []) or [])
+    )
+    merged_source_atom_ids = _dedupe_texts(
+        list(slot.get("source_atom_ids", [])) + list(getattr(node, "source_atom_ids", []) or [])
+    )
+    merged_source_legacy_event_ids = _dedupe_texts(
+        list(slot.get("source_legacy_event_ids", [])) + list(getattr(node, "source_legacy_event_ids", []) or [])
+    )
+    merged_source_chunk_ids = _dedupe_texts(
+        list(slot.get("source_chunk_ids", [])) + list(getattr(node, "source_chunk_ids", []) or [])
+    )
+    merged_source_refs = _dedupe_source_refs(
+        list(slot.get("source_refs", []) or [])
+        + _coerce_node_source_refs(node, fallback_novel=str(candidate["novel"]))
+    )
+    merged_source_novels = _dedupe_texts(
+        list(slot.get("source_novels", [])) + list(node.source_novels or [str(candidate["novel"])])
+    )
     return SkeletonNode(
         node_id=f"fused_event_{index + 1}",
         arc_name=slot["arc_name"],
@@ -1110,17 +1192,24 @@ def _build_slot_node(slot: Dict[str, Any], candidate: Dict[str, Any], index: int
         function_hint=node.function_hint or slot["function_hint"],
         role_slots=_dedupe_texts(list(slot["role_slots"]) + list(node.role_slots))[:8],
         template_hint=slot["template_hint"] or node.template_hint,
-        source_event_ids=_dedupe_texts(node.source_event_ids),
+        source_event_ids=merged_source_event_ids,
         chapter_start=1,
         chapter_end=chapter_count,
         chapter_count=chapter_count,
         chapter_blueprint=chapter_blueprint,
         character_keys=_dedupe_texts(list(slot.get("character_keys", [])) + list(node.character_keys))[:8],
-        source_novels=_dedupe_texts(node.source_novels or [str(candidate["novel"])]),
+        source_novels=merged_source_novels,
         selection_ref=_candidate_ref(candidate),
         selection_source_novel=str(candidate["novel"]),
         selection_source_index=int(candidate["index"]),
         logic_card=logic_card,
+        source_induced_event_ids=merged_source_induced_event_ids,
+        source_atom_ids=merged_source_atom_ids,
+        source_legacy_event_ids=merged_source_legacy_event_ids,
+        source_chunk_ids=merged_source_chunk_ids,
+        source_refs=merged_source_refs,
+        stage=getattr(node, "stage", "") or str(slot.get("stage", "") or ""),
+        power_stage=getattr(node, "power_stage", "") or str(slot.get("power_stage", "") or ""),
     )
 
 
@@ -1129,6 +1218,9 @@ def _build_slot_fallback_node(slot: Dict[str, Any], base_node: SkeletonNode, ind
     chapter_count = slot["chapter_count"] or max(1, base_node.chapter_count or 1)
     chapter_blueprint = _fit_blueprint_to_chapter_count(raw_blueprint, chapter_count)
     logic_card = _merge_logic_cards(slot.get("logic_card", {}), base_node.logic_card or {}, slot.get("pacing_role", ""), slot.get("chapter_count", chapter_count))
+    source_refs = _dedupe_source_refs(
+        list(slot.get("source_refs", []) or []) + _coerce_node_source_refs(base_node, fallback_novel=slot["reference_novel"])
+    )
     return SkeletonNode(
         node_id=f"fused_event_{index + 1}",
         arc_name=slot["arc_name"],
@@ -1139,17 +1231,32 @@ def _build_slot_fallback_node(slot: Dict[str, Any], base_node: SkeletonNode, ind
         function_hint=base_node.function_hint or slot["function_hint"],
         role_slots=_dedupe_texts(list(slot["role_slots"]) + list(base_node.role_slots))[:8],
         template_hint=slot["template_hint"] or base_node.template_hint,
-        source_event_ids=_dedupe_texts(base_node.source_event_ids),
+        source_event_ids=_dedupe_texts(list(slot.get("source_event_ids", [])) + list(base_node.source_event_ids)),
         chapter_start=1,
         chapter_end=chapter_count,
         chapter_count=chapter_count,
         chapter_blueprint=chapter_blueprint,
         character_keys=_dedupe_texts(list(slot.get("character_keys", [])) + list(base_node.character_keys))[:8],
-        source_novels=_dedupe_texts(base_node.source_novels or [slot["reference_novel"]]),
+        source_novels=_dedupe_texts(list(slot.get("source_novels", [])) + list(base_node.source_novels or [slot["reference_novel"]])),
         selection_ref=f"{slot['reference_novel']}::{base_node.node_id}",
         selection_source_novel=slot["reference_novel"],
         selection_source_index=slot["slot_index"],
         logic_card=logic_card,
+        source_induced_event_ids=_dedupe_texts(
+            list(slot.get("source_induced_event_ids", [])) + list(getattr(base_node, "source_induced_event_ids", []) or [])
+        ),
+        source_atom_ids=_dedupe_texts(
+            list(slot.get("source_atom_ids", [])) + list(getattr(base_node, "source_atom_ids", []) or [])
+        ),
+        source_legacy_event_ids=_dedupe_texts(
+            list(slot.get("source_legacy_event_ids", [])) + list(getattr(base_node, "source_legacy_event_ids", []) or [])
+        ),
+        source_chunk_ids=_dedupe_texts(
+            list(slot.get("source_chunk_ids", [])) + list(getattr(base_node, "source_chunk_ids", []) or [])
+        ),
+        source_refs=source_refs,
+        stage=getattr(base_node, "stage", "") or str(slot.get("stage", "") or ""),
+        power_stage=getattr(base_node, "power_stage", "") or str(slot.get("power_stage", "") or ""),
     )
 
 
@@ -1183,6 +1290,13 @@ def _slot_from_existing_node(
         "chapter_count": chapter_count,
         "chapter_blueprint": chapter_blueprint,
         "character_keys": node.character_keys[:],
+        "source_event_ids": list(node.source_event_ids),
+        "source_induced_event_ids": list(getattr(node, "source_induced_event_ids", []) or []),
+        "source_atom_ids": list(getattr(node, "source_atom_ids", []) or []),
+        "source_legacy_event_ids": list(getattr(node, "source_legacy_event_ids", []) or []),
+        "source_chunk_ids": list(getattr(node, "source_chunk_ids", []) or []),
+        "source_refs": _coerce_node_source_refs(node),
+        "source_novels": list(node.source_novels),
         "logic_card": dict(node.logic_card or {}),
         "excluded_node_id": "",
         "excluded_event_ids": set(),

@@ -231,6 +231,8 @@ def _segment_to_skeleton_node(
         logic_card=logic_card,
         source_induced_event_ids=source_induced_event_ids,
         source_atom_ids=source_atom_ids,
+        source_legacy_event_ids=[],
+        source_chunk_ids=[],
         source_refs=source_refs,
         stage=segment_stage,
         power_stage=segment_stage,
@@ -371,6 +373,16 @@ def _extract_skeleton_nodes(
         primary_function = _top_cluster_value(cluster, "function_hint")
         stage = _infer_fallback_cluster_stage(cluster, stages)
         source_atom_ids = _dedupe_texts(item["atom"].atom_id for item in cluster if item.get("atom"))
+        source_legacy_event_ids = _dedupe_texts(
+            getattr(item["event"], "event_id", "")
+            for item in cluster
+            if getattr(item.get("event"), "event_id", "")
+        )
+        source_chunk_ids = _dedupe_texts(
+            getattr(item["event"], "source_chunk_id", "")
+            for item in cluster
+            if getattr(item.get("event"), "source_chunk_id", "")
+        )
         source_refs = _build_fallback_source_refs(cluster, source_atom_ids)
         pacing_role = _infer_cluster_pacing_role(cluster_index, total_clusters, cluster, primary_function)
         node = SkeletonNode(
@@ -390,7 +402,10 @@ def _extract_skeleton_nodes(
             chapter_blueprint=_fallback_blueprint_for_cluster(cluster),
             character_keys=_dedupe_texts(key for item in cluster for key in item.get("character_keys", [])),
             logic_card=_build_cluster_logic_card(cluster, chapter_count, pacing_role),
+            source_induced_event_ids=[],
             source_atom_ids=source_atom_ids,
+            source_legacy_event_ids=source_legacy_event_ids,
+            source_chunk_ids=source_chunk_ids,
             source_refs=source_refs,
             stage=stage,
             power_stage=stage,

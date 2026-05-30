@@ -44,6 +44,10 @@ class ReassembledEvent:
     used_trope: str = ""
     template_name: str = ""
     source_atom_ids: List[str] = field(default_factory=list)
+    source_induced_event_ids: List[str] = field(default_factory=list)
+    source_legacy_event_ids: List[str] = field(default_factory=list)
+    source_chunk_ids: List[str] = field(default_factory=list)
+    source_refs: List[Dict[str, Any]] = field(default_factory=list)
     is_bridge: bool = False
     event_plan: Dict[str, Any] = field(default_factory=dict)
     active_characters: List[str] = field(default_factory=list)
@@ -174,6 +178,19 @@ def reassemble_plot(
 
         state_updates = event_plan.get("state_updates", {}) if isinstance(event_plan, dict) else {}
         logic_notes = [note for note in (plan_logic_notes + summary_logic_notes) if note]
+        source_atom_ids = _dedupe_texts(list(getattr(node, "source_atom_ids", []) or []))
+        source_induced_event_ids = _dedupe_texts(list(getattr(node, "source_induced_event_ids", []) or []))
+        source_legacy_event_ids = _dedupe_texts(list(getattr(node, "source_legacy_event_ids", []) or []))
+        source_chunk_ids = _dedupe_texts(list(getattr(node, "source_chunk_ids", []) or []))
+        source_refs = _dedupe_source_refs(list(getattr(node, "source_refs", []) or []))
+        fallback_source_novel = _dedupe_texts(list(getattr(node, "source_novels", []) or []))
+        fallback_source_novel = fallback_source_novel[0] if fallback_source_novel else ""
+        if not source_refs:
+            source_refs.extend({"ref_type": "atom", "ref_id": ref_id, "source_novel": fallback_source_novel} for ref_id in source_atom_ids)
+            source_refs.extend({"ref_type": "induced_event", "ref_id": ref_id, "source_novel": fallback_source_novel} for ref_id in source_induced_event_ids)
+            source_refs.extend({"ref_type": "legacy_event", "ref_id": ref_id, "source_novel": fallback_source_novel} for ref_id in source_legacy_event_ids)
+            source_refs.extend({"ref_type": "chunk", "ref_id": ref_id, "source_novel": fallback_source_novel} for ref_id in source_chunk_ids)
+            source_refs = _dedupe_source_refs(source_refs)
 
         event = ReassembledEvent(
             event_id=event_id,
@@ -183,7 +200,11 @@ def reassemble_plot(
             adapted_summary=final_summary,
             used_trope=used_trope,
             template_name=node.template_hint,
-            source_atom_ids=[item.get("metadata", {}).get("original_id", "") for item in similar_events],
+            source_atom_ids=source_atom_ids,
+            source_induced_event_ids=source_induced_event_ids,
+            source_legacy_event_ids=source_legacy_event_ids,
+            source_chunk_ids=source_chunk_ids,
+            source_refs=source_refs,
             event_plan=event_plan,
             active_characters=active_characters,
             state_updates=state_updates,
@@ -217,7 +238,112 @@ def load_step11_output(intermediate_dir: str | Path | None = None) -> List[Reass
     if not in_path.exists():
         raise FileNotFoundError(f"Step 11 file not found: {in_path}")
     data = read_json_file(in_path)
-    return [ReassembledEvent(**item) for item in data]
+    return [ReassembledEvent(**_normalize_reassembled_event_record(item)) for item in data]
+
+
+def _classify_source_ref_id(ref_id: str) -> str:
+    text = str(ref_id or "").strip()
+    if not text:
+        return ""
+    lowered = text.lower()
+    if "_induced_event" in lowered:
+        return "induced_event"
+    if re.search(r"_atom_?\d+$", lowered):
+        return "atom"
+    if "chunk" in lowered:
+        return "chunk"
+    if re.search(r"(?:^|_)event_?\d+$", lowered):
+        return "legacy_event"
+    return ""
+
+
+def _dedupe_source_refs(source_refs: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
+    deduped: List[Dict[str, Any]] = []
+    seen: Set[Tuple[str, str, str]] = set()
+    for raw_ref in source_refs or []:
+        if not isinstance(raw_ref, dict):
+            continue
+        ref_type = str(raw_ref.get("ref_type", "") or "").strip()
+        ref_id = str(raw_ref.get("ref_id", "") or "").strip()
+        source_novel = str(raw_ref.get("source_novel", "") or "").strip()
+        if not ref_type or not ref_id:
+            continue
+        key = (ref_type, ref_id, source_novel)
+        if key in seen:
+            continue
+        seen.add(key)
+        deduped.append({"ref_type": ref_type, "ref_id": ref_id, "source_novel": source_novel})
+    return deduped
+
+
+def _normalize_reassembled_event_record(record: Dict[str, Any]) -> Dict[str, Any]:
+    # source_atom_ids is kept for backward compatibility, but it should only contain real Step2 atom ids.
+    # Legacy event/chunk references are migrated into source_refs and the dedicated source_* fields below.
+    payload = dict(record or {})
+    payload.setdefault("source_atom_ids", [])
+    payload.setdefault("source_induced_event_ids", [])
+    payload.setdefault("source_legacy_event_ids", [])
+    payload.setdefault("source_chunk_ids", [])
+    payload.setdefault("source_refs", [])
+    payload.setdefault("repair_notes", [])
+    payload.setdefault("logic_notes", [])
+
+    atom_ids: List[str] = []
+    induced_event_ids = [str(item).strip() for item in payload.get("source_induced_event_ids", []) if str(item).strip()]
+    legacy_event_ids = [str(item).strip() for item in payload.get("source_legacy_event_ids", []) if str(item).strip()]
+    chunk_ids = [str(item).strip() for item in payload.get("source_chunk_ids", []) if str(item).strip()]
+    source_refs = _dedupe_source_refs(list(payload.get("source_refs", []) or []))
+    for ref in source_refs:
+        ref_type = str(ref.get("ref_type", "") or "").strip()
+        ref_id = str(ref.get("ref_id", "") or "").strip()
+        if not ref_id:
+            continue
+        if ref_type == "atom":
+            atom_ids.append(ref_id)
+        elif ref_type == "induced_event" and ref_id not in induced_event_ids:
+            induced_event_ids.append(ref_id)
+        elif ref_type == "legacy_event" and ref_id not in legacy_event_ids:
+            legacy_event_ids.append(ref_id)
+        elif ref_type == "chunk" and ref_id not in chunk_ids:
+            chunk_ids.append(ref_id)
+
+    migrated_mixed_refs = False
+    for raw_id in payload.get("source_atom_ids", []) or []:
+        ref_id = str(raw_id or "").strip()
+        if not ref_id:
+            continue
+        ref_type = _classify_source_ref_id(ref_id)
+        if ref_type in ("", "atom"):
+            atom_ids.append(ref_id)
+            continue
+        migrated_mixed_refs = True
+        if ref_type == "induced_event" and ref_id not in induced_event_ids:
+            induced_event_ids.append(ref_id)
+        elif ref_type == "legacy_event" and ref_id not in legacy_event_ids:
+            legacy_event_ids.append(ref_id)
+        elif ref_type == "chunk" and ref_id not in chunk_ids:
+            chunk_ids.append(ref_id)
+        source_refs.append({"ref_type": ref_type, "ref_id": ref_id, "source_novel": ""})
+
+    for ref_id in induced_event_ids:
+        source_refs.append({"ref_type": "induced_event", "ref_id": ref_id, "source_novel": ""})
+    for ref_id in legacy_event_ids:
+        source_refs.append({"ref_type": "legacy_event", "ref_id": ref_id, "source_novel": ""})
+    for ref_id in chunk_ids:
+        source_refs.append({"ref_type": "chunk", "ref_id": ref_id, "source_novel": ""})
+    for ref_id in atom_ids:
+        source_refs.append({"ref_type": "atom", "ref_id": ref_id, "source_novel": ""})
+
+    payload["source_atom_ids"] = _dedupe_texts(atom_ids)
+    payload["source_induced_event_ids"] = _dedupe_texts(induced_event_ids)
+    payload["source_legacy_event_ids"] = _dedupe_texts(legacy_event_ids)
+    payload["source_chunk_ids"] = _dedupe_texts(chunk_ids)
+    payload["source_refs"] = _dedupe_source_refs(source_refs)
+    if migrated_mixed_refs:
+        note = "migrated_legacy_source_ids_out_of_source_atom_ids"
+        if note not in payload["repair_notes"]:
+            payload["repair_notes"].append(note)
+    return payload
 
 
 def parse_event_index(value: Any) -> Optional[int]:

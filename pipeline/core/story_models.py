@@ -29,6 +29,8 @@ class SkeletonNode:
     logic_notes: List[str] = field(default_factory=list)
     source_induced_event_ids: List[str] = field(default_factory=list)
     source_atom_ids: List[str] = field(default_factory=list)
+    source_legacy_event_ids: List[str] = field(default_factory=list)
+    source_chunk_ids: List[str] = field(default_factory=list)
     source_refs: List[Dict[str, Any]] = field(default_factory=list)
     stage: str = ""
     power_stage: str = ""
