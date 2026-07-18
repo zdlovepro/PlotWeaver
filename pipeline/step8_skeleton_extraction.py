@@ -22,6 +22,7 @@ from pipeline.core.story_state import (
     extract_max_stage_from_text,
     infer_stage_from_node,
     normalize_stage_name,
+    stage_value,
 )
 from pipeline.core.world_building_core import FusedWorld
 from pipeline.step1_chunking import NarrativeEvent, VolumeArc
@@ -210,6 +211,7 @@ def _segment_to_skeleton_node(
     source_induced_event_ids = [event.event_id for event in events]
     source_atom_ids = _dedupe_texts(atom_id for event in events for atom_id in getattr(event, "source_atom_ids", []))
     source_refs = _build_segment_source_refs(events, source_atom_ids)
+    segment_stage_index = stage_value(segment_stage, stages) if segment_stage else -1
 
     return SkeletonNode(
         node_id=segment["segment_id"],
@@ -236,10 +238,12 @@ def _segment_to_skeleton_node(
         source_refs=source_refs,
         stage=segment_stage,
         power_stage=segment_stage,
+        stage_index=segment_stage_index,
         metadata={
             "used_legacy_fallback": False,
             "segment_event_count": len(events),
             "segment_chapter_span": chapter_count,
+            "realm_level_is_stage_index": False,
         },
     )
 

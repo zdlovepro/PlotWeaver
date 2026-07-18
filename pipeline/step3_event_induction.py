@@ -38,6 +38,7 @@ class InducedEvent:
     hook_open: List[str] = field(default_factory=list)
     hook_close: List[str] = field(default_factory=list)
     power_state: str = ""
+    stage_index: int = -1
     identity_state: str = ""
 
 
@@ -435,8 +436,8 @@ def _derive_power_state(cluster: List[PlotAtom], arc_name: str) -> str:
                 values.append(text)
     if values:
         return _dedupe_texts(values)[0]
-    realm_match = next((text for text in _flatten_text_values([arc_name]) if text), "")
-    return realm_match or "当前阶段"
+    # Arc labels describe source organization, not the protagonist's progression.
+    return ""
 
 
 def _derive_identity_state(cluster: List[PlotAtom]) -> str:

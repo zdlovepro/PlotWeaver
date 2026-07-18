@@ -34,6 +34,7 @@ class SkeletonNode:
     source_refs: List[Dict[str, Any]] = field(default_factory=list)
     stage: str = ""
     power_stage: str = ""
+    stage_index: int = -1
     metadata: Dict[str, Any] = field(default_factory=dict)
 
 

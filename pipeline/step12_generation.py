@@ -233,7 +233,7 @@ def _resolve_volume_stage_bounds(
             power_state = str(event.state_updates.get("power_state", "") or "").strip()
             if power_state:
                 stage_names.append(power_state)
-        stage_from_level = _stage_from_numeric_level(getattr(event, "realm_level", None), stages)
+        stage_from_level = _stage_from_numeric_level(getattr(event, "stage_index", None), stages)
         if stage_from_level:
             stage_names.append(stage_from_level)
 

@@ -21,6 +21,11 @@ _DIRECT_STAGE_FIELDS: Sequence[str] = (
 )
 
 _NUMERIC_STAGE_FIELDS: Sequence[str] = (
+    "stage_index",
+    "progression_stage_index",
+)
+
+_LEGACY_NUMERIC_STAGE_FIELDS: Sequence[str] = (
     "realm_level",
     "level",
     "rank",
@@ -179,7 +184,24 @@ def infer_stage_from_node(node: Any, stages: List[ProgressionStage]) -> str:
         if inferred:
             return inferred
 
+    # A legacy realm_level is often a volume or display rank. Only map it when
+    # the producer explicitly declares that it equals the world's stage_index.
+    if _legacy_numeric_fields_are_stage_indexes(node):
+        for field_name in _LEGACY_NUMERIC_STAGE_FIELDS:
+            numeric_value = _parse_int(get_obj_field(node, field_name))
+            inferred = _stage_from_numeric_hint(numeric_value, stages)
+            if inferred:
+                return inferred
+
     return ""
+
+
+def _legacy_numeric_fields_are_stage_indexes(node: Any) -> bool:
+    return bool(
+        get_obj_field(node, "realm_level_is_stage_index", False)
+        or get_obj_field(node, "metadata.realm_level_is_stage_index", False)
+        or get_obj_field(node, "metadata.numeric_stage_fields_confirmed", False)
+    )
 
 
 def _extract_stage_payloads(world: dict[str, Any] | object | None) -> List[Any]:

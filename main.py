@@ -8,6 +8,7 @@ from pathlib import Path
 from typing import Dict, List
 
 import config
+from pipeline.core.run_manifest import initialize_or_verify_run, record_step_artifacts
 from pipeline import (
     step1_chunking,
     step2_extraction,
@@ -97,6 +98,7 @@ def run_pipeline(start_step: int = 1, end_step: int | None = None) -> bool:
     print("=" * 60, flush=True)
 
     config.validate()
+    initialize_or_verify_run(start_step)
     input_dir = Path(config.INPUT_DIR)
     output_dir = Path(config.OUTPUT_DIR)
 
@@ -107,6 +109,7 @@ def run_pipeline(start_step: int = 1, end_step: int | None = None) -> bool:
             print(f"ERROR: No source novels found in '{input_dir}'.", flush=True)
             sys.exit(1)
         print(f"[Pipeline] Processed {len(novel_arcs)} novel(s).", flush=True)
+        record_step_artifacts(1)
     else:
         print("\n[Pipeline] Step 1 skipped - loading from intermediate file", flush=True)
         novel_arcs = step1_chunking.load_step1_output()
@@ -120,6 +123,7 @@ def run_pipeline(start_step: int = 1, end_step: int | None = None) -> bool:
         print("\n[Pipeline] Step 2: Dual-stage Plot Extraction", flush=True)
         all_atoms = step2_extraction.extract_all(novel_arcs)
         print(f"[Pipeline] Total plot atoms extracted: {sum(len(v) for v in all_atoms.values())}", flush=True)
+        record_step_artifacts(2)
     else:
         print("\n[Pipeline] Step 2 skipped - loading from intermediate file", flush=True)
         all_atoms = step2_extraction.load_step2_output()
@@ -133,6 +137,7 @@ def run_pipeline(start_step: int = 1, end_step: int | None = None) -> bool:
         print("\n[Pipeline] Step 3: Atom Linking & Event Induction", flush=True)
         induced_events = step3_event_induction.induce_all(all_atoms)
         print(f"[Pipeline] Induced {sum(len(v) for v in induced_events.values())} event(s).", flush=True)
+        record_step_artifacts(3)
     else:
         print("\n[Pipeline] Step 3 skipped - loading from intermediate file", flush=True)
         induced_events = step3_event_induction.load_step3_output()
@@ -146,6 +151,7 @@ def run_pipeline(start_step: int = 1, end_step: int | None = None) -> bool:
         print("\n[Pipeline] Step 4: RAG Knowledge Base", flush=True)
         kb = step4_knowledge_base.build_knowledge_base(all_atoms)
         print("[Pipeline] Knowledge base indexed.", flush=True)
+        record_step_artifacts(4)
     else:
         print("\n[Pipeline] Step 4 skipped - reconnecting knowledge base", flush=True)
         kb = step4_knowledge_base.connect_knowledge_base(all_atoms)
@@ -159,6 +165,7 @@ def run_pipeline(start_step: int = 1, end_step: int | None = None) -> bool:
         print("\n[Pipeline] Step 5: World Fusion", flush=True)
         fused_world = step5_world_fusion.build_world_base(all_atoms, kb)
         step5_world_fusion.save_step5_output(fused_world)
+        record_step_artifacts(5)
     else:
         print("\n[Pipeline] Step 5 skipped - loading from intermediate file", flush=True)
         fused_world = step5_world_fusion.load_step5_output()
@@ -171,6 +178,7 @@ def run_pipeline(start_step: int = 1, end_step: int | None = None) -> bool:
         print("\n[Pipeline] Step 6: Interaction Mining", flush=True)
         fused_world = step6_interaction_mining.mine_story_patterns(all_atoms, kb, fused_world)
         step6_interaction_mining.save_step6_output(fused_world)
+        record_step_artifacts(6)
     else:
         print("\n[Pipeline] Step 6 skipped - loading from intermediate file", flush=True)
         fused_world = step6_interaction_mining.load_step6_output()
@@ -181,8 +189,13 @@ def run_pipeline(start_step: int = 1, end_step: int | None = None) -> bool:
 
     if start_step <= 7:
         print("\n[Pipeline] Step 7: Template Mining", flush=True)
-        fused_world = step7_template_mining.derive_templates(all_atoms, fused_world)
+        fused_world = step7_template_mining.derive_templates(
+            all_atoms,
+            fused_world,
+            induced_events_by_novel=induced_events,
+        )
         step7_template_mining.save_step7_output(fused_world)
+        record_step_artifacts(7)
     else:
         print("\n[Pipeline] Step 7 skipped - loading from intermediate file", flush=True)
         fused_world = step7_template_mining.load_step7_output()
@@ -201,6 +214,7 @@ def run_pipeline(start_step: int = 1, end_step: int | None = None) -> bool:
         )
         step8_skeleton_extraction.save_step8_output(source_skeletons)
         print(f"[Pipeline] Source skeleton novels: {len(source_skeletons)}", flush=True)
+        record_step_artifacts(8)
     else:
         print("\n[Pipeline] Step 8 skipped - loading from intermediate file", flush=True)
         source_skeletons = step8_skeleton_extraction.load_step8_output()
@@ -220,6 +234,7 @@ def run_pipeline(start_step: int = 1, end_step: int | None = None) -> bool:
             source_skeletons=source_skeletons,
         )
         step9_skeleton_fusion.save_step9_output(skeleton)
+        record_step_artifacts(9)
     else:
         print("\n[Pipeline] Step 9 skipped - loading from intermediate file", flush=True)
         skeleton = step9_skeleton_fusion.load_step9_output()
@@ -232,6 +247,7 @@ def run_pipeline(start_step: int = 1, end_step: int | None = None) -> bool:
         print("\n[Pipeline] Step 10: Character Casting & Relationship Weaving", flush=True)
         skeleton = step10_character_casting.cast_characters(skeleton, fused_world)
         step10_character_casting.save_step10_output(skeleton)
+        record_step_artifacts(10)
     else:
         print("\n[Pipeline] Step 10 skipped - loading from intermediate file", flush=True)
         skeleton = step10_character_casting.load_step10_output()
@@ -262,6 +278,7 @@ def run_pipeline(start_step: int = 1, end_step: int | None = None) -> bool:
             )
             if attempt == 0:
                 step11_reassembly.save_step11_output(reassembled)
+                record_step_artifacts(11)
         else:
             print("\n[Pipeline] Step 11 skipped - loading from intermediate file", flush=True)
             reassembled = step11_reassembly.load_step11_output()
@@ -273,6 +290,7 @@ def run_pipeline(start_step: int = 1, end_step: int | None = None) -> bool:
         if start_step <= 12 or attempt > 0:
             print("\n[Pipeline] Step 12: Sliding Window Volume Generation", flush=True)
             volumes = step12_generation.generate_volumes(reassembled, fused_world, skeleton.character_sheet)
+            record_step_artifacts(12)
         else:
             print("\n[Pipeline] Step 12 skipped - loading from intermediate file", flush=True)
             volumes = step12_generation.load_step12_output()
@@ -292,6 +310,7 @@ def run_pipeline(start_step: int = 1, end_step: int | None = None) -> bool:
             source_texts=source_texts,
             output_dir=output_dir,
         )
+        record_step_artifacts(13)
 
         if validation_result.passed:
             break
@@ -348,8 +367,6 @@ def _load_source_texts(input_dir: Path) -> Dict[str, str]:
 
 if __name__ == "__main__":
     args = _parse_args()
-    args.start_step = 9
-    args.end_step = 12
     completed_full = run_pipeline(start_step=args.start_step, end_step=args.end_step)
 
     if completed_full:

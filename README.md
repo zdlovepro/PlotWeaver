@@ -64,6 +64,21 @@ python main.py --start-step 5 --end-step 7
 python main.py --only-step 7
 ```
 
+### Resume Safety
+
+Starting from Step 1 creates `intermediate_data/pipeline_run_manifest.json`.
+When resuming, PlotWeaver verifies the hashes of prior artifacts so outputs from
+different runs are not silently mixed. For a one-time recovery of legacy
+intermediate files that predate the manifest, explicitly opt in:
+
+```powershell
+$env:PLOTWEAVER_ALLOW_LEGACY_RESUME = "1"
+py -3 main.py --start-step 3 --end-step 9
+```
+
+The resumed steps are then recorded and verified normally. Remove the
+environment variable after the recovery run.
+
 ### Phase notes
 
 Steps 1-4 are the source-material accumulation stage:

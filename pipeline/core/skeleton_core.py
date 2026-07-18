@@ -598,15 +598,29 @@ def _blend_source_skeleton_nodes(
                     f"[Step 9] Slot {index + 1}/{len(slots)} has no ranked candidates; using fallback node.",
                     flush=True,
                 )
-                fallback_node = _build_slot_fallback_node(slot, base_nodes[index], index)
+                fallback_node = _build_slot_fallback_node(
+                    slot,
+                    base_nodes[index],
+                    index,
+                    progression_stages=progression_stages,
+                )
                 expanded_paths.append(_extend_search_path(path, fallback_node, candidate_score=-0.4))
                 continue
 
             for candidate_score, candidate in ranked_candidates:
-                expanded_paths.append(_extend_search_path(path, _build_slot_node(slot, candidate, index), candidate_score))
+                expanded_paths.append(
+                    _extend_search_path(
+                        path,
+                        _build_slot_node(slot, candidate, index, progression_stages=progression_stages),
+                        candidate_score,
+                    )
+                )
 
         if not expanded_paths:
-            return [_build_slot_fallback_node(slot, base_nodes[idx], idx) for idx, slot in enumerate(slots)]
+            return [
+                _build_slot_fallback_node(slot, base_nodes[idx], idx, progression_stages=progression_stages)
+                for idx, slot in enumerate(slots)
+            ]
         beam = _prune_search_paths(expanded_paths, width=_SKELETON_BEAM_WIDTH)
         if index == 0 or (index + 1) % progress_interval == 0 or index + 1 == len(slots):
             print(
@@ -1027,6 +1041,7 @@ def _infer_stage_for_scoring(node: Any, stages: List[ProgressionStage]) -> str:
             "stage": node.get("stage", ""),
             "power_stage": node.get("power_stage", ""),
             "power_state": node.get("power_state", ""),
+            "stage_index": node.get("stage_index"),
             "logic_card": {"power_state": logic_card.get("power_state", "") if isinstance(logic_card, dict) else ""},
             "original_summary": summary,
             "summary": summary,
@@ -1038,6 +1053,7 @@ def _infer_stage_for_scoring(node: Any, stages: List[ProgressionStage]) -> str:
             "stage": getattr(node, "stage", ""),
             "power_stage": getattr(node, "power_stage", ""),
             "power_state": getattr(node, "power_state", ""),
+            "stage_index": getattr(node, "stage_index", None),
             "logic_card": {"power_state": logic_card.get("power_state", "") if isinstance(logic_card, dict) else ""},
             "original_summary": summary,
             "summary": summary,
@@ -1196,12 +1212,35 @@ def _merge_logic_cards(slot_logic: Dict[str, Any], node_logic: Dict[str, Any], p
     }
 
 
-def _build_slot_node(slot: Dict[str, Any], candidate: Dict[str, Any], index: int) -> SkeletonNode:
+def _resolve_slot_stage(
+    slot: Dict[str, Any],
+    source_node: SkeletonNode,
+    progression_stages: Optional[List[ProgressionStage]] = None,
+) -> str:
+    """Keep fused state aligned to the pacing slot, not a source novel's raw realm."""
+    stages = progression_stages or build_progression_stages(None)
+    slot_stage = _infer_stage_for_scoring(slot, stages)
+    if slot_stage:
+        return slot_stage
+    return _infer_stage_for_scoring(source_node, stages)
+
+
+def _build_slot_node(
+    slot: Dict[str, Any],
+    candidate: Dict[str, Any],
+    index: int,
+    progression_stages: Optional[List[ProgressionStage]] = None,
+) -> SkeletonNode:
     node: SkeletonNode = candidate["node"]
     raw_blueprint = [dict(beat) for beat in (slot["chapter_blueprint"] or _fallback_chapter_blueprint(slot["chapter_count"]))]
     chapter_count = slot["chapter_count"] or max(1, node.chapter_count or 1)
     chapter_blueprint = _fit_blueprint_to_chapter_count(raw_blueprint, chapter_count)
     logic_card = _merge_logic_cards(slot.get("logic_card", {}), node.logic_card or {}, slot.get("pacing_role", ""), slot.get("chapter_count", chapter_count))
+    resolved_stage = _resolve_slot_stage(slot, node, progression_stages)
+    resolved_stage_index = stage_value(resolved_stage, progression_stages or build_progression_stages(None)) if resolved_stage else -1
+    if resolved_stage:
+        # Source summaries remain traceable, but the fused timeline owns state progression.
+        logic_card["power_state"] = resolved_stage
     merged_source_event_ids = _dedupe_texts(list(slot.get("source_event_ids", [])) + list(node.source_event_ids))
     merged_source_induced_event_ids = _dedupe_texts(
         list(slot.get("source_induced_event_ids", [])) + list(getattr(node, "source_induced_event_ids", []) or [])
@@ -1248,16 +1287,26 @@ def _build_slot_node(slot: Dict[str, Any], candidate: Dict[str, Any], index: int
         source_legacy_event_ids=merged_source_legacy_event_ids,
         source_chunk_ids=merged_source_chunk_ids,
         source_refs=merged_source_refs,
-        stage=getattr(node, "stage", "") or str(slot.get("stage", "") or ""),
-        power_stage=getattr(node, "power_stage", "") or str(slot.get("power_stage", "") or ""),
+        stage=resolved_stage or getattr(node, "stage", "") or str(slot.get("stage", "") or ""),
+        power_stage=resolved_stage or getattr(node, "power_stage", "") or str(slot.get("power_stage", "") or ""),
+        stage_index=resolved_stage_index,
     )
 
 
-def _build_slot_fallback_node(slot: Dict[str, Any], base_node: SkeletonNode, index: int) -> SkeletonNode:
+def _build_slot_fallback_node(
+    slot: Dict[str, Any],
+    base_node: SkeletonNode,
+    index: int,
+    progression_stages: Optional[List[ProgressionStage]] = None,
+) -> SkeletonNode:
     raw_blueprint = [dict(beat) for beat in (slot["chapter_blueprint"] or _fallback_chapter_blueprint(slot["chapter_count"]))]
     chapter_count = slot["chapter_count"] or max(1, base_node.chapter_count or 1)
     chapter_blueprint = _fit_blueprint_to_chapter_count(raw_blueprint, chapter_count)
     logic_card = _merge_logic_cards(slot.get("logic_card", {}), base_node.logic_card or {}, slot.get("pacing_role", ""), slot.get("chapter_count", chapter_count))
+    resolved_stage = _resolve_slot_stage(slot, base_node, progression_stages)
+    resolved_stage_index = stage_value(resolved_stage, progression_stages or build_progression_stages(None)) if resolved_stage else -1
+    if resolved_stage:
+        logic_card["power_state"] = resolved_stage
     source_refs = _dedupe_source_refs(
         list(slot.get("source_refs", []) or []) + _coerce_node_source_refs(base_node, fallback_novel=slot["reference_novel"])
     )
@@ -1295,8 +1344,9 @@ def _build_slot_fallback_node(slot: Dict[str, Any], base_node: SkeletonNode, ind
             list(slot.get("source_chunk_ids", [])) + list(getattr(base_node, "source_chunk_ids", []) or [])
         ),
         source_refs=source_refs,
-        stage=getattr(base_node, "stage", "") or str(slot.get("stage", "") or ""),
-        power_stage=getattr(base_node, "power_stage", "") or str(slot.get("power_stage", "") or ""),
+        stage=resolved_stage or getattr(base_node, "stage", "") or str(slot.get("stage", "") or ""),
+        power_stage=resolved_stage or getattr(base_node, "power_stage", "") or str(slot.get("power_stage", "") or ""),
+        stage_index=resolved_stage_index,
     )
 
 
@@ -2240,8 +2290,10 @@ def _refine_skeleton_sequence(
     candidate_pool = _flatten_node_candidates(per_novel_nodes)
     source_limits = _build_source_target_limits(base_novel, per_novel_nodes, len(fused_nodes))
     progression_stages = build_progression_stages(fused_world)
+    enable_llm_assessment = _env_flag("PLOTWEAVER_STEP9_ENABLE_LLM_ASSESSMENT", default=False)
     enable_rag_repair = _env_flag("PLOTWEAVER_STEP9_ENABLE_RAG_REPAIR", default=False)
     enable_llm_repair = _env_flag("PLOTWEAVER_STEP9_ENABLE_LLM_REPAIR", default=False)
+
     try:
         repair_budget_limit = max(0, int(str(os.getenv("PLOTWEAVER_STEP9_REPAIR_BUDGET", "10") or "10").strip()))
     except Exception:
@@ -2260,7 +2312,8 @@ def _refine_skeleton_sequence(
         flush=True,
     )
     print(
-        f"[Step 9] Repair switches: RAG={'on' if enable_rag_repair else 'off'}, LLM={'on' if enable_llm_repair else 'off'}",
+        f"[Step 9] Repair switches: assessment={'on' if enable_llm_assessment else 'off'}, "
+        f"RAG={'on' if enable_rag_repair else 'off'}, LLM={'on' if enable_llm_repair else 'off'}",
         flush=True,
     )
     print(f"[Step 9] Repair budget: {repair_budget_used}/{repair_budget_limit} used", flush=True)
@@ -2272,29 +2325,37 @@ def _refine_skeleton_sequence(
                 f"(node={node.node_id}, source={node.selection_source_novel or 'unknown'})",
                 flush=True,
             )
-        if not (isinstance(node.logic_card, dict) and node.logic_card.get("timeline_stage")) and client is None:
+        needs_logic_card = not (isinstance(node.logic_card, dict) and node.logic_card.get("timeline_stage"))
+        if needs_logic_card and client is None and (enable_llm_assessment or enable_llm_repair):
             try:
                 client = get_deepseek_client()
             except Exception as exc:
-                node.logic_card = _normalize_logic_card(node.logic_card if isinstance(node.logic_card, dict) else {}, node.pacing_role, node.chapter_count)
                 node.logic_notes = _dedupe_texts(list(node.logic_notes) + [f"logic_card_llm_unavailable:{exc}"])
-        if not (isinstance(node.logic_card, dict) and node.logic_card.get("timeline_stage")) and client is None:
-            node.logic_card = _normalize_logic_card(node.logic_card if isinstance(node.logic_card, dict) else {}, node.pacing_role, node.chapter_count)
+        if needs_logic_card:
+            if client is None:
+                node.logic_card = _normalize_logic_card(
+                    node.logic_card if isinstance(node.logic_card, dict) else {},
+                    node.pacing_role,
+                    node.chapter_count,
+                )
+            else:
+                node.logic_card = _ensure_logic_card(client, node)
         else:
-            node.logic_card = _ensure_logic_card(client, node)
+            node.logic_card = _normalize_logic_card(node.logic_card, node.pacing_role, node.chapter_count)
         next_node = refined[idx + 1] if idx + 1 < len(refined) else None
         heuristic_issues = _heuristic_transition_flags(output_nodes[-2:], node, next_node)
         if heuristic_issues:
-            if client is None:
+            assessment = {
+                "is_consistent": False,
+                "issues": heuristic_issues,
+                "severity": "high",
+            }
+            if enable_llm_assessment and client is None:
                 try:
                     client = get_deepseek_client()
                 except Exception as exc:
-                    assessment = {
-                        "is_consistent": False,
-                        "issues": heuristic_issues + [f"transition_assess_llm_unavailable:{exc}"],
-                        "severity": "high",
-                    }
-            if client is not None:
+                    assessment["issues"] = heuristic_issues + [f"transition_assess_llm_unavailable:{exc}"]
+            if client is not None and enable_llm_assessment:
                 assessment = _assess_skeleton_transition(client, output_nodes[-2:], node, next_node)
         else:
             assessment = {"is_consistent": True, "issues": [], "severity": "low"}
@@ -2405,10 +2466,23 @@ def _refine_skeleton_sequence(
             rule_fallback_node = chosen
             if replacement_candidates:
                 try:
-                    rule_fallback_node = _build_slot_node(slot, replacement_candidates[0], idx)
-                    if not (isinstance(rule_fallback_node.logic_card, dict) and rule_fallback_node.logic_card.get("timeline_stage")) and client is None:
-                        client = get_deepseek_client()
-                    rule_fallback_node.logic_card = _ensure_logic_card(client, rule_fallback_node)
+                    rule_fallback_node = _build_slot_node(
+                        slot,
+                        replacement_candidates[0],
+                        idx,
+                        progression_stages=progression_stages,
+                    )
+                    if not (isinstance(rule_fallback_node.logic_card, dict) and rule_fallback_node.logic_card.get("timeline_stage")):
+                        if client is None and (enable_llm_assessment or enable_llm_repair):
+                            client = get_deepseek_client()
+                        if client is None:
+                            rule_fallback_node.logic_card = _normalize_logic_card(
+                                rule_fallback_node.logic_card if isinstance(rule_fallback_node.logic_card, dict) else {},
+                                rule_fallback_node.pacing_role,
+                                rule_fallback_node.chapter_count,
+                            )
+                        else:
+                            rule_fallback_node.logic_card = _ensure_logic_card(client, rule_fallback_node)
                 except Exception as exc:
                     repair_notes.append(f"rule_fallback_build_failed:{exc}")
 
@@ -2494,7 +2568,12 @@ def _refine_skeleton_sequence(
                                 if suffix_matches:
                                     chosen_candidate = suffix_matches[0]
                             if chosen_candidate is not None:
-                                proposed_main = _build_slot_node(slot, chosen_candidate, idx)
+                                proposed_main = _build_slot_node(
+                                    slot,
+                                    chosen_candidate,
+                                    idx,
+                                    progression_stages=progression_stages,
+                                )
                                 if not (isinstance(proposed_main.logic_card, dict) and proposed_main.logic_card.get("timeline_stage")) and client is None:
                                     client = get_deepseek_client()
                                 proposed_main.logic_card = _ensure_logic_card(client, proposed_main)
@@ -2574,23 +2653,41 @@ def _refine_skeleton_sequence(
                         repair_action = "manual_review"
 
             if not llm_applied:
-                chosen = rule_fallback_node
                 review_assessment = dict(assessment)
-                repair_action = "rule_based_candidate"
-                if repair_notes:
-                    logic_notes = _dedupe_texts(logic_notes + repair_notes)
-                if not repair_validation_payload:
-                    fallback_validation = _validate_local_repair_window(
+                fallback_validation = _validate_local_repair_window(
+                    previous_nodes=output_nodes[-2:],
+                    repaired_nodes=[rule_fallback_node],
+                    next_node=next_node,
+                    fused_world=fused_world,
+                )
+                fatal_fallback = [issue for issue in fallback_validation if str(issue.severity).lower() == "fatal"]
+                fallback_payload = [_state_issue_to_payload(item) for item in fallback_validation]
+                if fatal_fallback:
+                    print(f"[Step 9] Repair validation fatal issues: {len(fatal_fallback)}", flush=True)
+                    print("[Step 9] Rule-based candidate also failed; retaining current node.", flush=True)
+                    repair_notes.extend(
+                        ["rule_fallback_rejected_by_validation"]
+                        + [f"fallback_fatal:{issue.issue_type}:{issue.message}" for issue in fatal_fallback]
+                    )
+                    chosen = node
+                    retained_validation = _validate_local_repair_window(
                         previous_nodes=output_nodes[-2:],
                         repaired_nodes=[chosen],
                         next_node=next_node,
                         fused_world=fused_world,
                     )
-                    fatal_fallback = [issue for issue in fallback_validation if str(issue.severity).lower() == "fatal"]
-                    if fatal_fallback:
-                        print(f"[Step 9] Repair validation fatal issues: {len(fatal_fallback)}", flush=True)
-                        repair_notes.extend([f"fallback_fatal:{issue.issue_type}:{issue.message}" for issue in fatal_fallback])
-                    repair_validation_payload = [_state_issue_to_payload(item) for item in fallback_validation]
+                    repair_validation_payload = (
+                        repair_validation_payload
+                        + fallback_payload
+                        + [_state_issue_to_payload(item) for item in retained_validation]
+                    )
+                    repair_action = "retained_current_after_fallback_failure"
+                else:
+                    chosen = rule_fallback_node
+                    repair_validation_payload = repair_validation_payload + fallback_payload
+                    repair_action = "rule_based_candidate"
+                if repair_notes:
+                    logic_notes = _dedupe_texts(logic_notes + repair_notes)
 
             _attach_repair_fields(
                 node=chosen,

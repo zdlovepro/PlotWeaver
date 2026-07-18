@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import json
 import re
-from dataclasses import dataclass, field
+from dataclasses import asdict, dataclass, field
 from pathlib import Path
 from typing import Dict, List, Set
 
@@ -10,6 +10,12 @@ from tenacity import retry, stop_after_attempt, wait_exponential
 
 import config
 from pipeline.core.story_models import CharacterSheet, NarrativeSkeleton
+from pipeline.core.common_json import write_json_file
+from pipeline.core.state_validator import (
+    validate_reassembled_events,
+    validate_skeleton_sequence,
+    validate_volume_outline,
+)
 from pipeline.core.utils import chat_completion_json, get_deepseek_client
 from pipeline.core.world_building_core import FusedWorld
 from pipeline.step11_reassembly import ReassembledEvent
@@ -26,6 +32,7 @@ class ValidationResult:
     ner_overlap_ratio: float
     flagged_event_ids: List[str] = field(default_factory=list)
     similar_tropes: List[str] = field(default_factory=list)
+    state_issues: List[Dict[str, str]] = field(default_factory=list)
     notes: str = ""
 
 
@@ -47,21 +54,67 @@ def validate_and_output(
     client = get_deepseek_client()
     similar_tropes, flagged_trope_events = _adversarial_check(client, outline_text, source_texts, reassembled_events)
 
+    state_issues = _collect_state_issues(skeleton, reassembled_events, volumes, fused_world)
+    blocking_state_issues = [item for item in state_issues if item["severity"] in {"major", "fatal"}]
+    if blocking_state_issues:
+        print(f"[Step 13] Blocking state issues: {len(blocking_state_issues)}", flush=True)
+
     flagged = list(set(flagged_ner + flagged_trope_events))
-    passed = ner_ratio < config.PLAGIARISM_NER_THRESHOLD and len(flagged_trope_events) == 0
+    passed = (
+        ner_ratio < config.PLAGIARISM_NER_THRESHOLD
+        and len(flagged_trope_events) == 0
+        and not blocking_state_issues
+    )
     result = ValidationResult(
         passed=passed,
         ner_overlap_ratio=ner_ratio,
         flagged_event_ids=flagged,
         similar_tropes=similar_tropes,
+        state_issues=state_issues,
         notes=("通过验证。" if passed else f"发现 {len(flagged)} 个需要修改的节点，NER重合率 {ner_ratio:.2%}。"),
     )
 
     _write_world_bible(fused_world, skeleton.character_sheet, output_dir)
     _write_volume_outline(volumes, fused_world, output_dir)
     _write_validation_report(result, output_dir)
+    _write_validation_result_json(result)
     print(f"[Step 13] Validation {'PASSED' if passed else 'FAILED'}: {result.notes}")
     return result
+
+
+def _collect_state_issues(
+    skeleton: NarrativeSkeleton,
+    events: List[ReassembledEvent],
+    volumes: List[VolumeOutline],
+    fused_world: FusedWorld,
+) -> List[Dict[str, str]]:
+    issues = list(validate_skeleton_sequence(skeleton.nodes, fused_world))
+    issues.extend(validate_reassembled_events(events, fused_world))
+    for volume in volumes:
+        issues.extend(validate_volume_outline(asdict(volume), fused_world))
+
+    result: List[Dict[str, str]] = []
+    seen: set[tuple[str, str, str, str]] = set()
+    for issue in issues:
+        payload = {
+            "severity": str(issue.severity),
+            "issue_type": str(issue.issue_type),
+            "message": str(issue.message),
+            "node_id": str(issue.node_id),
+            "suggested_action": str(issue.suggested_action),
+        }
+        key = (payload["severity"], payload["issue_type"], payload["node_id"], payload["message"])
+        if key not in seen:
+            seen.add(key)
+            result.append(payload)
+    return result
+
+
+def _write_validation_result_json(result: ValidationResult) -> None:
+    path = Path(config.INTERMEDIATE_DIR) / "step13_validation_result.json"
+    path.parent.mkdir(parents=True, exist_ok=True)
+    write_json_file(path, asdict(result))
+    print(f"[Step 13] Validation result saved -> {path.name}")
 
 
 def _compile_outline_text(volumes: List[VolumeOutline]) -> str:
@@ -209,6 +262,12 @@ def _write_validation_report(result: ValidationResult, output_dir: Path) -> None
     if result.flagged_event_ids:
         lines += ["", "## 需要重写的情节节点", ""]
         lines.extend(f"- `{eid}`" for eid in result.flagged_event_ids)
+    if result.state_issues:
+        lines += ["", "## 状态连续性问题", ""]
+        lines.extend(
+            f"- [{item['severity']}/{item['issue_type']}] {item['message']} (`{item['node_id']}`)"
+            for item in result.state_issues
+        )
     output_path = output_dir / "validation_report.md"
     output_path.write_text("\n".join(lines), encoding="utf-8")
     print(f"[Step 13] Validation report written to {output_path}")

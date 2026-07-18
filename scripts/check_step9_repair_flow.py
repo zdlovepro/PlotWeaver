@@ -1,10 +1,18 @@
 from __future__ import annotations
 
+import sys
 from pathlib import Path
 from typing import Any
 
+PROJECT_ROOT = Path(__file__).resolve().parents[1]
+if str(PROJECT_ROOT) not in sys.path:
+    sys.path.insert(0, str(PROJECT_ROOT))
+
 import config
 from pipeline.core.common_json import read_json_file
+from pipeline.core.state_validator import validate_skeleton_sequence
+from pipeline.step5_world_fusion import load_step5_output
+from pipeline.step9_skeleton_fusion import load_step9_output
 
 
 def _fail(message: str) -> int:
@@ -92,6 +100,17 @@ def main() -> int:
 
         if _is_bridge_node(node) and not source_refs:
             return _fail(f"Bridge node {node_id} must have non-empty `source_refs`.")
+
+    skeleton = load_step9_output()
+    world = load_step5_output()
+    fatal_issues = [
+        issue
+        for issue in validate_skeleton_sequence(skeleton.nodes, world)
+        if issue.severity == "fatal"
+    ]
+    if fatal_issues:
+        labels = "; ".join(f"{issue.node_id}:{issue.issue_type}" for issue in fatal_issues[:5])
+        return _fail(f"Step9 skeleton still has fatal state issues: {labels}")
 
     print("Step9 repair flow checks passed.")
     return 0

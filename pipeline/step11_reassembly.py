@@ -13,6 +13,7 @@ from tqdm import tqdm
 
 import config
 from pipeline.core.common_json import read_json_file, safe_json_load
+from pipeline.core.common_text import dedupe_texts
 from pipeline.core.story_models import Character, CharacterSheet, EventRolePlan, NarrativeSkeleton, SkeletonNode
 from pipeline.core.state_repair import repair_reassembled_events, rewrite_overpowered_win_text_by_rule
 from pipeline.core.state_validator import build_forbidden_stage_terms, validate_reassembled_events
@@ -22,6 +23,7 @@ from pipeline.core.world_building_core import FusedWorld, KnowledgeBase
 
 
 _STEP11_FILENAME = "step11_reassembled_plot.json"
+_dedupe_texts = dedupe_texts
 _GENERIC_REPEAT_MOTIFS = ("设局", "识破", "逆袭", "试炼", "拍卖会", "秘境", "暗中相助", "宝珠")
 _CANDIDATE_FOCUSES = [
     ("strategy", "强调谋略、试探和破局"),
@@ -49,6 +51,7 @@ class ReassembledEvent:
     source_chunk_ids: List[str] = field(default_factory=list)
     source_refs: List[Dict[str, Any]] = field(default_factory=list)
     is_bridge: bool = False
+    stage_index: int = -1
     event_plan: Dict[str, Any] = field(default_factory=dict)
     active_characters: List[str] = field(default_factory=list)
     state_updates: Dict[str, Any] = field(default_factory=dict)
@@ -115,7 +118,10 @@ def reassemble_plot(
         active_macro_stages = _get_active_macro_stages(fused_world, progress_ratio)
         suggested_micro = _pick_micro_interaction(fused_world.micro_interactions, recent_micro_names)
         anti_repeat_rules = _build_anti_repetition_rules(recent_context, recent_micro_names)
-        similar_events = kb.query_events(query=node.original_summary or node.pacing_role, n_results=3)
+        retrieval_query = " ".join(
+            part for part in [node.pacing_role, node.function_hint, node.conflict_hint, node.template_hint] if part
+        )
+        similar_events = kb.query_events(query=retrieval_query or node.pacing_role, n_results=3)
         template_brief = _select_event_template_brief(fused_world, node, similar_events)
         state_brief = _format_state_ledger(ledger)
         recent_story_brief = _format_recent_story_context(recent_context)
@@ -205,6 +211,7 @@ def reassemble_plot(
             source_legacy_event_ids=source_legacy_event_ids,
             source_chunk_ids=source_chunk_ids,
             source_refs=source_refs,
+            stage_index=getattr(node, "stage_index", -1),
             event_plan=event_plan,
             active_characters=active_characters,
             state_updates=state_updates,
@@ -547,9 +554,9 @@ def _build_event_allowed_state(
     if not protagonist_stage:
         protagonist_stage = infer_stage_from_node(node, stages)
     if not protagonist_stage:
-        protagonist_stage = _stage_from_level_hint(node.realm_level, stages)
+        protagonist_stage = _stage_from_level_hint(getattr(node, "stage_index", -1), stages)
 
-    max_stage = protagonist_stage or _stage_from_level_hint(node.realm_level, stages)
+    max_stage = protagonist_stage or _stage_from_level_hint(getattr(node, "stage_index", -1), stages)
     if not max_stage and stages:
         max_stage = _sorted_progression_stages(stages)[0].name
 
@@ -835,12 +842,48 @@ def _select_event_template_brief(fused_world: FusedWorld, node: SkeletonNode, si
     return "\n".join(lines) if lines else "暂无模板提示。"
 
 
+def _generation_node_brief(node: SkeletonNode) -> str:
+    """Expose only target-facing structure; source summaries stay in provenance fields."""
+    beat_functions = [
+        str(beat.get("primary_function", "")).strip()
+        for beat in (node.chapter_blueprint or [])
+        if isinstance(beat, dict) and str(beat.get("primary_function", "")).strip()
+    ]
+    lines = [
+        f"节奏角色: {node.pacing_role or '主线推进'}",
+        f"叙事功能: {node.function_hint or '推进当前主线'}",
+        f"冲突发动机: {node.conflict_hint or '局部压力'}",
+        f"角色槽位: {'、'.join(node.role_slots[:6]) or '主角、阻碍者'}",
+        f"模板提示: {node.template_hint or '通用事件模板'}",
+    ]
+    if beat_functions:
+        lines.append(f"节拍功能: {' -> '.join(beat_functions[:5])}")
+    return "\n".join(lines)
+
+
+def _abstract_retrieval_briefs(retrieved_events: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
+    """RAG may inform pattern selection, but raw source summaries must not reach generation."""
+    briefs: List[Dict[str, Any]] = []
+    for item in retrieved_events[:2]:
+        metadata = item.get("metadata", {}) if isinstance(item, dict) else {}
+        if not isinstance(metadata, dict):
+            metadata = {}
+        briefs.append(
+            {
+                "conflict_type": str(metadata.get("conflict_type", "") or ""),
+                "narrative_function": str(metadata.get("narrative_function", "") or ""),
+                "tension_level": str(metadata.get("tension_level", "") or ""),
+            }
+        )
+    return briefs
+
+
 @retry(stop=stop_after_attempt(3), wait=wait_exponential(min=2, max=10))
 def _plan_event(client, node: SkeletonNode, role_plan: Optional[EventRolePlan], characters_desc: str, active_macro_stages: str, template_brief: str, retrieved_events: List[Dict[str, Any]], state_brief: str, recent_story_brief: str, anti_repeat_rules: str) -> Dict[str, Any]:
     target_chapter_count = max(4, node.chapter_count or len(node.chapter_blueprint) or 4)
     prompt = (
         f"你是仙侠大纲规划师。\n"
-        f"骨架节点: {node.original_summary}\n"
+        f"骨架约束:\n{_generation_node_brief(node)}\n"
         f"当前节奏角色: {node.pacing_role}\n"
         f"建议章节数: {target_chapter_count}\n"
         f"章节蓝图: {json.dumps(node.chapter_blueprint or [], ensure_ascii=False)}\n"
@@ -851,7 +894,7 @@ def _plan_event(client, node: SkeletonNode, role_plan: Optional[EventRolePlan], 
         f"状态账本:\n{state_brief}\n"
         f"模板提示:\n{template_brief}\n"
         "只能抽象复用模板功能和角色槽位，禁止照搬禁用来源细节中的人物名、地点名、功法名、法宝名和标志性桥段。\n"
-        f"检索灵感:\n{json.dumps(retrieved_events[:2], ensure_ascii=False)}\n"
+        f"检索模式元数据:\n{json.dumps(_abstract_retrieval_briefs(retrieved_events), ensure_ascii=False)}\n"
         f"{anti_repeat_rules}\n"
         "请只返回 JSON，包含 story_purpose, target_chapter_count, trigger, goal, obstacle, choice, reversal, outcome, cost, required_roles, preconditions, state_updates, chapter_blueprint, summary_seed。"
     )
@@ -860,7 +903,7 @@ def _plan_event(client, node: SkeletonNode, role_plan: Optional[EventRolePlan], 
     if isinstance(data, dict) and data.get("goal") and data.get("obstacle"):
         data.setdefault("target_chapter_count", target_chapter_count)
         data.setdefault("chapter_blueprint", node.chapter_blueprint or [])
-        data.setdefault("summary_seed", node.original_summary)
+        data.setdefault("summary_seed", _generation_node_brief(node))
         data.setdefault("preconditions", [])
         data.setdefault("state_updates", _empty_state_updates())
         return data
@@ -871,18 +914,18 @@ def _fallback_event_plan(node: SkeletonNode, role_plan: Optional[EventRolePlan])
     return {
         "story_purpose": node.pacing_role,
         "target_chapter_count": max(4, node.chapter_count or len(node.chapter_blueprint) or 4),
-        "trigger": node.original_summary[:40],
+        "trigger": node.function_hint or node.pacing_role or "当前局势施加新的压力",
         "goal": "推动当前主线并争取局部优势",
         "obstacle": node.conflict_hint or "当前势力和资源压制",
         "choice": "主动应对而不是被动承受",
         "reversal": "局面出现意外变化",
-        "outcome": node.original_summary[:80],
+        "outcome": "主角获得局部优势，同时留下后续代价或钩子",
         "cost": "付出资源、伤势或人情债",
         "required_roles": (role_plan.role_slots if role_plan else node.role_slots) or ["阻碍者", "短期盟友"],
         "preconditions": [],
         "state_updates": _empty_state_updates(),
         "chapter_blueprint": node.chapter_blueprint or [],
-        "summary_seed": node.original_summary,
+        "summary_seed": _generation_node_brief(node),
     }
 
 
@@ -942,7 +985,7 @@ def _validate_or_repair_event_plan(
 ) -> Tuple[Dict[str, Any], List[str]]:
     prompt = (
         f"你是剧情连续性审校器。\n"
-        f"骨架节点: {node.original_summary}\n"
+        f"骨架约束:\n{_generation_node_brief(node)}\n"
         f"前序事件:\n{recent_story_brief}\n"
         f"状态账本:\n{state_brief}\n"
         f"长线阶段:\n{active_macro_stages}\n"
@@ -961,7 +1004,7 @@ def _validate_or_repair_event_plan(
     if isinstance(corrected, dict) and corrected.get("goal") and corrected.get("obstacle"):
         corrected.setdefault("target_chapter_count", event_plan.get("target_chapter_count", max(4, node.chapter_count or 4)))
         corrected.setdefault("chapter_blueprint", event_plan.get("chapter_blueprint", node.chapter_blueprint or []))
-        corrected.setdefault("summary_seed", event_plan.get("summary_seed", node.original_summary))
+        corrected.setdefault("summary_seed", event_plan.get("summary_seed", _generation_node_brief(node)))
         corrected.setdefault("preconditions", event_plan.get("preconditions", []))
         corrected.setdefault("state_updates", event_plan.get("state_updates", _empty_state_updates()))
         return corrected, issues
@@ -995,7 +1038,7 @@ def _generate_candidates(event_plan: Dict[str, Any], node: SkeletonNode, charact
     if not results:
         results.append({
             "focus": "fallback",
-            "adapted_summary": event_plan.get("summary_seed", node.original_summary),
+            "adapted_summary": event_plan.get("summary_seed", _generation_node_brief(node)),
             "distinctive_engine": "fallback",
             "used_trope": (suggested_micro or {}).get("interaction_name", ""),
         })
@@ -1005,7 +1048,7 @@ def _generate_candidates(event_plan: Dict[str, Any], node: SkeletonNode, charact
 def _generate_single_candidate(focus_name: str, focus_desc: str, event_plan: Dict[str, Any], node: SkeletonNode, characters_desc: str, active_macro_stages: str, suggested_micro: Optional[Dict[str, Any]], anti_repeat_rules: str, state_brief: str, recent_story_brief: str) -> Dict[str, Any]:
     client = get_deepseek_client()
     prompt = (
-        f"当前事件骨架: {node.original_summary}\n"
+        f"当前事件结构:\n{_generation_node_brief(node)}\n"
         f"事件计划: {json.dumps(event_plan, ensure_ascii=False)}\n"
         f"前序事件:\n{recent_story_brief}\n"
         f"角色池:\n{characters_desc}\n"
@@ -1020,7 +1063,7 @@ def _generate_single_candidate(focus_name: str, focus_desc: str, event_plan: Dic
     data = _safe_json_load(raw)
     summary = data.get("adapted_summary") if isinstance(data, dict) else ""
     if not summary:
-        summary = event_plan.get("summary_seed", node.original_summary)
+        summary = event_plan.get("summary_seed", _generation_node_brief(node))
     return {
         "focus": focus_name,
         "adapted_summary": summary,
@@ -1032,9 +1075,9 @@ def _generate_single_candidate(focus_name: str, focus_desc: str, event_plan: Dic
 @retry(stop=stop_after_attempt(3), wait=wait_exponential(min=2, max=10))
 def _judge_candidates(client, node: SkeletonNode, event_plan: Dict[str, Any], candidates: List[Dict[str, Any]], anti_repeat_rules: str, state_brief: str, recent_story_brief: str) -> Tuple[int, str]:
     if len(candidates) == 1:
-        return 0, candidates[0].get("adapted_summary", node.original_summary)
+        return 0, candidates[0].get("adapted_summary", _generation_node_brief(node))
     prompt = (
-        f"骨架节点: {node.original_summary}\n"
+        f"骨架约束:\n{_generation_node_brief(node)}\n"
         f"事件计划: {json.dumps(event_plan, ensure_ascii=False)}\n"
         f"前序事件:\n{recent_story_brief}\n"
         f"状态账本:\n{state_brief}\n"
@@ -1046,9 +1089,9 @@ def _judge_candidates(client, node: SkeletonNode, event_plan: Dict[str, Any], ca
     data = _safe_json_load(raw)
     if isinstance(data, dict):
         winner_index = max(0, min(int(data.get("winner_index", 1)) - 1, len(candidates) - 1))
-        summary = data.get("adapted_summary", candidates[winner_index].get("adapted_summary", node.original_summary))
+        summary = data.get("adapted_summary", candidates[winner_index].get("adapted_summary", _generation_node_brief(node)))
         return winner_index, summary
-    return 0, candidates[0].get("adapted_summary", node.original_summary)
+    return 0, candidates[0].get("adapted_summary", _generation_node_brief(node))
 
 
 @retry(stop=stop_after_attempt(3), wait=wait_exponential(min=2, max=10))
@@ -1063,7 +1106,7 @@ def _validate_or_repair_selected_summary(
 ) -> Tuple[str, List[str]]:
     prompt = (
         f"你是剧情连续性终审器。\n"
-        f"骨架节点: {node.original_summary}\n"
+        f"骨架约束:\n{_generation_node_brief(node)}\n"
         f"事件计划: {json.dumps(event_plan, ensure_ascii=False)}\n"
         f"前序事件:\n{recent_story_brief}\n"
         f"状态账本:\n{state_brief}\n"
