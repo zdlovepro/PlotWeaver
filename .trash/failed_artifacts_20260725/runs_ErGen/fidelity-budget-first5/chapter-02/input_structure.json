@@ -1,0 +1,286 @@
+{
+  "entities": [
+    {
+      "name": "王林",
+      "kind": "person"
+    },
+    {
+      "name": "四叔",
+      "kind": "person"
+    },
+    {
+      "name": "老者",
+      "kind": "person"
+    },
+    {
+      "name": "王卓",
+      "kind": "person"
+    },
+    {
+      "name": "王浩",
+      "kind": "person"
+    },
+    {
+      "name": "白衣青年",
+      "kind": "person"
+    },
+    {
+      "name": "黑衣中年人",
+      "kind": "person"
+    },
+    {
+      "name": "王氏家族宅子",
+      "kind": "location"
+    },
+    {
+      "name": "恒岳派山门",
+      "kind": "location"
+    },
+    {
+      "name": "四叔家",
+      "kind": "location"
+    },
+    {
+      "name": "山村",
+      "kind": "location"
+    }
+  ],
+  "facts": [
+    {
+      "kind": "progression",
+      "subject": "王林",
+      "predicate": "离开",
+      "value": "山村",
+      "object": "山村"
+    },
+    {
+      "kind": "location",
+      "subject": "王林",
+      "predicate": "到达",
+      "value": "四叔家",
+      "object": "四叔家"
+    },
+    {
+      "kind": "location",
+      "subject": "王林",
+      "predicate": "到达",
+      "value": "王氏家族宅子",
+      "object": "王氏家族宅子"
+    },
+    {
+      "kind": "identity",
+      "subject": "白衣青年",
+      "predicate": "是",
+      "value": "仙人",
+      "object": ""
+    },
+    {
+      "kind": "progression",
+      "subject": "王林",
+      "predicate": "被带走",
+      "value": "三人被仙人带走",
+      "object": ""
+    },
+    {
+      "kind": "location",
+      "subject": "王林",
+      "predicate": "到达",
+      "value": "恒岳派山门",
+      "object": "恒岳派山门"
+    },
+    {
+      "kind": "knowledge",
+      "subject": "黑衣中年人",
+      "predicate": "出现",
+      "value": "在恒岳派山门",
+      "object": ""
+    },
+    {
+      "kind": "emotion",
+      "subject": "王林",
+      "predicate": "紧张",
+      "value": "紧张",
+      "object": ""
+    }
+  ],
+  "events": [
+    {
+      "order": 0,
+      "participants": [
+        "王林",
+        "四叔"
+      ],
+      "action": "乘坐马车离开山村到达四叔家",
+      "obstacle": "",
+      "decision": "",
+      "outcomes": [
+        {
+          "kind": "location",
+          "subject": "王林",
+          "predicate": "到达",
+          "value": "四叔家",
+          "object": "四叔家"
+        }
+      ],
+      "costs": []
+    },
+    {
+      "order": 1,
+      "participants": [
+        "王林",
+        "四叔",
+        "老者",
+        "王卓",
+        "王浩"
+      ],
+      "action": "跟随四叔来到宅子",
+      "obstacle": "",
+      "decision": "",
+      "outcomes": [
+        {
+          "kind": "location",
+          "subject": "王林",
+          "predicate": "到达",
+          "value": "王氏家族宅子",
+          "object": "王氏家族宅子"
+        }
+      ],
+      "costs": []
+    },
+    {
+      "order": 2,
+      "participants": [
+        "王林",
+        "老者",
+        "王卓",
+        "王浩",
+        "白衣青年"
+      ],
+      "action": "询问后卷起三人飞走",
+      "obstacle": "",
+      "decision": "",
+      "outcomes": [
+        {
+          "kind": "progression",
+          "subject": "王林",
+          "predicate": "被带走",
+          "value": "三人被仙人带走",
+          "object": ""
+        }
+      ],
+      "costs": []
+    },
+    {
+      "order": 3,
+      "participants": [
+        "王林",
+        "王卓",
+        "王浩",
+        "白衣青年",
+        "黑衣中年人"
+      ],
+      "action": "飞行落地到达山门",
+      "obstacle": "",
+      "decision": "",
+      "outcomes": [
+        {
+          "kind": "location",
+          "subject": "王林",
+          "predicate": "到达",
+          "value": "恒岳派山门",
+          "object": "恒岳派山门"
+        },
+        {
+          "kind": "knowledge",
+          "subject": "黑衣中年人",
+          "predicate": "出现",
+          "value": "在恒岳派山门",
+          "object": ""
+        }
+      ],
+      "costs": []
+    }
+  ],
+  "scenes": [
+    {
+      "order": 0,
+      "objective": "到达四叔家暂住",
+      "entry_facts": [
+        {
+          "kind": "progression",
+          "subject": "王林",
+          "predicate": "离开",
+          "value": "山村",
+          "object": "山村"
+        }
+      ],
+      "exit_facts": [
+        {
+          "kind": "location",
+          "subject": "王林",
+          "predicate": "到达",
+          "value": "四叔家",
+          "object": "四叔家"
+        }
+      ],
+      "tension": 2
+    },
+    {
+      "order": 1,
+      "objective": "等待仙人测试",
+      "entry_facts": [
+        {
+          "kind": "location",
+          "subject": "王林",
+          "predicate": "到达",
+          "value": "王氏家族宅子",
+          "object": "王氏家族宅子"
+        }
+      ],
+      "exit_facts": [
+        {
+          "kind": "progression",
+          "subject": "王林",
+          "predicate": "被带走",
+          "value": "三人被仙人带走",
+          "object": ""
+        }
+      ],
+      "tension": 4
+    },
+    {
+      "order": 2,
+      "objective": "到达恒岳派山门",
+      "entry_facts": [
+        {
+          "kind": "progression",
+          "subject": "王林",
+          "predicate": "被带走",
+          "value": "三人被仙人带走",
+          "object": ""
+        }
+      ],
+      "exit_facts": [
+        {
+          "kind": "location",
+          "subject": "王林",
+          "predicate": "到达",
+          "value": "恒岳派山门",
+          "object": "恒岳派山门"
+        },
+        {
+          "kind": "knowledge",
+          "subject": "黑衣中年人",
+          "predicate": "出现",
+          "value": "在恒岳派山门",
+          "object": ""
+        }
+      ],
+      "tension": 3
+    }
+  ],
+  "time_anchors": [
+    "500年前"
+  ],
+  "spatial_relation_count": 3
+}

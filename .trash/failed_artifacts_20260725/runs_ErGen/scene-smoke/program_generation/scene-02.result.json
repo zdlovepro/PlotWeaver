@@ -1,0 +1,64 @@
+{
+  "scene_no": 2,
+  "scene_id": "ErGen/work-001/0001:chunk-01:scene-002",
+  "minimum_paragraph_chars": 60,
+  "repairs_used": 1,
+  "passed": true,
+  "draft": {
+    "scene_id": "ErGen/work-001/0001:chunk-01:scene-002",
+    "paragraphs": [
+      {
+        "paragraph_id": "ErGen/work-001/0001:chunk-01:scene-002:paragraph-00",
+        "text": "宴席上，王卓端起酒杯，斜眼看着铁柱，轻笑道：“就你这样的，也配去恒岳派？别给咱们村子丢人了。”铁柱的父亲王天水脸色一沉，冷声道：“王卓侄儿，话可不能这么说，我儿子怎么就不配了？”铁柱指甲深深掐进掌心，在心里默默念道：我一定要被选中。",
+        "claimed_fact_ids": [
+          "ErGen/work-001/0001:chunk-01:fact-009"
+        ],
+        "claimed_event_ids": [
+          "ErGen/work-001/0001:chunk-01:event-002"
+        ]
+      }
+    ]
+  },
+  "validations": [
+    {
+      "scene_id": "ErGen/work-001/0001:chunk-01:scene-002",
+      "reported_passed": false,
+      "realized_fact_ids": [
+        "ErGen/work-001/0001:chunk-01:fact-009"
+      ],
+      "missing_fact_ids": [],
+      "realized_event_ids": [],
+      "missing_event_ids": [
+        "ErGen/work-001/0001:chunk-01:event-002"
+      ],
+      "premature_event_ids": [],
+      "paragraph_issues": [
+        {
+          "paragraph_id": "ErGen/work-001/0001:chunk-01:scene-002:paragraph-00",
+          "problem": "事件“宴席上王卓轻视铁柱，铁柱下定决心”缺失“铁柱父亲反驳”行动",
+          "repair": "在本段中增加铁柱父亲反驳王卓的言语或行动"
+        }
+      ],
+      "repair_paragraph_ids": [
+        "ErGen/work-001/0001:chunk-01:scene-002:paragraph-00"
+      ],
+      "passed": false
+    },
+    {
+      "scene_id": "ErGen/work-001/0001:chunk-01:scene-002",
+      "reported_passed": true,
+      "realized_fact_ids": [
+        "ErGen/work-001/0001:chunk-01:fact-009"
+      ],
+      "missing_fact_ids": [],
+      "realized_event_ids": [
+        "ErGen/work-001/0001:chunk-01:event-002"
+      ],
+      "missing_event_ids": [],
+      "premature_event_ids": [],
+      "paragraph_issues": [],
+      "repair_paragraph_ids": [],
+      "passed": true
+    }
+  ]
+}

@@ -1,0 +1,172 @@
+{
+  "chapter_goal": "完整重建已提供的目标事件、场景、状态变化与结局，不新增输入外情节。",
+  "selected_template_ids": [
+    "library:chapter-010",
+    "library:scene-007",
+    "library:scene-008"
+  ],
+  "scenes": [
+    {
+      "scene_no": 1,
+      "entry_state": [
+        "王林 爬行于 石阶小径"
+      ],
+      "objective": "通过石阶测试",
+      "pressure": "双腿如灌铅，时间限制",
+      "turn": "时间到，王林未能完成，昏迷",
+      "exit_state": [
+        "黑衣中年人 宣布 时间已到，只有三人合格，其余……失败",
+        "王林 昏迷 昏迷"
+      ]
+    },
+    {
+      "scene_no": 2,
+      "entry_state": [
+        "王林 位于 剑灵阁"
+      ],
+      "objective": "通过剑灵测试",
+      "pressure": "剑灵阁的神秘阻力",
+      "turn": "王林被弹回十多丈处",
+      "exit_state": [
+        "白衣青年 宣布 不合格"
+      ]
+    }
+  ],
+  "chapter_state_changes": [
+    {
+      "slot": "王林状态",
+      "before": "王林 爬行于 石阶小径",
+      "after": "王林 昏迷 昏迷",
+      "cause_scene_no": 1
+    },
+    {
+      "slot": "王林位置",
+      "before": "王林 走进五丈 五丈处",
+      "after": "王林 被弹回 十多丈处",
+      "cause_scene_no": 2
+    },
+    {
+      "slot": "测试结果",
+      "before": "未知",
+      "after": "白衣青年 宣布 不合格",
+      "cause_scene_no": 2
+    }
+  ],
+  "style_budget": {
+    "schema_version": "1.0",
+    "mode": "fidelity_test_override",
+    "instruction": "仅用于重建实验的量化验收；正常原创写作应使用作者级柔性预算。",
+    "metrics": [
+      {
+        "metric_id": "chapter_char_count",
+        "unit": "count",
+        "target": 2065.0,
+        "preferred_min": 1565.0,
+        "preferred_max": 2565.0,
+        "priority": "high"
+      },
+      {
+        "metric_id": "mean_sentence_chars",
+        "unit": "mean_chars",
+        "target": 45.295455,
+        "preferred_min": 38.501137,
+        "preferred_max": 52.089773,
+        "priority": "high"
+      },
+      {
+        "metric_id": "mean_paragraph_chars",
+        "unit": "mean_chars",
+        "target": 58.028571,
+        "preferred_min": 49.324285,
+        "preferred_max": 66.732857,
+        "priority": "high"
+      },
+      {
+        "metric_id": "short_paragraph_ratio",
+        "unit": "ratio",
+        "target": 0.228571,
+        "preferred_min": 0.171428,
+        "preferred_max": 0.285714,
+        "priority": "high"
+      },
+      {
+        "metric_id": "dialogue_char_ratio",
+        "unit": "ratio",
+        "target": 0.139467,
+        "preferred_min": 0.1046,
+        "preferred_max": 0.174334,
+        "priority": "high"
+      },
+      {
+        "metric_id": "perception_marker_ratio",
+        "unit": "ratio",
+        "target": 0.090909,
+        "preferred_min": 0.068182,
+        "preferred_max": 0.113636,
+        "priority": "high"
+      },
+      {
+        "metric_id": "transition_marker_ratio",
+        "unit": "ratio",
+        "target": 0.113636,
+        "preferred_min": 0.085227,
+        "preferred_max": 0.142045,
+        "priority": "high"
+      },
+      {
+        "metric_id": "question_sentence_ratio",
+        "unit": "ratio",
+        "target": 0.022727,
+        "preferred_min": 0.002727,
+        "preferred_max": 0.042727,
+        "priority": "medium"
+      },
+      {
+        "metric_id": "exclamation_sentence_ratio",
+        "unit": "ratio",
+        "target": 0.090909,
+        "preferred_min": 0.068182,
+        "preferred_max": 0.113636,
+        "priority": "medium"
+      },
+      {
+        "metric_id": "ellipsis_per_sentence",
+        "unit": "ratio",
+        "target": 0.068182,
+        "preferred_min": 0.048182,
+        "preferred_max": 0.088182,
+        "priority": "medium"
+      }
+    ]
+  },
+  "continuity_checks": [
+    "时间：石阶测试在剑灵测试之前连续；位置：从石阶小径到剑灵阁；知识：王林目睹少年放弃，自己昏迷后醒来；资源：无变化；状态变化均已记录。"
+  ],
+  "style_execution_directives": [
+    {
+      "metric_id": "transition_marker_ratio",
+      "direction": "increase",
+      "target_range": "0.085227–0.142045",
+      "action": "在场景、时间或注意力变化处加入自然的承接词或结果性过渡，再继续推进。"
+    },
+    {
+      "metric_id": "mean_paragraph_chars",
+      "direction": "decrease",
+      "target_range": "49.324285–66.732857",
+      "action": "把并列的信息单元拆开，保留关键落点作为短段。"
+    },
+    {
+      "metric_id": "short_paragraph_ratio",
+      "direction": "increase",
+      "target_range": "0.171428–0.285714",
+      "action": "在关键判断、转折或情绪落点保留独立短段，其余信息保持连续段落。"
+    },
+    {
+      "metric_id": "mean_sentence_chars",
+      "direction": "increase",
+      "target_range": "38.501137–52.089773",
+      "action": "把动作、感知、判断或结果组合为完整复句，减少单个动作单独成句。"
+    }
+  ],
+  "reconstruction_mode": "fidelity_test_only"
+}

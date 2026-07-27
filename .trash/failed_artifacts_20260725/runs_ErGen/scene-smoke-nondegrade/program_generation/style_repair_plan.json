@@ -1,0 +1,39 @@
+{
+  "attempted": true,
+  "directives": [
+    {
+      "metric_id": "short_paragraph_ratio",
+      "direction": "increase",
+      "target_range": "0.115542–0.341468",
+      "action": "在关键判断、转折或情绪落点保留独立短段，其余信息保持连续段落。"
+    },
+    {
+      "metric_id": "perception_marker_ratio",
+      "direction": "increase",
+      "target_range": "0.066128–0.149052",
+      "action": "在关键动作或信息变化后补入角色看到、听到、感到或察觉到的具体反应。"
+    },
+    {
+      "metric_id": "exclamation_sentence_ratio",
+      "direction": "increase",
+      "target_range": "0.043584–0.122458",
+      "action": "在真正的情绪落点保留感叹句，并让前后的陈述句提供蓄势。"
+    },
+    {
+      "metric_id": "transition_marker_ratio",
+      "direction": "increase",
+      "target_range": "0.020393–0.077211",
+      "action": "在场景、时间或注意力变化处加入自然的承接词或结果性过渡，再继续推进。"
+    },
+    {
+      "metric_id": "ellipsis_per_sentence",
+      "direction": "increase",
+      "target_range": "0.019341–0.133627",
+      "action": "在话语中断、犹豫或未尽之意处谨慎保留省略号。"
+    },
+    "把同一因果单元合并为一到两个完整长句，避免用连续短句逐项解释。",
+    "仅在本场景的决断、转折或余波落点，将一个段落收束为不超过三十五字的短段；不得删失事实。"
+  ],
+  "repairs_used": 1,
+  "style_passed": false
+}

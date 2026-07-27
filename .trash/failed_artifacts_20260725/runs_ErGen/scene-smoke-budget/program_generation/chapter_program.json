@@ -1,0 +1,422 @@
+{
+  "chapter_id": "ErGen/work-001/0001",
+  "source_hash": "c6b903e4e5dcaa6bd9660b93734172e8e3ff61b47c5d77589f44f7e8fab70f22",
+  "schema_version": "1.0",
+  "entities": [
+    {
+      "entity_id": "ErGen/work-001/0001:chunk-01:entity-001",
+      "canonical_name": "铁柱",
+      "kind": "person"
+    },
+    {
+      "entity_id": "ErGen/work-001/0001:chunk-01:entity-002",
+      "canonical_name": "王天水",
+      "kind": "person"
+    },
+    {
+      "entity_id": "ErGen/work-001/0001:chunk-01:entity-003",
+      "canonical_name": "母亲",
+      "kind": "person"
+    },
+    {
+      "entity_id": "ErGen/work-001/0001:chunk-01:entity-004",
+      "canonical_name": "四叔",
+      "kind": "person"
+    },
+    {
+      "entity_id": "ErGen/work-001/0001:chunk-01:entity-005",
+      "canonical_name": "王卓",
+      "kind": "person"
+    },
+    {
+      "entity_id": "ErGen/work-001/0001:chunk-01:entity-006",
+      "canonical_name": "王卓父亲",
+      "kind": "person"
+    },
+    {
+      "entity_id": "ErGen/work-001/0001:chunk-01:entity-007",
+      "canonical_name": "村子",
+      "kind": "location"
+    },
+    {
+      "entity_id": "ErGen/work-001/0001:chunk-01:entity-008",
+      "canonical_name": "恒岳派",
+      "kind": "organization"
+    },
+    {
+      "entity_id": "ErGen/work-001/0001:chunk-01:entity-009",
+      "canonical_name": "王氏家族",
+      "kind": "organization"
+    }
+  ],
+  "scene_programs": [
+    {
+      "scene_id": "ErGen/work-001/0001:chunk-01:scene-001",
+      "chapter_id": "ErGen/work-001/0001",
+      "order": 0,
+      "objective": "四叔推荐恒岳派名额",
+      "participant_ids": [
+        "ErGen/work-001/0001:chunk-01:entity-001",
+        "ErGen/work-001/0001:chunk-01:entity-002",
+        "ErGen/work-001/0001:chunk-01:entity-003",
+        "ErGen/work-001/0001:chunk-01:entity-004"
+      ],
+      "entry_state_fact_ids": [],
+      "event_programs": [
+        {
+          "event_id": "ErGen/work-001/0001:chunk-01:event-001",
+          "scene_id": "ErGen/work-001/0001:chunk-01:scene-001",
+          "summary": "四叔推荐铁柱去恒岳派",
+          "action": "四叔向铁柱父母提出恒岳派推荐名额，铁柱父母同意，铁柱对仙人生出好奇",
+          "participant_ids": [
+            "ErGen/work-001/0001:chunk-01:entity-001",
+            "ErGen/work-001/0001:chunk-01:entity-002",
+            "ErGen/work-001/0001:chunk-01:entity-003",
+            "ErGen/work-001/0001:chunk-01:entity-004"
+          ],
+          "obstacle": "",
+          "decision": "",
+          "precondition_fact_ids": [],
+          "required_fact_ids": [
+            "ErGen/work-001/0001:chunk-01:fact-006",
+            "ErGen/work-001/0001:chunk-01:fact-004"
+          ],
+          "outcome_fact_ids": [
+            "ErGen/work-001/0001:chunk-01:fact-006",
+            "ErGen/work-001/0001:chunk-01:fact-004"
+          ]
+        }
+      ],
+      "fact_contracts": [
+        {
+          "fact_id": "ErGen/work-001/0001:chunk-01:fact-001",
+          "scene_id": "ErGen/work-001/0001:chunk-01:scene-001",
+          "fact_kind": "identity",
+          "subject_id": "ErGen/work-001/0001:chunk-01:entity-001",
+          "predicate": "本名",
+          "value": "王林",
+          "object_id": "",
+          "expression_mode": "narration",
+          "must_realize": true,
+          "forbidden_inverse_meanings": []
+        },
+        {
+          "fact_id": "ErGen/work-001/0001:chunk-01:fact-002",
+          "scene_id": "ErGen/work-001/0001:chunk-01:scene-001",
+          "fact_kind": "relationship",
+          "subject_id": "ErGen/work-001/0001:chunk-01:entity-001",
+          "predicate": "父亲是",
+          "value": "",
+          "object_id": "ErGen/work-001/0001:chunk-01:entity-002",
+          "expression_mode": "narration",
+          "must_realize": true,
+          "forbidden_inverse_meanings": []
+        },
+        {
+          "fact_id": "ErGen/work-001/0001:chunk-01:fact-003",
+          "scene_id": "ErGen/work-001/0001:chunk-01:scene-001",
+          "fact_kind": "relationship",
+          "subject_id": "ErGen/work-001/0001:chunk-01:entity-001",
+          "predicate": "母亲是",
+          "value": "",
+          "object_id": "ErGen/work-001/0001:chunk-01:entity-003",
+          "expression_mode": "narration",
+          "must_realize": true,
+          "forbidden_inverse_meanings": []
+        },
+        {
+          "fact_id": "ErGen/work-001/0001:chunk-01:fact-004",
+          "scene_id": "ErGen/work-001/0001:chunk-01:scene-001",
+          "fact_kind": "knowledge",
+          "subject_id": "ErGen/work-001/0001:chunk-01:entity-001",
+          "predicate": "对仙人好奇",
+          "value": "好奇",
+          "object_id": "",
+          "expression_mode": "narration",
+          "must_realize": true,
+          "forbidden_inverse_meanings": []
+        },
+        {
+          "fact_id": "ErGen/work-001/0001:chunk-01:fact-005",
+          "scene_id": "ErGen/work-001/0001:chunk-01:scene-001",
+          "fact_kind": "resource",
+          "subject_id": "ErGen/work-001/0001:chunk-01:entity-001",
+          "predicate": "获得",
+          "value": "两本书",
+          "object_id": "",
+          "expression_mode": "action",
+          "must_realize": true,
+          "forbidden_inverse_meanings": []
+        },
+        {
+          "fact_id": "ErGen/work-001/0001:chunk-01:fact-006",
+          "scene_id": "ErGen/work-001/0001:chunk-01:scene-001",
+          "fact_kind": "progression",
+          "subject_id": "ErGen/work-001/0001:chunk-01:entity-001",
+          "predicate": "被推荐",
+          "value": "恒岳派",
+          "object_id": "ErGen/work-001/0001:chunk-01:entity-008",
+          "expression_mode": "action",
+          "must_realize": true,
+          "forbidden_inverse_meanings": []
+        },
+        {
+          "fact_id": "ErGen/work-001/0001:chunk-01:fact-007",
+          "scene_id": "ErGen/work-001/0001:chunk-01:scene-001",
+          "fact_kind": "emotion",
+          "subject_id": "ErGen/work-001/0001:chunk-01:entity-002",
+          "predicate": "期望",
+          "value": "",
+          "object_id": "ErGen/work-001/0001:chunk-01:entity-001",
+          "expression_mode": "internal",
+          "must_realize": true,
+          "forbidden_inverse_meanings": []
+        },
+        {
+          "fact_id": "ErGen/work-001/0001:chunk-01:fact-008",
+          "scene_id": "ErGen/work-001/0001:chunk-01:scene-001",
+          "fact_kind": "emotion",
+          "subject_id": "ErGen/work-001/0001:chunk-01:entity-005",
+          "predicate": "轻视",
+          "value": "",
+          "object_id": "ErGen/work-001/0001:chunk-01:entity-001",
+          "expression_mode": "internal",
+          "must_realize": true,
+          "forbidden_inverse_meanings": []
+        },
+        {
+          "fact_id": "ErGen/work-001/0001:chunk-01:fact-011",
+          "scene_id": "ErGen/work-001/0001:chunk-01:scene-001",
+          "fact_kind": "relationship",
+          "subject_id": "ErGen/work-001/0001:chunk-01:entity-001",
+          "predicate": "四叔是",
+          "value": "",
+          "object_id": "ErGen/work-001/0001:chunk-01:entity-004",
+          "expression_mode": "narration",
+          "must_realize": true,
+          "forbidden_inverse_meanings": []
+        }
+      ],
+      "paragraphs": [
+        {
+          "paragraph_id": "ErGen/work-001/0001:chunk-01:scene-001:paragraph-00",
+          "scene_id": "ErGen/work-001/0001:chunk-01:scene-001",
+          "order": 0,
+          "function": "orientation",
+          "required_fact_ids": [
+            "ErGen/work-001/0001:chunk-01:fact-001",
+            "ErGen/work-001/0001:chunk-01:fact-002",
+            "ErGen/work-001/0001:chunk-01:fact-003"
+          ],
+          "event_ids": [],
+          "viewpoint_entity_id": "ErGen/work-001/0001:chunk-01:entity-001",
+          "dialogue_act": ""
+        },
+        {
+          "paragraph_id": "ErGen/work-001/0001:chunk-01:scene-001:paragraph-01",
+          "scene_id": "ErGen/work-001/0001:chunk-01:scene-001",
+          "order": 1,
+          "function": "orientation",
+          "required_fact_ids": [
+            "ErGen/work-001/0001:chunk-01:fact-011"
+          ],
+          "event_ids": [],
+          "viewpoint_entity_id": "ErGen/work-001/0001:chunk-01:entity-001",
+          "dialogue_act": ""
+        },
+        {
+          "paragraph_id": "ErGen/work-001/0001:chunk-01:scene-001:paragraph-02",
+          "scene_id": "ErGen/work-001/0001:chunk-01:scene-001",
+          "order": 2,
+          "function": "action_progression",
+          "required_fact_ids": [
+            "ErGen/work-001/0001:chunk-01:fact-006",
+            "ErGen/work-001/0001:chunk-01:fact-004"
+          ],
+          "event_ids": [
+            "ErGen/work-001/0001:chunk-01:event-001"
+          ],
+          "viewpoint_entity_id": "ErGen/work-001/0001:chunk-01:entity-001",
+          "dialogue_act": ""
+        },
+        {
+          "paragraph_id": "ErGen/work-001/0001:chunk-01:scene-001:paragraph-03",
+          "scene_id": "ErGen/work-001/0001:chunk-01:scene-001",
+          "order": 3,
+          "function": "perception_reaction",
+          "required_fact_ids": [
+            "ErGen/work-001/0001:chunk-01:fact-007",
+            "ErGen/work-001/0001:chunk-01:fact-008"
+          ],
+          "event_ids": [],
+          "viewpoint_entity_id": "ErGen/work-001/0001:chunk-01:entity-001",
+          "dialogue_act": ""
+        },
+        {
+          "paragraph_id": "ErGen/work-001/0001:chunk-01:scene-001:paragraph-04",
+          "scene_id": "ErGen/work-001/0001:chunk-01:scene-001",
+          "order": 4,
+          "function": "aftermath",
+          "required_fact_ids": [
+            "ErGen/work-001/0001:chunk-01:fact-005"
+          ],
+          "event_ids": [],
+          "viewpoint_entity_id": "ErGen/work-001/0001:chunk-01:entity-001",
+          "dialogue_act": ""
+        }
+      ],
+      "exit_state_fact_ids": [
+        "ErGen/work-001/0001:chunk-01:fact-006",
+        "ErGen/work-001/0001:chunk-01:fact-004"
+      ],
+      "forbidden_event_ids": [
+        "ErGen/work-001/0001:chunk-01:event-002",
+        "ErGen/work-001/0001:chunk-01:event-003"
+      ]
+    },
+    {
+      "scene_id": "ErGen/work-001/0001:chunk-01:scene-002",
+      "chapter_id": "ErGen/work-001/0001",
+      "order": 1,
+      "objective": "庆祝及王卓挑衅",
+      "participant_ids": [
+        "ErGen/work-001/0001:chunk-01:entity-001",
+        "ErGen/work-001/0001:chunk-01:entity-002",
+        "ErGen/work-001/0001:chunk-01:entity-005",
+        "ErGen/work-001/0001:chunk-01:entity-006"
+      ],
+      "entry_state_fact_ids": [
+        "ErGen/work-001/0001:chunk-01:fact-006"
+      ],
+      "event_programs": [
+        {
+          "event_id": "ErGen/work-001/0001:chunk-01:event-002",
+          "scene_id": "ErGen/work-001/0001:chunk-01:scene-002",
+          "summary": "宴席上王卓轻视铁柱，铁柱下定决心",
+          "action": "王卓出言轻视，铁柱父亲反驳，铁柱内心决定被选中",
+          "participant_ids": [
+            "ErGen/work-001/0001:chunk-01:entity-001",
+            "ErGen/work-001/0001:chunk-01:entity-002",
+            "ErGen/work-001/0001:chunk-01:entity-005",
+            "ErGen/work-001/0001:chunk-01:entity-006"
+          ],
+          "obstacle": "",
+          "decision": "",
+          "precondition_fact_ids": [],
+          "required_fact_ids": [
+            "ErGen/work-001/0001:chunk-01:fact-009"
+          ],
+          "outcome_fact_ids": [
+            "ErGen/work-001/0001:chunk-01:fact-009"
+          ]
+        }
+      ],
+      "fact_contracts": [
+        {
+          "fact_id": "ErGen/work-001/0001:chunk-01:fact-009",
+          "scene_id": "ErGen/work-001/0001:chunk-01:scene-002",
+          "fact_kind": "goal",
+          "subject_id": "ErGen/work-001/0001:chunk-01:entity-001",
+          "predicate": "下定决心",
+          "value": "被选中",
+          "object_id": "",
+          "expression_mode": "internal",
+          "must_realize": true,
+          "forbidden_inverse_meanings": []
+        }
+      ],
+      "paragraphs": [
+        {
+          "paragraph_id": "ErGen/work-001/0001:chunk-01:scene-002:paragraph-00",
+          "scene_id": "ErGen/work-001/0001:chunk-01:scene-002",
+          "order": 0,
+          "function": "action_progression",
+          "required_fact_ids": [
+            "ErGen/work-001/0001:chunk-01:fact-009"
+          ],
+          "event_ids": [
+            "ErGen/work-001/0001:chunk-01:event-002"
+          ],
+          "viewpoint_entity_id": "ErGen/work-001/0001:chunk-01:entity-001",
+          "dialogue_act": ""
+        }
+      ],
+      "exit_state_fact_ids": [
+        "ErGen/work-001/0001:chunk-01:fact-009"
+      ],
+      "forbidden_event_ids": [
+        "ErGen/work-001/0001:chunk-01:event-003"
+      ]
+    },
+    {
+      "scene_id": "ErGen/work-001/0001:chunk-01:scene-003",
+      "chapter_id": "ErGen/work-001/0001",
+      "order": 2,
+      "objective": "铁柱离开家乡",
+      "participant_ids": [
+        "ErGen/work-001/0001:chunk-01:entity-001",
+        "ErGen/work-001/0001:chunk-01:entity-004"
+      ],
+      "entry_state_fact_ids": [
+        "ErGen/work-001/0001:chunk-01:fact-009"
+      ],
+      "event_programs": [
+        {
+          "event_id": "ErGen/work-001/0001:chunk-01:event-003",
+          "scene_id": "ErGen/work-001/0001:chunk-01:scene-003",
+          "summary": "铁柱离开家乡前往恒岳派",
+          "action": "四叔接铁柱，铁柱告别父母，第一次离开家乡",
+          "participant_ids": [
+            "ErGen/work-001/0001:chunk-01:entity-001",
+            "ErGen/work-001/0001:chunk-01:entity-004"
+          ],
+          "obstacle": "",
+          "decision": "",
+          "precondition_fact_ids": [
+            "ErGen/work-001/0001:chunk-01:fact-009"
+          ],
+          "required_fact_ids": [
+            "ErGen/work-001/0001:chunk-01:fact-010"
+          ],
+          "outcome_fact_ids": [
+            "ErGen/work-001/0001:chunk-01:fact-010"
+          ]
+        }
+      ],
+      "fact_contracts": [
+        {
+          "fact_id": "ErGen/work-001/0001:chunk-01:fact-010",
+          "scene_id": "ErGen/work-001/0001:chunk-01:scene-003",
+          "fact_kind": "progression",
+          "subject_id": "ErGen/work-001/0001:chunk-01:entity-001",
+          "predicate": "离开家乡",
+          "value": "前往恒岳派",
+          "object_id": "ErGen/work-001/0001:chunk-01:entity-008",
+          "expression_mode": "action",
+          "must_realize": true,
+          "forbidden_inverse_meanings": []
+        }
+      ],
+      "paragraphs": [
+        {
+          "paragraph_id": "ErGen/work-001/0001:chunk-01:scene-003:paragraph-00",
+          "scene_id": "ErGen/work-001/0001:chunk-01:scene-003",
+          "order": 0,
+          "function": "action_progression",
+          "required_fact_ids": [
+            "ErGen/work-001/0001:chunk-01:fact-010"
+          ],
+          "event_ids": [
+            "ErGen/work-001/0001:chunk-01:event-003"
+          ],
+          "viewpoint_entity_id": "ErGen/work-001/0001:chunk-01:entity-001",
+          "dialogue_act": ""
+        }
+      ],
+      "exit_state_fact_ids": [
+        "ErGen/work-001/0001:chunk-01:fact-010"
+      ],
+      "forbidden_event_ids": []
+    }
+  ]
+}

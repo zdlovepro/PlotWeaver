@@ -1,0 +1,243 @@
+{
+  "chapter_goal": "重建第一章：铁柱从村口读书回家，经历父亲劝学、四叔推荐、宴请庆祝，最终决心离家前往恒岳派。",
+  "selected_template_ids": [
+    "library:chapter-010",
+    "library:micro-001",
+    "library:micro-003"
+  ],
+  "scenes": [
+    {
+      "scene_no": 1,
+      "entry_state": [
+        "铁柱 位于 村内小路边"
+      ],
+      "objective": "读书后回家",
+      "pressure": "",
+      "turn": "",
+      "exit_state": [
+        "铁柱 回到 家中"
+      ]
+    },
+    {
+      "scene_no": 2,
+      "entry_state": [
+        "铁柱 回到 家中"
+      ],
+      "objective": "家庭互动及获得推荐",
+      "pressure": "父亲期望铁柱读书",
+      "turn": "四叔到来并告知恒岳派消息",
+      "exit_state": [
+        "四叔 告知 恒岳派今年收取弟子",
+        "四叔 让出 恒岳派推荐名额"
+      ]
+    },
+    {
+      "scene_no": 3,
+      "entry_state": [
+        "四叔 离开 村子"
+      ],
+      "objective": "庆祝铁柱获得推荐",
+      "pressure": "离别前的喧闹",
+      "turn": "宴席举办",
+      "exit_state": [
+        "父亲 举办 数百桌宴席"
+      ]
+    },
+    {
+      "scene_no": 4,
+      "entry_state": [
+        "父亲 举办 数百桌宴席"
+      ],
+      "objective": "铁柱决心并离家",
+      "pressure": "母亲不舍与王卓轻视",
+      "turn": "四叔来接",
+      "exit_state": [
+        "四叔 接 铁柱上马车"
+      ]
+    }
+  ],
+  "chapter_state_changes": [
+    {
+      "slot": "铁柱位置",
+      "before": "",
+      "after": "铁柱 回到 家中",
+      "cause_scene_no": 1
+    },
+    {
+      "slot": "父亲期望",
+      "before": "",
+      "after": "父亲 期望 铁柱好好读书",
+      "cause_scene_no": 2
+    },
+    {
+      "slot": "四叔到达",
+      "before": "",
+      "after": "四叔 到达 铁柱家",
+      "cause_scene_no": 2
+    },
+    {
+      "slot": "四叔给予",
+      "before": "",
+      "after": "四叔 给予 两本线状书",
+      "cause_scene_no": 2
+    },
+    {
+      "slot": "四叔告知",
+      "before": "",
+      "after": "四叔 告知 恒岳派今年收取弟子",
+      "cause_scene_no": 2
+    },
+    {
+      "slot": "四叔让出",
+      "before": "",
+      "after": "四叔 让出 恒岳派推荐名额",
+      "cause_scene_no": 2
+    },
+    {
+      "slot": "四叔离开",
+      "before": "",
+      "after": "四叔 离开 村子",
+      "cause_scene_no": 3
+    },
+    {
+      "slot": "父亲举办",
+      "before": "",
+      "after": "父亲 举办 数百桌宴席",
+      "cause_scene_no": 3
+    },
+    {
+      "slot": "铁柱决心",
+      "before": "",
+      "after": "铁柱 决心 被恒岳派选中",
+      "cause_scene_no": 4
+    },
+    {
+      "slot": "四叔接走",
+      "before": "",
+      "after": "四叔 接 铁柱上马车",
+      "cause_scene_no": 4
+    }
+  ],
+  "style_budget": {
+    "schema_version": "1.0",
+    "mode": "fidelity_test_override",
+    "instruction": "仅用于重建实验的量化验收；正常原创写作应使用作者级柔性预算。",
+    "metrics": [
+      {
+        "metric_id": "chapter_char_count",
+        "unit": "count",
+        "target": 5449.0,
+        "preferred_min": 4359.2,
+        "preferred_max": 6538.8,
+        "priority": "high"
+      },
+      {
+        "metric_id": "mean_sentence_chars",
+        "unit": "mean_chars",
+        "target": 43.958333,
+        "preferred_min": 37.364583,
+        "preferred_max": 50.552083,
+        "priority": "high"
+      },
+      {
+        "metric_id": "mean_paragraph_chars",
+        "unit": "mean_chars",
+        "target": 54.050505,
+        "preferred_min": 45.942929,
+        "preferred_max": 62.158081,
+        "priority": "high"
+      },
+      {
+        "metric_id": "short_paragraph_ratio",
+        "unit": "ratio",
+        "target": 0.282828,
+        "preferred_min": 0.212121,
+        "preferred_max": 0.353535,
+        "priority": "high"
+      },
+      {
+        "metric_id": "dialogue_char_ratio",
+        "unit": "ratio",
+        "target": 0.36025,
+        "preferred_min": 0.270188,
+        "preferred_max": 0.450313,
+        "priority": "high"
+      },
+      {
+        "metric_id": "perception_marker_ratio",
+        "unit": "ratio",
+        "target": 0.158333,
+        "preferred_min": 0.11875,
+        "preferred_max": 0.197916,
+        "priority": "high"
+      },
+      {
+        "metric_id": "transition_marker_ratio",
+        "unit": "ratio",
+        "target": 0.033333,
+        "preferred_min": 0.013333,
+        "preferred_max": 0.053333,
+        "priority": "high"
+      },
+      {
+        "metric_id": "question_sentence_ratio",
+        "unit": "ratio",
+        "target": 0.1,
+        "preferred_min": 0.075,
+        "preferred_max": 0.125,
+        "priority": "medium"
+      },
+      {
+        "metric_id": "exclamation_sentence_ratio",
+        "unit": "ratio",
+        "target": 0.058333,
+        "preferred_min": 0.038333,
+        "preferred_max": 0.078333,
+        "priority": "medium"
+      },
+      {
+        "metric_id": "ellipsis_per_sentence",
+        "unit": "ratio",
+        "target": 0.075,
+        "preferred_min": 0.055,
+        "preferred_max": 0.095,
+        "priority": "medium"
+      }
+    ]
+  },
+  "continuity_checks": [
+    "时间：从白天开始，经过夜晚到次日早晨。",
+    "地点：村口小路 -> 家中 -> 宴席场地 -> 马车离开。",
+    "人物：铁柱、父亲、母亲、四叔、教书先生、王卓、村民。",
+    "资源：两本书、推荐名额。",
+    "知识：恒岳派招收弟子。",
+    "所有状态变化均有场景原因。"
+  ],
+  "style_execution_directives": [
+    {
+      "metric_id": "perception_marker_ratio",
+      "direction": "increase",
+      "target_range": "0.11875–0.197916",
+      "action": "在关键动作或信息变化后补入角色看到、听到、感到或察觉到的具体反应。"
+    },
+    {
+      "metric_id": "transition_marker_ratio",
+      "direction": "increase",
+      "target_range": "0.013333–0.053333",
+      "action": "在场景、时间或注意力变化处加入自然的承接词或结果性过渡，再继续推进。"
+    },
+    {
+      "metric_id": "mean_paragraph_chars",
+      "direction": "decrease",
+      "target_range": "45.942929–62.158081",
+      "action": "把并列的信息单元拆开，保留关键落点作为短段。"
+    },
+    {
+      "metric_id": "dialogue_char_ratio",
+      "direction": "increase",
+      "target_range": "0.270188–0.450313",
+      "action": "在冲突、试探或信息交接处增加有结果的直接对话，并用动作承接每轮话语。"
+    }
+  ],
+  "reconstruction_mode": "fidelity_test_only"
+}

@@ -1,0 +1,81 @@
+{
+  "scene_no": 3,
+  "scene_id": "ErGen/work-001/0001:chunk-01:scene-003",
+  "minimum_paragraph_chars": 20,
+  "repairs_used": 0,
+  "passed": true,
+  "prose_passed": true,
+  "role_passed": false,
+  "draft": {
+    "scene_id": "ErGen/work-001/0001:chunk-01:scene-003",
+    "paragraphs": [
+      {
+        "paragraph_id": "ErGen/work-001/0001:chunk-01:scene-003:paragraph-00",
+        "text": "四叔站在院门口，拍了拍铁柱的肩膀：“走吧，别误了时辰。”铁柱转过身，对着屋里喊道：“娘，儿子走了，您保重！”他背起包袱，大步迈出门槛，跟在四叔身后朝村口走去。",
+        "claimed_fact_ids": [
+          "ErGen/work-001/0001:chunk-01:fact-010"
+        ],
+        "claimed_event_ids": [
+          "ErGen/work-001/0001:chunk-01:event-003"
+        ]
+      },
+      {
+        "paragraph_id": "ErGen/work-001/0001:chunk-01:scene-003:paragraph-01",
+        "text": "回头望去，村子的轮廓在晨雾中渐渐模糊，母亲还站在门口。铁柱深吸一口气，攥紧包袱带子——这次离开，不知何时才能回来。他不再回头，加快了脚步。",
+        "claimed_fact_ids": [],
+        "claimed_event_ids": []
+      }
+    ]
+  },
+  "validations": [
+    {
+      "scene_id": "ErGen/work-001/0001:chunk-01:scene-003",
+      "reported_passed": true,
+      "realized_fact_ids": [
+        "ErGen/work-001/0001:chunk-01:fact-010"
+      ],
+      "missing_fact_ids": [],
+      "realized_event_ids": [
+        "ErGen/work-001/0001:chunk-01:event-003"
+      ],
+      "missing_event_ids": [],
+      "premature_event_ids": [],
+      "paragraph_issues": [],
+      "repair_paragraph_ids": [],
+      "passed": true
+    }
+  ],
+  "prose_validations": [
+    {
+      "scene_id": "ErGen/work-001/0001:chunk-01:scene-003",
+      "reported_passed": true,
+      "dramatized_beat_ids": [
+        "ErGen/work-001/0001:chunk-01:scene-003:beat-00",
+        "ErGen/work-001/0001:chunk-01:scene-003:beat-01"
+      ],
+      "missing_beat_ids": [],
+      "summary_paragraph_ids": [],
+      "paragraph_issues": [],
+      "repair_paragraph_ids": [],
+      "passed": true
+    }
+  ],
+  "prose_checks": {
+    "passed": true,
+    "paragraph_issues": {}
+  },
+  "role_checks": [
+    {
+      "attempt": 0,
+      "passed": false,
+      "paragraph_issues": {
+        "ErGen/work-001/0001:chunk-01:scene-003:paragraph-00": [
+          "对话职责要求中文引号内对白不少于59字，当前为20字"
+        ],
+        "ErGen/work-001/0001:chunk-01:scene-003:paragraph-01": [
+          "戏剧段落至少需要 76 字来展开过程，当前只有 69 字"
+        ]
+      }
+    }
+  ]
+}

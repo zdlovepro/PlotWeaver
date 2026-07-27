@@ -1,0 +1,222 @@
+{
+  "chapter_id": "ErGen/work-001/0005",
+  "entities": [
+    {
+      "name": "王林",
+      "kind": "person",
+      "aliases": [
+        "铁柱"
+      ]
+    },
+    {
+      "name": "王卓",
+      "kind": "person",
+      "aliases": []
+    },
+    {
+      "name": "王天水",
+      "kind": "person",
+      "aliases": [
+        "铁柱父亲"
+      ]
+    },
+    {
+      "name": "铁柱母亲",
+      "kind": "person",
+      "aliases": []
+    },
+    {
+      "name": "王卓父亲",
+      "kind": "person",
+      "aliases": []
+    },
+    {
+      "name": "王浩父亲",
+      "kind": "person",
+      "aliases": []
+    },
+    {
+      "name": "恒岳派青年",
+      "kind": "person",
+      "aliases": [
+        "张姓青年"
+      ]
+    },
+    {
+      "name": "恒岳派山门",
+      "kind": "location",
+      "aliases": []
+    },
+    {
+      "name": "王氏家族大宅子",
+      "kind": "location",
+      "aliases": []
+    }
+  ],
+  "facts": [
+    {
+      "kind": "progression",
+      "statement": "王林 测试结果 不合格",
+      "certainty": 1.0
+    },
+    {
+      "kind": "identity",
+      "statement": "王卓 成为 道虚弟子",
+      "certainty": 1.0
+    },
+    {
+      "kind": "progression",
+      "statement": "恒岳派青年 遣散 众少年",
+      "certainty": 1.0
+    },
+    {
+      "kind": "location",
+      "statement": "王林 被送回家 回家",
+      "certainty": 1.0
+    },
+    {
+      "kind": "goal",
+      "statement": "王卓 计划 回家处理俗事",
+      "certainty": 1.0
+    },
+    {
+      "kind": "progression",
+      "statement": "恒岳派青年 带离 消失",
+      "certainty": 1.0
+    },
+    {
+      "kind": "emotion",
+      "statement": "王林 情绪 绝望",
+      "certainty": 1.0
+    },
+    {
+      "kind": "location",
+      "statement": "王氏家族大宅子 设有宴席 宴席",
+      "certainty": 1.0
+    },
+    {
+      "kind": "emotion",
+      "statement": "王浩父亲 情绪 焦急",
+      "certainty": 1.0
+    },
+    {
+      "kind": "emotion",
+      "statement": "王天水 情绪 不妙的预感",
+      "certainty": 1.0
+    },
+    {
+      "kind": "progression",
+      "statement": "铁柱母亲 询问 结果",
+      "certainty": 1.0
+    }
+  ],
+  "events": [
+    {
+      "order": 0,
+      "summary": "恒岳派测试王林不合格，众少年被遣散，王林被送回家",
+      "participants": [
+        "王林",
+        "恒岳派青年"
+      ],
+      "action": "测试不合格",
+      "obstacle": "",
+      "decision": "",
+      "preconditions": [],
+      "outcomes": [
+        "王林 测试结果 不合格",
+        "恒岳派青年 遣散 众少年",
+        "王林 被送回家 回家"
+      ],
+      "costs": []
+    },
+    {
+      "order": 1,
+      "summary": "王林回家后，父亲从其脸上看到没落，升起不妙的预感",
+      "participants": [
+        "王林",
+        "王天水"
+      ],
+      "action": "表现出没落",
+      "obstacle": "",
+      "decision": "",
+      "preconditions": [
+        "王林 被送回家 回家"
+      ],
+      "outcomes": [
+        "王天水 情绪 不妙的预感"
+      ],
+      "costs": []
+    }
+  ],
+  "scenes": [
+    {
+      "order": 0,
+      "participants": [
+        "王林",
+        "恒岳派青年"
+      ],
+      "events": [
+        "恒岳派测试王林不合格，众少年被遣散，王林被送回家"
+      ],
+      "objective": "完成恒岳派测试",
+      "entry_facts": [],
+      "exit_facts": [
+        "王林 测试结果 不合格",
+        "恒岳派青年 遣散 众少年",
+        "王林 被送回家 回家"
+      ],
+      "tension": 0,
+      "locations": [],
+      "time_anchors": []
+    },
+    {
+      "order": 1,
+      "participants": [
+        "王林",
+        "王天水"
+      ],
+      "events": [
+        "王林回家后，父亲从其脸上看到没落，升起不妙的预感"
+      ],
+      "objective": "父亲发现王林情绪异常",
+      "entry_facts": [
+        "王林 被送回家 回家"
+      ],
+      "exit_facts": [
+        "王天水 情绪 不妙的预感"
+      ],
+      "tension": 0,
+      "locations": [],
+      "time_anchors": []
+    }
+  ],
+  "state_changes": [
+    {
+      "operation": "add",
+      "event": "恒岳派测试王林不合格，众少年被遣散，王林被送回家",
+      "before": "",
+      "after": "王林 测试结果 不合格"
+    },
+    {
+      "operation": "add",
+      "event": "恒岳派测试王林不合格，众少年被遣散，王林被送回家",
+      "before": "",
+      "after": "恒岳派青年 遣散 众少年"
+    },
+    {
+      "operation": "add",
+      "event": "恒岳派测试王林不合格，众少年被遣散，王林被送回家",
+      "before": "",
+      "after": "王林 被送回家 回家"
+    },
+    {
+      "operation": "add",
+      "event": "王林回家后，父亲从其脸上看到没落，升起不妙的预感",
+      "before": "",
+      "after": "王天水 情绪 不妙的预感"
+    }
+  ],
+  "time_anchors": [],
+  "temporal_relations": [],
+  "spatial_relations": []
+}

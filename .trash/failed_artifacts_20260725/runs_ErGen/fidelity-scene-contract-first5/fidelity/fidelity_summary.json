@@ -1,0 +1,41 @@
+{
+  "schema_version": "1.0",
+  "mode": "fidelity_regression",
+  "author_id": "ErGen",
+  "work_id": "work-001",
+  "chapter_limit": 5,
+  "successful_chapters": 0,
+  "failed_chapters": 5,
+  "mean_style_similarity": null,
+  "mean_char_count_ratio": null,
+  "style_budget_pass_rate": 0.0,
+  "continuity_pass_rate": 0.0,
+  "mean_structure_score": null,
+  "chapters": [
+    {
+      "chapter_no": 1,
+      "chapter_id": "ErGen/work-001/0001",
+      "error": "ValueError: model returned an empty or too-short draft after retries (last length=956)"
+    },
+    {
+      "chapter_no": 2,
+      "chapter_id": "ErGen/work-001/0002",
+      "error": "RuntimeError: Model did not return valid JSON after 6 attempt(s)"
+    },
+    {
+      "chapter_no": 3,
+      "chapter_id": "ErGen/work-001/0003",
+      "error": "RuntimeError: Model did not return valid JSON after 6 attempt(s)"
+    },
+    {
+      "chapter_no": 4,
+      "chapter_id": "ErGen/work-001/0004",
+      "error": "RuntimeError: Model did not return valid JSON after 6 attempt(s)"
+    },
+    {
+      "chapter_no": 5,
+      "chapter_id": "ErGen/work-001/0005",
+      "error": "RuntimeError: Model did not return valid JSON after 6 attempt(s)"
+    }
+  ]
+}

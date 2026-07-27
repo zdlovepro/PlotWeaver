@@ -1,0 +1,52 @@
+{
+  "scene_id": "ErGen/work-001/0005:chunk-01:scene-001",
+  "paragraphs": [
+    {
+      "paragraph_id": "ErGen/work-001/0005:chunk-01:scene-001:paragraph-00",
+      "text": "恒岳派山门前，测试结果揭晓。王卓被道虚选中，成为弟子。王氏家族大宅子早已设下宴席，等待庆贺。王林站在人群中，看着这一幕，心中百味杂陈。",
+      "claimed_fact_ids": [
+        "ErGen/work-001/0005:chunk-01:fact-002",
+        "ErGen/work-001/0005:chunk-01:fact-008"
+      ],
+      "claimed_event_ids": []
+    },
+    {
+      "paragraph_id": "ErGen/work-001/0005:chunk-01:scene-001:paragraph-01",
+      "text": "恒岳派青年看着王林，冷冷道：“王林，你资质太差，无法通过测试，立刻下山回家，不得逗留。”王林抬起头，恳求道：“前辈，再给我一次机会吧。”青年摇头：“规矩如此，速速离去。”随即，青年示意几人送王林下山。",
+      "claimed_fact_ids": [
+        "ErGen/work-001/0005:chunk-01:fact-001",
+        "ErGen/work-001/0005:chunk-01:fact-003",
+        "ErGen/work-001/0005:chunk-01:fact-004"
+      ],
+      "claimed_event_ids": [
+        "ErGen/work-001/0005:chunk-01:event-001"
+      ]
+    },
+    {
+      "paragraph_id": "ErGen/work-001/0005:chunk-01:scene-001:paragraph-02",
+      "text": "王林感到一阵绝望，仿佛天塌下来一般。他看到王浩父亲在人群中焦急地张望，眉头紧锁，脸上写满担忧。",
+      "claimed_fact_ids": [
+        "ErGen/work-001/0005:chunk-01:fact-007",
+        "ErGen/work-001/0005:chunk-01:fact-009"
+      ],
+      "claimed_event_ids": []
+    },
+    {
+      "paragraph_id": "ErGen/work-001/0005:chunk-01:scene-001:paragraph-03",
+      "text": "王卓告诉王林他计划先回家处理俗事，让王林独自面对。",
+      "claimed_fact_ids": [
+        "ErGen/work-001/0005:chunk-01:fact-005"
+      ],
+      "claimed_event_ids": []
+    },
+    {
+      "paragraph_id": "ErGen/work-001/0005:chunk-01:scene-001:paragraph-04",
+      "text": "随后，恒岳派青年带着众人消失在山门后。铁柱母亲走上前来，焦急地询问测试结果。",
+      "claimed_fact_ids": [
+        "ErGen/work-001/0005:chunk-01:fact-006",
+        "ErGen/work-001/0005:chunk-01:fact-011"
+      ],
+      "claimed_event_ids": []
+    }
+  ]
+}

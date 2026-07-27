@@ -1,0 +1,427 @@
+{
+  "chapter_id": "ErGen/work-001/0003",
+  "source_hash": "1ebd4afd0b180980010e3a9755836136cdb31fe76d762bad9583daa450d96d4d",
+  "schema_version": "1.0",
+  "entities": [
+    {
+      "entity_id": "ErGen/work-001/0003:chunk-01:entity-001",
+      "canonical_name": "王林",
+      "kind": "person"
+    },
+    {
+      "entity_id": "ErGen/work-001/0003:chunk-01:entity-002",
+      "canonical_name": "王卓",
+      "kind": "person"
+    },
+    {
+      "entity_id": "ErGen/work-001/0003:chunk-01:entity-003",
+      "canonical_name": "王浩",
+      "kind": "person"
+    },
+    {
+      "entity_id": "ErGen/work-001/0003:chunk-01:entity-004",
+      "canonical_name": "黑衣中年人",
+      "kind": "person"
+    },
+    {
+      "entity_id": "ErGen/work-001/0003:chunk-01:entity-005",
+      "canonical_name": "恒岳派",
+      "kind": "organization"
+    },
+    {
+      "entity_id": "ErGen/work-001/0003:chunk-01:entity-006",
+      "canonical_name": "众少年",
+      "kind": "person"
+    },
+    {
+      "entity_id": "ErGen/work-001/0003:chunk-01:entity-007",
+      "canonical_name": "玉盒",
+      "kind": "item"
+    },
+    {
+      "entity_id": "ErGen/work-001/0003:chunk-01:entity-008",
+      "canonical_name": "灵芝",
+      "kind": "item"
+    },
+    {
+      "entity_id": "ErGen/work-001/0003:chunk-01:entity-009",
+      "canonical_name": "石阶",
+      "kind": "location"
+    }
+  ],
+  "scene_programs": [
+    {
+      "scene_id": "ErGen/work-001/0003:chunk-01:scene-001",
+      "chapter_id": "ErGen/work-001/0003",
+      "order": 0,
+      "objective": "筛选出灵根充足的弟子",
+      "participant_ids": [
+        "ErGen/work-001/0003:chunk-01:entity-004",
+        "ErGen/work-001/0003:chunk-01:entity-006",
+        "ErGen/work-001/0003:chunk-01:entity-002",
+        "ErGen/work-001/0003:chunk-01:entity-003",
+        "ErGen/work-001/0003:chunk-01:entity-001"
+      ],
+      "entry_state_fact_ids": [
+        "ErGen/work-001/0003:chunk-01:fact-001"
+      ],
+      "event_programs": [
+        {
+          "event_id": "ErGen/work-001/0003:chunk-01:event-001",
+          "scene_id": "ErGen/work-001/0003:chunk-01:scene-001",
+          "summary": "黑衣中年人宣布灵根测试开始，众少年依次测试",
+          "action": "宣布测试规则并逐个测试",
+          "participant_ids": [
+            "ErGen/work-001/0003:chunk-01:entity-004",
+            "ErGen/work-001/0003:chunk-01:entity-006"
+          ],
+          "obstacle": "",
+          "decision": "",
+          "precondition_fact_ids": [
+            "ErGen/work-001/0003:chunk-01:fact-001"
+          ],
+          "required_fact_ids": [
+            "ErGen/work-001/0003:chunk-01:fact-002",
+            "ErGen/work-001/0003:chunk-01:fact-003",
+            "ErGen/work-001/0003:chunk-01:fact-005"
+          ],
+          "outcome_fact_ids": [
+            "ErGen/work-001/0003:chunk-01:fact-002",
+            "ErGen/work-001/0003:chunk-01:fact-003",
+            "ErGen/work-001/0003:chunk-01:fact-005"
+          ]
+        },
+        {
+          "event_id": "ErGen/work-001/0003:chunk-01:event-002",
+          "scene_id": "ErGen/work-001/0003:chunk-01:scene-001",
+          "summary": "王卓被测试并选中",
+          "action": "被测试后得到合格评价",
+          "participant_ids": [
+            "ErGen/work-001/0003:chunk-01:entity-002",
+            "ErGen/work-001/0003:chunk-01:entity-004"
+          ],
+          "obstacle": "",
+          "decision": "",
+          "precondition_fact_ids": [
+            "ErGen/work-001/0003:chunk-01:fact-002"
+          ],
+          "required_fact_ids": [
+            "ErGen/work-001/0003:chunk-01:fact-002"
+          ],
+          "outcome_fact_ids": [
+            "ErGen/work-001/0003:chunk-01:fact-002"
+          ]
+        },
+        {
+          "event_id": "ErGen/work-001/0003:chunk-01:event-003",
+          "scene_id": "ErGen/work-001/0003:chunk-01:scene-001",
+          "summary": "王浩献灵芝后被收为药童",
+          "action": "献玉盒和灵芝，请求做药童",
+          "participant_ids": [
+            "ErGen/work-001/0003:chunk-01:entity-003",
+            "ErGen/work-001/0003:chunk-01:entity-004"
+          ],
+          "obstacle": "最初被说资质差",
+          "decision": "献出宝物",
+          "precondition_fact_ids": [
+            "ErGen/work-001/0003:chunk-01:fact-004"
+          ],
+          "required_fact_ids": [
+            "ErGen/work-001/0003:chunk-01:fact-004",
+            "ErGen/work-001/0003:chunk-01:fact-003"
+          ],
+          "outcome_fact_ids": [
+            "ErGen/work-001/0003:chunk-01:fact-003"
+          ]
+        },
+        {
+          "event_id": "ErGen/work-001/0003:chunk-01:event-004",
+          "scene_id": "ErGen/work-001/0003:chunk-01:scene-001",
+          "summary": "王林被测试为不合格",
+          "action": "接受灵根测试",
+          "participant_ids": [
+            "ErGen/work-001/0003:chunk-01:entity-001",
+            "ErGen/work-001/0003:chunk-01:entity-004"
+          ],
+          "obstacle": "",
+          "decision": "",
+          "precondition_fact_ids": [
+            "ErGen/work-001/0003:chunk-01:fact-005"
+          ],
+          "required_fact_ids": [
+            "ErGen/work-001/0003:chunk-01:fact-005"
+          ],
+          "outcome_fact_ids": [
+            "ErGen/work-001/0003:chunk-01:fact-005"
+          ]
+        }
+      ],
+      "fact_contracts": [
+        {
+          "fact_id": "ErGen/work-001/0003:chunk-01:fact-001",
+          "scene_id": "ErGen/work-001/0003:chunk-01:scene-001",
+          "fact_kind": "progression",
+          "subject_id": "ErGen/work-001/0003:chunk-01:entity-001",
+          "predicate": "处于",
+          "value": "灵根测试",
+          "object_id": "",
+          "expression_mode": "action",
+          "must_realize": true,
+          "forbidden_inverse_meanings": []
+        },
+        {
+          "fact_id": "ErGen/work-001/0003:chunk-01:fact-002",
+          "scene_id": "ErGen/work-001/0003:chunk-01:scene-001",
+          "fact_kind": "identity",
+          "subject_id": "ErGen/work-001/0003:chunk-01:entity-002",
+          "predicate": "被选中",
+          "value": "合格者",
+          "object_id": "",
+          "expression_mode": "narration",
+          "must_realize": true,
+          "forbidden_inverse_meanings": []
+        },
+        {
+          "fact_id": "ErGen/work-001/0003:chunk-01:fact-003",
+          "scene_id": "ErGen/work-001/0003:chunk-01:scene-001",
+          "fact_kind": "identity",
+          "subject_id": "ErGen/work-001/0003:chunk-01:entity-003",
+          "predicate": "被收为",
+          "value": "药童",
+          "object_id": "",
+          "expression_mode": "narration",
+          "must_realize": true,
+          "forbidden_inverse_meanings": []
+        },
+        {
+          "fact_id": "ErGen/work-001/0003:chunk-01:fact-004",
+          "scene_id": "ErGen/work-001/0003:chunk-01:scene-001",
+          "fact_kind": "resource",
+          "subject_id": "ErGen/work-001/0003:chunk-01:entity-003",
+          "predicate": "献出",
+          "value": "玉盒与灵芝",
+          "object_id": "ErGen/work-001/0003:chunk-01:entity-007",
+          "expression_mode": "action",
+          "must_realize": true,
+          "forbidden_inverse_meanings": []
+        },
+        {
+          "fact_id": "ErGen/work-001/0003:chunk-01:fact-005",
+          "scene_id": "ErGen/work-001/0003:chunk-01:scene-001",
+          "fact_kind": "identity",
+          "subject_id": "ErGen/work-001/0003:chunk-01:entity-001",
+          "predicate": "被判定为",
+          "value": "不合格",
+          "object_id": "",
+          "expression_mode": "narration",
+          "must_realize": true,
+          "forbidden_inverse_meanings": []
+        },
+        {
+          "fact_id": "ErGen/work-001/0003:chunk-01:fact-008",
+          "scene_id": "ErGen/work-001/0003:chunk-01:scene-001",
+          "fact_kind": "location",
+          "subject_id": "ErGen/work-001/0003:chunk-01:entity-002",
+          "predicate": "离开",
+          "value": "跟随中年人见掌门",
+          "object_id": "",
+          "expression_mode": "action",
+          "must_realize": true,
+          "forbidden_inverse_meanings": []
+        },
+        {
+          "fact_id": "ErGen/work-001/0003:chunk-01:fact-009",
+          "scene_id": "ErGen/work-001/0003:chunk-01:scene-001",
+          "fact_kind": "location",
+          "subject_id": "ErGen/work-001/0003:chunk-01:entity-003",
+          "predicate": "离开",
+          "value": "随中年人前往丹房",
+          "object_id": "",
+          "expression_mode": "action",
+          "must_realize": true,
+          "forbidden_inverse_meanings": []
+        }
+      ],
+      "paragraphs": [
+        {
+          "paragraph_id": "ErGen/work-001/0003:chunk-01:scene-001:paragraph-00",
+          "scene_id": "ErGen/work-001/0003:chunk-01:scene-001",
+          "order": 0,
+          "function": "orientation",
+          "required_fact_ids": [
+            "ErGen/work-001/0003:chunk-01:fact-001",
+            "ErGen/work-001/0003:chunk-01:fact-008",
+            "ErGen/work-001/0003:chunk-01:fact-009"
+          ],
+          "event_ids": [],
+          "viewpoint_entity_id": "ErGen/work-001/0003:chunk-01:entity-004",
+          "dialogue_act": ""
+        },
+        {
+          "paragraph_id": "ErGen/work-001/0003:chunk-01:scene-001:paragraph-01",
+          "scene_id": "ErGen/work-001/0003:chunk-01:scene-001",
+          "order": 1,
+          "function": "action_progression",
+          "required_fact_ids": [
+            "ErGen/work-001/0003:chunk-01:fact-002",
+            "ErGen/work-001/0003:chunk-01:fact-003",
+            "ErGen/work-001/0003:chunk-01:fact-005"
+          ],
+          "event_ids": [
+            "ErGen/work-001/0003:chunk-01:event-001"
+          ],
+          "viewpoint_entity_id": "ErGen/work-001/0003:chunk-01:entity-004",
+          "dialogue_act": ""
+        },
+        {
+          "paragraph_id": "ErGen/work-001/0003:chunk-01:scene-001:paragraph-02",
+          "scene_id": "ErGen/work-001/0003:chunk-01:scene-001",
+          "order": 2,
+          "function": "action_progression",
+          "required_fact_ids": [
+            "ErGen/work-001/0003:chunk-01:fact-002"
+          ],
+          "event_ids": [
+            "ErGen/work-001/0003:chunk-01:event-002"
+          ],
+          "viewpoint_entity_id": "ErGen/work-001/0003:chunk-01:entity-002",
+          "dialogue_act": ""
+        },
+        {
+          "paragraph_id": "ErGen/work-001/0003:chunk-01:scene-001:paragraph-03",
+          "scene_id": "ErGen/work-001/0003:chunk-01:scene-001",
+          "order": 3,
+          "function": "dialogue_conflict",
+          "required_fact_ids": [
+            "ErGen/work-001/0003:chunk-01:fact-004",
+            "ErGen/work-001/0003:chunk-01:fact-003"
+          ],
+          "event_ids": [
+            "ErGen/work-001/0003:chunk-01:event-003"
+          ],
+          "viewpoint_entity_id": "ErGen/work-001/0003:chunk-01:entity-003",
+          "dialogue_act": "以对话施压并暴露冲突"
+        },
+        {
+          "paragraph_id": "ErGen/work-001/0003:chunk-01:scene-001:paragraph-04",
+          "scene_id": "ErGen/work-001/0003:chunk-01:scene-001",
+          "order": 4,
+          "function": "action_progression",
+          "required_fact_ids": [
+            "ErGen/work-001/0003:chunk-01:fact-005"
+          ],
+          "event_ids": [
+            "ErGen/work-001/0003:chunk-01:event-004"
+          ],
+          "viewpoint_entity_id": "ErGen/work-001/0003:chunk-01:entity-001",
+          "dialogue_act": ""
+        }
+      ],
+      "exit_state_fact_ids": [
+        "ErGen/work-001/0003:chunk-01:fact-002",
+        "ErGen/work-001/0003:chunk-01:fact-003",
+        "ErGen/work-001/0003:chunk-01:fact-005"
+      ],
+      "forbidden_event_ids": [
+        "ErGen/work-001/0003:chunk-01:event-005"
+      ]
+    },
+    {
+      "scene_id": "ErGen/work-001/0003:chunk-01:scene-002",
+      "chapter_id": "ErGen/work-001/0003",
+      "order": 1,
+      "objective": "完成毅力测试",
+      "participant_ids": [
+        "ErGen/work-001/0003:chunk-01:entity-004",
+        "ErGen/work-001/0003:chunk-01:entity-001",
+        "ErGen/work-001/0003:chunk-01:entity-006"
+      ],
+      "entry_state_fact_ids": [
+        "ErGen/work-001/0003:chunk-01:fact-006"
+      ],
+      "event_programs": [
+        {
+          "event_id": "ErGen/work-001/0003:chunk-01:event-005",
+          "scene_id": "ErGen/work-001/0003:chunk-01:scene-002",
+          "summary": "黑衣人宣布第二项毅力测试，王林开始攀登石阶",
+          "action": "宣布毅力测试规则",
+          "participant_ids": [
+            "ErGen/work-001/0003:chunk-01:entity-004",
+            "ErGen/work-001/0003:chunk-01:entity-001",
+            "ErGen/work-001/0003:chunk-01:entity-006"
+          ],
+          "obstacle": "",
+          "decision": "王林决定参加",
+          "precondition_fact_ids": [
+            "ErGen/work-001/0003:chunk-01:fact-006",
+            "ErGen/work-001/0003:chunk-01:fact-005"
+          ],
+          "required_fact_ids": [
+            "ErGen/work-001/0003:chunk-01:fact-007"
+          ],
+          "outcome_fact_ids": [
+            "ErGen/work-001/0003:chunk-01:fact-007"
+          ]
+        }
+      ],
+      "fact_contracts": [
+        {
+          "fact_id": "ErGen/work-001/0003:chunk-01:fact-006",
+          "scene_id": "ErGen/work-001/0003:chunk-01:scene-002",
+          "fact_kind": "progression",
+          "subject_id": "ErGen/work-001/0003:chunk-01:entity-006",
+          "predicate": "开始",
+          "value": "第二项测试",
+          "object_id": "",
+          "expression_mode": "action",
+          "must_realize": true,
+          "forbidden_inverse_meanings": []
+        },
+        {
+          "fact_id": "ErGen/work-001/0003:chunk-01:fact-007",
+          "scene_id": "ErGen/work-001/0003:chunk-01:scene-002",
+          "fact_kind": "identity",
+          "subject_id": "ErGen/work-001/0003:chunk-01:entity-001",
+          "predicate": "成为",
+          "value": "毅力测试参与者",
+          "object_id": "",
+          "expression_mode": "narration",
+          "must_realize": true,
+          "forbidden_inverse_meanings": []
+        }
+      ],
+      "paragraphs": [
+        {
+          "paragraph_id": "ErGen/work-001/0003:chunk-01:scene-002:paragraph-00",
+          "scene_id": "ErGen/work-001/0003:chunk-01:scene-002",
+          "order": 0,
+          "function": "orientation",
+          "required_fact_ids": [
+            "ErGen/work-001/0003:chunk-01:fact-006"
+          ],
+          "event_ids": [],
+          "viewpoint_entity_id": "ErGen/work-001/0003:chunk-01:entity-004",
+          "dialogue_act": ""
+        },
+        {
+          "paragraph_id": "ErGen/work-001/0003:chunk-01:scene-002:paragraph-01",
+          "scene_id": "ErGen/work-001/0003:chunk-01:scene-002",
+          "order": 1,
+          "function": "decision",
+          "required_fact_ids": [
+            "ErGen/work-001/0003:chunk-01:fact-007"
+          ],
+          "event_ids": [
+            "ErGen/work-001/0003:chunk-01:event-005"
+          ],
+          "viewpoint_entity_id": "ErGen/work-001/0003:chunk-01:entity-004",
+          "dialogue_act": ""
+        }
+      ],
+      "exit_state_fact_ids": [
+        "ErGen/work-001/0003:chunk-01:fact-007"
+      ],
+      "forbidden_event_ids": []
+    }
+  ]
+}

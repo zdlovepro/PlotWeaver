@@ -1,0 +1,15 @@
+{
+  "scene_id": "ErGen/work-001/0001:chunk-01:scene-002",
+  "paragraphs": [
+    {
+      "paragraph_id": "ErGen/work-001/0001:chunk-01:scene-002:paragraph-00",
+      "text": "宴席上王卓讥讽铁柱资质平庸，父亲王天水拍桌怒斥，铁柱攥紧拳头，心中暗暗发誓一定要被恒岳派选中。",
+      "claimed_fact_ids": [
+        "ErGen/work-001/0001:chunk-01:fact-009"
+      ],
+      "claimed_event_ids": [
+        "ErGen/work-001/0001:chunk-01:event-002"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,298 @@
+{
+  "entities": [
+    {
+      "name": "王林",
+      "kind": "person"
+    },
+    {
+      "name": "王卓",
+      "kind": "person"
+    },
+    {
+      "name": "王浩",
+      "kind": "person"
+    },
+    {
+      "name": "黑衣中年人",
+      "kind": "person"
+    },
+    {
+      "name": "恒岳派",
+      "kind": "organization"
+    },
+    {
+      "name": "众少年",
+      "kind": "person"
+    },
+    {
+      "name": "玉盒",
+      "kind": "item"
+    },
+    {
+      "name": "灵芝",
+      "kind": "item"
+    },
+    {
+      "name": "石阶",
+      "kind": "location"
+    }
+  ],
+  "facts": [
+    {
+      "kind": "progression",
+      "subject": "王林",
+      "predicate": "处于",
+      "value": "灵根测试",
+      "object": ""
+    },
+    {
+      "kind": "identity",
+      "subject": "王卓",
+      "predicate": "被选中",
+      "value": "合格者",
+      "object": ""
+    },
+    {
+      "kind": "identity",
+      "subject": "王浩",
+      "predicate": "被收为",
+      "value": "药童",
+      "object": ""
+    },
+    {
+      "kind": "resource",
+      "subject": "王浩",
+      "predicate": "献出",
+      "value": "玉盒与灵芝",
+      "object": "玉盒"
+    },
+    {
+      "kind": "identity",
+      "subject": "王林",
+      "predicate": "被判定为",
+      "value": "不合格",
+      "object": ""
+    },
+    {
+      "kind": "progression",
+      "subject": "众少年",
+      "predicate": "开始",
+      "value": "第二项测试",
+      "object": ""
+    },
+    {
+      "kind": "identity",
+      "subject": "王林",
+      "predicate": "成为",
+      "value": "毅力测试参与者",
+      "object": ""
+    },
+    {
+      "kind": "location",
+      "subject": "王卓",
+      "predicate": "离开",
+      "value": "跟随中年人见掌门",
+      "object": ""
+    },
+    {
+      "kind": "location",
+      "subject": "王浩",
+      "predicate": "离开",
+      "value": "随中年人前往丹房",
+      "object": ""
+    }
+  ],
+  "events": [
+    {
+      "order": 0,
+      "participants": [
+        "黑衣中年人",
+        "众少年"
+      ],
+      "action": "宣布测试规则并逐个测试",
+      "obstacle": "",
+      "decision": "",
+      "outcomes": [
+        {
+          "kind": "identity",
+          "subject": "王卓",
+          "predicate": "被选中",
+          "value": "合格者",
+          "object": ""
+        },
+        {
+          "kind": "identity",
+          "subject": "王浩",
+          "predicate": "被收为",
+          "value": "药童",
+          "object": ""
+        },
+        {
+          "kind": "identity",
+          "subject": "王林",
+          "predicate": "被判定为",
+          "value": "不合格",
+          "object": ""
+        }
+      ],
+      "costs": []
+    },
+    {
+      "order": 1,
+      "participants": [
+        "王卓",
+        "黑衣中年人"
+      ],
+      "action": "被测试后得到合格评价",
+      "obstacle": "",
+      "decision": "",
+      "outcomes": [
+        {
+          "kind": "identity",
+          "subject": "王卓",
+          "predicate": "被选中",
+          "value": "合格者",
+          "object": ""
+        }
+      ],
+      "costs": []
+    },
+    {
+      "order": 2,
+      "participants": [
+        "王浩",
+        "黑衣中年人"
+      ],
+      "action": "献玉盒和灵芝，请求做药童",
+      "obstacle": "最初被说资质差",
+      "decision": "献出宝物",
+      "outcomes": [
+        {
+          "kind": "identity",
+          "subject": "王浩",
+          "predicate": "被收为",
+          "value": "药童",
+          "object": ""
+        }
+      ],
+      "costs": [
+        {
+          "kind": "resource",
+          "subject": "王浩",
+          "predicate": "献出",
+          "value": "玉盒与灵芝",
+          "object": "玉盒"
+        }
+      ]
+    },
+    {
+      "order": 3,
+      "participants": [
+        "王林",
+        "黑衣中年人"
+      ],
+      "action": "接受灵根测试",
+      "obstacle": "",
+      "decision": "",
+      "outcomes": [
+        {
+          "kind": "identity",
+          "subject": "王林",
+          "predicate": "被判定为",
+          "value": "不合格",
+          "object": ""
+        }
+      ],
+      "costs": []
+    },
+    {
+      "order": 4,
+      "participants": [
+        "黑衣中年人",
+        "王林",
+        "众少年"
+      ],
+      "action": "宣布毅力测试规则",
+      "obstacle": "",
+      "decision": "王林决定参加",
+      "outcomes": [
+        {
+          "kind": "identity",
+          "subject": "王林",
+          "predicate": "成为",
+          "value": "毅力测试参与者",
+          "object": ""
+        }
+      ],
+      "costs": []
+    }
+  ],
+  "scenes": [
+    {
+      "order": 0,
+      "objective": "筛选出灵根充足的弟子",
+      "entry_facts": [
+        {
+          "kind": "progression",
+          "subject": "王林",
+          "predicate": "处于",
+          "value": "灵根测试",
+          "object": ""
+        }
+      ],
+      "exit_facts": [
+        {
+          "kind": "identity",
+          "subject": "王卓",
+          "predicate": "被选中",
+          "value": "合格者",
+          "object": ""
+        },
+        {
+          "kind": "identity",
+          "subject": "王浩",
+          "predicate": "被收为",
+          "value": "药童",
+          "object": ""
+        },
+        {
+          "kind": "identity",
+          "subject": "王林",
+          "predicate": "被判定为",
+          "value": "不合格",
+          "object": ""
+        }
+      ],
+      "tension": 3
+    },
+    {
+      "order": 1,
+      "objective": "完成毅力测试",
+      "entry_facts": [
+        {
+          "kind": "progression",
+          "subject": "众少年",
+          "predicate": "开始",
+          "value": "第二项测试",
+          "object": ""
+        }
+      ],
+      "exit_facts": [
+        {
+          "kind": "identity",
+          "subject": "王林",
+          "predicate": "成为",
+          "value": "毅力测试参与者",
+          "object": ""
+        }
+      ],
+      "tension": 4
+    }
+  ],
+  "time_anchors": [
+    "此时",
+    "此时",
+    "第三天"
+  ],
+  "spatial_relation_count": 0
+}

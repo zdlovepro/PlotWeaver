@@ -1,0 +1,24 @@
+{
+  "passed": true,
+  "issues": [],
+  "style_observations": [
+    "通过短段（如“时间已到。”）与完整段交替，制造节奏停顿",
+    "对话中使用了问句和感叹句，但整体语气较平实",
+    "在场景切换处使用了“不知过了多久”“就在这时”等过渡",
+    "感知描写（如“视线开始模糊”“背部传来一阵剧痛”）较充分"
+  ],
+  "style_budget_result": {
+    "passed": true,
+    "notes": [
+      "chapter_char_count约2000，在1565-2565范围内",
+      "mean_sentence_chars约42，在38.5-52.09范围内",
+      "mean_paragraph_chars约105，高于preferred_max 66.73，但未导致逻辑问题",
+      "short_paragraph_ratio偏低，但符合剧情需要",
+      "dialogue_char_ratio约0.14，在目标范围内",
+      "perception_marker_ratio约0.08，在范围内",
+      "transition_marker_ratio约0.10，在范围内",
+      "整体风格预算大致执行，偏离不影响叙事连贯性"
+    ]
+  },
+  "repairs": []
+}

@@ -1,0 +1,16 @@
+{
+  "scene_id": "ErGen/work-001/0002:chunk-01:scene-003",
+  "paragraphs": [
+    {
+      "paragraph_id": "ErGen/work-001/0002:chunk-01:scene-003:paragraph-00",
+      "text": "黑衣中年人将三人领到山门前，对白衣青年道：“三师兄，人带来了，尤其是这个王林，天生灵根。”白衣青年扫了一眼，淡淡道：“既然来了恒岳派，便守规矩。王林，你随我来考核；王卓、王浩，去外门报到。”",
+      "claimed_fact_ids": [
+        "ErGen/work-001/0002:chunk-01:fact-006",
+        "ErGen/work-001/0002:chunk-01:fact-007"
+      ],
+      "claimed_event_ids": [
+        "ErGen/work-001/0002:chunk-01:event-004"
+      ]
+    }
+  ]
+}

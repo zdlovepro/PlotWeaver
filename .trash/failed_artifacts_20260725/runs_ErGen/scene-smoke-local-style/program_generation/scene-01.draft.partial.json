@@ -1,0 +1,51 @@
+{
+  "scene_id": "ErGen/work-001/0001:chunk-01:scene-001",
+  "paragraphs": [
+    {
+      "paragraph_id": "ErGen/work-001/0001:chunk-01:scene-001:paragraph-00",
+      "text": "铁柱本名王林，是王天水与他母亲的独生子。村子不大，铁柱一家住在这里，日子虽清贫倒也安稳。",
+      "claimed_fact_ids": [
+        "ErGen/work-001/0001:chunk-01:fact-001",
+        "ErGen/work-001/0001:chunk-01:fact-002",
+        "ErGen/work-001/0001:chunk-01:fact-003"
+      ],
+      "claimed_event_ids": []
+    },
+    {
+      "paragraph_id": "ErGen/work-001/0001:chunk-01:scene-001:paragraph-01",
+      "text": "铁柱的四叔是王天水的弟弟，在村里颇有声望，常在外走动。这天傍晚，他忽然来到铁柱家中，铁柱的父母忙迎了上去。",
+      "claimed_fact_ids": [
+        "ErGen/work-001/0001:chunk-01:fact-011"
+      ],
+      "claimed_event_ids": []
+    },
+    {
+      "paragraph_id": "ErGen/work-001/0001:chunk-01:scene-001:paragraph-02",
+      "text": "四叔坐下后，对铁柱的父母说道：「恒岳派这次招人，我给铁柱弄了个名额。」王天水与母亲对视一眼，脸上露出喜色。铁柱在一旁听着，心中对那仙人世界生出了好奇。",
+      "claimed_fact_ids": [
+        "ErGen/work-001/0001:chunk-01:fact-006",
+        "ErGen/work-001/0001:chunk-01:fact-004"
+      ],
+      "claimed_event_ids": [
+        "ErGen/work-001/0001:chunk-01:event-001"
+      ]
+    },
+    {
+      "paragraph_id": "ErGen/work-001/0001:chunk-01:scene-001:paragraph-03",
+      "text": "王天水拍了拍铁柱的肩膀，眼中满是期望。一旁的王卓却撇了撇嘴，露出一丝不屑，似乎对铁柱能去恒岳派并不看好。",
+      "claimed_fact_ids": [
+        "ErGen/work-001/0001:chunk-01:fact-007",
+        "ErGen/work-001/0001:chunk-01:fact-008"
+      ],
+      "claimed_event_ids": []
+    },
+    {
+      "paragraph_id": "ErGen/work-001/0001:chunk-01:scene-001:paragraph-04",
+      "text": "四叔从怀里掏出两本书，递给铁柱：「拿着，这是入门用的。」铁柱接过书，翻了两页，只见上面写满了他看不懂的文字，心里对将来多了几分期待。",
+      "claimed_fact_ids": [
+        "ErGen/work-001/0001:chunk-01:fact-005"
+      ],
+      "claimed_event_ids": []
+    }
+  ]
+}

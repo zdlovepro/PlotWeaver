@@ -1,0 +1,21 @@
+{
+  "scene_id": "ErGen/work-001/0001:chunk-01:scene-003",
+  "paragraphs": [
+    {
+      "paragraph_id": "ErGen/work-001/0001:chunk-01:scene-003:paragraph-00",
+      "text": "四叔站在院门口，拍了拍铁柱的肩膀：“走吧，别误了时辰。”铁柱转过身，对着屋里喊道：“娘，儿子走了，您保重！”他背起包袱，大步迈出门槛，跟在四叔身后朝村口走去。",
+      "claimed_fact_ids": [
+        "ErGen/work-001/0001:chunk-01:fact-010"
+      ],
+      "claimed_event_ids": [
+        "ErGen/work-001/0001:chunk-01:event-003"
+      ]
+    },
+    {
+      "paragraph_id": "ErGen/work-001/0001:chunk-01:scene-003:paragraph-01",
+      "text": "回头望去，村子的轮廓在晨雾中渐渐模糊，母亲还站在门口。铁柱深吸一口气，攥紧包袱带子——这次离开，不知何时才能回来。他不再回头，加快了脚步。",
+      "claimed_fact_ids": [],
+      "claimed_event_ids": []
+    }
+  ]
+}

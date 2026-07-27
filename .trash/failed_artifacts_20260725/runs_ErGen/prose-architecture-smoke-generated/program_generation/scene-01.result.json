@@ -1,0 +1,138 @@
+{
+  "scene_no": 1,
+  "scene_id": "ErGen/work-001/0001:chunk-01:scene-001",
+  "minimum_paragraph_chars": 20,
+  "repairs_used": 0,
+  "passed": true,
+  "prose_passed": false,
+  "role_passed": false,
+  "draft": {
+    "scene_id": "ErGen/work-001/0001:chunk-01:scene-001",
+    "paragraphs": [
+      {
+        "paragraph_id": "ErGen/work-001/0001:chunk-01:scene-001:paragraph-00",
+        "text": "铁柱的大名叫做王林，他是王天水的儿子。此刻他坐在自家院子的树荫下，手里摆弄着一块平滑的扁石头，眼神却飘向村外那看不到的远方。他的父亲王天水从屋里走出，站到他身后，沉默地看着他的背影。",
+        "claimed_fact_ids": [
+          "ErGen/work-001/0001:chunk-01:fact-001",
+          "ErGen/work-001/0001:chunk-01:fact-002"
+        ],
+        "claimed_event_ids": []
+      },
+      {
+        "paragraph_id": "ErGen/work-001/0001:chunk-01:scene-001:paragraph-01",
+        "text": "铁柱的母亲端着一碗水走出里屋，放在院中的小桌上，又转身回去拿另一碗。这时院门口传来脚步声，四叔走了进来，笑道：“都在啊。”铁柱抬起头看向四叔——父亲的亲弟弟，就住在隔壁——又看了看母亲额头上的汗珠。",
+        "claimed_fact_ids": [
+          "ErGen/work-001/0001:chunk-01:fact-003",
+          "ErGen/work-001/0001:chunk-01:fact-011"
+        ],
+        "claimed_event_ids": []
+      },
+      {
+        "paragraph_id": "ErGen/work-001/0001:chunk-01:scene-001:paragraph-02",
+        "text": "四叔迈进院子，对王天水说：“大哥，恒岳派今年有推荐名额，我想让铁柱去。”王天水看了看铁柱，缓缓点头：“行，那就让他试试。”母亲从屋里探出头，擦着手说：“能去仙门是好事，铁柱这孩子聪明。”四叔笑道：“不过名额有限，王卓那小子听说也想去，他父亲还在走动关系。”王天水沉声道：“既然定了铁柱，就不让。”",
+        "claimed_fact_ids": [
+          "ErGen/work-001/0001:chunk-01:fact-006"
+        ],
+        "claimed_event_ids": [
+          "ErGen/work-001/0001:chunk-01:event-001"
+        ]
+      },
+      {
+        "paragraph_id": "ErGen/work-001/0001:chunk-01:scene-001:paragraph-03",
+        "text": "铁柱听着四叔的描述，心中对那神秘的仙人世界生出了浓浓的好奇。",
+        "claimed_fact_ids": [
+          "ErGen/work-001/0001:chunk-01:fact-004"
+        ],
+        "claimed_event_ids": []
+      },
+      {
+        "paragraph_id": "ErGen/work-001/0001:chunk-01:scene-001:paragraph-04",
+        "text": "铁柱抬头看向父亲，发现父亲眼里藏着很少流露的期待，那目光沉甸甸地压在他心上。他下意识地攥紧手里的石头，脑海里闪过王卓那张总是带着轻蔑的脸。",
+        "claimed_fact_ids": [
+          "ErGen/work-001/0001:chunk-01:fact-007",
+          "ErGen/work-001/0001:chunk-01:fact-008"
+        ],
+        "claimed_event_ids": []
+      },
+      {
+        "paragraph_id": "ErGen/work-001/0001:chunk-01:scene-001:paragraph-05",
+        "text": "片刻后，四叔从怀中掏出两本泛黄的书册，塞到铁柱手中。",
+        "claimed_fact_ids": [
+          "ErGen/work-001/0001:chunk-01:fact-005"
+        ],
+        "claimed_event_ids": []
+      }
+    ]
+  },
+  "validations": [
+    {
+      "scene_id": "ErGen/work-001/0001:chunk-01:scene-001",
+      "reported_passed": true,
+      "realized_fact_ids": [
+        "ErGen/work-001/0001:chunk-01:fact-001",
+        "ErGen/work-001/0001:chunk-01:fact-002",
+        "ErGen/work-001/0001:chunk-01:fact-003",
+        "ErGen/work-001/0001:chunk-01:fact-004",
+        "ErGen/work-001/0001:chunk-01:fact-005",
+        "ErGen/work-001/0001:chunk-01:fact-006",
+        "ErGen/work-001/0001:chunk-01:fact-007",
+        "ErGen/work-001/0001:chunk-01:fact-008",
+        "ErGen/work-001/0001:chunk-01:fact-011"
+      ],
+      "missing_fact_ids": [],
+      "realized_event_ids": [
+        "ErGen/work-001/0001:chunk-01:event-001"
+      ],
+      "missing_event_ids": [],
+      "premature_event_ids": [],
+      "paragraph_issues": [],
+      "repair_paragraph_ids": [],
+      "passed": true
+    }
+  ],
+  "prose_validations": [
+    {
+      "scene_id": "ErGen/work-001/0001:chunk-01:scene-001",
+      "reported_passed": false,
+      "dramatized_beat_ids": [
+        "ErGen/work-001/0001:chunk-01:scene-001:beat-00",
+        "ErGen/work-001/0001:chunk-01:scene-001:beat-01",
+        "ErGen/work-001/0001:chunk-01:scene-001:beat-02",
+        "ErGen/work-001/0001:chunk-01:scene-001:beat-04",
+        "ErGen/work-001/0001:chunk-01:scene-001:beat-05"
+      ],
+      "missing_beat_ids": [
+        "ErGen/work-001/0001:chunk-01:scene-001:beat-03"
+      ],
+      "summary_paragraph_ids": [
+        "ErGen/work-001/0001:chunk-01:scene-001:paragraph-03"
+      ],
+      "paragraph_issues": [
+        {
+          "paragraph_id": "ErGen/work-001/0001:chunk-01:scene-001:paragraph-03",
+          "problem": "只交代人物产生好奇的结果，未演出好奇产生的过程、可见动作或心理波动",
+          "repair": "保留‘生出好奇’的结果，补写铁柱在听到四叔描述时的具体反应，如身体微动、眼神变化、内心自问或攥紧拳头等可见动作，展现好奇如何从感知中涌现"
+        }
+      ],
+      "repair_paragraph_ids": [
+        "ErGen/work-001/0001:chunk-01:scene-001:paragraph-03"
+      ],
+      "passed": false
+    }
+  ],
+  "prose_checks": {
+    "passed": true,
+    "paragraph_issues": {}
+  },
+  "role_checks": [
+    {
+      "attempt": 0,
+      "passed": false,
+      "paragraph_issues": {
+        "ErGen/work-001/0001:chunk-01:scene-001:paragraph-04": [
+          "戏剧段落至少需要 76 字来展开过程，当前只有 69 字"
+        ]
+      }
+    }
+  ]
+}

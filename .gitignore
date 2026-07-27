@@ -76,3 +76,6 @@ output/
 novels/
 intermediate_data/
 history/
+corpus/
+runs/
+config.local.yaml

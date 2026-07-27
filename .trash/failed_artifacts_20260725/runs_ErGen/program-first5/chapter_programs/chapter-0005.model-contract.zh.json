@@ -1,0 +1,360 @@
+{
+  "契约版本": "1.0",
+  "章节ID": "ErGen/work-001/0005",
+  "源文本哈希": "924dfc006e4e6fb0ff16e91164c4c8d60cbcb3598e3049f923e804726244e2b7",
+  "实体字典": [
+    {
+      "实体ID": "ErGen/work-001/0005:chunk-01:entity-001",
+      "名称": "王林",
+      "类型": "person"
+    },
+    {
+      "实体ID": "ErGen/work-001/0005:chunk-01:entity-002",
+      "名称": "王卓",
+      "类型": "person"
+    },
+    {
+      "实体ID": "ErGen/work-001/0005:chunk-01:entity-003",
+      "名称": "王天水",
+      "类型": "person"
+    },
+    {
+      "实体ID": "ErGen/work-001/0005:chunk-01:entity-004",
+      "名称": "铁柱母亲",
+      "类型": "person"
+    },
+    {
+      "实体ID": "ErGen/work-001/0005:chunk-01:entity-005",
+      "名称": "王卓父亲",
+      "类型": "person"
+    },
+    {
+      "实体ID": "ErGen/work-001/0005:chunk-01:entity-006",
+      "名称": "王浩父亲",
+      "类型": "person"
+    },
+    {
+      "实体ID": "ErGen/work-001/0005:chunk-01:entity-007",
+      "名称": "恒岳派青年",
+      "类型": "person"
+    },
+    {
+      "实体ID": "ErGen/work-001/0005:chunk-01:entity-008",
+      "名称": "恒岳派山门",
+      "类型": "location"
+    },
+    {
+      "实体ID": "ErGen/work-001/0005:chunk-01:entity-009",
+      "名称": "王氏家族大宅子",
+      "类型": "location"
+    }
+  ],
+  "场景程序": [
+    {
+      "场景ID": "ErGen/work-001/0005:chunk-01:scene-001",
+      "章节ID": "ErGen/work-001/0005",
+      "场景序号": 0,
+      "场景目标": "完成恒岳派测试",
+      "参与实体ID": [
+        "ErGen/work-001/0005:chunk-01:entity-001",
+        "ErGen/work-001/0005:chunk-01:entity-007"
+      ],
+      "入场状态事实ID": [],
+      "必现事件": [
+        {
+          "事件ID": "ErGen/work-001/0005:chunk-01:event-001",
+          "场景ID": "ErGen/work-001/0005:chunk-01:scene-001",
+          "事件概述": "恒岳派测试王林不合格，众少年被遣散，王林被送回家",
+          "行动": "测试不合格",
+          "参与实体ID": [
+            "ErGen/work-001/0005:chunk-01:entity-001",
+            "ErGen/work-001/0005:chunk-01:entity-007"
+          ],
+          "阻力": "",
+          "决断": "",
+          "前置事实ID": [],
+          "必须表达的事实ID": [
+            "ErGen/work-001/0005:chunk-01:fact-001",
+            "ErGen/work-001/0005:chunk-01:fact-003",
+            "ErGen/work-001/0005:chunk-01:fact-004"
+          ],
+          "结果事实ID": [
+            "ErGen/work-001/0005:chunk-01:fact-001",
+            "ErGen/work-001/0005:chunk-01:fact-003",
+            "ErGen/work-001/0005:chunk-01:fact-004"
+          ]
+        }
+      ],
+      "事实表达契约": [
+        {
+          "事实ID": "ErGen/work-001/0005:chunk-01:fact-001",
+          "场景ID": "ErGen/work-001/0005:chunk-01:scene-001",
+          "事实类型": "progression",
+          "主体ID": "ErGen/work-001/0005:chunk-01:entity-001",
+          "谓词": "测试结果",
+          "值": "不合格",
+          "客体ID": "",
+          "表达方式": "行动呈现",
+          "必须表达": true,
+          "禁止相反含义": []
+        },
+        {
+          "事实ID": "ErGen/work-001/0005:chunk-01:fact-002",
+          "场景ID": "ErGen/work-001/0005:chunk-01:scene-001",
+          "事实类型": "identity",
+          "主体ID": "ErGen/work-001/0005:chunk-01:entity-002",
+          "谓词": "成为",
+          "值": "道虚弟子",
+          "客体ID": "",
+          "表达方式": "叙述交代",
+          "必须表达": true,
+          "禁止相反含义": []
+        },
+        {
+          "事实ID": "ErGen/work-001/0005:chunk-01:fact-003",
+          "场景ID": "ErGen/work-001/0005:chunk-01:scene-001",
+          "事实类型": "progression",
+          "主体ID": "ErGen/work-001/0005:chunk-01:entity-007",
+          "谓词": "遣散",
+          "值": "众少年",
+          "客体ID": "",
+          "表达方式": "行动呈现",
+          "必须表达": true,
+          "禁止相反含义": []
+        },
+        {
+          "事实ID": "ErGen/work-001/0005:chunk-01:fact-004",
+          "场景ID": "ErGen/work-001/0005:chunk-01:scene-001",
+          "事实类型": "location",
+          "主体ID": "ErGen/work-001/0005:chunk-01:entity-001",
+          "谓词": "被送回家",
+          "值": "回家",
+          "客体ID": "",
+          "表达方式": "行动呈现",
+          "必须表达": true,
+          "禁止相反含义": []
+        },
+        {
+          "事实ID": "ErGen/work-001/0005:chunk-01:fact-005",
+          "场景ID": "ErGen/work-001/0005:chunk-01:scene-001",
+          "事实类型": "goal",
+          "主体ID": "ErGen/work-001/0005:chunk-01:entity-002",
+          "谓词": "计划",
+          "值": "回家处理俗事",
+          "客体ID": "",
+          "表达方式": "心理或感知",
+          "必须表达": true,
+          "禁止相反含义": []
+        },
+        {
+          "事实ID": "ErGen/work-001/0005:chunk-01:fact-006",
+          "场景ID": "ErGen/work-001/0005:chunk-01:scene-001",
+          "事实类型": "progression",
+          "主体ID": "ErGen/work-001/0005:chunk-01:entity-007",
+          "谓词": "带离",
+          "值": "消失",
+          "客体ID": "",
+          "表达方式": "行动呈现",
+          "必须表达": true,
+          "禁止相反含义": []
+        },
+        {
+          "事实ID": "ErGen/work-001/0005:chunk-01:fact-007",
+          "场景ID": "ErGen/work-001/0005:chunk-01:scene-001",
+          "事实类型": "emotion",
+          "主体ID": "ErGen/work-001/0005:chunk-01:entity-001",
+          "谓词": "情绪",
+          "值": "绝望",
+          "客体ID": "",
+          "表达方式": "心理或感知",
+          "必须表达": true,
+          "禁止相反含义": []
+        },
+        {
+          "事实ID": "ErGen/work-001/0005:chunk-01:fact-008",
+          "场景ID": "ErGen/work-001/0005:chunk-01:scene-001",
+          "事实类型": "location",
+          "主体ID": "ErGen/work-001/0005:chunk-01:entity-009",
+          "谓词": "设有宴席",
+          "值": "宴席",
+          "客体ID": "",
+          "表达方式": "行动呈现",
+          "必须表达": true,
+          "禁止相反含义": []
+        },
+        {
+          "事实ID": "ErGen/work-001/0005:chunk-01:fact-009",
+          "场景ID": "ErGen/work-001/0005:chunk-01:scene-001",
+          "事实类型": "emotion",
+          "主体ID": "ErGen/work-001/0005:chunk-01:entity-006",
+          "谓词": "情绪",
+          "值": "焦急",
+          "客体ID": "",
+          "表达方式": "心理或感知",
+          "必须表达": true,
+          "禁止相反含义": []
+        },
+        {
+          "事实ID": "ErGen/work-001/0005:chunk-01:fact-011",
+          "场景ID": "ErGen/work-001/0005:chunk-01:scene-001",
+          "事实类型": "progression",
+          "主体ID": "ErGen/work-001/0005:chunk-01:entity-004",
+          "谓词": "询问",
+          "值": "结果",
+          "客体ID": "",
+          "表达方式": "行动呈现",
+          "必须表达": true,
+          "禁止相反含义": []
+        }
+      ],
+      "段落程序": [
+        {
+          "段落ID": "ErGen/work-001/0005:chunk-01:scene-001:paragraph-00",
+          "场景ID": "ErGen/work-001/0005:chunk-01:scene-001",
+          "段落序号": 0,
+          "段落功能": "场景定位",
+          "必须表达的事实ID": [
+            "ErGen/work-001/0005:chunk-01:fact-002",
+            "ErGen/work-001/0005:chunk-01:fact-008"
+          ],
+          "事件ID列表": [],
+          "视角人物ID": "ErGen/work-001/0005:chunk-01:entity-001",
+          "对话行为": ""
+        },
+        {
+          "段落ID": "ErGen/work-001/0005:chunk-01:scene-001:paragraph-01",
+          "场景ID": "ErGen/work-001/0005:chunk-01:scene-001",
+          "段落序号": 1,
+          "段落功能": "行动推进",
+          "必须表达的事实ID": [
+            "ErGen/work-001/0005:chunk-01:fact-001",
+            "ErGen/work-001/0005:chunk-01:fact-003",
+            "ErGen/work-001/0005:chunk-01:fact-004"
+          ],
+          "事件ID列表": [
+            "ErGen/work-001/0005:chunk-01:event-001"
+          ],
+          "视角人物ID": "ErGen/work-001/0005:chunk-01:entity-001",
+          "对话行为": ""
+        },
+        {
+          "段落ID": "ErGen/work-001/0005:chunk-01:scene-001:paragraph-02",
+          "场景ID": "ErGen/work-001/0005:chunk-01:scene-001",
+          "段落序号": 2,
+          "段落功能": "感知反应",
+          "必须表达的事实ID": [
+            "ErGen/work-001/0005:chunk-01:fact-007",
+            "ErGen/work-001/0005:chunk-01:fact-009"
+          ],
+          "事件ID列表": [],
+          "视角人物ID": "ErGen/work-001/0005:chunk-01:entity-001",
+          "对话行为": ""
+        },
+        {
+          "段落ID": "ErGen/work-001/0005:chunk-01:scene-001:paragraph-03",
+          "场景ID": "ErGen/work-001/0005:chunk-01:scene-001",
+          "段落序号": 3,
+          "段落功能": "做出决定",
+          "必须表达的事实ID": [
+            "ErGen/work-001/0005:chunk-01:fact-005"
+          ],
+          "事件ID列表": [],
+          "视角人物ID": "ErGen/work-001/0005:chunk-01:entity-001",
+          "对话行为": ""
+        },
+        {
+          "段落ID": "ErGen/work-001/0005:chunk-01:scene-001:paragraph-04",
+          "场景ID": "ErGen/work-001/0005:chunk-01:scene-001",
+          "段落序号": 4,
+          "段落功能": "余波收束",
+          "必须表达的事实ID": [
+            "ErGen/work-001/0005:chunk-01:fact-006",
+            "ErGen/work-001/0005:chunk-01:fact-011"
+          ],
+          "事件ID列表": [],
+          "视角人物ID": "ErGen/work-001/0005:chunk-01:entity-001",
+          "对话行为": ""
+        }
+      ],
+      "出场状态事实ID": [
+        "ErGen/work-001/0005:chunk-01:fact-001",
+        "ErGen/work-001/0005:chunk-01:fact-003",
+        "ErGen/work-001/0005:chunk-01:fact-004"
+      ],
+      "禁止提前事件ID": [
+        "ErGen/work-001/0005:chunk-01:event-002"
+      ]
+    },
+    {
+      "场景ID": "ErGen/work-001/0005:chunk-01:scene-002",
+      "章节ID": "ErGen/work-001/0005",
+      "场景序号": 1,
+      "场景目标": "父亲发现王林情绪异常",
+      "参与实体ID": [
+        "ErGen/work-001/0005:chunk-01:entity-001",
+        "ErGen/work-001/0005:chunk-01:entity-003"
+      ],
+      "入场状态事实ID": [
+        "ErGen/work-001/0005:chunk-01:fact-004"
+      ],
+      "必现事件": [
+        {
+          "事件ID": "ErGen/work-001/0005:chunk-01:event-002",
+          "场景ID": "ErGen/work-001/0005:chunk-01:scene-002",
+          "事件概述": "王林回家后，父亲从其脸上看到没落，升起不妙的预感",
+          "行动": "表现出没落",
+          "参与实体ID": [
+            "ErGen/work-001/0005:chunk-01:entity-001",
+            "ErGen/work-001/0005:chunk-01:entity-003"
+          ],
+          "阻力": "",
+          "决断": "",
+          "前置事实ID": [
+            "ErGen/work-001/0005:chunk-01:fact-001",
+            "ErGen/work-001/0005:chunk-01:fact-004"
+          ],
+          "必须表达的事实ID": [
+            "ErGen/work-001/0005:chunk-01:fact-010"
+          ],
+          "结果事实ID": [
+            "ErGen/work-001/0005:chunk-01:fact-010"
+          ]
+        }
+      ],
+      "事实表达契约": [
+        {
+          "事实ID": "ErGen/work-001/0005:chunk-01:fact-010",
+          "场景ID": "ErGen/work-001/0005:chunk-01:scene-002",
+          "事实类型": "emotion",
+          "主体ID": "ErGen/work-001/0005:chunk-01:entity-003",
+          "谓词": "情绪",
+          "值": "不妙的预感",
+          "客体ID": "",
+          "表达方式": "心理或感知",
+          "必须表达": true,
+          "禁止相反含义": []
+        }
+      ],
+      "段落程序": [
+        {
+          "段落ID": "ErGen/work-001/0005:chunk-01:scene-002:paragraph-00",
+          "场景ID": "ErGen/work-001/0005:chunk-01:scene-002",
+          "段落序号": 0,
+          "段落功能": "行动推进",
+          "必须表达的事实ID": [
+            "ErGen/work-001/0005:chunk-01:fact-010"
+          ],
+          "事件ID列表": [
+            "ErGen/work-001/0005:chunk-01:event-002"
+          ],
+          "视角人物ID": "ErGen/work-001/0005:chunk-01:entity-001",
+          "对话行为": ""
+        }
+      ],
+      "出场状态事实ID": [
+        "ErGen/work-001/0005:chunk-01:fact-010"
+      ],
+      "禁止提前事件ID": []
+    }
+  ]
+}

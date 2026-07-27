@@ -1,1 +1,1 @@
-"""pipeline – PlotWeaver V2.0 step modules."""
+"""Generic, author-agnostic narrative distillation pipeline."""

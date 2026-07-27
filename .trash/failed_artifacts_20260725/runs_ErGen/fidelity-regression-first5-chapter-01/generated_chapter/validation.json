@@ -1,0 +1,25 @@
+{
+  "passed": false,
+  "issues": [
+    {
+      "code": "state_mapping_mismatch",
+      "severity": "error",
+      "evidence": "计划中'四叔离开'的cause_scene_no为3，但草稿中四叔在场景2末尾连夜离开，场景3则为宴席。",
+      "repair": "调整场景划分，使四叔离开发生在场景3入口，或修改cause_scene_no为2。"
+    }
+  ],
+  "style_observations": [
+    "感知标记较多，符合increase指令。",
+    "对话比例高，符合increase指令。",
+    "段落长度有短有长，交织使用。"
+  ],
+  "style_budget_result": {
+    "passed": true,
+    "notes": [
+      "主要节奏指标大致在柔性区间内。"
+    ]
+  },
+  "repairs": [
+    "修正场景状态映射，确保状态变化与场景编号一致。"
+  ]
+}

@@ -1,0 +1,422 @@
+{
+  "契约版本": "1.0",
+  "章节ID": "ErGen/work-001/0001",
+  "源文本哈希": "c6b903e4e5dcaa6bd9660b93734172e8e3ff61b47c5d77589f44f7e8fab70f22",
+  "实体字典": [
+    {
+      "实体ID": "ErGen/work-001/0001:chunk-01:entity-001",
+      "名称": "铁柱",
+      "类型": "person"
+    },
+    {
+      "实体ID": "ErGen/work-001/0001:chunk-01:entity-002",
+      "名称": "王天水",
+      "类型": "person"
+    },
+    {
+      "实体ID": "ErGen/work-001/0001:chunk-01:entity-003",
+      "名称": "母亲",
+      "类型": "person"
+    },
+    {
+      "实体ID": "ErGen/work-001/0001:chunk-01:entity-004",
+      "名称": "四叔",
+      "类型": "person"
+    },
+    {
+      "实体ID": "ErGen/work-001/0001:chunk-01:entity-005",
+      "名称": "王卓",
+      "类型": "person"
+    },
+    {
+      "实体ID": "ErGen/work-001/0001:chunk-01:entity-006",
+      "名称": "王卓父亲",
+      "类型": "person"
+    },
+    {
+      "实体ID": "ErGen/work-001/0001:chunk-01:entity-007",
+      "名称": "村子",
+      "类型": "location"
+    },
+    {
+      "实体ID": "ErGen/work-001/0001:chunk-01:entity-008",
+      "名称": "恒岳派",
+      "类型": "organization"
+    },
+    {
+      "实体ID": "ErGen/work-001/0001:chunk-01:entity-009",
+      "名称": "王氏家族",
+      "类型": "organization"
+    }
+  ],
+  "场景程序": [
+    {
+      "场景ID": "ErGen/work-001/0001:chunk-01:scene-001",
+      "章节ID": "ErGen/work-001/0001",
+      "场景序号": 0,
+      "场景目标": "四叔推荐恒岳派名额",
+      "参与实体ID": [
+        "ErGen/work-001/0001:chunk-01:entity-001",
+        "ErGen/work-001/0001:chunk-01:entity-002",
+        "ErGen/work-001/0001:chunk-01:entity-003",
+        "ErGen/work-001/0001:chunk-01:entity-004"
+      ],
+      "入场状态事实ID": [],
+      "必现事件": [
+        {
+          "事件ID": "ErGen/work-001/0001:chunk-01:event-001",
+          "场景ID": "ErGen/work-001/0001:chunk-01:scene-001",
+          "事件概述": "四叔推荐铁柱去恒岳派",
+          "行动": "四叔向铁柱父母提出恒岳派推荐名额，铁柱父母同意，铁柱对仙人生出好奇",
+          "参与实体ID": [
+            "ErGen/work-001/0001:chunk-01:entity-001",
+            "ErGen/work-001/0001:chunk-01:entity-002",
+            "ErGen/work-001/0001:chunk-01:entity-003",
+            "ErGen/work-001/0001:chunk-01:entity-004"
+          ],
+          "阻力": "",
+          "决断": "",
+          "前置事实ID": [],
+          "必须表达的事实ID": [
+            "ErGen/work-001/0001:chunk-01:fact-006",
+            "ErGen/work-001/0001:chunk-01:fact-004"
+          ],
+          "结果事实ID": [
+            "ErGen/work-001/0001:chunk-01:fact-006",
+            "ErGen/work-001/0001:chunk-01:fact-004"
+          ]
+        }
+      ],
+      "事实表达契约": [
+        {
+          "事实ID": "ErGen/work-001/0001:chunk-01:fact-001",
+          "场景ID": "ErGen/work-001/0001:chunk-01:scene-001",
+          "事实类型": "identity",
+          "主体ID": "ErGen/work-001/0001:chunk-01:entity-001",
+          "谓词": "本名",
+          "值": "王林",
+          "客体ID": "",
+          "表达方式": "叙述交代",
+          "必须表达": true,
+          "禁止相反含义": []
+        },
+        {
+          "事实ID": "ErGen/work-001/0001:chunk-01:fact-002",
+          "场景ID": "ErGen/work-001/0001:chunk-01:scene-001",
+          "事实类型": "relationship",
+          "主体ID": "ErGen/work-001/0001:chunk-01:entity-001",
+          "谓词": "父亲是",
+          "值": "",
+          "客体ID": "ErGen/work-001/0001:chunk-01:entity-002",
+          "表达方式": "叙述交代",
+          "必须表达": true,
+          "禁止相反含义": []
+        },
+        {
+          "事实ID": "ErGen/work-001/0001:chunk-01:fact-003",
+          "场景ID": "ErGen/work-001/0001:chunk-01:scene-001",
+          "事实类型": "relationship",
+          "主体ID": "ErGen/work-001/0001:chunk-01:entity-001",
+          "谓词": "母亲是",
+          "值": "",
+          "客体ID": "ErGen/work-001/0001:chunk-01:entity-003",
+          "表达方式": "叙述交代",
+          "必须表达": true,
+          "禁止相反含义": []
+        },
+        {
+          "事实ID": "ErGen/work-001/0001:chunk-01:fact-004",
+          "场景ID": "ErGen/work-001/0001:chunk-01:scene-001",
+          "事实类型": "knowledge",
+          "主体ID": "ErGen/work-001/0001:chunk-01:entity-001",
+          "谓词": "对仙人好奇",
+          "值": "好奇",
+          "客体ID": "",
+          "表达方式": "叙述交代",
+          "必须表达": true,
+          "禁止相反含义": []
+        },
+        {
+          "事实ID": "ErGen/work-001/0001:chunk-01:fact-005",
+          "场景ID": "ErGen/work-001/0001:chunk-01:scene-001",
+          "事实类型": "resource",
+          "主体ID": "ErGen/work-001/0001:chunk-01:entity-001",
+          "谓词": "获得",
+          "值": "两本书",
+          "客体ID": "",
+          "表达方式": "行动呈现",
+          "必须表达": true,
+          "禁止相反含义": []
+        },
+        {
+          "事实ID": "ErGen/work-001/0001:chunk-01:fact-006",
+          "场景ID": "ErGen/work-001/0001:chunk-01:scene-001",
+          "事实类型": "progression",
+          "主体ID": "ErGen/work-001/0001:chunk-01:entity-001",
+          "谓词": "被推荐",
+          "值": "恒岳派",
+          "客体ID": "ErGen/work-001/0001:chunk-01:entity-008",
+          "表达方式": "行动呈现",
+          "必须表达": true,
+          "禁止相反含义": []
+        },
+        {
+          "事实ID": "ErGen/work-001/0001:chunk-01:fact-007",
+          "场景ID": "ErGen/work-001/0001:chunk-01:scene-001",
+          "事实类型": "emotion",
+          "主体ID": "ErGen/work-001/0001:chunk-01:entity-002",
+          "谓词": "期望",
+          "值": "",
+          "客体ID": "ErGen/work-001/0001:chunk-01:entity-001",
+          "表达方式": "心理或感知",
+          "必须表达": true,
+          "禁止相反含义": []
+        },
+        {
+          "事实ID": "ErGen/work-001/0001:chunk-01:fact-008",
+          "场景ID": "ErGen/work-001/0001:chunk-01:scene-001",
+          "事实类型": "emotion",
+          "主体ID": "ErGen/work-001/0001:chunk-01:entity-005",
+          "谓词": "轻视",
+          "值": "",
+          "客体ID": "ErGen/work-001/0001:chunk-01:entity-001",
+          "表达方式": "心理或感知",
+          "必须表达": true,
+          "禁止相反含义": []
+        },
+        {
+          "事实ID": "ErGen/work-001/0001:chunk-01:fact-011",
+          "场景ID": "ErGen/work-001/0001:chunk-01:scene-001",
+          "事实类型": "relationship",
+          "主体ID": "ErGen/work-001/0001:chunk-01:entity-001",
+          "谓词": "四叔是",
+          "值": "",
+          "客体ID": "ErGen/work-001/0001:chunk-01:entity-004",
+          "表达方式": "叙述交代",
+          "必须表达": true,
+          "禁止相反含义": []
+        }
+      ],
+      "段落程序": [
+        {
+          "段落ID": "ErGen/work-001/0001:chunk-01:scene-001:paragraph-00",
+          "场景ID": "ErGen/work-001/0001:chunk-01:scene-001",
+          "段落序号": 0,
+          "段落功能": "场景定位",
+          "必须表达的事实ID": [
+            "ErGen/work-001/0001:chunk-01:fact-001",
+            "ErGen/work-001/0001:chunk-01:fact-002",
+            "ErGen/work-001/0001:chunk-01:fact-003"
+          ],
+          "事件ID列表": [],
+          "视角人物ID": "ErGen/work-001/0001:chunk-01:entity-001",
+          "对话行为": ""
+        },
+        {
+          "段落ID": "ErGen/work-001/0001:chunk-01:scene-001:paragraph-01",
+          "场景ID": "ErGen/work-001/0001:chunk-01:scene-001",
+          "段落序号": 1,
+          "段落功能": "场景定位",
+          "必须表达的事实ID": [
+            "ErGen/work-001/0001:chunk-01:fact-011"
+          ],
+          "事件ID列表": [],
+          "视角人物ID": "ErGen/work-001/0001:chunk-01:entity-001",
+          "对话行为": ""
+        },
+        {
+          "段落ID": "ErGen/work-001/0001:chunk-01:scene-001:paragraph-02",
+          "场景ID": "ErGen/work-001/0001:chunk-01:scene-001",
+          "段落序号": 2,
+          "段落功能": "行动推进",
+          "必须表达的事实ID": [
+            "ErGen/work-001/0001:chunk-01:fact-006",
+            "ErGen/work-001/0001:chunk-01:fact-004"
+          ],
+          "事件ID列表": [
+            "ErGen/work-001/0001:chunk-01:event-001"
+          ],
+          "视角人物ID": "ErGen/work-001/0001:chunk-01:entity-001",
+          "对话行为": ""
+        },
+        {
+          "段落ID": "ErGen/work-001/0001:chunk-01:scene-001:paragraph-03",
+          "场景ID": "ErGen/work-001/0001:chunk-01:scene-001",
+          "段落序号": 3,
+          "段落功能": "感知反应",
+          "必须表达的事实ID": [
+            "ErGen/work-001/0001:chunk-01:fact-007",
+            "ErGen/work-001/0001:chunk-01:fact-008"
+          ],
+          "事件ID列表": [],
+          "视角人物ID": "ErGen/work-001/0001:chunk-01:entity-001",
+          "对话行为": ""
+        },
+        {
+          "段落ID": "ErGen/work-001/0001:chunk-01:scene-001:paragraph-04",
+          "场景ID": "ErGen/work-001/0001:chunk-01:scene-001",
+          "段落序号": 4,
+          "段落功能": "余波收束",
+          "必须表达的事实ID": [
+            "ErGen/work-001/0001:chunk-01:fact-005"
+          ],
+          "事件ID列表": [],
+          "视角人物ID": "ErGen/work-001/0001:chunk-01:entity-001",
+          "对话行为": ""
+        }
+      ],
+      "出场状态事实ID": [
+        "ErGen/work-001/0001:chunk-01:fact-006",
+        "ErGen/work-001/0001:chunk-01:fact-004"
+      ],
+      "禁止提前事件ID": [
+        "ErGen/work-001/0001:chunk-01:event-002",
+        "ErGen/work-001/0001:chunk-01:event-003"
+      ]
+    },
+    {
+      "场景ID": "ErGen/work-001/0001:chunk-01:scene-002",
+      "章节ID": "ErGen/work-001/0001",
+      "场景序号": 1,
+      "场景目标": "庆祝及王卓挑衅",
+      "参与实体ID": [
+        "ErGen/work-001/0001:chunk-01:entity-001",
+        "ErGen/work-001/0001:chunk-01:entity-002",
+        "ErGen/work-001/0001:chunk-01:entity-005",
+        "ErGen/work-001/0001:chunk-01:entity-006"
+      ],
+      "入场状态事实ID": [
+        "ErGen/work-001/0001:chunk-01:fact-006"
+      ],
+      "必现事件": [
+        {
+          "事件ID": "ErGen/work-001/0001:chunk-01:event-002",
+          "场景ID": "ErGen/work-001/0001:chunk-01:scene-002",
+          "事件概述": "宴席上王卓轻视铁柱，铁柱下定决心",
+          "行动": "王卓出言轻视，铁柱父亲反驳，铁柱内心决定被选中",
+          "参与实体ID": [
+            "ErGen/work-001/0001:chunk-01:entity-001",
+            "ErGen/work-001/0001:chunk-01:entity-002",
+            "ErGen/work-001/0001:chunk-01:entity-005",
+            "ErGen/work-001/0001:chunk-01:entity-006"
+          ],
+          "阻力": "",
+          "决断": "",
+          "前置事实ID": [],
+          "必须表达的事实ID": [
+            "ErGen/work-001/0001:chunk-01:fact-009"
+          ],
+          "结果事实ID": [
+            "ErGen/work-001/0001:chunk-01:fact-009"
+          ]
+        }
+      ],
+      "事实表达契约": [
+        {
+          "事实ID": "ErGen/work-001/0001:chunk-01:fact-009",
+          "场景ID": "ErGen/work-001/0001:chunk-01:scene-002",
+          "事实类型": "goal",
+          "主体ID": "ErGen/work-001/0001:chunk-01:entity-001",
+          "谓词": "下定决心",
+          "值": "被选中",
+          "客体ID": "",
+          "表达方式": "心理或感知",
+          "必须表达": true,
+          "禁止相反含义": []
+        }
+      ],
+      "段落程序": [
+        {
+          "段落ID": "ErGen/work-001/0001:chunk-01:scene-002:paragraph-00",
+          "场景ID": "ErGen/work-001/0001:chunk-01:scene-002",
+          "段落序号": 0,
+          "段落功能": "行动推进",
+          "必须表达的事实ID": [
+            "ErGen/work-001/0001:chunk-01:fact-009"
+          ],
+          "事件ID列表": [
+            "ErGen/work-001/0001:chunk-01:event-002"
+          ],
+          "视角人物ID": "ErGen/work-001/0001:chunk-01:entity-001",
+          "对话行为": ""
+        }
+      ],
+      "出场状态事实ID": [
+        "ErGen/work-001/0001:chunk-01:fact-009"
+      ],
+      "禁止提前事件ID": [
+        "ErGen/work-001/0001:chunk-01:event-003"
+      ]
+    },
+    {
+      "场景ID": "ErGen/work-001/0001:chunk-01:scene-003",
+      "章节ID": "ErGen/work-001/0001",
+      "场景序号": 2,
+      "场景目标": "铁柱离开家乡",
+      "参与实体ID": [
+        "ErGen/work-001/0001:chunk-01:entity-001",
+        "ErGen/work-001/0001:chunk-01:entity-004"
+      ],
+      "入场状态事实ID": [
+        "ErGen/work-001/0001:chunk-01:fact-009"
+      ],
+      "必现事件": [
+        {
+          "事件ID": "ErGen/work-001/0001:chunk-01:event-003",
+          "场景ID": "ErGen/work-001/0001:chunk-01:scene-003",
+          "事件概述": "铁柱离开家乡前往恒岳派",
+          "行动": "四叔接铁柱，铁柱告别父母，第一次离开家乡",
+          "参与实体ID": [
+            "ErGen/work-001/0001:chunk-01:entity-001",
+            "ErGen/work-001/0001:chunk-01:entity-004"
+          ],
+          "阻力": "",
+          "决断": "",
+          "前置事实ID": [
+            "ErGen/work-001/0001:chunk-01:fact-009"
+          ],
+          "必须表达的事实ID": [
+            "ErGen/work-001/0001:chunk-01:fact-010"
+          ],
+          "结果事实ID": [
+            "ErGen/work-001/0001:chunk-01:fact-010"
+          ]
+        }
+      ],
+      "事实表达契约": [
+        {
+          "事实ID": "ErGen/work-001/0001:chunk-01:fact-010",
+          "场景ID": "ErGen/work-001/0001:chunk-01:scene-003",
+          "事实类型": "progression",
+          "主体ID": "ErGen/work-001/0001:chunk-01:entity-001",
+          "谓词": "离开家乡",
+          "值": "前往恒岳派",
+          "客体ID": "ErGen/work-001/0001:chunk-01:entity-008",
+          "表达方式": "行动呈现",
+          "必须表达": true,
+          "禁止相反含义": []
+        }
+      ],
+      "段落程序": [
+        {
+          "段落ID": "ErGen/work-001/0001:chunk-01:scene-003:paragraph-00",
+          "场景ID": "ErGen/work-001/0001:chunk-01:scene-003",
+          "段落序号": 0,
+          "段落功能": "行动推进",
+          "必须表达的事实ID": [
+            "ErGen/work-001/0001:chunk-01:fact-010"
+          ],
+          "事件ID列表": [
+            "ErGen/work-001/0001:chunk-01:event-003"
+          ],
+          "视角人物ID": "ErGen/work-001/0001:chunk-01:entity-001",
+          "对话行为": ""
+        }
+      ],
+      "出场状态事实ID": [
+        "ErGen/work-001/0001:chunk-01:fact-010"
+      ],
+      "禁止提前事件ID": []
+    }
+  ]
+}

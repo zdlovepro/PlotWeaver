@@ -1,0 +1,5 @@
+{
+  "chapter_no": 1,
+  "chapter_id": "ErGen/work-001/0001",
+  "error": "ValueError: model returned an empty or too-short draft after retries (last length=956)"
+}

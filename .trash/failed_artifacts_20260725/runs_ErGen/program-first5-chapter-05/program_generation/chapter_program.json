@@ -1,0 +1,360 @@
+{
+  "chapter_id": "ErGen/work-001/0005",
+  "source_hash": "924dfc006e4e6fb0ff16e91164c4c8d60cbcb3598e3049f923e804726244e2b7",
+  "schema_version": "1.0",
+  "entities": [
+    {
+      "entity_id": "ErGen/work-001/0005:chunk-01:entity-001",
+      "canonical_name": "王林",
+      "kind": "person"
+    },
+    {
+      "entity_id": "ErGen/work-001/0005:chunk-01:entity-002",
+      "canonical_name": "王卓",
+      "kind": "person"
+    },
+    {
+      "entity_id": "ErGen/work-001/0005:chunk-01:entity-003",
+      "canonical_name": "王天水",
+      "kind": "person"
+    },
+    {
+      "entity_id": "ErGen/work-001/0005:chunk-01:entity-004",
+      "canonical_name": "铁柱母亲",
+      "kind": "person"
+    },
+    {
+      "entity_id": "ErGen/work-001/0005:chunk-01:entity-005",
+      "canonical_name": "王卓父亲",
+      "kind": "person"
+    },
+    {
+      "entity_id": "ErGen/work-001/0005:chunk-01:entity-006",
+      "canonical_name": "王浩父亲",
+      "kind": "person"
+    },
+    {
+      "entity_id": "ErGen/work-001/0005:chunk-01:entity-007",
+      "canonical_name": "恒岳派青年",
+      "kind": "person"
+    },
+    {
+      "entity_id": "ErGen/work-001/0005:chunk-01:entity-008",
+      "canonical_name": "恒岳派山门",
+      "kind": "location"
+    },
+    {
+      "entity_id": "ErGen/work-001/0005:chunk-01:entity-009",
+      "canonical_name": "王氏家族大宅子",
+      "kind": "location"
+    }
+  ],
+  "scene_programs": [
+    {
+      "scene_id": "ErGen/work-001/0005:chunk-01:scene-001",
+      "chapter_id": "ErGen/work-001/0005",
+      "order": 0,
+      "objective": "完成恒岳派测试",
+      "participant_ids": [
+        "ErGen/work-001/0005:chunk-01:entity-001",
+        "ErGen/work-001/0005:chunk-01:entity-007"
+      ],
+      "entry_state_fact_ids": [],
+      "event_programs": [
+        {
+          "event_id": "ErGen/work-001/0005:chunk-01:event-001",
+          "scene_id": "ErGen/work-001/0005:chunk-01:scene-001",
+          "summary": "恒岳派测试王林不合格，众少年被遣散，王林被送回家",
+          "action": "测试不合格",
+          "participant_ids": [
+            "ErGen/work-001/0005:chunk-01:entity-001",
+            "ErGen/work-001/0005:chunk-01:entity-007"
+          ],
+          "obstacle": "",
+          "decision": "",
+          "precondition_fact_ids": [],
+          "required_fact_ids": [
+            "ErGen/work-001/0005:chunk-01:fact-001",
+            "ErGen/work-001/0005:chunk-01:fact-003",
+            "ErGen/work-001/0005:chunk-01:fact-004"
+          ],
+          "outcome_fact_ids": [
+            "ErGen/work-001/0005:chunk-01:fact-001",
+            "ErGen/work-001/0005:chunk-01:fact-003",
+            "ErGen/work-001/0005:chunk-01:fact-004"
+          ]
+        }
+      ],
+      "fact_contracts": [
+        {
+          "fact_id": "ErGen/work-001/0005:chunk-01:fact-001",
+          "scene_id": "ErGen/work-001/0005:chunk-01:scene-001",
+          "fact_kind": "progression",
+          "subject_id": "ErGen/work-001/0005:chunk-01:entity-001",
+          "predicate": "测试结果",
+          "value": "不合格",
+          "object_id": "",
+          "expression_mode": "action",
+          "must_realize": true,
+          "forbidden_inverse_meanings": []
+        },
+        {
+          "fact_id": "ErGen/work-001/0005:chunk-01:fact-002",
+          "scene_id": "ErGen/work-001/0005:chunk-01:scene-001",
+          "fact_kind": "identity",
+          "subject_id": "ErGen/work-001/0005:chunk-01:entity-002",
+          "predicate": "成为",
+          "value": "道虚弟子",
+          "object_id": "",
+          "expression_mode": "narration",
+          "must_realize": true,
+          "forbidden_inverse_meanings": []
+        },
+        {
+          "fact_id": "ErGen/work-001/0005:chunk-01:fact-003",
+          "scene_id": "ErGen/work-001/0005:chunk-01:scene-001",
+          "fact_kind": "progression",
+          "subject_id": "ErGen/work-001/0005:chunk-01:entity-007",
+          "predicate": "遣散",
+          "value": "众少年",
+          "object_id": "",
+          "expression_mode": "action",
+          "must_realize": true,
+          "forbidden_inverse_meanings": []
+        },
+        {
+          "fact_id": "ErGen/work-001/0005:chunk-01:fact-004",
+          "scene_id": "ErGen/work-001/0005:chunk-01:scene-001",
+          "fact_kind": "location",
+          "subject_id": "ErGen/work-001/0005:chunk-01:entity-001",
+          "predicate": "被送回家",
+          "value": "回家",
+          "object_id": "",
+          "expression_mode": "action",
+          "must_realize": true,
+          "forbidden_inverse_meanings": []
+        },
+        {
+          "fact_id": "ErGen/work-001/0005:chunk-01:fact-005",
+          "scene_id": "ErGen/work-001/0005:chunk-01:scene-001",
+          "fact_kind": "goal",
+          "subject_id": "ErGen/work-001/0005:chunk-01:entity-002",
+          "predicate": "计划",
+          "value": "回家处理俗事",
+          "object_id": "",
+          "expression_mode": "internal",
+          "must_realize": true,
+          "forbidden_inverse_meanings": []
+        },
+        {
+          "fact_id": "ErGen/work-001/0005:chunk-01:fact-006",
+          "scene_id": "ErGen/work-001/0005:chunk-01:scene-001",
+          "fact_kind": "progression",
+          "subject_id": "ErGen/work-001/0005:chunk-01:entity-007",
+          "predicate": "带离",
+          "value": "消失",
+          "object_id": "",
+          "expression_mode": "action",
+          "must_realize": true,
+          "forbidden_inverse_meanings": []
+        },
+        {
+          "fact_id": "ErGen/work-001/0005:chunk-01:fact-007",
+          "scene_id": "ErGen/work-001/0005:chunk-01:scene-001",
+          "fact_kind": "emotion",
+          "subject_id": "ErGen/work-001/0005:chunk-01:entity-001",
+          "predicate": "情绪",
+          "value": "绝望",
+          "object_id": "",
+          "expression_mode": "internal",
+          "must_realize": true,
+          "forbidden_inverse_meanings": []
+        },
+        {
+          "fact_id": "ErGen/work-001/0005:chunk-01:fact-008",
+          "scene_id": "ErGen/work-001/0005:chunk-01:scene-001",
+          "fact_kind": "location",
+          "subject_id": "ErGen/work-001/0005:chunk-01:entity-009",
+          "predicate": "设有宴席",
+          "value": "宴席",
+          "object_id": "",
+          "expression_mode": "action",
+          "must_realize": true,
+          "forbidden_inverse_meanings": []
+        },
+        {
+          "fact_id": "ErGen/work-001/0005:chunk-01:fact-009",
+          "scene_id": "ErGen/work-001/0005:chunk-01:scene-001",
+          "fact_kind": "emotion",
+          "subject_id": "ErGen/work-001/0005:chunk-01:entity-006",
+          "predicate": "情绪",
+          "value": "焦急",
+          "object_id": "",
+          "expression_mode": "internal",
+          "must_realize": true,
+          "forbidden_inverse_meanings": []
+        },
+        {
+          "fact_id": "ErGen/work-001/0005:chunk-01:fact-011",
+          "scene_id": "ErGen/work-001/0005:chunk-01:scene-001",
+          "fact_kind": "progression",
+          "subject_id": "ErGen/work-001/0005:chunk-01:entity-004",
+          "predicate": "询问",
+          "value": "结果",
+          "object_id": "",
+          "expression_mode": "action",
+          "must_realize": true,
+          "forbidden_inverse_meanings": []
+        }
+      ],
+      "paragraphs": [
+        {
+          "paragraph_id": "ErGen/work-001/0005:chunk-01:scene-001:paragraph-00",
+          "scene_id": "ErGen/work-001/0005:chunk-01:scene-001",
+          "order": 0,
+          "function": "orientation",
+          "required_fact_ids": [
+            "ErGen/work-001/0005:chunk-01:fact-002",
+            "ErGen/work-001/0005:chunk-01:fact-008"
+          ],
+          "event_ids": [],
+          "viewpoint_entity_id": "ErGen/work-001/0005:chunk-01:entity-001",
+          "dialogue_act": ""
+        },
+        {
+          "paragraph_id": "ErGen/work-001/0005:chunk-01:scene-001:paragraph-01",
+          "scene_id": "ErGen/work-001/0005:chunk-01:scene-001",
+          "order": 1,
+          "function": "action_progression",
+          "required_fact_ids": [
+            "ErGen/work-001/0005:chunk-01:fact-001",
+            "ErGen/work-001/0005:chunk-01:fact-003",
+            "ErGen/work-001/0005:chunk-01:fact-004"
+          ],
+          "event_ids": [
+            "ErGen/work-001/0005:chunk-01:event-001"
+          ],
+          "viewpoint_entity_id": "ErGen/work-001/0005:chunk-01:entity-001",
+          "dialogue_act": ""
+        },
+        {
+          "paragraph_id": "ErGen/work-001/0005:chunk-01:scene-001:paragraph-02",
+          "scene_id": "ErGen/work-001/0005:chunk-01:scene-001",
+          "order": 2,
+          "function": "perception_reaction",
+          "required_fact_ids": [
+            "ErGen/work-001/0005:chunk-01:fact-007",
+            "ErGen/work-001/0005:chunk-01:fact-009"
+          ],
+          "event_ids": [],
+          "viewpoint_entity_id": "ErGen/work-001/0005:chunk-01:entity-001",
+          "dialogue_act": ""
+        },
+        {
+          "paragraph_id": "ErGen/work-001/0005:chunk-01:scene-001:paragraph-03",
+          "scene_id": "ErGen/work-001/0005:chunk-01:scene-001",
+          "order": 3,
+          "function": "decision",
+          "required_fact_ids": [
+            "ErGen/work-001/0005:chunk-01:fact-005"
+          ],
+          "event_ids": [],
+          "viewpoint_entity_id": "ErGen/work-001/0005:chunk-01:entity-001",
+          "dialogue_act": ""
+        },
+        {
+          "paragraph_id": "ErGen/work-001/0005:chunk-01:scene-001:paragraph-04",
+          "scene_id": "ErGen/work-001/0005:chunk-01:scene-001",
+          "order": 4,
+          "function": "aftermath",
+          "required_fact_ids": [
+            "ErGen/work-001/0005:chunk-01:fact-006",
+            "ErGen/work-001/0005:chunk-01:fact-011"
+          ],
+          "event_ids": [],
+          "viewpoint_entity_id": "ErGen/work-001/0005:chunk-01:entity-001",
+          "dialogue_act": ""
+        }
+      ],
+      "exit_state_fact_ids": [
+        "ErGen/work-001/0005:chunk-01:fact-001",
+        "ErGen/work-001/0005:chunk-01:fact-003",
+        "ErGen/work-001/0005:chunk-01:fact-004"
+      ],
+      "forbidden_event_ids": [
+        "ErGen/work-001/0005:chunk-01:event-002"
+      ]
+    },
+    {
+      "scene_id": "ErGen/work-001/0005:chunk-01:scene-002",
+      "chapter_id": "ErGen/work-001/0005",
+      "order": 1,
+      "objective": "父亲发现王林情绪异常",
+      "participant_ids": [
+        "ErGen/work-001/0005:chunk-01:entity-001",
+        "ErGen/work-001/0005:chunk-01:entity-003"
+      ],
+      "entry_state_fact_ids": [
+        "ErGen/work-001/0005:chunk-01:fact-004"
+      ],
+      "event_programs": [
+        {
+          "event_id": "ErGen/work-001/0005:chunk-01:event-002",
+          "scene_id": "ErGen/work-001/0005:chunk-01:scene-002",
+          "summary": "王林回家后，父亲从其脸上看到没落，升起不妙的预感",
+          "action": "表现出没落",
+          "participant_ids": [
+            "ErGen/work-001/0005:chunk-01:entity-001",
+            "ErGen/work-001/0005:chunk-01:entity-003"
+          ],
+          "obstacle": "",
+          "decision": "",
+          "precondition_fact_ids": [
+            "ErGen/work-001/0005:chunk-01:fact-001",
+            "ErGen/work-001/0005:chunk-01:fact-004"
+          ],
+          "required_fact_ids": [
+            "ErGen/work-001/0005:chunk-01:fact-010"
+          ],
+          "outcome_fact_ids": [
+            "ErGen/work-001/0005:chunk-01:fact-010"
+          ]
+        }
+      ],
+      "fact_contracts": [
+        {
+          "fact_id": "ErGen/work-001/0005:chunk-01:fact-010",
+          "scene_id": "ErGen/work-001/0005:chunk-01:scene-002",
+          "fact_kind": "emotion",
+          "subject_id": "ErGen/work-001/0005:chunk-01:entity-003",
+          "predicate": "情绪",
+          "value": "不妙的预感",
+          "object_id": "",
+          "expression_mode": "internal",
+          "must_realize": true,
+          "forbidden_inverse_meanings": []
+        }
+      ],
+      "paragraphs": [
+        {
+          "paragraph_id": "ErGen/work-001/0005:chunk-01:scene-002:paragraph-00",
+          "scene_id": "ErGen/work-001/0005:chunk-01:scene-002",
+          "order": 0,
+          "function": "action_progression",
+          "required_fact_ids": [
+            "ErGen/work-001/0005:chunk-01:fact-010"
+          ],
+          "event_ids": [
+            "ErGen/work-001/0005:chunk-01:event-002"
+          ],
+          "viewpoint_entity_id": "ErGen/work-001/0005:chunk-01:entity-001",
+          "dialogue_act": ""
+        }
+      ],
+      "exit_state_fact_ids": [
+        "ErGen/work-001/0005:chunk-01:fact-010"
+      ],
+      "forbidden_event_ids": []
+    }
+  ]
+}

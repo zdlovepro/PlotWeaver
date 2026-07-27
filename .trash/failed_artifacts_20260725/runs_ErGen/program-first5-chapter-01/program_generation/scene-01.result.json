@@ -1,0 +1,130 @@
+{
+  "scene_no": 1,
+  "scene_id": "ErGen/work-001/0001:chunk-01:scene-001",
+  "minimum_paragraph_chars": 20,
+  "repairs_used": 1,
+  "passed": true,
+  "role_passed": true,
+  "draft": {
+    "scene_id": "ErGen/work-001/0001:chunk-01:scene-001",
+    "paragraphs": [
+      {
+        "paragraph_id": "ErGen/work-001/0001:chunk-01:scene-001:paragraph-00",
+        "text": "铁柱本名王林，父亲王天水是村里老实巴交的庄稼汉，母亲则是操持家务的农妇，一家三口住在恒岳派山脚下的破旧土屋里。",
+        "claimed_fact_ids": [
+          "ErGen/work-001/0001:chunk-01:fact-001",
+          "ErGen/work-001/0001:chunk-01:fact-002",
+          "ErGen/work-001/0001:chunk-01:fact-003"
+        ],
+        "claimed_event_ids": []
+      },
+      {
+        "paragraph_id": "ErGen/work-001/0001:chunk-01:scene-001:paragraph-01",
+        "text": "铁柱的四叔是村里消息灵通的人物，时常带回外界见闻，让铁柱心生向往。",
+        "claimed_fact_ids": [
+          "ErGen/work-001/0001:chunk-01:fact-011"
+        ],
+        "claimed_event_ids": []
+      },
+      {
+        "paragraph_id": "ErGen/work-001/0001:chunk-01:scene-001:paragraph-02",
+        "text": "片刻后，四叔在饭桌上向铁柱父亲王天水推荐铁柱去恒岳派，铁柱闻言，心中不禁对那传说中的仙人产生了好奇。",
+        "claimed_fact_ids": [
+          "ErGen/work-001/0001:chunk-01:fact-006",
+          "ErGen/work-001/0001:chunk-01:fact-004"
+        ],
+        "claimed_event_ids": [
+          "ErGen/work-001/0001:chunk-01:event-001"
+        ]
+      },
+      {
+        "paragraph_id": "ErGen/work-001/0001:chunk-01:scene-001:paragraph-03",
+        "text": "铁柱从父亲王天水眼中看到了深深的期望，同时察觉角落里的王卓正用轻视的眼神打量自己。",
+        "claimed_fact_ids": [
+          "ErGen/work-001/0001:chunk-01:fact-007",
+          "ErGen/work-001/0001:chunk-01:fact-008"
+        ],
+        "claimed_event_ids": []
+      },
+      {
+        "paragraph_id": "ErGen/work-001/0001:chunk-01:scene-001:paragraph-04",
+        "text": "四叔临走前塞给铁柱两本泛黄的书，嘱咐他好好研读。",
+        "claimed_fact_ids": [
+          "ErGen/work-001/0001:chunk-01:fact-005"
+        ],
+        "claimed_event_ids": []
+      }
+    ]
+  },
+  "validations": [
+    {
+      "scene_id": "ErGen/work-001/0001:chunk-01:scene-001",
+      "reported_passed": false,
+      "realized_fact_ids": [
+        "ErGen/work-001/0001:chunk-01:fact-001",
+        "ErGen/work-001/0001:chunk-01:fact-002",
+        "ErGen/work-001/0001:chunk-01:fact-003",
+        "ErGen/work-001/0001:chunk-01:fact-004",
+        "ErGen/work-001/0001:chunk-01:fact-005",
+        "ErGen/work-001/0001:chunk-01:fact-007",
+        "ErGen/work-001/0001:chunk-01:fact-008",
+        "ErGen/work-001/0001:chunk-01:fact-011"
+      ],
+      "missing_fact_ids": [
+        "ErGen/work-001/0001:chunk-01:fact-006"
+      ],
+      "realized_event_ids": [],
+      "missing_event_ids": [
+        "ErGen/work-001/0001:chunk-01:event-001"
+      ],
+      "premature_event_ids": [],
+      "paragraph_issues": [
+        {
+          "paragraph_id": "ErGen/work-001/0001:chunk-01:scene-001:paragraph-02",
+          "problem": "必须事实 fact-006（铁柱被推荐恒岳派）未在正文中明确表达，仅提及“提起恒岳派推荐名额一事”，未明确推荐铁柱本人",
+          "repair": "在本段补写具体推荐行为，例如‘四叔推荐铁柱去恒岳派’或‘四叔告诉铁柱父母，推荐铁柱去恒岳派’"
+        }
+      ],
+      "repair_paragraph_ids": [
+        "ErGen/work-001/0001:chunk-01:scene-001:paragraph-02"
+      ],
+      "passed": false
+    },
+    {
+      "scene_id": "ErGen/work-001/0001:chunk-01:scene-001",
+      "reported_passed": true,
+      "realized_fact_ids": [
+        "ErGen/work-001/0001:chunk-01:fact-001",
+        "ErGen/work-001/0001:chunk-01:fact-002",
+        "ErGen/work-001/0001:chunk-01:fact-003",
+        "ErGen/work-001/0001:chunk-01:fact-004",
+        "ErGen/work-001/0001:chunk-01:fact-005",
+        "ErGen/work-001/0001:chunk-01:fact-006",
+        "ErGen/work-001/0001:chunk-01:fact-007",
+        "ErGen/work-001/0001:chunk-01:fact-008",
+        "ErGen/work-001/0001:chunk-01:fact-011"
+      ],
+      "missing_fact_ids": [],
+      "realized_event_ids": [
+        "ErGen/work-001/0001:chunk-01:event-001"
+      ],
+      "missing_event_ids": [],
+      "premature_event_ids": [],
+      "paragraph_issues": [],
+      "repair_paragraph_ids": [],
+      "passed": true
+    }
+  ],
+  "role_checks": [
+    {
+      "attempt": 0,
+      "passed": true,
+      "paragraph_issues": {}
+    },
+    {
+      "attempt": 1,
+      "passed": true,
+      "paragraph_issues": {}
+    }
+  ]
+}

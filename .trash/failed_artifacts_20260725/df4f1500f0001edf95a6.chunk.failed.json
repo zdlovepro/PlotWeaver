@@ -1,0 +1,16 @@
+{
+  "chapter_id": "ErGen/work-001/0001",
+  "source_hash": "c6b903e4e5dcaa6bd9660b93734172e8e3ff61b47c5d77589f44f7e8fab70f22",
+  "chunk_index": 1,
+  "errors": [
+    "entities: entities must not be empty",
+    "facts: facts must not be empty",
+    "events: events must not be empty",
+    "scenes: scenes must not be empty",
+    "events: 正文约 1184 字，至少应抽取 3 个因果事件",
+    "facts: 正文至少需要 6 条带证据的事实，当前为 0",
+    "scenes: 正文约 1184 字，至少应划分 1 个可追踪场景",
+    "evidence: 至少应覆盖 2 个正文单元，当前为 0"
+  ],
+  "last_model_draft": {}
+}

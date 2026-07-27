@@ -1,0 +1,9 @@
+{
+  "chapter_id": "ErGen/work-001/0001",
+  "source_hash": "c6b903e4e5dcaa6bd9660b93734172e8e3ff61b47c5d77589f44f7e8fab70f22",
+  "chunk_index": 3,
+  "errors": [
+    "RuntimeError: Model did not return valid JSON after 1 attempt(s): APIConnectionError: Connection error."
+  ],
+  "last_model_draft": {}
+}

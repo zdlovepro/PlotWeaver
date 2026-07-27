@@ -1,0 +1,341 @@
+{
+  "chapter_id": "ErGen/work-001/0002",
+  "entities": [
+    {
+      "name": "王林",
+      "kind": "person",
+      "aliases": [
+        "铁柱"
+      ]
+    },
+    {
+      "name": "四叔",
+      "kind": "person",
+      "aliases": []
+    },
+    {
+      "name": "老者",
+      "kind": "person",
+      "aliases": [
+        "王卓的父亲"
+      ]
+    },
+    {
+      "name": "王卓",
+      "kind": "person",
+      "aliases": []
+    },
+    {
+      "name": "王浩",
+      "kind": "person",
+      "aliases": []
+    },
+    {
+      "name": "白衣青年",
+      "kind": "person",
+      "aliases": [
+        "张师弟"
+      ]
+    },
+    {
+      "name": "恒岳派",
+      "kind": "organization",
+      "aliases": []
+    },
+    {
+      "name": "山村",
+      "kind": "location",
+      "aliases": []
+    },
+    {
+      "name": "四叔家",
+      "kind": "location",
+      "aliases": []
+    },
+    {
+      "name": "王氏家族大宅子",
+      "kind": "location",
+      "aliases": []
+    },
+    {
+      "name": "恒岳派山门",
+      "kind": "location",
+      "aliases": []
+    }
+  ],
+  "facts": [
+    {
+      "kind": "location",
+      "statement": "王林 离开 山村",
+      "certainty": 1.0
+    },
+    {
+      "kind": "location",
+      "statement": "王林 到达 四叔家",
+      "certainty": 1.0
+    },
+    {
+      "kind": "location",
+      "statement": "王林 到达 王氏家族大宅子",
+      "certainty": 1.0
+    },
+    {
+      "kind": "relationship",
+      "statement": "王林 见到 老者",
+      "certainty": 1.0
+    },
+    {
+      "kind": "relationship",
+      "statement": "王林 见到 王卓",
+      "certainty": 1.0
+    },
+    {
+      "kind": "relationship",
+      "statement": "王林 见到 王浩",
+      "certainty": 1.0
+    },
+    {
+      "kind": "progression",
+      "statement": "白衣青年 出现 于院子",
+      "certainty": 1.0
+    },
+    {
+      "kind": "knowledge",
+      "statement": "白衣青年 询问 王家三个名额",
+      "certainty": 1.0
+    },
+    {
+      "kind": "relationship",
+      "statement": "老者 介绍 王卓",
+      "certainty": 1.0
+    },
+    {
+      "kind": "identity",
+      "statement": "王卓 拥有 修仙灵根",
+      "certainty": 1.0
+    },
+    {
+      "kind": "progression",
+      "statement": "白衣青年 带走 三个少年",
+      "certainty": 1.0
+    },
+    {
+      "kind": "location",
+      "statement": "王林 到达 恒岳派山门",
+      "certainty": 1.0
+    },
+    {
+      "kind": "goal",
+      "statement": "王浩 希望 被选中",
+      "certainty": 1.0
+    }
+  ],
+  "events": [
+    {
+      "order": 0,
+      "summary": "王林离开山村，随四叔到达四叔家",
+      "participants": [
+        "王林",
+        "四叔"
+      ],
+      "action": "乘马车离开山村并到达四叔家",
+      "obstacle": "",
+      "decision": "",
+      "preconditions": [],
+      "outcomes": [
+        "王林 到达 四叔家"
+      ],
+      "costs": [],
+      "contract_id": "target-event-001"
+    },
+    {
+      "order": 1,
+      "summary": "王林随四叔到达王氏家族大宅子",
+      "participants": [
+        "王林",
+        "四叔"
+      ],
+      "action": "前往大宅子",
+      "obstacle": "",
+      "decision": "",
+      "preconditions": [],
+      "outcomes": [
+        "王林 到达 王氏家族大宅子"
+      ],
+      "costs": [],
+      "contract_id": "target-event-002"
+    },
+    {
+      "order": 2,
+      "summary": "在家族大宅院中，白衣青年出现并带走三个少年",
+      "participants": [
+        "王林",
+        "四叔",
+        "老者",
+        "王卓",
+        "王浩",
+        "白衣青年"
+      ],
+      "action": "白衣青年询问并带走少年",
+      "obstacle": "",
+      "decision": "",
+      "preconditions": [
+        "王林 到达 王氏家族大宅子"
+      ],
+      "outcomes": [
+        "白衣青年 带走 三个少年"
+      ],
+      "costs": [],
+      "contract_id": "target-event-003"
+    }
+  ],
+  "scenes": [
+    {
+      "order": 0,
+      "participants": [
+        "王林",
+        "四叔"
+      ],
+      "events": [
+        {
+          "order": 0,
+          "summary": "王林离开山村，随四叔到达四叔家",
+          "participants": [
+            "王林",
+            "四叔"
+          ],
+          "action": "乘马车离开山村并到达四叔家",
+          "obstacle": "",
+          "decision": "",
+          "preconditions": [],
+          "outcomes": [
+            "王林 到达 四叔家"
+          ],
+          "costs": [],
+          "contract_id": "target-event-001"
+        }
+      ],
+      "objective": "离开山村前往县城（到达四叔家）",
+      "entry_facts": [
+        "王林 离开 山村"
+      ],
+      "exit_facts": [
+        "王林 到达 四叔家"
+      ],
+      "tension": 1,
+      "locations": [],
+      "time_anchors": [],
+      "contract_id": "target-scene-001"
+    },
+    {
+      "order": 1,
+      "participants": [
+        "王林",
+        "四叔"
+      ],
+      "events": [
+        {
+          "order": 1,
+          "summary": "王林随四叔到达王氏家族大宅子",
+          "participants": [
+            "王林",
+            "四叔"
+          ],
+          "action": "前往大宅子",
+          "obstacle": "",
+          "decision": "",
+          "preconditions": [],
+          "outcomes": [
+            "王林 到达 王氏家族大宅子"
+          ],
+          "costs": [],
+          "contract_id": "target-event-002"
+        }
+      ],
+      "objective": "到达王氏家族大宅子参加仙人选拔",
+      "entry_facts": [
+        "王林 到达 四叔家"
+      ],
+      "exit_facts": [
+        "王林 到达 王氏家族大宅子"
+      ],
+      "tension": 2,
+      "locations": [],
+      "time_anchors": [],
+      "contract_id": "target-scene-002"
+    },
+    {
+      "order": 2,
+      "participants": [
+        "王林",
+        "四叔",
+        "老者",
+        "王卓",
+        "王浩",
+        "白衣青年"
+      ],
+      "events": [
+        {
+          "order": 2,
+          "summary": "在家族大宅院中，白衣青年出现并带走三个少年",
+          "participants": [
+            "王林",
+            "四叔",
+            "老者",
+            "王卓",
+            "王浩",
+            "白衣青年"
+          ],
+          "action": "白衣青年询问并带走少年",
+          "obstacle": "",
+          "decision": "",
+          "preconditions": [
+            "王林 到达 王氏家族大宅子"
+          ],
+          "outcomes": [
+            "白衣青年 带走 三个少年"
+          ],
+          "costs": [],
+          "contract_id": "target-event-003"
+        }
+      ],
+      "objective": "等待仙人并接受选拔",
+      "entry_facts": [
+        "王林 到达 王氏家族大宅子"
+      ],
+      "exit_facts": [
+        "白衣青年 带走 三个少年"
+      ],
+      "tension": 4,
+      "locations": [],
+      "time_anchors": [],
+      "contract_id": "target-scene-003"
+    }
+  ],
+  "state_changes": [
+    {
+      "operation": "add",
+      "event": "王林离开山村，随四叔到达四叔家",
+      "before": "",
+      "after": "王林 到达 四叔家",
+      "contract_id": "target-change-001"
+    },
+    {
+      "operation": "add",
+      "event": "王林随四叔到达王氏家族大宅子",
+      "before": "",
+      "after": "王林 到达 王氏家族大宅子",
+      "contract_id": "target-change-002"
+    },
+    {
+      "operation": "add",
+      "event": "在家族大宅院中，白衣青年出现并带走三个少年",
+      "before": "",
+      "after": "白衣青年 带走 三个少年",
+      "contract_id": "target-change-003"
+    }
+  ],
+  "time_anchors": [],
+  "temporal_relations": [],
+  "spatial_relations": []
+}

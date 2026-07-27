@@ -1,0 +1,197 @@
+{
+  "reconstruction_mode": "fidelity_test_only",
+  "chapter_goal": "完整重建已提供的目标事件、场景、状态变化与结局，不新增输入外情节。",
+  "required_events": [
+    {
+      "order": 0,
+      "summary": "恒岳派测试王林不合格，众少年被遣散，王林被送回家",
+      "participants": [
+        "王林",
+        "恒岳派青年"
+      ],
+      "action": "测试不合格",
+      "obstacle": "",
+      "decision": "",
+      "preconditions": [],
+      "outcomes": [
+        "王林 测试结果 不合格",
+        "恒岳派青年 遣散 众少年",
+        "王林 被送回家 回家"
+      ],
+      "costs": []
+    },
+    {
+      "order": 1,
+      "summary": "王林回家后，父亲从其脸上看到没落，升起不妙的预感",
+      "participants": [
+        "王林",
+        "王天水"
+      ],
+      "action": "表现出没落",
+      "obstacle": "",
+      "decision": "",
+      "preconditions": [
+        "王林 被送回家 回家"
+      ],
+      "outcomes": [
+        "王天水 情绪 不妙的预感"
+      ],
+      "costs": []
+    }
+  ],
+  "required_scenes": [
+    {
+      "order": 0,
+      "participants": [
+        "王林",
+        "恒岳派青年"
+      ],
+      "events": [
+        "恒岳派测试王林不合格，众少年被遣散，王林被送回家"
+      ],
+      "objective": "完成恒岳派测试",
+      "entry_facts": [],
+      "exit_facts": [
+        "王林 测试结果 不合格",
+        "恒岳派青年 遣散 众少年",
+        "王林 被送回家 回家"
+      ],
+      "tension": 0,
+      "locations": [],
+      "time_anchors": []
+    },
+    {
+      "order": 1,
+      "participants": [
+        "王林",
+        "王天水"
+      ],
+      "events": [
+        "王林回家后，父亲从其脸上看到没落，升起不妙的预感"
+      ],
+      "objective": "父亲发现王林情绪异常",
+      "entry_facts": [
+        "王林 被送回家 回家"
+      ],
+      "exit_facts": [
+        "王天水 情绪 不妙的预感"
+      ],
+      "tension": 0,
+      "locations": [],
+      "time_anchors": []
+    }
+  ],
+  "required_state_changes": [
+    {
+      "operation": "add",
+      "event": "恒岳派测试王林不合格，众少年被遣散，王林被送回家",
+      "before": "",
+      "after": "王林 测试结果 不合格"
+    },
+    {
+      "operation": "add",
+      "event": "恒岳派测试王林不合格，众少年被遣散，王林被送回家",
+      "before": "",
+      "after": "恒岳派青年 遣散 众少年"
+    },
+    {
+      "operation": "add",
+      "event": "恒岳派测试王林不合格，众少年被遣散，王林被送回家",
+      "before": "",
+      "after": "王林 被送回家 回家"
+    },
+    {
+      "operation": "add",
+      "event": "王林回家后，父亲从其脸上看到没落，升起不妙的预感",
+      "before": "",
+      "after": "王天水 情绪 不妙的预感"
+    }
+  ],
+  "style_budget_override": {
+    "schema_version": "1.0",
+    "mode": "fidelity_test_override",
+    "instruction": "仅用于重建实验的量化验收；正常原创写作应使用作者级柔性预算。",
+    "metrics": [
+      {
+        "metric_id": "chapter_char_count",
+        "unit": "count",
+        "target": 1999.0,
+        "preferred_min": 1499.0,
+        "preferred_max": 2499.0,
+        "priority": "high"
+      },
+      {
+        "metric_id": "mean_sentence_chars",
+        "unit": "mean_chars",
+        "target": 42.0,
+        "preferred_min": 35.7,
+        "preferred_max": 48.3,
+        "priority": "high"
+      },
+      {
+        "metric_id": "mean_paragraph_chars",
+        "unit": "mean_chars",
+        "target": 54.555556,
+        "preferred_min": 46.372223,
+        "preferred_max": 62.738889,
+        "priority": "high"
+      },
+      {
+        "metric_id": "short_paragraph_ratio",
+        "unit": "ratio",
+        "target": 0.138889,
+        "preferred_min": 0.104167,
+        "preferred_max": 0.173611,
+        "priority": "high"
+      },
+      {
+        "metric_id": "dialogue_char_ratio",
+        "unit": "ratio",
+        "target": 0.354177,
+        "preferred_min": 0.265633,
+        "preferred_max": 0.442721,
+        "priority": "high"
+      },
+      {
+        "metric_id": "perception_marker_ratio",
+        "unit": "ratio",
+        "target": 0.152174,
+        "preferred_min": 0.11413,
+        "preferred_max": 0.190218,
+        "priority": "high"
+      },
+      {
+        "metric_id": "transition_marker_ratio",
+        "unit": "ratio",
+        "target": 0.021739,
+        "preferred_min": 0.001739,
+        "preferred_max": 0.041739,
+        "priority": "high"
+      },
+      {
+        "metric_id": "question_sentence_ratio",
+        "unit": "ratio",
+        "target": 0.065217,
+        "preferred_min": 0.045217,
+        "preferred_max": 0.085217,
+        "priority": "medium"
+      },
+      {
+        "metric_id": "exclamation_sentence_ratio",
+        "unit": "ratio",
+        "target": 0.043478,
+        "preferred_min": 0.023478,
+        "preferred_max": 0.063478,
+        "priority": "medium"
+      },
+      {
+        "metric_id": "ellipsis_per_sentence",
+        "unit": "ratio",
+        "target": 0.043478,
+        "preferred_min": 0.023478,
+        "preferred_max": 0.063478,
+        "priority": "medium"
+      }
+    ]
+  }
+}

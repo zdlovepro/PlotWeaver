@@ -1,0 +1,278 @@
+{
+  "reconstruction_mode": "fidelity_test_only",
+  "chapter_goal": "完整重建已提供的目标事件、场景、状态变化与结局，不新增输入外情节。",
+  "required_events": [
+    {
+      "order": 0,
+      "summary": "王林爬石阶，目睹少年放弃",
+      "participants": [
+        "王林"
+      ],
+      "action": "坚持爬石阶，目睹一个少年踩空放弃",
+      "obstacle": "",
+      "decision": "",
+      "preconditions": [],
+      "outcomes": [
+        "王林 目睹 一个少年踩空"
+      ],
+      "costs": [
+        "王林 感到 双腿如灌铅"
+      ],
+      "contract_id": "target-event-001"
+    },
+    {
+      "order": 1,
+      "summary": "时间到，王林失败昏迷",
+      "participants": [
+        "王林",
+        "黑衣中年人"
+      ],
+      "action": "王林继续爬行，黑衣中年人宣布时间到，王林昏迷",
+      "obstacle": "",
+      "decision": "",
+      "preconditions": [
+        "王林 爬行于 石阶小径"
+      ],
+      "outcomes": [
+        "黑衣中年人 宣布 时间已到，只有三人合格，其余……失败",
+        "王林 昏迷 昏迷"
+      ],
+      "costs": [
+        "王林 感到 双腿如灌铅"
+      ],
+      "contract_id": "target-event-002"
+    },
+    {
+      "order": 2,
+      "summary": "剑灵测试，王林进取失败",
+      "participants": [
+        "王林",
+        "白衣青年"
+      ],
+      "action": "王林尝试进入剑灵房间，走进五丈，再进至距离大门三丈，被弹回",
+      "obstacle": "",
+      "decision": "",
+      "preconditions": [
+        "王林 位于 剑灵阁"
+      ],
+      "outcomes": [
+        "王林 被弹回 十多丈处",
+        "白衣青年 宣布 不合格"
+      ],
+      "costs": [],
+      "contract_id": "target-event-003"
+    }
+  ],
+  "required_scenes": [
+    {
+      "order": 0,
+      "participants": [
+        "王林"
+      ],
+      "events": [
+        {
+          "order": 0,
+          "summary": "王林爬石阶，目睹少年放弃",
+          "participants": [
+            "王林"
+          ],
+          "action": "坚持爬石阶，目睹一个少年踩空放弃",
+          "obstacle": "",
+          "decision": "",
+          "preconditions": [],
+          "outcomes": [
+            "王林 目睹 一个少年踩空"
+          ],
+          "costs": [
+            "王林 感到 双腿如灌铅"
+          ],
+          "contract_id": "target-event-001"
+        },
+        {
+          "order": 1,
+          "summary": "时间到，王林失败昏迷",
+          "participants": [
+            "王林",
+            "黑衣中年人"
+          ],
+          "action": "王林继续爬行，黑衣中年人宣布时间到，王林昏迷",
+          "obstacle": "",
+          "decision": "",
+          "preconditions": [
+            "王林 爬行于 石阶小径"
+          ],
+          "outcomes": [
+            "黑衣中年人 宣布 时间已到，只有三人合格，其余……失败",
+            "王林 昏迷 昏迷"
+          ],
+          "costs": [
+            "王林 感到 双腿如灌铅"
+          ],
+          "contract_id": "target-event-002"
+        }
+      ],
+      "objective": "通过石阶测试",
+      "entry_facts": [
+        "王林 爬行于 石阶小径"
+      ],
+      "exit_facts": [
+        "黑衣中年人 宣布 时间已到，只有三人合格，其余……失败",
+        "王林 昏迷 昏迷"
+      ],
+      "tension": 4,
+      "locations": [],
+      "time_anchors": [],
+      "contract_id": "target-scene-001"
+    },
+    {
+      "order": 1,
+      "participants": [
+        "王林",
+        "白衣青年"
+      ],
+      "events": [
+        {
+          "order": 2,
+          "summary": "剑灵测试，王林进取失败",
+          "participants": [
+            "王林",
+            "白衣青年"
+          ],
+          "action": "王林尝试进入剑灵房间，走进五丈，再进至距离大门三丈，被弹回",
+          "obstacle": "",
+          "decision": "",
+          "preconditions": [
+            "王林 位于 剑灵阁"
+          ],
+          "outcomes": [
+            "王林 被弹回 十多丈处",
+            "白衣青年 宣布 不合格"
+          ],
+          "costs": [],
+          "contract_id": "target-event-003"
+        }
+      ],
+      "objective": "通过剑灵测试",
+      "entry_facts": [
+        "王林 位于 剑灵阁"
+      ],
+      "exit_facts": [
+        "白衣青年 宣布 不合格"
+      ],
+      "tension": 3,
+      "locations": [],
+      "time_anchors": [],
+      "contract_id": "target-scene-002"
+    }
+  ],
+  "required_state_changes": [
+    {
+      "operation": "add",
+      "event": "时间到，王林失败昏迷",
+      "before": "",
+      "after": "王林 昏迷 昏迷",
+      "contract_id": "target-change-001"
+    },
+    {
+      "operation": "add",
+      "event": "剑灵测试，王林进取失败",
+      "before": "王林 走进五丈 五丈处",
+      "after": "王林 被弹回 十多丈处",
+      "contract_id": "target-change-002"
+    },
+    {
+      "operation": "add",
+      "event": "剑灵测试，王林进取失败",
+      "before": "",
+      "after": "白衣青年 宣布 不合格",
+      "contract_id": "target-change-003"
+    }
+  ],
+  "style_budget_override": {
+    "schema_version": "1.0",
+    "mode": "fidelity_test_override",
+    "instruction": "仅用于重建实验的量化验收；正常原创写作应使用作者级柔性预算。",
+    "metrics": [
+      {
+        "metric_id": "chapter_char_count",
+        "unit": "count",
+        "target": 2065.0,
+        "preferred_min": 1565.0,
+        "preferred_max": 2565.0,
+        "priority": "high"
+      },
+      {
+        "metric_id": "mean_sentence_chars",
+        "unit": "mean_chars",
+        "target": 45.295455,
+        "preferred_min": 38.501137,
+        "preferred_max": 52.089773,
+        "priority": "high"
+      },
+      {
+        "metric_id": "mean_paragraph_chars",
+        "unit": "mean_chars",
+        "target": 58.028571,
+        "preferred_min": 49.324285,
+        "preferred_max": 66.732857,
+        "priority": "high"
+      },
+      {
+        "metric_id": "short_paragraph_ratio",
+        "unit": "ratio",
+        "target": 0.228571,
+        "preferred_min": 0.171428,
+        "preferred_max": 0.285714,
+        "priority": "high"
+      },
+      {
+        "metric_id": "dialogue_char_ratio",
+        "unit": "ratio",
+        "target": 0.139467,
+        "preferred_min": 0.1046,
+        "preferred_max": 0.174334,
+        "priority": "high"
+      },
+      {
+        "metric_id": "perception_marker_ratio",
+        "unit": "ratio",
+        "target": 0.090909,
+        "preferred_min": 0.068182,
+        "preferred_max": 0.113636,
+        "priority": "high"
+      },
+      {
+        "metric_id": "transition_marker_ratio",
+        "unit": "ratio",
+        "target": 0.113636,
+        "preferred_min": 0.085227,
+        "preferred_max": 0.142045,
+        "priority": "high"
+      },
+      {
+        "metric_id": "question_sentence_ratio",
+        "unit": "ratio",
+        "target": 0.022727,
+        "preferred_min": 0.002727,
+        "preferred_max": 0.042727,
+        "priority": "medium"
+      },
+      {
+        "metric_id": "exclamation_sentence_ratio",
+        "unit": "ratio",
+        "target": 0.090909,
+        "preferred_min": 0.068182,
+        "preferred_max": 0.113636,
+        "priority": "medium"
+      },
+      {
+        "metric_id": "ellipsis_per_sentence",
+        "unit": "ratio",
+        "target": 0.068182,
+        "preferred_min": 0.048182,
+        "preferred_max": 0.088182,
+        "priority": "medium"
+      }
+    ]
+  }
+}

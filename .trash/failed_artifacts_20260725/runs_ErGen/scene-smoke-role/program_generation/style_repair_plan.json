@@ -1,0 +1,30 @@
+{
+  "attempted": true,
+  "directives": [
+    {
+      "metric_id": "short_paragraph_ratio",
+      "direction": "increase",
+      "target_range": "0.115542–0.341468",
+      "action": "在关键判断、转折或情绪落点保留独立短段，其余信息保持连续段落。"
+    },
+    {
+      "metric_id": "transition_marker_ratio",
+      "direction": "increase",
+      "target_range": "0.020393–0.077211",
+      "action": "在场景、时间或注意力变化处加入自然的承接词或结果性过渡，再继续推进。"
+    },
+    {
+      "metric_id": "ellipsis_per_sentence",
+      "direction": "increase",
+      "target_range": "0.019341–0.133627",
+      "action": "在话语中断、犹豫或未尽之意处谨慎保留省略号。"
+    },
+    "把同一因果单元合并为一到两个完整长句，避免用连续短句逐项解释。",
+    "仅在本场景的决断、转折或余波落点，将一个段落收束为不超过三十五字的短段；不得删失事实。",
+    "在合适的行动结果或注意力切换处使用一次自然的承接标记，例如“随后”“此时”或“片刻后”。",
+    "只在已列出的参与者之间保留一轮能改变行动或判断的直接对白；不得为增加对白引入新人物、新信息或新事件。",
+    "在已有动作或信息变化后补出视角人物的可感知反应，并使该反应服务于已给定的下一步判断。"
+  ],
+  "repairs_used": 0,
+  "style_passed": false
+}

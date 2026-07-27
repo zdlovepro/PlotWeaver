@@ -1,0 +1,52 @@
+{
+  "schema_version": "1.0",
+  "author_id": "ErGen",
+  "work_id": "work-001",
+  "generation_mode": "controlled_expansion",
+  "target_char_min": 4000,
+  "target_char_max": 5000,
+  "chapter_limit": 5,
+  "chapters": [
+    {
+      "chapter_no": 1,
+      "chapter_id": "ErGen/work-001/0001",
+      "program": "D:\\205zd\\Desktop\\PlotWeaver\\runs\\ErGen\\expansion-v3-first5\\chapter_programs\\chapter-0001.program.json",
+      "quality": "D:\\205zd\\Desktop\\PlotWeaver\\runs\\ErGen\\expansion-v3-first5\\chapter_programs\\chapter-0001.quality.json",
+      "batches": "D:\\205zd\\Desktop\\PlotWeaver\\runs\\ErGen\\expansion-v3-first5\\chapter_programs\\chapter-0001.batches.json",
+      "passed": true
+    },
+    {
+      "chapter_no": 2,
+      "chapter_id": "ErGen/work-001/0002",
+      "program": "D:\\205zd\\Desktop\\PlotWeaver\\runs\\ErGen\\expansion-v3-first5\\chapter_programs\\chapter-0002.program.json",
+      "quality": "D:\\205zd\\Desktop\\PlotWeaver\\runs\\ErGen\\expansion-v3-first5\\chapter_programs\\chapter-0002.quality.json",
+      "batches": "D:\\205zd\\Desktop\\PlotWeaver\\runs\\ErGen\\expansion-v3-first5\\chapter_programs\\chapter-0002.batches.json",
+      "passed": true
+    },
+    {
+      "chapter_no": 3,
+      "chapter_id": "ErGen/work-001/0003",
+      "program": "D:\\205zd\\Desktop\\PlotWeaver\\runs\\ErGen\\expansion-v3-first5\\chapter_programs\\chapter-0003.program.json",
+      "quality": "D:\\205zd\\Desktop\\PlotWeaver\\runs\\ErGen\\expansion-v3-first5\\chapter_programs\\chapter-0003.quality.json",
+      "batches": "D:\\205zd\\Desktop\\PlotWeaver\\runs\\ErGen\\expansion-v3-first5\\chapter_programs\\chapter-0003.batches.json",
+      "passed": true
+    },
+    {
+      "chapter_no": 4,
+      "chapter_id": "ErGen/work-001/0004",
+      "program": "D:\\205zd\\Desktop\\PlotWeaver\\runs\\ErGen\\expansion-v3-first5\\chapter_programs\\chapter-0004.program.json",
+      "quality": "D:\\205zd\\Desktop\\PlotWeaver\\runs\\ErGen\\expansion-v3-first5\\chapter_programs\\chapter-0004.quality.json",
+      "batches": "D:\\205zd\\Desktop\\PlotWeaver\\runs\\ErGen\\expansion-v3-first5\\chapter_programs\\chapter-0004.batches.json",
+      "passed": true
+    },
+    {
+      "chapter_no": 5,
+      "chapter_id": "ErGen/work-001/0005",
+      "program": "D:\\205zd\\Desktop\\PlotWeaver\\runs\\ErGen\\expansion-v3-first5\\chapter_programs\\chapter-0005.program.json",
+      "quality": "D:\\205zd\\Desktop\\PlotWeaver\\runs\\ErGen\\expansion-v3-first5\\chapter_programs\\chapter-0005.quality.json",
+      "batches": "D:\\205zd\\Desktop\\PlotWeaver\\runs\\ErGen\\expansion-v3-first5\\chapter_programs\\chapter-0005.batches.json",
+      "passed": true
+    }
+  ],
+  "passed": true
+}

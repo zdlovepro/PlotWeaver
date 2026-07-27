@@ -1,0 +1,87 @@
+{
+  "schema_version": "1.0",
+  "mode": "fidelity_test_override",
+  "instruction": "仅用于重建实验的量化验收；正常原创写作应使用作者级柔性预算。",
+  "metrics": [
+    {
+      "metric_id": "chapter_char_count",
+      "unit": "count",
+      "target": 2141.0,
+      "preferred_min": 1641.0,
+      "preferred_max": 2641.0,
+      "priority": "high"
+    },
+    {
+      "metric_id": "mean_sentence_chars",
+      "unit": "mean_chars",
+      "target": 44.06383,
+      "preferred_min": 37.454256,
+      "preferred_max": 50.673405,
+      "priority": "high"
+    },
+    {
+      "metric_id": "mean_paragraph_chars",
+      "unit": "mean_chars",
+      "target": 53.923077,
+      "preferred_min": 45.834615,
+      "preferred_max": 62.011539,
+      "priority": "high"
+    },
+    {
+      "metric_id": "short_paragraph_ratio",
+      "unit": "ratio",
+      "target": 0.307692,
+      "preferred_min": 0.230769,
+      "preferred_max": 0.384615,
+      "priority": "high"
+    },
+    {
+      "metric_id": "dialogue_char_ratio",
+      "unit": "ratio",
+      "target": 0.175619,
+      "preferred_min": 0.131714,
+      "preferred_max": 0.219524,
+      "priority": "high"
+    },
+    {
+      "metric_id": "perception_marker_ratio",
+      "unit": "ratio",
+      "target": 0.191489,
+      "preferred_min": 0.143617,
+      "preferred_max": 0.239361,
+      "priority": "high"
+    },
+    {
+      "metric_id": "transition_marker_ratio",
+      "unit": "ratio",
+      "target": 0.0,
+      "preferred_min": 0.0,
+      "preferred_max": 0.02,
+      "priority": "high"
+    },
+    {
+      "metric_id": "question_sentence_ratio",
+      "unit": "ratio",
+      "target": 0.085106,
+      "preferred_min": 0.063829,
+      "preferred_max": 0.106383,
+      "priority": "medium"
+    },
+    {
+      "metric_id": "exclamation_sentence_ratio",
+      "unit": "ratio",
+      "target": 0.06383,
+      "preferred_min": 0.04383,
+      "preferred_max": 0.08383,
+      "priority": "medium"
+    },
+    {
+      "metric_id": "ellipsis_per_sentence",
+      "unit": "ratio",
+      "target": 0.0,
+      "preferred_min": 0.0,
+      "preferred_max": 0.02,
+      "priority": "medium"
+    }
+  ]
+}

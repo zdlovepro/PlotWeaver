@@ -1,0 +1,28 @@
+{
+  "passed": false,
+  "issues": [
+    {
+      "code": "style_budget_char_count",
+      "severity": "error",
+      "evidence": "正文实际字符数约1800，低于风格预算最低要求4359字，无法完整展现计划事件应有的细节与节奏。",
+      "repair": "在不新增计划外事件的前提下，扩充每个场景的动作、对话、感知、阻力与结果。建议：在回家路上补充环境与内心活动；在四叔到来时增加对话细节和人物反应；在宴席上补充宾客互动、家族议论；在王卓轻视处增加铁柱的内心博弈；在离别时增加情感渲染。"
+    }
+  ],
+  "style_observations": [
+    "完整覆盖了全部4个计划场景和所有状态变化。",
+    "感知和心理描写（如'他心里有些琢磨不定'、'心猛地跳了一下'）较好地运用了focalization约束。",
+    "对话中使用了问句和省略号，体现了dialogue约束中的语气变化。",
+    "段落长度有短有长，符合paragraph_pacing约束的交替要求。"
+  ],
+  "style_budget_result": {
+    "passed": false,
+    "notes": [
+      "章节字符数严重不达标（1800 vs 4359），导致其他指标（如mean_paragraph_chars、short_paragraph_ratio等）随之偏离目标区间。",
+      "其他指标如perception_marker_ratio、question_sentence_ratio等大致在范围或略低，但整体风格预算因篇幅不足未通过。"
+    ]
+  },
+  "repairs": [
+    "首先扩充各场景内容以达字符数最低要求，再微调其他指标如感叹句比例。",
+    "注意保持事件顺序和状态变化的连续性，避免新增计划外情节。"
+  ]
+}

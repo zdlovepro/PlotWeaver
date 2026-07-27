@@ -1,0 +1,376 @@
+{
+  "契约版本": "1.0",
+  "章节ID": "ErGen/work-001/0004",
+  "源文本哈希": "010c2006dbcad1a956d82bdb3462ca7c6ac0b944722f4a3344289c6ecdfe27a9",
+  "实体字典": [
+    {
+      "实体ID": "ErGen/work-001/0004:chunk-01:entity-001",
+      "名称": "王林",
+      "类型": "person"
+    },
+    {
+      "实体ID": "ErGen/work-001/0004:chunk-01:entity-002",
+      "名称": "黑衣中年人",
+      "类型": "person"
+    },
+    {
+      "实体ID": "ErGen/work-001/0004:chunk-01:entity-003",
+      "名称": "面色蜡黄中年人",
+      "类型": "person"
+    },
+    {
+      "实体ID": "ErGen/work-001/0004:chunk-01:entity-004",
+      "名称": "白衣青年",
+      "类型": "person"
+    },
+    {
+      "实体ID": "ErGen/work-001/0004:chunk-01:entity-005",
+      "名称": "恒岳派女弟子",
+      "类型": "person"
+    },
+    {
+      "实体ID": "ErGen/work-001/0004:chunk-01:entity-006",
+      "名称": "石阶小径",
+      "类型": "location"
+    },
+    {
+      "实体ID": "ErGen/work-001/0004:chunk-01:entity-007",
+      "名称": "剑灵阁",
+      "类型": "location"
+    }
+  ],
+  "场景程序": [
+    {
+      "场景ID": "ErGen/work-001/0004:chunk-01:scene-001",
+      "章节ID": "ErGen/work-001/0004",
+      "场景序号": 0,
+      "场景目标": "通过石阶测试",
+      "参与实体ID": [
+        "ErGen/work-001/0004:chunk-01:entity-001"
+      ],
+      "入场状态事实ID": [
+        "ErGen/work-001/0004:chunk-01:fact-001"
+      ],
+      "必现事件": [
+        {
+          "事件ID": "ErGen/work-001/0004:chunk-01:event-001",
+          "场景ID": "ErGen/work-001/0004:chunk-01:scene-001",
+          "事件概述": "王林爬石阶，目睹少年放弃",
+          "行动": "坚持爬石阶，目睹一个少年踩空放弃",
+          "参与实体ID": [
+            "ErGen/work-001/0004:chunk-01:entity-001"
+          ],
+          "阻力": "",
+          "决断": "",
+          "前置事实ID": [
+            "ErGen/work-001/0004:chunk-01:fact-001"
+          ],
+          "必须表达的事实ID": [
+            "ErGen/work-001/0004:chunk-01:fact-002",
+            "ErGen/work-001/0004:chunk-01:fact-003"
+          ],
+          "结果事实ID": [
+            "ErGen/work-001/0004:chunk-01:fact-003"
+          ]
+        },
+        {
+          "事件ID": "ErGen/work-001/0004:chunk-01:event-002",
+          "场景ID": "ErGen/work-001/0004:chunk-01:scene-001",
+          "事件概述": "时间到，王林失败昏迷",
+          "行动": "王林继续爬行，黑衣中年人宣布时间到，王林昏迷",
+          "参与实体ID": [
+            "ErGen/work-001/0004:chunk-01:entity-001",
+            "ErGen/work-001/0004:chunk-01:entity-002"
+          ],
+          "阻力": "",
+          "决断": "",
+          "前置事实ID": [
+            "ErGen/work-001/0004:chunk-01:fact-001",
+            "ErGen/work-001/0004:chunk-01:fact-005"
+          ],
+          "必须表达的事实ID": [
+            "ErGen/work-001/0004:chunk-01:fact-002",
+            "ErGen/work-001/0004:chunk-01:fact-005",
+            "ErGen/work-001/0004:chunk-01:fact-006"
+          ],
+          "结果事实ID": [
+            "ErGen/work-001/0004:chunk-01:fact-005",
+            "ErGen/work-001/0004:chunk-01:fact-006"
+          ]
+        }
+      ],
+      "事实表达契约": [
+        {
+          "事实ID": "ErGen/work-001/0004:chunk-01:fact-001",
+          "场景ID": "ErGen/work-001/0004:chunk-01:scene-001",
+          "事实类型": "location",
+          "主体ID": "ErGen/work-001/0004:chunk-01:entity-001",
+          "谓词": "爬行于",
+          "值": "石阶小径",
+          "客体ID": "ErGen/work-001/0004:chunk-01:entity-006",
+          "表达方式": "行动呈现",
+          "必须表达": true,
+          "禁止相反含义": []
+        },
+        {
+          "事实ID": "ErGen/work-001/0004:chunk-01:fact-002",
+          "场景ID": "ErGen/work-001/0004:chunk-01:scene-001",
+          "事实类型": "emotion",
+          "主体ID": "ErGen/work-001/0004:chunk-01:entity-001",
+          "谓词": "感到",
+          "值": "双腿如灌铅",
+          "客体ID": "",
+          "表达方式": "心理或感知",
+          "必须表达": true,
+          "禁止相反含义": []
+        },
+        {
+          "事实ID": "ErGen/work-001/0004:chunk-01:fact-003",
+          "场景ID": "ErGen/work-001/0004:chunk-01:scene-001",
+          "事实类型": "knowledge",
+          "主体ID": "ErGen/work-001/0004:chunk-01:entity-001",
+          "谓词": "目睹",
+          "值": "一个少年踩空",
+          "客体ID": "",
+          "表达方式": "叙述交代",
+          "必须表达": true,
+          "禁止相反含义": []
+        },
+        {
+          "事实ID": "ErGen/work-001/0004:chunk-01:fact-004",
+          "场景ID": "ErGen/work-001/0004:chunk-01:scene-001",
+          "事实类型": "knowledge",
+          "主体ID": "ErGen/work-001/0004:chunk-01:entity-003",
+          "谓词": "评价",
+          "值": "可惜资质太过普通",
+          "客体ID": "",
+          "表达方式": "叙述交代",
+          "必须表达": true,
+          "禁止相反含义": []
+        },
+        {
+          "事实ID": "ErGen/work-001/0004:chunk-01:fact-005",
+          "场景ID": "ErGen/work-001/0004:chunk-01:scene-001",
+          "事实类型": "knowledge",
+          "主体ID": "ErGen/work-001/0004:chunk-01:entity-002",
+          "谓词": "宣布",
+          "值": "时间已到，只有三人合格，其余……失败",
+          "客体ID": "",
+          "表达方式": "叙述交代",
+          "必须表达": true,
+          "禁止相反含义": []
+        },
+        {
+          "事实ID": "ErGen/work-001/0004:chunk-01:fact-006",
+          "场景ID": "ErGen/work-001/0004:chunk-01:scene-001",
+          "事实类型": "progression",
+          "主体ID": "ErGen/work-001/0004:chunk-01:entity-001",
+          "谓词": "昏迷",
+          "值": "昏迷",
+          "客体ID": "",
+          "表达方式": "行动呈现",
+          "必须表达": true,
+          "禁止相反含义": []
+        }
+      ],
+      "段落程序": [
+        {
+          "段落ID": "ErGen/work-001/0004:chunk-01:scene-001:paragraph-00",
+          "场景ID": "ErGen/work-001/0004:chunk-01:scene-001",
+          "段落序号": 0,
+          "段落功能": "场景定位",
+          "必须表达的事实ID": [
+            "ErGen/work-001/0004:chunk-01:fact-001"
+          ],
+          "事件ID列表": [],
+          "视角人物ID": "ErGen/work-001/0004:chunk-01:entity-001",
+          "对话行为": ""
+        },
+        {
+          "段落ID": "ErGen/work-001/0004:chunk-01:scene-001:paragraph-01",
+          "场景ID": "ErGen/work-001/0004:chunk-01:scene-001",
+          "段落序号": 1,
+          "段落功能": "行动推进",
+          "必须表达的事实ID": [
+            "ErGen/work-001/0004:chunk-01:fact-002",
+            "ErGen/work-001/0004:chunk-01:fact-003"
+          ],
+          "事件ID列表": [
+            "ErGen/work-001/0004:chunk-01:event-001"
+          ],
+          "视角人物ID": "ErGen/work-001/0004:chunk-01:entity-001",
+          "对话行为": ""
+        },
+        {
+          "段落ID": "ErGen/work-001/0004:chunk-01:scene-001:paragraph-02",
+          "场景ID": "ErGen/work-001/0004:chunk-01:scene-001",
+          "段落序号": 2,
+          "段落功能": "行动推进",
+          "必须表达的事实ID": [
+            "ErGen/work-001/0004:chunk-01:fact-002",
+            "ErGen/work-001/0004:chunk-01:fact-005",
+            "ErGen/work-001/0004:chunk-01:fact-006"
+          ],
+          "事件ID列表": [
+            "ErGen/work-001/0004:chunk-01:event-002"
+          ],
+          "视角人物ID": "ErGen/work-001/0004:chunk-01:entity-001",
+          "对话行为": ""
+        },
+        {
+          "段落ID": "ErGen/work-001/0004:chunk-01:scene-001:paragraph-03",
+          "场景ID": "ErGen/work-001/0004:chunk-01:scene-001",
+          "段落序号": 3,
+          "段落功能": "感知反应",
+          "必须表达的事实ID": [
+            "ErGen/work-001/0004:chunk-01:fact-004"
+          ],
+          "事件ID列表": [],
+          "视角人物ID": "ErGen/work-001/0004:chunk-01:entity-001",
+          "对话行为": ""
+        }
+      ],
+      "出场状态事实ID": [
+        "ErGen/work-001/0004:chunk-01:fact-005",
+        "ErGen/work-001/0004:chunk-01:fact-006"
+      ],
+      "禁止提前事件ID": [
+        "ErGen/work-001/0004:chunk-01:event-003"
+      ]
+    },
+    {
+      "场景ID": "ErGen/work-001/0004:chunk-01:scene-002",
+      "章节ID": "ErGen/work-001/0004",
+      "场景序号": 1,
+      "场景目标": "通过剑灵测试",
+      "参与实体ID": [
+        "ErGen/work-001/0004:chunk-01:entity-001",
+        "ErGen/work-001/0004:chunk-01:entity-004"
+      ],
+      "入场状态事实ID": [
+        "ErGen/work-001/0004:chunk-01:fact-007"
+      ],
+      "必现事件": [
+        {
+          "事件ID": "ErGen/work-001/0004:chunk-01:event-003",
+          "场景ID": "ErGen/work-001/0004:chunk-01:scene-002",
+          "事件概述": "剑灵测试，王林进取失败",
+          "行动": "王林尝试进入剑灵房间，走进五丈，再进至距离大门三丈，被弹回",
+          "参与实体ID": [
+            "ErGen/work-001/0004:chunk-01:entity-001",
+            "ErGen/work-001/0004:chunk-01:entity-004"
+          ],
+          "阻力": "",
+          "决断": "",
+          "前置事实ID": [
+            "ErGen/work-001/0004:chunk-01:fact-007",
+            "ErGen/work-001/0004:chunk-01:fact-008"
+          ],
+          "必须表达的事实ID": [
+            "ErGen/work-001/0004:chunk-01:fact-009",
+            "ErGen/work-001/0004:chunk-01:fact-010"
+          ],
+          "结果事实ID": [
+            "ErGen/work-001/0004:chunk-01:fact-009",
+            "ErGen/work-001/0004:chunk-01:fact-010"
+          ]
+        }
+      ],
+      "事实表达契约": [
+        {
+          "事实ID": "ErGen/work-001/0004:chunk-01:fact-007",
+          "场景ID": "ErGen/work-001/0004:chunk-01:scene-002",
+          "事实类型": "location",
+          "主体ID": "ErGen/work-001/0004:chunk-01:entity-001",
+          "谓词": "位于",
+          "值": "剑灵阁",
+          "客体ID": "ErGen/work-001/0004:chunk-01:entity-007",
+          "表达方式": "行动呈现",
+          "必须表达": true,
+          "禁止相反含义": []
+        },
+        {
+          "事实ID": "ErGen/work-001/0004:chunk-01:fact-008",
+          "场景ID": "ErGen/work-001/0004:chunk-01:scene-002",
+          "事实类型": "progression",
+          "主体ID": "ErGen/work-001/0004:chunk-01:entity-001",
+          "谓词": "走进五丈",
+          "值": "五丈处",
+          "客体ID": "",
+          "表达方式": "行动呈现",
+          "必须表达": true,
+          "禁止相反含义": []
+        },
+        {
+          "事实ID": "ErGen/work-001/0004:chunk-01:fact-009",
+          "场景ID": "ErGen/work-001/0004:chunk-01:scene-002",
+          "事实类型": "progression",
+          "主体ID": "ErGen/work-001/0004:chunk-01:entity-001",
+          "谓词": "被弹回",
+          "值": "十多丈处",
+          "客体ID": "",
+          "表达方式": "行动呈现",
+          "必须表达": true,
+          "禁止相反含义": []
+        },
+        {
+          "事实ID": "ErGen/work-001/0004:chunk-01:fact-010",
+          "场景ID": "ErGen/work-001/0004:chunk-01:scene-002",
+          "事实类型": "knowledge",
+          "主体ID": "ErGen/work-001/0004:chunk-01:entity-004",
+          "谓词": "宣布",
+          "值": "不合格",
+          "客体ID": "",
+          "表达方式": "叙述交代",
+          "必须表达": true,
+          "禁止相反含义": []
+        }
+      ],
+      "段落程序": [
+        {
+          "段落ID": "ErGen/work-001/0004:chunk-01:scene-002:paragraph-00",
+          "场景ID": "ErGen/work-001/0004:chunk-01:scene-002",
+          "段落序号": 0,
+          "段落功能": "场景定位",
+          "必须表达的事实ID": [
+            "ErGen/work-001/0004:chunk-01:fact-007"
+          ],
+          "事件ID列表": [],
+          "视角人物ID": "ErGen/work-001/0004:chunk-01:entity-001",
+          "对话行为": ""
+        },
+        {
+          "段落ID": "ErGen/work-001/0004:chunk-01:scene-002:paragraph-01",
+          "场景ID": "ErGen/work-001/0004:chunk-01:scene-002",
+          "段落序号": 1,
+          "段落功能": "行动推进",
+          "必须表达的事实ID": [
+            "ErGen/work-001/0004:chunk-01:fact-009",
+            "ErGen/work-001/0004:chunk-01:fact-010"
+          ],
+          "事件ID列表": [
+            "ErGen/work-001/0004:chunk-01:event-003"
+          ],
+          "视角人物ID": "ErGen/work-001/0004:chunk-01:entity-001",
+          "对话行为": ""
+        },
+        {
+          "段落ID": "ErGen/work-001/0004:chunk-01:scene-002:paragraph-02",
+          "场景ID": "ErGen/work-001/0004:chunk-01:scene-002",
+          "段落序号": 2,
+          "段落功能": "余波收束",
+          "必须表达的事实ID": [
+            "ErGen/work-001/0004:chunk-01:fact-008"
+          ],
+          "事件ID列表": [],
+          "视角人物ID": "ErGen/work-001/0004:chunk-01:entity-001",
+          "对话行为": ""
+        }
+      ],
+      "出场状态事实ID": [
+        "ErGen/work-001/0004:chunk-01:fact-010"
+      ],
+      "禁止提前事件ID": []
+    }
+  ]
+}

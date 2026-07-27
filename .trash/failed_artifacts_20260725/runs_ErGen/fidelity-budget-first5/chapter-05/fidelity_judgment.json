@@ -1,0 +1,30 @@
+{
+  "scores": {
+    "event_causality": 4,
+    "state_coverage": 3,
+    "temporal_spatial": 3,
+    "scene_pacing": 2,
+    "style_execution": 1
+  },
+  "missing_requirements": [
+    "mean_sentence_chars",
+    "mean_paragraph_chars",
+    "short_paragraph_ratio",
+    "dialogue_char_ratio",
+    "perception_marker_ratio",
+    "question_sentence_ratio",
+    "exclamation_sentence_ratio"
+  ],
+  "contradictions": [],
+  "strengths": [
+    "清晰的因果链条",
+    "情感氛围塑造",
+    "时间连续性"
+  ],
+  "next_repairs": [
+    "调整段落长度，增加短段落比例",
+    "增加对话字符占比",
+    "增加感知标记",
+    "调整句子长度"
+  ]
+}

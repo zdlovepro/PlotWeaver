@@ -1,0 +1,51 @@
+{
+  "scene_id": "ErGen/work-001/0001:chunk-01:scene-001",
+  "paragraphs": [
+    {
+      "paragraph_id": "ErGen/work-001/0001:chunk-01:scene-001:paragraph-00",
+      "text": "铁柱本名王林，父亲是王天水，母亲是村里普通的妇人。这孩子从小便不爱说话，却总爱盯着远处的山发呆。",
+      "claimed_fact_ids": [
+        "ErGen/work-001/0001:chunk-01:fact-001",
+        "ErGen/work-001/0001:chunk-01:fact-002",
+        "ErGen/work-001/0001:chunk-01:fact-003"
+      ],
+      "claimed_event_ids": []
+    },
+    {
+      "paragraph_id": "ErGen/work-001/0001:chunk-01:scene-001:paragraph-01",
+      "text": "四叔是王林的远房叔伯，常年在外走动，见过些世面。今日他特意来到王林家，说是有一桩好事要商量。",
+      "claimed_fact_ids": [
+        "ErGen/work-001/0001:chunk-01:fact-011"
+      ],
+      "claimed_event_ids": []
+    },
+    {
+      "paragraph_id": "ErGen/work-001/0001:chunk-01:scene-001:paragraph-02",
+      "text": "“恒岳派今年要在咱们村招一个弟子，我寻思着铁柱年纪合适，不如让他去试试。”四叔话音刚落，王林的父母便对视一眼，眼中满是惊喜。铁柱虽不懂仙人是什么，但听到“恒岳派”三字，心里莫名生出一丝好奇。",
+      "claimed_fact_ids": [
+        "ErGen/work-001/0001:chunk-01:fact-006",
+        "ErGen/work-001/0001:chunk-01:fact-004"
+      ],
+      "claimed_event_ids": [
+        "ErGen/work-001/0001:chunk-01:event-001"
+      ]
+    },
+    {
+      "paragraph_id": "ErGen/work-001/0001:chunk-01:scene-001:paragraph-03",
+      "text": "父亲王天水拍了拍铁柱的肩膀，粗糙的手掌带着期待：“去了好好学，别给咱家丢脸。”旁边的王卓却撇了撇嘴，小声嘀咕：“就他？能行吗？”铁柱低下头，没说话。",
+      "claimed_fact_ids": [
+        "ErGen/work-001/0001:chunk-01:fact-007",
+        "ErGen/work-001/0001:chunk-01:fact-008"
+      ],
+      "claimed_event_ids": []
+    },
+    {
+      "paragraph_id": "ErGen/work-001/0001:chunk-01:scene-001:paragraph-04",
+      "text": "临走时四叔塞给铁柱两本书，一本讲基础吐纳，一本是门派规矩。“拿回去好好看，过两天我来接你。”铁柱捧着书，觉得沉甸甸的。",
+      "claimed_fact_ids": [
+        "ErGen/work-001/0001:chunk-01:fact-005"
+      ],
+      "claimed_event_ids": []
+    }
+  ]
+}

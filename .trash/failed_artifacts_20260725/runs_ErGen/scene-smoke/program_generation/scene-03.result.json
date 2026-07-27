@@ -1,0 +1,40 @@
+{
+  "scene_no": 3,
+  "scene_id": "ErGen/work-001/0001:chunk-01:scene-003",
+  "minimum_paragraph_chars": 60,
+  "repairs_used": 0,
+  "passed": true,
+  "draft": {
+    "scene_id": "ErGen/work-001/0001:chunk-01:scene-003",
+    "paragraphs": [
+      {
+        "paragraph_id": "ErGen/work-001/0001:chunk-01:scene-003:paragraph-00",
+        "text": "四叔的身影出现在村口时，铁柱知道该走了。他最后看了一眼自家茅屋，母亲正站在门框里抹泪。铁柱咬咬牙，转身朝四叔走去：“四叔，我们走吧。”四叔点点头，拍了拍他的肩膀。两人沿着土路离开村子，铁柱没有回头，但握紧的拳头暴露了他心里的不舍。他知道，从今天起，他要一个人去恒岳派闯荡了。",
+        "claimed_fact_ids": [
+          "ErGen/work-001/0001:chunk-01:fact-010"
+        ],
+        "claimed_event_ids": [
+          "ErGen/work-001/0001:chunk-01:event-003"
+        ]
+      }
+    ]
+  },
+  "validations": [
+    {
+      "scene_id": "ErGen/work-001/0001:chunk-01:scene-003",
+      "reported_passed": true,
+      "realized_fact_ids": [
+        "ErGen/work-001/0001:chunk-01:fact-010"
+      ],
+      "missing_fact_ids": [],
+      "realized_event_ids": [
+        "ErGen/work-001/0001:chunk-01:event-003"
+      ],
+      "missing_event_ids": [],
+      "premature_event_ids": [],
+      "paragraph_issues": [],
+      "repair_paragraph_ids": [],
+      "passed": true
+    }
+  ]
+}

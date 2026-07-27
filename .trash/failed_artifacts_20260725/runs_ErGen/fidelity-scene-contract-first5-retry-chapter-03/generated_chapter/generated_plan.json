@@ -1,0 +1,388 @@
+{
+  "chapter_goal": "完整重建已提供的目标事件、场景、状态变化与结局，不新增输入外情节。",
+  "selected_template_ids": [
+    "library:chapter-011",
+    "library:scene-007"
+  ],
+  "scenes": [
+    {
+      "scene_no": 1,
+      "entry_state": [
+        "王林 处于 灵根测试"
+      ],
+      "objective": "筛选出灵根充足的弟子",
+      "pressure": "测试结果的不确定性，王浩因资质差必须献宝",
+      "turn": "王浩献出玉盒与灵芝，被收为药童；王林被判定为不合格",
+      "exit_state": [
+        "王卓 被选中 合格者",
+        "王浩 被收为 药童",
+        "王林 被判定为 不合格"
+      ]
+    },
+    {
+      "scene_no": 2,
+      "entry_state": [
+        "众少年 开始 第二项测试"
+      ],
+      "objective": "完成毅力测试",
+      "pressure": "毅力测试的难度和未知结果",
+      "turn": "王林决定参加毅力测试",
+      "exit_state": [
+        "王林 成为 毅力测试参与者"
+      ]
+    }
+  ],
+  "chapter_state_changes": [
+    {
+      "slot": "王卓 被选中 合格者",
+      "before": "",
+      "after": "王卓 被选中 合格者",
+      "cause_scene_no": 1
+    },
+    {
+      "slot": "王浩 被收为 药童",
+      "before": "",
+      "after": "王浩 被收为 药童",
+      "cause_scene_no": 1
+    },
+    {
+      "slot": "王林 被判定为 不合格",
+      "before": "",
+      "after": "王林 被判定为 不合格",
+      "cause_scene_no": 1
+    },
+    {
+      "slot": "王林 成为 毅力测试参与者",
+      "before": "",
+      "after": "王林 成为 毅力测试参与者",
+      "cause_scene_no": 2
+    }
+  ],
+  "covered_required_event_ids": [
+    "target-event-001",
+    "target-event-002",
+    "target-event-003",
+    "target-event-004",
+    "target-event-005"
+  ],
+  "covered_required_state_change_ids": [
+    "target-change-001",
+    "target-change-002",
+    "target-change-003",
+    "target-change-004"
+  ],
+  "chapter_end_contract": [
+    "在本章结束于王林开始攀登石阶，不推进到后续测试结果。"
+  ],
+  "style_budget": {
+    "schema_version": "1.0",
+    "mode": "fidelity_test_override",
+    "instruction": "仅用于重建实验的量化验收；正常原创写作应使用作者级柔性预算。",
+    "metrics": [
+      {
+        "metric_id": "chapter_char_count",
+        "unit": "count",
+        "target": 2036.0,
+        "preferred_min": 1536.0,
+        "preferred_max": 2536.0,
+        "priority": "high"
+      },
+      {
+        "metric_id": "mean_sentence_chars",
+        "unit": "mean_chars",
+        "target": 33.655172,
+        "preferred_min": 28.606896,
+        "preferred_max": 38.703448,
+        "priority": "high"
+      },
+      {
+        "metric_id": "mean_paragraph_chars",
+        "unit": "mean_chars",
+        "target": 44.266667,
+        "preferred_min": 37.626667,
+        "preferred_max": 50.906667,
+        "priority": "high"
+      },
+      {
+        "metric_id": "short_paragraph_ratio",
+        "unit": "ratio",
+        "target": 0.488889,
+        "preferred_min": 0.366667,
+        "preferred_max": 0.611111,
+        "priority": "high"
+      },
+      {
+        "metric_id": "dialogue_char_ratio",
+        "unit": "ratio",
+        "target": 0.278978,
+        "preferred_min": 0.209234,
+        "preferred_max": 0.348722,
+        "priority": "high"
+      },
+      {
+        "metric_id": "perception_marker_ratio",
+        "unit": "ratio",
+        "target": 0.068966,
+        "preferred_min": 0.048966,
+        "preferred_max": 0.088966,
+        "priority": "high"
+      },
+      {
+        "metric_id": "transition_marker_ratio",
+        "unit": "ratio",
+        "target": 0.034483,
+        "preferred_min": 0.014483,
+        "preferred_max": 0.054483,
+        "priority": "high"
+      },
+      {
+        "metric_id": "question_sentence_ratio",
+        "unit": "ratio",
+        "target": 0.051724,
+        "preferred_min": 0.031724,
+        "preferred_max": 0.071724,
+        "priority": "medium"
+      },
+      {
+        "metric_id": "exclamation_sentence_ratio",
+        "unit": "ratio",
+        "target": 0.086207,
+        "preferred_min": 0.064655,
+        "preferred_max": 0.107759,
+        "priority": "medium"
+      },
+      {
+        "metric_id": "ellipsis_per_sentence",
+        "unit": "ratio",
+        "target": 0.017241,
+        "preferred_min": 0.0,
+        "preferred_max": 0.037241,
+        "priority": "medium"
+      }
+    ]
+  },
+  "continuity_checks": [
+    "时间从灵根测试到毅力测试开始连续；",
+    "位置在恒岳派测试场地；",
+    "资源变化：王浩献出玉盒与灵芝；",
+    "知识状态更新：王林得知自己灵根不合格；",
+    "人物关系不变。"
+  ],
+  "style_execution_directives": [
+    {
+      "metric_id": "perception_marker_ratio",
+      "direction": "increase",
+      "target_range": "0.048966–0.088966",
+      "action": "在关键动作或信息变化后补入角色看到、听到、感到或察觉到的具体反应。"
+    },
+    {
+      "metric_id": "transition_marker_ratio",
+      "direction": "increase",
+      "target_range": "0.014483–0.054483",
+      "action": "在场景、时间或注意力变化处加入自然的承接词或结果性过渡，再继续推进。"
+    },
+    {
+      "metric_id": "exclamation_sentence_ratio",
+      "direction": "increase",
+      "target_range": "0.064655–0.107759",
+      "action": "在真正的情绪落点保留感叹句，并让前后的陈述句提供蓄势。"
+    },
+    {
+      "metric_id": "mean_sentence_chars",
+      "direction": "increase",
+      "target_range": "28.606896–38.703448",
+      "action": "把动作、感知、判断或结果组合为完整复句，减少单个动作单独成句。"
+    },
+    {
+      "metric_id": "ellipsis_per_sentence",
+      "direction": "maintain",
+      "target_range": "0.0–0.037241",
+      "action": "保持当前做法，只在不破坏剧情时微调。"
+    },
+    {
+      "metric_id": "chapter_char_count",
+      "direction": "increase",
+      "target_range": "1536.0–2536.0",
+      "action": "在不新增计划外情节的前提下，补足已计划场景中的动作、对话、感知、阻力与结果，使篇幅覆盖完整事件链。"
+    }
+  ],
+  "style_execution_blueprint": {
+    "instruction": "按此蓝图安排正文，但不得删改计划事件或以凑数破坏可读性。",
+    "chapter_char_count": {
+      "target": 2036,
+      "minimum": 1536,
+      "maximum": 2536
+    },
+    "paragraph_count": {
+      "target": 46,
+      "minimum": 30,
+      "maximum": 67
+    },
+    "short_paragraph_count": {
+      "target": 22,
+      "minimum": 11,
+      "maximum": 41
+    },
+    "sentence_count": {
+      "target": 60,
+      "minimum": 40,
+      "maximum": 89
+    },
+    "dialogue_char_count": {
+      "target": 568,
+      "minimum": 321,
+      "maximum": 884
+    },
+    "perception_sentence_count": {
+      "target": 4,
+      "minimum": 3,
+      "maximum": 5
+    },
+    "transition_sentence_count": {
+      "target": 2,
+      "minimum": 1,
+      "maximum": 3
+    }
+  },
+  "reconstruction_mode": "fidelity_test_only",
+  "scene_contracts": [
+    {
+      "order": 0,
+      "participants": [
+        "黑衣中年人",
+        "众少年",
+        "王卓",
+        "王浩",
+        "王林"
+      ],
+      "events": [
+        {
+          "order": 0,
+          "summary": "黑衣中年人宣布灵根测试开始，众少年依次测试",
+          "participants": [
+            "黑衣中年人",
+            "众少年"
+          ],
+          "action": "宣布测试规则并逐个测试",
+          "obstacle": "",
+          "decision": "",
+          "preconditions": [],
+          "outcomes": [
+            "王卓 被选中 合格者",
+            "王浩 被收为 药童",
+            "王林 被判定为 不合格"
+          ],
+          "costs": [],
+          "contract_id": "target-event-001"
+        },
+        {
+          "order": 1,
+          "summary": "王卓被测试并选中",
+          "participants": [
+            "王卓",
+            "黑衣中年人"
+          ],
+          "action": "被测试后得到合格评价",
+          "obstacle": "",
+          "decision": "",
+          "preconditions": [],
+          "outcomes": [
+            "王卓 被选中 合格者"
+          ],
+          "costs": [],
+          "contract_id": "target-event-002"
+        },
+        {
+          "order": 2,
+          "summary": "王浩献灵芝后被收为药童",
+          "participants": [
+            "王浩",
+            "黑衣中年人"
+          ],
+          "action": "献玉盒和灵芝，请求做药童",
+          "obstacle": "最初被说资质差",
+          "decision": "献出宝物",
+          "preconditions": [],
+          "outcomes": [
+            "王浩 被收为 药童"
+          ],
+          "costs": [
+            "王浩 献出 玉盒与灵芝"
+          ],
+          "contract_id": "target-event-003"
+        },
+        {
+          "order": 3,
+          "summary": "王林被测试为不合格",
+          "participants": [
+            "王林",
+            "黑衣中年人"
+          ],
+          "action": "接受灵根测试",
+          "obstacle": "",
+          "decision": "",
+          "preconditions": [],
+          "outcomes": [
+            "王林 被判定为 不合格"
+          ],
+          "costs": [],
+          "contract_id": "target-event-004"
+        }
+      ],
+      "objective": "筛选出灵根充足的弟子",
+      "entry_facts": [
+        "王林 处于 灵根测试"
+      ],
+      "exit_facts": [
+        "王卓 被选中 合格者",
+        "王浩 被收为 药童",
+        "王林 被判定为 不合格"
+      ],
+      "tension": 3,
+      "locations": [],
+      "time_anchors": [],
+      "contract_id": "target-scene-001"
+    },
+    {
+      "order": 1,
+      "participants": [
+        "黑衣中年人",
+        "王林",
+        "众少年"
+      ],
+      "events": [
+        {
+          "order": 4,
+          "summary": "黑衣人宣布第二项毅力测试，王林开始攀登石阶",
+          "participants": [
+            "黑衣中年人",
+            "王林",
+            "众少年"
+          ],
+          "action": "宣布毅力测试规则",
+          "obstacle": "",
+          "decision": "王林决定参加",
+          "preconditions": [
+            "王林 被判定为 不合格"
+          ],
+          "outcomes": [
+            "王林 成为 毅力测试参与者"
+          ],
+          "costs": [],
+          "contract_id": "target-event-005"
+        }
+      ],
+      "objective": "完成毅力测试",
+      "entry_facts": [
+        "众少年 开始 第二项测试"
+      ],
+      "exit_facts": [
+        "王林 成为 毅力测试参与者"
+      ],
+      "tension": 4,
+      "locations": [],
+      "time_anchors": [],
+      "contract_id": "target-scene-002"
+    }
+  ]
+}

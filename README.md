@@ -1,146 +1,111 @@
-# PlotWeaver V2.0
+# PlotWeaver
 
-An automated Python pipeline for fusing multiple Xianxia (Chinese cultivation)
-novel outlines into a new, highly coherent novel outline.
+PlotWeaver is an evidence-first pipeline for distilling a reusable **小说作者 Skill** from Chinese web-novel samples. The author identifier is supplied at runtime; it becomes the output folder name, for example `output/ExampleAuthor_skill/`.
 
-## Features
+The V3 path never uses source prose as a generation prompt. It first turns each chapter into source-evidenced facts, events, scenes, time/space relations and dramatic beats; only then can it build bounded generation programs and judge reconstruction gaps.
 
-- **13-step automated pipeline** powered by DeepSeek API and ChromaDB
-- Detailed architecture notes in `docs/pipeline.md`
-- Shared non-step logic centralized under `pipeline/core/`
-- Semantic arc detection with long-chapter subchunk support
-- Dual-stage plot extraction with `raw + canonical + character_keys`
-- Event induction that links multiple atoms into larger event units
-- Retrieval index plus world/template mining
-- Multi-source skeleton casting and separate character-casting pass
-- Character-driven plot reassembly
-- Sliding-window volume generation
-- Validation and final output packaging
+## Project documentation
 
-## Quick Start
+The current V3/V4 documentation replaces the retired V2 thirteen-step design:
 
-1. **Install dependencies**
-   ```bash
-   pip install -r requirements.txt
-   ```
+- [Requirements specification](docs/SRS.md)
+- [Software design specification](docs/SDS.md)
+- [Local models, LoRA, SFT, DPO and style evaluation](docs/MODEL_GUIDE.md)
+- [Implementation roadmap](docs/ROADMAP.md)
 
-2. **Configure**
-   - Edit `config.yaml` and set your `DEEPSEEK_API_KEY`, or set the environment variable.
-   - Set `input_dir`, `output_dir`, and `intermediate_dir` as needed.
+## V3 numbered pipeline
 
-3. **Add source novels**
-   - Place your source novel `.txt` files in the configured input directory.
-
-4. **Run**
-   ```bash
-   python main.py
-   ```
-
-## Running the Pipeline (`--start-step`, `--end-step`, `--only-step`)
-
-After early steps finish, their outputs are written into `intermediate_data`
-and can be reused with `--start-step`. You can also stop after a specific
-step with `--end-step`, or run a single step with `--only-step`.
-
-### Common commands
-
-```bash
-# Full run
-python main.py
-
-# Resume from Step 3
-python main.py --start-step 3
-
-# Run only the material-building phase
-python main.py --start-step 1 --end-step 4
-
-# Run only Step 2
-python main.py --only-step 2
-
-# Run the world/pattern/template phase
-python main.py --start-step 5 --end-step 7
-
-# Regenerate only Step 7 templates
-python main.py --only-step 7
+```text
+1. 导入小说文本
+2. 高密度、可追溯的章节标注
+3. 跨章节连续性图与本地剧情事实图谱 `narrative_graph.json`
+4. 匿名化多层叙事模板
+5. 量化文风蒸馏
+6. 编译小说作者 Skill
+7. 可选：受控扩写章节规划（不自动生成正文）
 ```
 
-### Resume Safety
-
-Starting from Step 1 creates `intermediate_data/pipeline_run_manifest.json`.
-When resuming, PlotWeaver verifies the hashes of prior artifacts so outputs from
-different runs are not silently mixed. For a one-time recovery of legacy
-intermediate files that predate the manifest, explicitly opt in:
+Put one or more `.txt` novels in `input/` and run:
 
 ```powershell
-$env:PLOTWEAVER_ALLOW_LEGACY_RESUME = "1"
-py -3 main.py --start-step 3 --end-step 9
+python main.py run --author-id ExampleAuthor --work-id work-001 --chapter-limit 20
 ```
 
-The resumed steps are then recorded and verified normally. Remove the
-environment variable after the recovery run.
+`input/` is the active import source. `novels/` can retain the complete source archive but is not read automatically. Importing a directory assigns stable IDs such as `work-001`; original titles remain in metadata. One compiled skill currently corresponds to one selected work, so a multi-work import must specify `--work-id` when running stage 6 or 7. This prevents silently overwriting the author-level output with whichever work happened to finish last.
 
-### Phase notes
+Every run writes a hash manifest to `runs/<AuthorId>/<RunId>/pipeline_manifest.json`. Resume an interrupted annotation pass with the same run inputs; add `--no-resume` only when the source or extraction contract has changed.
 
-Steps 1-4 are the source-material accumulation stage:
+## High-density annotation
 
-- Step 1: physical chunking
-- Step 2: plot atom extraction
-- Step 3: event induction
-- Step 4: RAG knowledge base
+The annotation stage uses short overlapping source windows and checkpointed batches, so long chapters are never sent in one request. Every accepted entity, fact, event and scene retains an exact source quote and offset. Hard quality gates require event, fact and scene density proportional to source length, coverage of evidence-bearing sections, ordered time relations, fact-backed spatial relations, and valid state transitions.
 
-Steps 5 onward move into synthesis and outline generation:
+```powershell
+python main.py ingest --author-id ExampleAuthor --source-dir input
+python main.py annotate --author-id ExampleAuthor --work-id work-001 --limit 20
+python main.py continuity --author-id ExampleAuthor --work-id work-001 --limit 20
+python main.py graph --author-id ExampleAuthor --work-id work-001 --limit 20
+python main.py templates --author-id ExampleAuthor --work-id work-001 --limit 20 --batch-size 5
+python main.py style --author-id ExampleAuthor --work-id work-001 --limit 20 --batch-size 5
+python main.py compile-skill --author-id ExampleAuthor --work-id work-001 --limit 20
+```
 
-- world fusion
-- pattern/template mining
-- skeleton fusion
-- outline generation
+The first five commands produce typed data under `corpus/<AuthorId>/<WorkId>/`. `compile-skill` validates matching samples and emits a generic package at `output/<AuthorId>_skill/`, including `SKILL.md`, anonymous narrative templates, a measured style profile and Chinese JSON prompt templates.
 
-## Pipeline Steps
+## Controlled expansion and reconstruction tests
 
-| Step | Module | Description |
-|------|--------|-------------|
-| 1 | `pipeline/step1_chunking.py` | Physical chunking and arc anchoring |
-| 2 | `pipeline/step2_extraction.py` | Plot atom extraction |
-| 3 | `pipeline/step3_event_induction.py` | Event induction from plot atoms |
-| 4 | `pipeline/step4_knowledge_base.py` | Build the RAG knowledge base |
-| 5 | `pipeline/step5_world_fusion.py` | Build the fused world base |
-| 6 | `pipeline/step6_interaction_mining.py` | Mine reusable interactions and long threads |
-| 7 | `pipeline/step7_template_mining.py` | Derive event, volume, and chapter-flow templates |
-| 8 | `pipeline/step8_skeleton_extraction.py` | Extract per-source skeleton nodes |
-| 9 | `pipeline/step9_skeleton_fusion.py` | Fuse multi-source skeletons into one backbone |
-| 10 | `pipeline/step10_character_casting.py` | Cast protagonist, supporting roles, and relationship stages |
-| 11 | `pipeline/step11_reassembly.py` | Character-driven plot reassembly |
-| 12 | `pipeline/step12_generation.py` | Sliding-window volume generation |
-| 13 | `pipeline/step13_validation.py` | Validation and final output |
+`compile-program` derives an immutable `事实 → 事件 → 场景 → 节拍 → 段落` contract for a chapter. A fact/event is assigned to exactly one local scene and later events are explicit no-leak barriers.
 
-## Repository Layout
+```powershell
+python main.py compile-program --author-id ExampleAuthor --work-id work-001 --chapter 1 --limit 20
+python main.py plan-expansion --author-id ExampleAuthor --work-id work-001 --chapter 1 --limit 20 --target-char-min 4000 --target-char-max 5000
+```
 
-- `pipeline/`: numbered step modules plus `pipeline/core/` shared modules
-- `pipeline/core/`: shared data structures, utilities, aliasing, world-building helpers, and skeleton helpers
-- `docs/`: pipeline and architecture notes
+The controlled-expansion planner allocates a hard character budget to scenes and paragraphs. Every added beat is labelled either **合理推导** or **氛围扩写** and links to local supporting fact IDs. Such labels allow actions, reactions, transitions and sensory detail, but never authorize a new relationship, setting, resource, motive, time point or plot result.
 
-## Intermediate Outputs
+Generation is separate from planning so a failed candidate cannot be mistaken for the skill itself:
 
-Common intermediate files now include:
+```powershell
+python main.py generate-from-program --author-id ExampleAuthor `
+  --program runs/ExampleAuthor/chapter-plan/chapter_programs/chapter-0001.program.json `
+  --graph corpus/ExampleAuthor/work-001/narrative_graph.json --run-id first5-test
+```
 
-| File | Description |
-|------|-------------|
-| `step1_chunks.json` | Volume arcs and chunked source events |
-| `step2_extracted_plots.json` | Extracted plot atoms |
-| `step3_induced_events.json` | Multi-atom induced events |
-| `step5_world_fusion.json` | Fused world snapshot |
-| `step6_interaction_mining.json` | Pattern-enhanced world snapshot |
-| `step7_template_mining.json` | Template-mined world snapshot |
-| `step8_source_skeletons.json` | Per-source skeleton node maps |
-| `step9_skeleton.json` | Fused event skeleton |
-| `step10_casted_skeleton.json` | Skeleton with character sheet |
-| `step11_reassembled_plot.json` | Reassembled event plan |
-| `step12_volume_outlines.json` | Generated volume outlines |
+The generator works scene by scene and sends exactly one paragraph job per writing request. Before that request, it reads only the paragraph’s bounded subgraph from `narrative_graph.json`: permitted entities, facts, relationships, causal links, foreshadow lifecycle and previously committed state. It never sends source prose, a whole source chapter, or generated prose tails to the writer. Each chapter first writes `chapter_graph_patch.candidate.json`; semantic, prose, role, style, length and state/causality checks must all pass before the patch is committed, `generated_draft.txt` is published, and the next chapter may start. Checkpoints make model transport failures resumable.
 
-## Output
+For a planned chapter range, use the sequence runner rather than invoking each chapter independently:
 
-After a successful run, the `output` directory contains:
+```powershell
+python main.py generate-program-work --author-id ExampleAuthor --index runs/ExampleAuthor/chapter-plan-work/expansion_plan_index.json --run-id first5-test
+```
 
-- `novel_world_bible.md`
-- `volume_1_to_N_outline.md`
-- `validation_report.md`
+It creates an input state file for chapter 2 onward only after the preceding chapter has passed every gate. A rejected chapter blocks later chapters and leaves their status as `not_started`; this prevents a speculative exit state from contaminating continuity evaluation.
+
+After generation, run the independent reconstruction regression:
+
+```powershell
+python main.py evaluate-program-fidelity --author-id ExampleAuthor --work-id work-001 `
+  --index runs/ExampleAuthor/chapter-plan-work/expansion_plan_index.json `
+  --sequence runs/ExampleAuthor/first5-test/program_sequence/sequence_summary.json `
+  --annotation-limit 20 --run-id first5-fidelity
+```
+
+The report contains a local style-similarity measurement and a strict model judgment over anonymised facts, events, scenes, state changes and time/space relations. Any explicit omission or contradiction forces the structural result to fail even if the model's numeric score is high.
+
+## Run options
+
+```powershell
+python main.py run --author-id ExampleAuthor --work-id work-001 `
+  --chapter-limit 20 --annotation-input-chars 1200 --annotation-overlap-units 1 `
+  --template-batch-size 5 --style-batch-size 5
+```
+
+To include planning for the first five chapters after stages 1–6:
+
+```powershell
+python main.py run --author-id ExampleAuthor --work-id work-001 --chapter-limit 20 `
+  --expansion-chapters 5 --target-char-min 4000 --target-char-max 5000
+```
+
+All model-facing structured prompts are Chinese and give a concrete JSON example. Strict JSON validation accepts exactly the declared V3 format; it also recognises the earlier faithful chapter-program schema with its documented defaults, so existing faithful program artifacts remain readable.
+
+Use `--offline` only for deterministic structural smoke tests after annotation has completed; high-density evidence annotation itself requires a model. Configure a compatible model in `config.yaml` for annotation, template mining, style synthesis and generation. Analyse only novels you are permitted to process.

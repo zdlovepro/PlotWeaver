@@ -1,0 +1,9 @@
+{
+  "stage": "complete",
+  "status": "complete",
+  "semantic_passed": true,
+  "structural_passed": true,
+  "prose_passed": false,
+  "style_passed": true,
+  "overall_passed": false
+}

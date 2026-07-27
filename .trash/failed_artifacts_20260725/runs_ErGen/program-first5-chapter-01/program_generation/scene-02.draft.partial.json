@@ -1,0 +1,15 @@
+{
+  "scene_id": "ErGen/work-001/0001:chunk-01:scene-002",
+  "paragraphs": [
+    {
+      "paragraph_id": "ErGen/work-001/0001:chunk-01:scene-002:paragraph-00",
+      "text": "王卓冷笑着对铁柱说：“就你这模样，也想被选中？真是笑死人了。”铁柱的父亲王天水立刻回击：“你少在这里胡说八道！”王卓父亲淡淡道：“实话实说罢了。”铁柱抬起头，目光如铁：“我，一定会被选中的。”",
+      "claimed_fact_ids": [
+        "ErGen/work-001/0001:chunk-01:fact-009"
+      ],
+      "claimed_event_ids": [
+        "ErGen/work-001/0001:chunk-01:event-002"
+      ]
+    }
+  ]
+}

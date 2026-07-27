@@ -1,0 +1,15 @@
+{
+  "scene_id": "ErGen/work-001/0001:chunk-01:scene-002",
+  "paragraphs": [
+    {
+      "paragraph_id": "ErGen/work-001/0001:chunk-01:scene-002:paragraph-00",
+      "text": "宴席上，王卓端起酒杯，斜眼看着铁柱，轻笑道：“就你这样的，也配去恒岳派？别给咱们村子丢人了。”铁柱的父亲王天水脸色一沉，正要开口，铁柱却先抬起了头，指甲深深掐进掌心，在心里默默念道：我一定要被选中。",
+      "claimed_fact_ids": [
+        "ErGen/work-001/0001:chunk-01:fact-009"
+      ],
+      "claimed_event_ids": [
+        "ErGen/work-001/0001:chunk-01:event-002"
+      ]
+    }
+  ]
+}

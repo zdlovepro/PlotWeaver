@@ -1,0 +1,272 @@
+{
+  "reconstruction_mode": "fidelity_test_only",
+  "chapter_id": "work-001/0001",
+  "entities": [
+    {
+      "name": "铁柱",
+      "kind": "person"
+    },
+    {
+      "name": "王天水",
+      "kind": "person"
+    },
+    {
+      "name": "母亲",
+      "kind": "person"
+    },
+    {
+      "name": "四叔",
+      "kind": "person"
+    },
+    {
+      "name": "王卓",
+      "kind": "person"
+    },
+    {
+      "name": "王卓父亲",
+      "kind": "person"
+    },
+    {
+      "name": "村子",
+      "kind": "location"
+    },
+    {
+      "name": "恒岳派",
+      "kind": "organization"
+    },
+    {
+      "name": "王氏家族",
+      "kind": "organization"
+    }
+  ],
+  "facts": [
+    {
+      "kind": "identity",
+      "subject": "铁柱",
+      "predicate": "本名",
+      "value": "王林",
+      "object": ""
+    },
+    {
+      "kind": "relationship",
+      "subject": "铁柱",
+      "predicate": "父亲是",
+      "value": "",
+      "object": "王天水"
+    },
+    {
+      "kind": "relationship",
+      "subject": "铁柱",
+      "predicate": "母亲是",
+      "value": "",
+      "object": "母亲"
+    },
+    {
+      "kind": "knowledge",
+      "subject": "铁柱",
+      "predicate": "对仙人好奇",
+      "value": "好奇",
+      "object": ""
+    },
+    {
+      "kind": "resource",
+      "subject": "铁柱",
+      "predicate": "获得",
+      "value": "两本书",
+      "object": ""
+    },
+    {
+      "kind": "progression",
+      "subject": "铁柱",
+      "predicate": "被推荐",
+      "value": "恒岳派",
+      "object": "恒岳派"
+    },
+    {
+      "kind": "emotion",
+      "subject": "王天水",
+      "predicate": "期望",
+      "value": "",
+      "object": "铁柱"
+    },
+    {
+      "kind": "emotion",
+      "subject": "王卓",
+      "predicate": "轻视",
+      "value": "",
+      "object": "铁柱"
+    },
+    {
+      "kind": "goal",
+      "subject": "铁柱",
+      "predicate": "下定决心",
+      "value": "被选中",
+      "object": ""
+    },
+    {
+      "kind": "progression",
+      "subject": "铁柱",
+      "predicate": "离开家乡",
+      "value": "前往恒岳派",
+      "object": "恒岳派"
+    },
+    {
+      "kind": "relationship",
+      "subject": "铁柱",
+      "predicate": "四叔是",
+      "value": "",
+      "object": "四叔"
+    }
+  ],
+  "time_anchors": [
+    "随后",
+    "第二天",
+    "此时",
+    "随后",
+    "此时"
+  ],
+  "spatial_relation_count": 0,
+  "current_events": [
+    {
+      "order": 0,
+      "participants": [
+        "铁柱",
+        "王天水",
+        "母亲",
+        "四叔"
+      ],
+      "action": "四叔向铁柱父母提出恒岳派推荐名额，铁柱父母同意，铁柱对仙人生出好奇",
+      "obstacle": "",
+      "decision": "",
+      "outcomes": [
+        {
+          "kind": "progression",
+          "subject": "铁柱",
+          "predicate": "被推荐",
+          "value": "恒岳派",
+          "object": "恒岳派"
+        },
+        {
+          "kind": "knowledge",
+          "subject": "铁柱",
+          "predicate": "对仙人好奇",
+          "value": "好奇",
+          "object": ""
+        }
+      ],
+      "costs": []
+    },
+    {
+      "order": 1,
+      "participants": [
+        "铁柱",
+        "王天水",
+        "王卓",
+        "王卓父亲"
+      ],
+      "action": "王卓出言轻视，铁柱父亲反驳，铁柱内心决定被选中",
+      "obstacle": "",
+      "decision": "",
+      "outcomes": [
+        {
+          "kind": "goal",
+          "subject": "铁柱",
+          "predicate": "下定决心",
+          "value": "被选中",
+          "object": ""
+        }
+      ],
+      "costs": []
+    },
+    {
+      "order": 2,
+      "participants": [
+        "铁柱",
+        "四叔"
+      ],
+      "action": "四叔接铁柱，铁柱告别父母，第一次离开家乡",
+      "obstacle": "",
+      "decision": "",
+      "outcomes": [
+        {
+          "kind": "progression",
+          "subject": "铁柱",
+          "predicate": "离开家乡",
+          "value": "前往恒岳派",
+          "object": "恒岳派"
+        }
+      ],
+      "costs": []
+    }
+  ],
+  "scene_states": [
+    {
+      "order": 0,
+      "objective": "四叔推荐恒岳派名额",
+      "entry_facts": [],
+      "exit_facts": [
+        {
+          "kind": "progression",
+          "subject": "铁柱",
+          "predicate": "被推荐",
+          "value": "恒岳派",
+          "object": "恒岳派"
+        },
+        {
+          "kind": "knowledge",
+          "subject": "铁柱",
+          "predicate": "对仙人好奇",
+          "value": "好奇",
+          "object": ""
+        }
+      ],
+      "tension": 1
+    },
+    {
+      "order": 1,
+      "objective": "庆祝及王卓挑衅",
+      "entry_facts": [
+        {
+          "kind": "progression",
+          "subject": "铁柱",
+          "predicate": "被推荐",
+          "value": "恒岳派",
+          "object": "恒岳派"
+        }
+      ],
+      "exit_facts": [
+        {
+          "kind": "goal",
+          "subject": "铁柱",
+          "predicate": "下定决心",
+          "value": "被选中",
+          "object": ""
+        }
+      ],
+      "tension": 3
+    },
+    {
+      "order": 2,
+      "objective": "铁柱离开家乡",
+      "entry_facts": [
+        {
+          "kind": "goal",
+          "subject": "铁柱",
+          "predicate": "下定决心",
+          "value": "被选中",
+          "object": ""
+        }
+      ],
+      "exit_facts": [
+        {
+          "kind": "progression",
+          "subject": "铁柱",
+          "predicate": "离开家乡",
+          "value": "前往恒岳派",
+          "object": "恒岳派"
+        }
+      ],
+      "tension": 2
+    }
+  ]
+}

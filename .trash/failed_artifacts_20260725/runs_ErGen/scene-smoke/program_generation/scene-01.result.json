@@ -1,0 +1,84 @@
+{
+  "scene_no": 1,
+  "scene_id": "ErGen/work-001/0001:chunk-01:scene-001",
+  "minimum_paragraph_chars": 60,
+  "repairs_used": 0,
+  "passed": true,
+  "draft": {
+    "scene_id": "ErGen/work-001/0001:chunk-01:scene-001",
+    "paragraphs": [
+      {
+        "paragraph_id": "ErGen/work-001/0001:chunk-01:scene-001:paragraph-00",
+        "text": "铁柱本名王林，今年十四岁，生在这个偏僻的村子里。父亲王天水是个老实巴交的庄稼人，母亲也是个本分的农妇。一家三口日子虽穷，倒也过得安稳。",
+        "claimed_fact_ids": [
+          "ErGen/work-001/0001:chunk-01:fact-001",
+          "ErGen/work-001/0001:chunk-01:fact-002",
+          "ErGen/work-001/0001:chunk-01:fact-003"
+        ],
+        "claimed_event_ids": []
+      },
+      {
+        "paragraph_id": "ErGen/work-001/0001:chunk-01:scene-001:paragraph-01",
+        "text": "四叔是铁柱父亲的弟弟，在王氏家族里算是个有头脸的人物，时常在外面走动，见过些世面。这一天，四叔突然登门，铁柱一家都有些意外。",
+        "claimed_fact_ids": [
+          "ErGen/work-001/0001:chunk-01:fact-011"
+        ],
+        "claimed_event_ids": []
+      },
+      {
+        "paragraph_id": "ErGen/work-001/0001:chunk-01:scene-001:paragraph-02",
+        "text": "四叔坐下后，喝了口水，开门见山道：“天水哥，我这次来，是为铁柱的事。恒岳派今年的推荐名额，我争取到了一个，想给铁柱。”王天水一愣，随即激动起来：“四弟，这……这能行吗？”母亲也在一旁搓着手，满脸期盼。铁柱听着，心里涌起一股说不出的好奇——仙人？恒岳派？那是什么地方？",
+        "claimed_fact_ids": [
+          "ErGen/work-001/0001:chunk-01:fact-006",
+          "ErGen/work-001/0001:chunk-01:fact-004"
+        ],
+        "claimed_event_ids": [
+          "ErGen/work-001/0001:chunk-01:event-001"
+        ]
+      },
+      {
+        "paragraph_id": "ErGen/work-001/0001:chunk-01:scene-001:paragraph-03",
+        "text": "王天水紧紧攥着拳头，眼里满是期望，仿佛看到了儿子出人头地的未来。可铁柱却想起王卓那双轻蔑的眼睛——那个总是嘲笑他土气的堂兄，要是知道自己要去恒岳派，怕是要气得跳脚吧。",
+        "claimed_fact_ids": [
+          "ErGen/work-001/0001:chunk-01:fact-007",
+          "ErGen/work-001/0001:chunk-01:fact-008"
+        ],
+        "claimed_event_ids": []
+      },
+      {
+        "paragraph_id": "ErGen/work-001/0001:chunk-01:scene-001:paragraph-04",
+        "text": "四叔从怀里掏出两本泛黄的书，递给铁柱：“这是恒岳派的基础功法，你先看看，心里有个底。”铁柱双手接过，手指摩挲着粗糙的纸页，心里莫名地泛起一丝期待。",
+        "claimed_fact_ids": [
+          "ErGen/work-001/0001:chunk-01:fact-005"
+        ],
+        "claimed_event_ids": []
+      }
+    ]
+  },
+  "validations": [
+    {
+      "scene_id": "ErGen/work-001/0001:chunk-01:scene-001",
+      "reported_passed": true,
+      "realized_fact_ids": [
+        "ErGen/work-001/0001:chunk-01:fact-001",
+        "ErGen/work-001/0001:chunk-01:fact-002",
+        "ErGen/work-001/0001:chunk-01:fact-003",
+        "ErGen/work-001/0001:chunk-01:fact-004",
+        "ErGen/work-001/0001:chunk-01:fact-005",
+        "ErGen/work-001/0001:chunk-01:fact-006",
+        "ErGen/work-001/0001:chunk-01:fact-007",
+        "ErGen/work-001/0001:chunk-01:fact-008",
+        "ErGen/work-001/0001:chunk-01:fact-011"
+      ],
+      "missing_fact_ids": [],
+      "realized_event_ids": [
+        "ErGen/work-001/0001:chunk-01:event-001"
+      ],
+      "missing_event_ids": [],
+      "premature_event_ids": [],
+      "paragraph_issues": [],
+      "repair_paragraph_ids": [],
+      "passed": true
+    }
+  ]
+}

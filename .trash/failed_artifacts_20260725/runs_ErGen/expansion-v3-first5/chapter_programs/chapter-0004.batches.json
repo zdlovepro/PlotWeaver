@@ -1,0 +1,142 @@
+{
+  "schema_version": "1.0",
+  "batch_paragraph_limit": 6,
+  "batches": [
+    {
+      "scene_id": "ErGen/work-001/0004:chunk-01:scene-001",
+      "paragraph_ids": [
+        "ErGen/work-001/0004:chunk-01:scene-001:paragraph-00",
+        "ErGen/work-001/0004:chunk-01:scene-001:expansion-paragraph-001",
+        "ErGen/work-001/0004:chunk-01:scene-001:expansion-paragraph-002",
+        "ErGen/work-001/0004:chunk-01:scene-001:expansion-paragraph-003",
+        "ErGen/work-001/0004:chunk-01:scene-001:expansion-paragraph-004",
+        "ErGen/work-001/0004:chunk-01:scene-001:expansion-paragraph-005"
+      ]
+    },
+    {
+      "scene_id": "ErGen/work-001/0004:chunk-01:scene-001",
+      "paragraph_ids": [
+        "ErGen/work-001/0004:chunk-01:scene-001:expansion-paragraph-006",
+        "ErGen/work-001/0004:chunk-01:scene-001:expansion-paragraph-007",
+        "ErGen/work-001/0004:chunk-01:scene-001:paragraph-01",
+        "ErGen/work-001/0004:chunk-01:scene-001:expansion-paragraph-008",
+        "ErGen/work-001/0004:chunk-01:scene-001:expansion-paragraph-009",
+        "ErGen/work-001/0004:chunk-01:scene-001:expansion-paragraph-010"
+      ]
+    },
+    {
+      "scene_id": "ErGen/work-001/0004:chunk-01:scene-001",
+      "paragraph_ids": [
+        "ErGen/work-001/0004:chunk-01:scene-001:expansion-paragraph-011",
+        "ErGen/work-001/0004:chunk-01:scene-001:expansion-paragraph-012",
+        "ErGen/work-001/0004:chunk-01:scene-001:expansion-paragraph-013",
+        "ErGen/work-001/0004:chunk-01:scene-001:expansion-paragraph-014",
+        "ErGen/work-001/0004:chunk-01:scene-001:paragraph-02",
+        "ErGen/work-001/0004:chunk-01:scene-001:expansion-paragraph-015"
+      ]
+    },
+    {
+      "scene_id": "ErGen/work-001/0004:chunk-01:scene-001",
+      "paragraph_ids": [
+        "ErGen/work-001/0004:chunk-01:scene-001:expansion-paragraph-016",
+        "ErGen/work-001/0004:chunk-01:scene-001:expansion-paragraph-017",
+        "ErGen/work-001/0004:chunk-01:scene-001:expansion-paragraph-018",
+        "ErGen/work-001/0004:chunk-01:scene-001:expansion-paragraph-019",
+        "ErGen/work-001/0004:chunk-01:scene-001:expansion-paragraph-020",
+        "ErGen/work-001/0004:chunk-01:scene-001:expansion-paragraph-021"
+      ]
+    },
+    {
+      "scene_id": "ErGen/work-001/0004:chunk-01:scene-001",
+      "paragraph_ids": [
+        "ErGen/work-001/0004:chunk-01:scene-001:paragraph-03",
+        "ErGen/work-001/0004:chunk-01:scene-001:expansion-paragraph-022",
+        "ErGen/work-001/0004:chunk-01:scene-001:expansion-paragraph-023",
+        "ErGen/work-001/0004:chunk-01:scene-001:expansion-paragraph-024",
+        "ErGen/work-001/0004:chunk-01:scene-001:expansion-paragraph-025",
+        "ErGen/work-001/0004:chunk-01:scene-001:expansion-paragraph-026"
+      ]
+    },
+    {
+      "scene_id": "ErGen/work-001/0004:chunk-01:scene-001",
+      "paragraph_ids": [
+        "ErGen/work-001/0004:chunk-01:scene-001:expansion-paragraph-027",
+        "ErGen/work-001/0004:chunk-01:scene-001:paragraph-04",
+        "ErGen/work-001/0004:chunk-01:scene-001:expansion-paragraph-028",
+        "ErGen/work-001/0004:chunk-01:scene-001:expansion-paragraph-029",
+        "ErGen/work-001/0004:chunk-01:scene-001:expansion-paragraph-030",
+        "ErGen/work-001/0004:chunk-01:scene-001:expansion-paragraph-031"
+      ]
+    },
+    {
+      "scene_id": "ErGen/work-001/0004:chunk-01:scene-001",
+      "paragraph_ids": [
+        "ErGen/work-001/0004:chunk-01:scene-001:expansion-paragraph-032",
+        "ErGen/work-001/0004:chunk-01:scene-001:expansion-paragraph-033",
+        "ErGen/work-001/0004:chunk-01:scene-001:paragraph-05",
+        "ErGen/work-001/0004:chunk-01:scene-001:expansion-paragraph-034",
+        "ErGen/work-001/0004:chunk-01:scene-001:expansion-paragraph-035",
+        "ErGen/work-001/0004:chunk-01:scene-001:expansion-paragraph-036"
+      ]
+    },
+    {
+      "scene_id": "ErGen/work-001/0004:chunk-01:scene-001",
+      "paragraph_ids": [
+        "ErGen/work-001/0004:chunk-01:scene-001:expansion-paragraph-037",
+        "ErGen/work-001/0004:chunk-01:scene-001:expansion-paragraph-038",
+        "ErGen/work-001/0004:chunk-01:scene-001:expansion-paragraph-039"
+      ]
+    },
+    {
+      "scene_id": "ErGen/work-001/0004:chunk-01:scene-002",
+      "paragraph_ids": [
+        "ErGen/work-001/0004:chunk-01:scene-002:paragraph-00",
+        "ErGen/work-001/0004:chunk-01:scene-002:expansion-paragraph-001",
+        "ErGen/work-001/0004:chunk-01:scene-002:expansion-paragraph-002",
+        "ErGen/work-001/0004:chunk-01:scene-002:expansion-paragraph-003",
+        "ErGen/work-001/0004:chunk-01:scene-002:expansion-paragraph-004",
+        "ErGen/work-001/0004:chunk-01:scene-002:expansion-paragraph-005"
+      ]
+    },
+    {
+      "scene_id": "ErGen/work-001/0004:chunk-01:scene-002",
+      "paragraph_ids": [
+        "ErGen/work-001/0004:chunk-01:scene-002:expansion-paragraph-006",
+        "ErGen/work-001/0004:chunk-01:scene-002:paragraph-01",
+        "ErGen/work-001/0004:chunk-01:scene-002:expansion-paragraph-007",
+        "ErGen/work-001/0004:chunk-01:scene-002:expansion-paragraph-008",
+        "ErGen/work-001/0004:chunk-01:scene-002:expansion-paragraph-009",
+        "ErGen/work-001/0004:chunk-01:scene-002:expansion-paragraph-010"
+      ]
+    },
+    {
+      "scene_id": "ErGen/work-001/0004:chunk-01:scene-002",
+      "paragraph_ids": [
+        "ErGen/work-001/0004:chunk-01:scene-002:expansion-paragraph-011",
+        "ErGen/work-001/0004:chunk-01:scene-002:expansion-paragraph-012",
+        "ErGen/work-001/0004:chunk-01:scene-002:paragraph-02",
+        "ErGen/work-001/0004:chunk-01:scene-002:expansion-paragraph-013",
+        "ErGen/work-001/0004:chunk-01:scene-002:expansion-paragraph-014",
+        "ErGen/work-001/0004:chunk-01:scene-002:expansion-paragraph-015"
+      ]
+    },
+    {
+      "scene_id": "ErGen/work-001/0004:chunk-01:scene-002",
+      "paragraph_ids": [
+        "ErGen/work-001/0004:chunk-01:scene-002:expansion-paragraph-016",
+        "ErGen/work-001/0004:chunk-01:scene-002:expansion-paragraph-017",
+        "ErGen/work-001/0004:chunk-01:scene-002:paragraph-03",
+        "ErGen/work-001/0004:chunk-01:scene-002:expansion-paragraph-018",
+        "ErGen/work-001/0004:chunk-01:scene-002:expansion-paragraph-019",
+        "ErGen/work-001/0004:chunk-01:scene-002:expansion-paragraph-020"
+      ]
+    },
+    {
+      "scene_id": "ErGen/work-001/0004:chunk-01:scene-002",
+      "paragraph_ids": [
+        "ErGen/work-001/0004:chunk-01:scene-002:expansion-paragraph-021",
+        "ErGen/work-001/0004:chunk-01:scene-002:expansion-paragraph-022"
+      ]
+    }
+  ]
+}

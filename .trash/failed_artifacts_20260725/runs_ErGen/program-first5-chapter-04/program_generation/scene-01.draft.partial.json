@@ -1,0 +1,44 @@
+{
+  "scene_id": "ErGen/work-001/0004:chunk-01:scene-001",
+  "paragraphs": [
+    {
+      "paragraph_id": "ErGen/work-001/0004:chunk-01:scene-001:paragraph-00",
+      "text": "王林咬紧牙关，沿着陡峭的石阶小径一步步向上爬行，汗水浸透了衣衫。",
+      "claimed_fact_ids": [
+        "ErGen/work-001/0004:chunk-01:fact-001"
+      ],
+      "claimed_event_ids": []
+    },
+    {
+      "paragraph_id": "ErGen/work-001/0004:chunk-01:scene-001:paragraph-01",
+      "text": "他感到双腿如灌铅般沉重，正咬牙坚持时，忽然瞥见前方一个少年踩空，惊呼着坠落下去。",
+      "claimed_fact_ids": [
+        "ErGen/work-001/0004:chunk-01:fact-002",
+        "ErGen/work-001/0004:chunk-01:fact-003"
+      ],
+      "claimed_event_ids": [
+        "ErGen/work-001/0004:chunk-01:event-001"
+      ]
+    },
+    {
+      "paragraph_id": "ErGen/work-001/0004:chunk-01:scene-001:paragraph-02",
+      "text": "王林感到双腿如灌铅，再也无法前进一步。此时黑衣中年人冷冷宣布时间已到，只有三人合格，其余失败。王林眼前一黑，身体软倒，昏迷过去。",
+      "claimed_fact_ids": [
+        "ErGen/work-001/0004:chunk-01:fact-002",
+        "ErGen/work-001/0004:chunk-01:fact-005",
+        "ErGen/work-001/0004:chunk-01:fact-006"
+      ],
+      "claimed_event_ids": [
+        "ErGen/work-001/0004:chunk-01:event-002"
+      ]
+    },
+    {
+      "paragraph_id": "ErGen/work-001/0004:chunk-01:scene-001:paragraph-03",
+      "text": "昏迷前，他隐约听到一个声音叹息道：“可惜资质太过普通。”然后便彻底失去了知觉。",
+      "claimed_fact_ids": [
+        "ErGen/work-001/0004:chunk-01:fact-004"
+      ],
+      "claimed_event_ids": []
+    }
+  ]
+}

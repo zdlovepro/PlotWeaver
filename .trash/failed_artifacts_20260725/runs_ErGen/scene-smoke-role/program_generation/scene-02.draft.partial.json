@@ -1,0 +1,15 @@
+{
+  "scene_id": "ErGen/work-001/0001:chunk-01:scene-002",
+  "paragraphs": [
+    {
+      "paragraph_id": "ErGen/work-001/0001:chunk-01:scene-002:paragraph-00",
+      "text": "宴席上，王卓轻蔑地瞥了铁柱一眼，哼道：“就你这熊样，也配去恒岳派？”王天水猛地一拍桌子，怒目而视：“我儿子怎么就不配了！”铁柱攥紧拳头，指甲几乎陷进掌心，心底涌起一股狠劲：无论如何，我都要被选中。",
+      "claimed_fact_ids": [
+        "ErGen/work-001/0001:chunk-01:fact-009"
+      ],
+      "claimed_event_ids": [
+        "ErGen/work-001/0001:chunk-01:event-002"
+      ]
+    }
+  ]
+}

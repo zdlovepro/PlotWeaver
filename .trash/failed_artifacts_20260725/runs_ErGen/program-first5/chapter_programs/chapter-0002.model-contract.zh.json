@@ -1,0 +1,427 @@
+{
+  "契约版本": "1.0",
+  "章节ID": "ErGen/work-001/0002",
+  "源文本哈希": "61f4576a58aea352079b5e45ab636835210a733c08b147ac9ebf1676f123e44b",
+  "实体字典": [
+    {
+      "实体ID": "ErGen/work-001/0002:chunk-01:entity-001",
+      "名称": "王林",
+      "类型": "person"
+    },
+    {
+      "实体ID": "ErGen/work-001/0002:chunk-01:entity-002",
+      "名称": "四叔",
+      "类型": "person"
+    },
+    {
+      "实体ID": "ErGen/work-001/0002:chunk-01:entity-003",
+      "名称": "老者",
+      "类型": "person"
+    },
+    {
+      "实体ID": "ErGen/work-001/0002:chunk-01:entity-004",
+      "名称": "王卓",
+      "类型": "person"
+    },
+    {
+      "实体ID": "ErGen/work-001/0002:chunk-01:entity-005",
+      "名称": "王浩",
+      "类型": "person"
+    },
+    {
+      "实体ID": "ErGen/work-001/0002:chunk-01:entity-006",
+      "名称": "白衣青年",
+      "类型": "person"
+    },
+    {
+      "实体ID": "ErGen/work-001/0002:chunk-01:entity-007",
+      "名称": "黑衣中年人",
+      "类型": "person"
+    },
+    {
+      "实体ID": "ErGen/work-001/0002:chunk-01:entity-008",
+      "名称": "王氏家族宅子",
+      "类型": "location"
+    },
+    {
+      "实体ID": "ErGen/work-001/0002:chunk-01:entity-009",
+      "名称": "恒岳派山门",
+      "类型": "location"
+    },
+    {
+      "实体ID": "ErGen/work-001/0002:chunk-01:entity-010",
+      "名称": "四叔家",
+      "类型": "location"
+    },
+    {
+      "实体ID": "ErGen/work-001/0002:chunk-01:entity-011",
+      "名称": "山村",
+      "类型": "location"
+    }
+  ],
+  "场景程序": [
+    {
+      "场景ID": "ErGen/work-001/0002:chunk-01:scene-001",
+      "章节ID": "ErGen/work-001/0002",
+      "场景序号": 0,
+      "场景目标": "到达四叔家暂住",
+      "参与实体ID": [
+        "ErGen/work-001/0002:chunk-01:entity-001",
+        "ErGen/work-001/0002:chunk-01:entity-002"
+      ],
+      "入场状态事实ID": [
+        "ErGen/work-001/0002:chunk-01:fact-001"
+      ],
+      "必现事件": [
+        {
+          "事件ID": "ErGen/work-001/0002:chunk-01:event-001",
+          "场景ID": "ErGen/work-001/0002:chunk-01:scene-001",
+          "事件概述": "王林离开山村，乘马车到达四叔家",
+          "行动": "乘坐马车离开山村到达四叔家",
+          "参与实体ID": [
+            "ErGen/work-001/0002:chunk-01:entity-001",
+            "ErGen/work-001/0002:chunk-01:entity-002"
+          ],
+          "阻力": "",
+          "决断": "",
+          "前置事实ID": [
+            "ErGen/work-001/0002:chunk-01:fact-001"
+          ],
+          "必须表达的事实ID": [
+            "ErGen/work-001/0002:chunk-01:fact-002"
+          ],
+          "结果事实ID": [
+            "ErGen/work-001/0002:chunk-01:fact-002"
+          ]
+        }
+      ],
+      "事实表达契约": [
+        {
+          "事实ID": "ErGen/work-001/0002:chunk-01:fact-001",
+          "场景ID": "ErGen/work-001/0002:chunk-01:scene-001",
+          "事实类型": "progression",
+          "主体ID": "ErGen/work-001/0002:chunk-01:entity-001",
+          "谓词": "离开",
+          "值": "山村",
+          "客体ID": "ErGen/work-001/0002:chunk-01:entity-011",
+          "表达方式": "行动呈现",
+          "必须表达": true,
+          "禁止相反含义": []
+        },
+        {
+          "事实ID": "ErGen/work-001/0002:chunk-01:fact-002",
+          "场景ID": "ErGen/work-001/0002:chunk-01:scene-001",
+          "事实类型": "location",
+          "主体ID": "ErGen/work-001/0002:chunk-01:entity-001",
+          "谓词": "到达",
+          "值": "四叔家",
+          "客体ID": "ErGen/work-001/0002:chunk-01:entity-010",
+          "表达方式": "行动呈现",
+          "必须表达": true,
+          "禁止相反含义": []
+        },
+        {
+          "事实ID": "ErGen/work-001/0002:chunk-01:fact-008",
+          "场景ID": "ErGen/work-001/0002:chunk-01:scene-001",
+          "事实类型": "emotion",
+          "主体ID": "ErGen/work-001/0002:chunk-01:entity-001",
+          "谓词": "紧张",
+          "值": "紧张",
+          "客体ID": "",
+          "表达方式": "心理或感知",
+          "必须表达": true,
+          "禁止相反含义": []
+        }
+      ],
+      "段落程序": [
+        {
+          "段落ID": "ErGen/work-001/0002:chunk-01:scene-001:paragraph-00",
+          "场景ID": "ErGen/work-001/0002:chunk-01:scene-001",
+          "段落序号": 0,
+          "段落功能": "场景定位",
+          "必须表达的事实ID": [
+            "ErGen/work-001/0002:chunk-01:fact-001"
+          ],
+          "事件ID列表": [],
+          "视角人物ID": "ErGen/work-001/0002:chunk-01:entity-001",
+          "对话行为": ""
+        },
+        {
+          "段落ID": "ErGen/work-001/0002:chunk-01:scene-001:paragraph-01",
+          "场景ID": "ErGen/work-001/0002:chunk-01:scene-001",
+          "段落序号": 1,
+          "段落功能": "行动推进",
+          "必须表达的事实ID": [
+            "ErGen/work-001/0002:chunk-01:fact-002"
+          ],
+          "事件ID列表": [
+            "ErGen/work-001/0002:chunk-01:event-001"
+          ],
+          "视角人物ID": "ErGen/work-001/0002:chunk-01:entity-001",
+          "对话行为": ""
+        },
+        {
+          "段落ID": "ErGen/work-001/0002:chunk-01:scene-001:paragraph-02",
+          "场景ID": "ErGen/work-001/0002:chunk-01:scene-001",
+          "段落序号": 2,
+          "段落功能": "感知反应",
+          "必须表达的事实ID": [
+            "ErGen/work-001/0002:chunk-01:fact-008"
+          ],
+          "事件ID列表": [],
+          "视角人物ID": "ErGen/work-001/0002:chunk-01:entity-001",
+          "对话行为": ""
+        }
+      ],
+      "出场状态事实ID": [
+        "ErGen/work-001/0002:chunk-01:fact-002"
+      ],
+      "禁止提前事件ID": [
+        "ErGen/work-001/0002:chunk-01:event-002",
+        "ErGen/work-001/0002:chunk-01:event-003",
+        "ErGen/work-001/0002:chunk-01:event-004"
+      ]
+    },
+    {
+      "场景ID": "ErGen/work-001/0002:chunk-01:scene-002",
+      "章节ID": "ErGen/work-001/0002",
+      "场景序号": 1,
+      "场景目标": "等待仙人测试",
+      "参与实体ID": [
+        "ErGen/work-001/0002:chunk-01:entity-001",
+        "ErGen/work-001/0002:chunk-01:entity-002",
+        "ErGen/work-001/0002:chunk-01:entity-003",
+        "ErGen/work-001/0002:chunk-01:entity-004",
+        "ErGen/work-001/0002:chunk-01:entity-005",
+        "ErGen/work-001/0002:chunk-01:entity-006"
+      ],
+      "入场状态事实ID": [
+        "ErGen/work-001/0002:chunk-01:fact-003"
+      ],
+      "必现事件": [
+        {
+          "事件ID": "ErGen/work-001/0002:chunk-01:event-002",
+          "场景ID": "ErGen/work-001/0002:chunk-01:scene-002",
+          "事件概述": "王林随四叔到达王氏家族宅子，见到族人",
+          "行动": "跟随四叔来到宅子",
+          "参与实体ID": [
+            "ErGen/work-001/0002:chunk-01:entity-001",
+            "ErGen/work-001/0002:chunk-01:entity-002",
+            "ErGen/work-001/0002:chunk-01:entity-003",
+            "ErGen/work-001/0002:chunk-01:entity-004",
+            "ErGen/work-001/0002:chunk-01:entity-005"
+          ],
+          "阻力": "",
+          "决断": "",
+          "前置事实ID": [],
+          "必须表达的事实ID": [
+            "ErGen/work-001/0002:chunk-01:fact-003"
+          ],
+          "结果事实ID": [
+            "ErGen/work-001/0002:chunk-01:fact-003"
+          ]
+        },
+        {
+          "事件ID": "ErGen/work-001/0002:chunk-01:event-003",
+          "场景ID": "ErGen/work-001/0002:chunk-01:scene-002",
+          "事件概述": "仙人白衣青年到来，卷走王林、王卓、王浩",
+          "行动": "询问后卷起三人飞走",
+          "参与实体ID": [
+            "ErGen/work-001/0002:chunk-01:entity-001",
+            "ErGen/work-001/0002:chunk-01:entity-003",
+            "ErGen/work-001/0002:chunk-01:entity-004",
+            "ErGen/work-001/0002:chunk-01:entity-005",
+            "ErGen/work-001/0002:chunk-01:entity-006"
+          ],
+          "阻力": "",
+          "决断": "",
+          "前置事实ID": [
+            "ErGen/work-001/0002:chunk-01:fact-004"
+          ],
+          "必须表达的事实ID": [
+            "ErGen/work-001/0002:chunk-01:fact-005"
+          ],
+          "结果事实ID": [
+            "ErGen/work-001/0002:chunk-01:fact-005"
+          ]
+        }
+      ],
+      "事实表达契约": [
+        {
+          "事实ID": "ErGen/work-001/0002:chunk-01:fact-003",
+          "场景ID": "ErGen/work-001/0002:chunk-01:scene-002",
+          "事实类型": "location",
+          "主体ID": "ErGen/work-001/0002:chunk-01:entity-001",
+          "谓词": "到达",
+          "值": "王氏家族宅子",
+          "客体ID": "ErGen/work-001/0002:chunk-01:entity-008",
+          "表达方式": "行动呈现",
+          "必须表达": true,
+          "禁止相反含义": []
+        },
+        {
+          "事实ID": "ErGen/work-001/0002:chunk-01:fact-004",
+          "场景ID": "ErGen/work-001/0002:chunk-01:scene-002",
+          "事实类型": "identity",
+          "主体ID": "ErGen/work-001/0002:chunk-01:entity-006",
+          "谓词": "是",
+          "值": "仙人",
+          "客体ID": "",
+          "表达方式": "叙述交代",
+          "必须表达": true,
+          "禁止相反含义": []
+        },
+        {
+          "事实ID": "ErGen/work-001/0002:chunk-01:fact-005",
+          "场景ID": "ErGen/work-001/0002:chunk-01:scene-002",
+          "事实类型": "progression",
+          "主体ID": "ErGen/work-001/0002:chunk-01:entity-001",
+          "谓词": "被带走",
+          "值": "三人被仙人带走",
+          "客体ID": "",
+          "表达方式": "行动呈现",
+          "必须表达": true,
+          "禁止相反含义": []
+        }
+      ],
+      "段落程序": [
+        {
+          "段落ID": "ErGen/work-001/0002:chunk-01:scene-002:paragraph-00",
+          "场景ID": "ErGen/work-001/0002:chunk-01:scene-002",
+          "段落序号": 0,
+          "段落功能": "场景定位",
+          "必须表达的事实ID": [
+            "ErGen/work-001/0002:chunk-01:fact-004"
+          ],
+          "事件ID列表": [],
+          "视角人物ID": "ErGen/work-001/0002:chunk-01:entity-001",
+          "对话行为": ""
+        },
+        {
+          "段落ID": "ErGen/work-001/0002:chunk-01:scene-002:paragraph-01",
+          "场景ID": "ErGen/work-001/0002:chunk-01:scene-002",
+          "段落序号": 1,
+          "段落功能": "行动推进",
+          "必须表达的事实ID": [
+            "ErGen/work-001/0002:chunk-01:fact-003"
+          ],
+          "事件ID列表": [
+            "ErGen/work-001/0002:chunk-01:event-002"
+          ],
+          "视角人物ID": "ErGen/work-001/0002:chunk-01:entity-001",
+          "对话行为": ""
+        },
+        {
+          "段落ID": "ErGen/work-001/0002:chunk-01:scene-002:paragraph-02",
+          "场景ID": "ErGen/work-001/0002:chunk-01:scene-002",
+          "段落序号": 2,
+          "段落功能": "行动推进",
+          "必须表达的事实ID": [
+            "ErGen/work-001/0002:chunk-01:fact-005"
+          ],
+          "事件ID列表": [
+            "ErGen/work-001/0002:chunk-01:event-003"
+          ],
+          "视角人物ID": "ErGen/work-001/0002:chunk-01:entity-001",
+          "对话行为": ""
+        }
+      ],
+      "出场状态事实ID": [
+        "ErGen/work-001/0002:chunk-01:fact-005"
+      ],
+      "禁止提前事件ID": [
+        "ErGen/work-001/0002:chunk-01:event-004"
+      ]
+    },
+    {
+      "场景ID": "ErGen/work-001/0002:chunk-01:scene-003",
+      "章节ID": "ErGen/work-001/0002",
+      "场景序号": 2,
+      "场景目标": "到达恒岳派山门",
+      "参与实体ID": [
+        "ErGen/work-001/0002:chunk-01:entity-001",
+        "ErGen/work-001/0002:chunk-01:entity-004",
+        "ErGen/work-001/0002:chunk-01:entity-005",
+        "ErGen/work-001/0002:chunk-01:entity-006",
+        "ErGen/work-001/0002:chunk-01:entity-007"
+      ],
+      "入场状态事实ID": [
+        "ErGen/work-001/0002:chunk-01:fact-005"
+      ],
+      "必现事件": [
+        {
+          "事件ID": "ErGen/work-001/0002:chunk-01:event-004",
+          "场景ID": "ErGen/work-001/0002:chunk-01:scene-003",
+          "事件概述": "三人被带到恒岳派山门，见到三师兄",
+          "行动": "飞行落地到达山门",
+          "参与实体ID": [
+            "ErGen/work-001/0002:chunk-01:entity-001",
+            "ErGen/work-001/0002:chunk-01:entity-004",
+            "ErGen/work-001/0002:chunk-01:entity-005",
+            "ErGen/work-001/0002:chunk-01:entity-006",
+            "ErGen/work-001/0002:chunk-01:entity-007"
+          ],
+          "阻力": "",
+          "决断": "",
+          "前置事实ID": [],
+          "必须表达的事实ID": [
+            "ErGen/work-001/0002:chunk-01:fact-006",
+            "ErGen/work-001/0002:chunk-01:fact-007"
+          ],
+          "结果事实ID": [
+            "ErGen/work-001/0002:chunk-01:fact-006",
+            "ErGen/work-001/0002:chunk-01:fact-007"
+          ]
+        }
+      ],
+      "事实表达契约": [
+        {
+          "事实ID": "ErGen/work-001/0002:chunk-01:fact-006",
+          "场景ID": "ErGen/work-001/0002:chunk-01:scene-003",
+          "事实类型": "location",
+          "主体ID": "ErGen/work-001/0002:chunk-01:entity-001",
+          "谓词": "到达",
+          "值": "恒岳派山门",
+          "客体ID": "ErGen/work-001/0002:chunk-01:entity-009",
+          "表达方式": "行动呈现",
+          "必须表达": true,
+          "禁止相反含义": []
+        },
+        {
+          "事实ID": "ErGen/work-001/0002:chunk-01:fact-007",
+          "场景ID": "ErGen/work-001/0002:chunk-01:scene-003",
+          "事实类型": "knowledge",
+          "主体ID": "ErGen/work-001/0002:chunk-01:entity-007",
+          "谓词": "出现",
+          "值": "在恒岳派山门",
+          "客体ID": "",
+          "表达方式": "叙述交代",
+          "必须表达": true,
+          "禁止相反含义": []
+        }
+      ],
+      "段落程序": [
+        {
+          "段落ID": "ErGen/work-001/0002:chunk-01:scene-003:paragraph-00",
+          "场景ID": "ErGen/work-001/0002:chunk-01:scene-003",
+          "段落序号": 0,
+          "段落功能": "行动推进",
+          "必须表达的事实ID": [
+            "ErGen/work-001/0002:chunk-01:fact-006",
+            "ErGen/work-001/0002:chunk-01:fact-007"
+          ],
+          "事件ID列表": [
+            "ErGen/work-001/0002:chunk-01:event-004"
+          ],
+          "视角人物ID": "ErGen/work-001/0002:chunk-01:entity-001",
+          "对话行为": ""
+        }
+      ],
+      "出场状态事实ID": [
+        "ErGen/work-001/0002:chunk-01:fact-006",
+        "ErGen/work-001/0002:chunk-01:fact-007"
+      ],
+      "禁止提前事件ID": []
+    }
+  ]
+}
