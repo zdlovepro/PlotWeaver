@@ -127,6 +127,10 @@ class EventProgram:
     outcome_fact_ids: tuple[str, ...]
     obstacle: str = ""
     decision: str = ""
+    action_type: str = "other"
+    actor_id: str = ""
+    target_ids: tuple[str, ...] = field(default_factory=tuple)
+    basis_fact_ids: tuple[str, ...] = field(default_factory=tuple)
 
     def validate(self) -> None:
         _required(self.event_id, "event_id")
@@ -136,6 +140,14 @@ class EventProgram:
         if not self.participant_ids:
             raise ValueError("event program requires participants")
         _unique(self.participant_ids, "event participant_ids")
+        if self.action_type not in {"speech", "movement", "transfer", "perception", "decision", "confrontation", "state_change", "other"}:
+            raise ValueError(f"unsupported event program action_type: {self.action_type}")
+        if self.actor_id and self.actor_id not in self.participant_ids:
+            raise ValueError("event program actor must be a participant")
+        _unique(self.target_ids, "event target_ids")
+        if any(item not in self.participant_ids for item in self.target_ids):
+            raise ValueError("event program targets must be participants")
+        _unique(self.basis_fact_ids, "event basis_fact_ids")
         if not self.outcome_fact_ids:
             raise ValueError("event program requires outcome facts")
         for name, values in (
@@ -148,6 +160,8 @@ class EventProgram:
                 _required(value, name)
         if not set(self.outcome_fact_ids).issubset(self.required_fact_ids):
             raise ValueError("event outcomes must be included in required facts")
+        if not set(self.basis_fact_ids).issubset(set(self.precondition_fact_ids) | set(self.required_fact_ids)):
+            raise ValueError("event basis facts must be preconditions or required facts")
 
     def to_dict(self) -> dict[str, Any]:
         return {
@@ -155,18 +169,31 @@ class EventProgram:
             "participant_ids": list(self.participant_ids), "obstacle": self.obstacle, "decision": self.decision,
             "precondition_fact_ids": list(self.precondition_fact_ids),
             "required_fact_ids": list(self.required_fact_ids), "outcome_fact_ids": list(self.outcome_fact_ids),
+            "action_type": self.action_type, "actor_id": self.actor_id,
+            "target_ids": list(self.target_ids), "basis_fact_ids": list(self.basis_fact_ids),
         }
 
     @classmethod
     def from_dict(cls, payload: dict[str, Any]) -> "EventProgram":
+        participant_ids = tuple(str(item) for item in payload.get("participant_ids", []) if str(item).strip())
+        required_fact_ids = tuple(str(item) for item in payload.get("required_fact_ids", []) if str(item).strip())
+        has_frame = all(field in payload for field in ("action_type", "actor_id", "target_ids", "basis_fact_ids"))
+        actor_id = str(payload.get("actor_id", "")).strip()
+        basis_fact_ids = tuple(str(item) for item in payload.get("basis_fact_ids", []) if str(item).strip())
+        if not has_frame:
+            actor_id = actor_id or (participant_ids[0] if participant_ids else "")
+            basis_fact_ids = basis_fact_ids or required_fact_ids
         return cls(
             event_id=str(payload.get("event_id", "")), scene_id=str(payload.get("scene_id", "")),
             summary=str(payload.get("summary", "")), action=str(payload.get("action", "")),
-            participant_ids=tuple(str(item) for item in payload.get("participant_ids", []) if str(item).strip()),
+            participant_ids=participant_ids,
             precondition_fact_ids=tuple(str(item) for item in payload.get("precondition_fact_ids", []) if str(item).strip()),
-            required_fact_ids=tuple(str(item) for item in payload.get("required_fact_ids", []) if str(item).strip()),
+            required_fact_ids=required_fact_ids,
             outcome_fact_ids=tuple(str(item) for item in payload.get("outcome_fact_ids", []) if str(item).strip()),
             obstacle=str(payload.get("obstacle", "")), decision=str(payload.get("decision", "")),
+            action_type=str(payload.get("action_type", "other")), actor_id=actor_id,
+            target_ids=tuple(str(item) for item in payload.get("target_ids", []) if str(item).strip()),
+            basis_fact_ids=basis_fact_ids,
         )
 
 
@@ -195,6 +222,9 @@ class NarrativeBeat:
     dialogue_pressure: str = ""
     expansion_license: str = "source"
     support_fact_ids: tuple[str, ...] = field(default_factory=tuple)
+    mechanism_ids: tuple[str, ...] = field(default_factory=tuple)
+    narrative_function: str = ""
+    counterfactual_guard: str = ""
 
     def validate(self) -> None:
         _required(self.beat_id, "beat_id")
@@ -213,6 +243,7 @@ class NarrativeBeat:
         if self.expansion_license not in EXPANSION_LICENSE_LEVELS:
             raise ValueError(f"unsupported expansion license: {self.expansion_license}")
         _unique(self.support_fact_ids, "beat support_fact_ids")
+        _unique(self.mechanism_ids, "beat mechanism_ids")
         if self.expansion_license != "source" and not self.support_fact_ids:
             raise ValueError("expanded beat requires at least one support fact")
 
@@ -226,6 +257,9 @@ class NarrativeBeat:
             "dialogue_pressure": self.dialogue_pressure,
             "expansion_license": self.expansion_license,
             "support_fact_ids": list(self.support_fact_ids),
+            "mechanism_ids": list(self.mechanism_ids),
+            "narrative_function": self.narrative_function,
+            "counterfactual_guard": self.counterfactual_guard,
         }
 
     @classmethod
@@ -241,6 +275,9 @@ class NarrativeBeat:
             dialogue_pressure=str(payload.get("dialogue_pressure", "")),
             expansion_license=str(payload.get("expansion_license", "source")),
             support_fact_ids=tuple(str(item) for item in payload.get("support_fact_ids", []) if str(item).strip()),
+            mechanism_ids=tuple(str(item) for item in payload.get("mechanism_ids", []) if str(item).strip()),
+            narrative_function=str(payload.get("narrative_function", "")),
+            counterfactual_guard=str(payload.get("counterfactual_guard", "")),
         )
 
 
@@ -316,6 +353,10 @@ class SceneProgram:
     exit_state_fact_ids: tuple[str, ...]
     forbidden_event_ids: tuple[str, ...] = field(default_factory=tuple)
     narrative_beats: tuple[NarrativeBeat, ...] = field(default_factory=tuple)
+    # Facts established in an earlier scene and needed only to understand the
+    # current action.  They are visible to the writer but must never be
+    # realised again as if they were new narrative events.
+    context_fact_contracts: tuple[FactContract, ...] = field(default_factory=tuple)
 
     def validate(self) -> None:
         _required(self.scene_id, "scene_id")
@@ -330,10 +371,12 @@ class SceneProgram:
             raise ValueError("scene program requires events, facts and paragraphs")
         event_ids = tuple(item.event_id for item in self.event_programs)
         fact_ids = tuple(item.fact_id for item in self.fact_contracts)
+        context_fact_ids = tuple(item.fact_id for item in self.context_fact_contracts)
         paragraph_ids = tuple(item.paragraph_id for item in self.paragraphs)
         beat_ids = tuple(item.beat_id for item in self.narrative_beats)
         _unique(event_ids, "scene event ids")
         _unique(fact_ids, "scene fact ids")
+        _unique(context_fact_ids, "scene context fact ids")
         _unique(paragraph_ids, "scene paragraph ids")
         _unique(beat_ids, "scene beat ids")
         _unique(self.entry_state_fact_ids, "scene entry_state_fact_ids")
@@ -341,7 +384,9 @@ class SceneProgram:
         _unique(self.forbidden_event_ids, "scene forbidden_event_ids")
         if set(event_ids) & set(self.forbidden_event_ids):
             raise ValueError("scene cannot require and forbid the same event")
-        local_facts, local_events = set(fact_ids), set(event_ids)
+        local_facts, context_facts, available_facts, local_events = set(fact_ids), set(context_fact_ids), set(fact_ids) | set(context_fact_ids), set(event_ids)
+        if local_facts & context_facts:
+            raise ValueError("scene context facts must not duplicate local facts")
         local_beats = set(beat_ids)
         for event in self.event_programs:
             event.validate()
@@ -349,10 +394,16 @@ class SceneProgram:
                 raise ValueError("event program scene_id does not match its scene")
             if not set(event.required_fact_ids).issubset(local_facts):
                 raise ValueError("event program refers to a non-local fact")
+            if not set(event.precondition_fact_ids).issubset(available_facts):
+                raise ValueError("event program refers to an unavailable precondition")
         for fact in self.fact_contracts:
             fact.validate()
             if fact.scene_id != self.scene_id:
                 raise ValueError("fact contract scene_id does not match its scene")
+        for fact in self.context_fact_contracts:
+            fact.validate()
+            if fact.scene_id != self.scene_id or fact.must_realize:
+                raise ValueError("context fact must belong to the scene and be read-only")
         if self.narrative_beats:
             if tuple(item.order for item in self.narrative_beats) != tuple(range(len(self.narrative_beats))):
                 raise ValueError("narrative beat orders must be consecutive and start at zero")
@@ -398,6 +449,7 @@ class SceneProgram:
             "entry_state_fact_ids": list(self.entry_state_fact_ids),
             "event_programs": [item.to_dict() for item in self.event_programs],
             "fact_contracts": [item.to_dict() for item in self.fact_contracts],
+            "context_fact_contracts": [item.to_dict() for item in self.context_fact_contracts],
             "paragraphs": [item.to_dict() for item in self.paragraphs],
             "exit_state_fact_ids": list(self.exit_state_fact_ids),
             "forbidden_event_ids": list(self.forbidden_event_ids),
@@ -413,6 +465,7 @@ class SceneProgram:
             entry_state_fact_ids=tuple(str(item) for item in payload.get("entry_state_fact_ids", []) if str(item).strip()),
             event_programs=tuple(EventProgram.from_dict(item) for item in payload.get("event_programs", []) if isinstance(item, dict)),
             fact_contracts=tuple(FactContract.from_dict(item) for item in payload.get("fact_contracts", []) if isinstance(item, dict)),
+            context_fact_contracts=tuple(FactContract.from_dict(item) for item in payload.get("context_fact_contracts", []) if isinstance(item, dict)),
             paragraphs=tuple(ParagraphProgram.from_dict(item) for item in payload.get("paragraphs", []) if isinstance(item, dict)),
             exit_state_fact_ids=tuple(str(item) for item in payload.get("exit_state_fact_ids", []) if str(item).strip()),
             forbidden_event_ids=tuple(str(item) for item in payload.get("forbidden_event_ids", []) if str(item).strip()),
@@ -480,6 +533,8 @@ class ChapterProgram:
             for event in scene.event_programs:
                 if not set(event.precondition_fact_ids).issubset(all_fact_ids):
                     raise ValueError("event preconditions reference a fact without a chapter contract")
+            if not {fact.fact_id for fact in scene.context_fact_contracts}.issubset(all_fact_ids):
+                raise ValueError("scene context references a fact without a chapter contract")
         if self.entities:
             known_entities = set(entity_ids)
             for scene in self.scene_programs:

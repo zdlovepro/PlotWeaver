@@ -92,6 +92,7 @@ def validate_annotation(
     validate_items(annotation.time_anchors, "time_anchors")
     validate_items(annotation.temporal_relations, "temporal_relations")
     validate_items(annotation.spatial_relations, "spatial_relations")
+    validate_items(annotation.narrative_mechanisms, "narrative_mechanisms")
 
     def duplicate_ids(items: tuple[Any, ...], field: str) -> set[str]:
         values = [str(getattr(item, field, "")) for item in items]
@@ -106,6 +107,7 @@ def validate_annotation(
         ("time_anchors", annotation.time_anchors, "anchor_id"),
         ("temporal_relations", annotation.temporal_relations, "relation_id"),
         ("spatial_relations", annotation.spatial_relations, "relation_id"),
+        ("narrative_mechanisms", annotation.narrative_mechanisms, "mechanism_id"),
     ):
         for duplicate in duplicate_ids(items, field):
             issues.append(ValidationIssue("duplicate_id", name, f"duplicate id: {duplicate}"))
@@ -113,6 +115,9 @@ def validate_annotation(
         orders = [item.order for item in items]
         if len(orders) != len(set(orders)):
             issues.append(ValidationIssue("duplicate_order", name, f"{name} contains duplicate order values"))
+    mechanism_orders = [item.order for item in annotation.narrative_mechanisms]
+    if len(mechanism_orders) != len(set(mechanism_orders)):
+        issues.append(ValidationIssue("duplicate_order", "narrative_mechanisms", "narrative mechanisms contain duplicate order values"))
 
     entity_ids = {item.entity_id for item in annotation.entities}
     fact_ids = {item.fact_id for item in annotation.facts}
@@ -127,6 +132,7 @@ def validate_annotation(
         ("events", annotation.events),
         ("scenes", annotation.scenes),
         ("state_changes", annotation.state_changes),
+        ("narrative_mechanisms", annotation.narrative_mechanisms),
     ):
         for index, item in enumerate(items):
             if item.chapter_id != annotation.chapter_id:
@@ -153,7 +159,12 @@ def validate_annotation(
         for entity_id in item.participant_ids:
             if entity_id not in entity_ids:
                 issues.append(ValidationIssue("unknown_entity", f"events[{index}].participant_ids", f"unknown entity: {entity_id}"))
-        for fact_id in (*item.trigger_fact_ids, *item.precondition_fact_ids, *item.outcome_fact_ids, *item.cost_fact_ids):
+        if item.actor_id and item.actor_id not in entity_ids:
+            issues.append(ValidationIssue("unknown_entity", f"events[{index}].actor_id", f"unknown entity: {item.actor_id}"))
+        for entity_id in item.target_ids:
+            if entity_id not in entity_ids:
+                issues.append(ValidationIssue("unknown_entity", f"events[{index}].target_ids", f"unknown entity: {entity_id}"))
+        for fact_id in (*item.trigger_fact_ids, *item.precondition_fact_ids, *item.outcome_fact_ids, *item.cost_fact_ids, *item.basis_fact_ids):
             if fact_id not in fact_ids:
                 issues.append(ValidationIssue("unknown_fact", f"events[{index}]", f"unknown fact: {fact_id}"))
     for index, item in enumerate(annotation.scenes):
@@ -170,8 +181,8 @@ def validate_annotation(
         for location_id in item.location_ids:
             if location_id not in entity_ids:
                 issues.append(ValidationIssue("unknown_entity", f"scenes[{index}].location_ids", f"unknown location entity: {location_id}"))
-            elif next(entity for entity in annotation.entities if entity.entity_id == location_id).kind != "location":
-                issues.append(ValidationIssue("invalid_location", f"scenes[{index}].location_ids", f"entity is not a location: {location_id}"))
+            elif next(entity for entity in annotation.entities if entity.entity_id == location_id).kind not in {"location", "item"}:
+                issues.append(ValidationIssue("invalid_location", f"scenes[{index}].location_ids", f"entity is not a spatial reference: {location_id}"))
         for anchor_id in item.time_anchor_ids:
             if anchor_id not in time_anchor_ids:
                 issues.append(ValidationIssue("unknown_time_anchor", f"scenes[{index}].time_anchor_ids", f"unknown time anchor: {anchor_id}"))
@@ -198,8 +209,8 @@ def validate_annotation(
             issues.append(ValidationIssue("unknown_entity", f"spatial_relations[{index}].subject_id", f"unknown entity: {item.subject_id}"))
         if item.location_id not in entity_ids:
             issues.append(ValidationIssue("unknown_entity", f"spatial_relations[{index}].location_id", f"unknown location entity: {item.location_id}"))
-        elif next(entity for entity in annotation.entities if entity.entity_id == item.location_id).kind != "location":
-            issues.append(ValidationIssue("invalid_location", f"spatial_relations[{index}].location_id", f"entity is not a location: {item.location_id}"))
+        elif next(entity for entity in annotation.entities if entity.entity_id == item.location_id).kind not in {"location", "item"}:
+            issues.append(ValidationIssue("invalid_location", f"spatial_relations[{index}].location_id", f"entity is not a spatial reference: {item.location_id}"))
         if item.fact_id not in fact_ids:
             issues.append(ValidationIssue("unknown_fact", f"spatial_relations[{index}].fact_id", f"unknown fact: {item.fact_id}"))
             continue
@@ -209,6 +220,36 @@ def validate_annotation(
         fact_spans = {(span.start, span.end, span.quote, span.unit_id) for span in fact.evidence}
         if not all((span.start, span.end, span.quote, span.unit_id) in fact_spans for span in item.evidence):
             issues.append(ValidationIssue("invalid_spatial_evidence", f"spatial_relations[{index}]", "spatial relation evidence must come from its supporting fact"))
+    for index, item in enumerate(annotation.narrative_mechanisms):
+        path = f"narrative_mechanisms[{index}]"
+        check_spans(path, item.evidence)
+        for entity_id in item.participant_ids:
+            if entity_id not in entity_ids:
+                issues.append(ValidationIssue("unknown_entity", f"{path}.participant_ids", f"unknown entity: {entity_id}"))
+        for fact_id in item.fact_ids:
+            if fact_id not in fact_ids:
+                issues.append(ValidationIssue("unknown_fact", f"{path}.fact_ids", f"unknown fact: {fact_id}"))
+        for event_id in item.event_ids:
+            if event_id not in event_ids:
+                issues.append(ValidationIssue("unknown_event", f"{path}.event_ids", f"unknown event: {event_id}"))
+        linked_spans = [
+            span
+            for fact_id in item.fact_ids if fact_id in facts_by_id
+            for span in facts_by_id[fact_id].evidence
+        ] + [
+            span
+            for event_id in item.event_ids if event_id in events_by_id
+            for span in events_by_id[event_id].evidence
+        ]
+        if linked_spans and not all(any(
+            mechanism_span.unit_id == linked_span.unit_id
+            and min(mechanism_span.end, linked_span.end) - max(mechanism_span.start, linked_span.start) >= 2
+            for linked_span in linked_spans
+        ) for mechanism_span in item.evidence):
+            issues.append(ValidationIssue(
+                "ungrounded_narrative_mechanism", path,
+                "mechanism evidence must overlap evidence from its linked facts or events",
+            ))
     for index, item in enumerate(annotation.state_changes):
         if item.event_id not in event_ids:
             issues.append(ValidationIssue("unknown_event", f"state_changes[{index}].event_id", f"unknown event: {item.event_id}"))

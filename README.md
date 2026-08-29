@@ -1,111 +1,77 @@
 # PlotWeaver
 
-PlotWeaver is an evidence-first pipeline for distilling a reusable **小说作者 Skill** from Chinese web-novel samples. The author identifier is supplied at runtime; it becomes the output folder name, for example `output/ExampleAuthor_skill/`.
+PlotWeaver 是面向中文长篇小说的“分层梗概—按需事实—叙事图谱—模板与风格—
+作者 Skill—受控生成”流水线。最终目标是从同一小说作者的多部作品中蒸馏可迁移、
+可执行和可评测的写作 Skill。
 
-The V3 path never uses source prose as a generation prompt. It first turns each chapter into source-evidenced facts, events, scenes, time/space relations and dramatic beats; only then can it build bounded generation programs and judge reconstruction gaps.
-
-## Project documentation
-
-The current V3/V4 documentation replaces the retired V2 thirteen-step design:
-
-- [Requirements specification](docs/SRS.md)
-- [Software design specification](docs/SDS.md)
-- [Local models, LoRA, SFT, DPO and style evaluation](docs/MODEL_GUIDE.md)
-- [Implementation roadmap](docs/ROADMAP.md)
-
-## V3 numbered pipeline
+## 当前统一流程
 
 ```text
-1. 导入小说文本
-2. 高密度、可追溯的章节标注
-3. 跨章节连续性图与本地剧情事实图谱 `narrative_graph.json`
-4. 匿名化多层叙事模板
-5. 量化文风蒸馏
-6. 编译小说作者 Skill
-7. 可选：受控扩写章节规划（不自动生成正文）
+原文切章
+→ 局部/场景/章节梗概
+→ 故事弧/卷/全书大纲
+→ 大纲驱动的必要事实补全
+→ 叙事图谱
+→ 多重叙事模板 + 文风档案
+→ {author_id}_skill
+→ 长篇生成与差距评测
 ```
 
-Put one or more `.txt` novels in `input/` and run:
+最重要的顺序约束是：先形成梗概和分层大纲，再决定需要提取哪些事实。第一模块
+不会生成命题表、实体表或知识图谱；事实提取统一属于第三模块。
+
+## 目录
+
+```text
+input/                                  # 当前导入源，不上传 Git
+novels/                                 # 小说档案，不上传 Git
+corpus/<作者标识>/<作品标识>/             # 不可变章节语料
+runs/<作者标识>/<运行标识>/               # 各模块产物和检查点
+output/<作者标识>_skill/                 # 最终 Skill
+pipeline/contracts/                     # 跨模块公共契约
+pipeline/modules/                       # 00—09 独立业务阶段
+v2/                                     # 历史思路参考，新版不导入
+```
+
+完整模块边界见 [pipeline/modules/README.md](pipeline/modules/README.md)，目标架构见
+[docs/ARCHITECTURE.md](docs/ARCHITECTURE.md)。
+
+## 当前迁移状态
+
+- 模块 00 的语料导入保留；
+- 模块 01 已重建为私有梗概模块，目录和公共契约已经固定，服务正在接入；
+- 模块 02、03 已分别固定为分层大纲和按需事实补全；
+- 放错位置的事实优先和图谱反推大纲实现已移出活动流水线并保留可恢复备份；
+- 后续模块将在新契约接通后逐个恢复，不会通过旧入口悄悄回退。
+
+当前可用的语料导入形式：
 
 ```powershell
-python main.py run --author-id ExampleAuthor --work-id work-001 --chapter-limit 20
+py -3.12 main.py ingest --author-id ExampleAuthor --source-dir input
 ```
 
-`input/` is the active import source. `novels/` can retain the complete source archive but is not read automatically. Importing a directory assigns stable IDs such as `work-001`; original titles remain in metadata. One compiled skill currently corresponds to one selected work, so a multi-work import must specify `--work-id` when running stage 6 or 7. This prevents silently overwriting the author-level output with whichever work happened to finish last.
-
-Every run writes a hash manifest to `runs/<AuthorId>/<RunId>/pipeline_manifest.json`. Resume an interrupted annotation pass with the same run inputs; add `--no-resume` only when the source or extraction contract has changed.
-
-## High-density annotation
-
-The annotation stage uses short overlapping source windows and checkpointed batches, so long chapters are never sent in one request. Every accepted entity, fact, event and scene retains an exact source quote and offset. Hard quality gates require event, fact and scene density proportional to source length, coverage of evidence-bearing sections, ordered time relations, fact-backed spatial relations, and valid state transitions.
+第一模块完成后的目标入口为：
 
 ```powershell
-python main.py ingest --author-id ExampleAuthor --source-dir input
-python main.py annotate --author-id ExampleAuthor --work-id work-001 --limit 20
-python main.py continuity --author-id ExampleAuthor --work-id work-001 --limit 20
-python main.py graph --author-id ExampleAuthor --work-id work-001 --limit 20
-python main.py templates --author-id ExampleAuthor --work-id work-001 --limit 20 --batch-size 5
-python main.py style --author-id ExampleAuthor --work-id work-001 --limit 20 --batch-size 5
-python main.py compile-skill --author-id ExampleAuthor --work-id work-001 --limit 20
+py -3.12 main.py extract-synopsis --author-id ExampleAuthor --work-id work-001 `
+  --limit 5 --run-id synopsis-5
 ```
 
-The first five commands produce typed data under `corpus/<AuthorId>/<WorkId>/`. `compile-skill` validates matching samples and emits a generic package at `output/<AuthorId>_skill/`, including `SKILL.md`, anonymous narrative templates, a measured style profile and Chinese JSON prompt templates.
+在第一模块服务接通前，该入口会明确报告迁移未完成，不会调用旧事实提取流程。
 
-## Controlled expansion and reconstruction tests
+## 两种样本路线
 
-`compile-program` derives an immutable `事实 → 事件 → 场景 → 节拍 → 段落` contract for a chapter. A fact/event is assigned to exactly one local scene and later events are explicit no-leak barriers.
+- 5—20 章：第二模块聚合到局部故事弧，用于程序质量验证。
+- 整本小说：第二模块继续聚合到卷级和全书级，再反向生成事实需求。
 
-```powershell
-python main.py compile-program --author-id ExampleAuthor --work-id work-001 --chapter 1 --limit 20
-python main.py plan-expansion --author-id ExampleAuthor --work-id work-001 --chapter 1 --limit 20 --target-char-min 4000 --target-char-max 5000
-```
+两条路线共用同一个梗概提取器和事实补全器。短样本不能证明已经蒸馏出完整作者
+Skill；正式 Skill 还需要多部作品、反例检查和跨作品稳定性验证。
 
-The controlled-expansion planner allocates a hard character budget to scenes and paragraphs. Every added beat is labelled either **合理推导** or **氛围扩写** and links to local supporting fact IDs. Such labels allow actions, reactions, transitions and sensory detail, but never authorize a new relationship, setting, resource, motive, time point or plot result.
+## 关键边界
 
-Generation is separate from planning so a failed candidate cannot be mistaken for the skill itself:
+- 伏笔必须有后文回应证据；只有设置没有回应的是开放线索或未填坑。
+- `narrative_graph.json` 是剧情连续性底座，不等于作者 Skill。
+- 更强模型能改善语义理解和正文质量，但不能修复错误的模块顺序和数据契约。
+- 生成器不能读取待重建章节原文，只能读取大纲、相关图谱子图、状态和 Skill。
+- 公共代码、注释和文档使用通用“小说作者”称谓，具体作者代号由用户输入。
 
-```powershell
-python main.py generate-from-program --author-id ExampleAuthor `
-  --program runs/ExampleAuthor/chapter-plan/chapter_programs/chapter-0001.program.json `
-  --graph corpus/ExampleAuthor/work-001/narrative_graph.json --run-id first5-test
-```
-
-The generator works scene by scene and sends exactly one paragraph job per writing request. Before that request, it reads only the paragraph’s bounded subgraph from `narrative_graph.json`: permitted entities, facts, relationships, causal links, foreshadow lifecycle and previously committed state. It never sends source prose, a whole source chapter, or generated prose tails to the writer. Each chapter first writes `chapter_graph_patch.candidate.json`; semantic, prose, role, style, length and state/causality checks must all pass before the patch is committed, `generated_draft.txt` is published, and the next chapter may start. Checkpoints make model transport failures resumable.
-
-For a planned chapter range, use the sequence runner rather than invoking each chapter independently:
-
-```powershell
-python main.py generate-program-work --author-id ExampleAuthor --index runs/ExampleAuthor/chapter-plan-work/expansion_plan_index.json --run-id first5-test
-```
-
-It creates an input state file for chapter 2 onward only after the preceding chapter has passed every gate. A rejected chapter blocks later chapters and leaves their status as `not_started`; this prevents a speculative exit state from contaminating continuity evaluation.
-
-After generation, run the independent reconstruction regression:
-
-```powershell
-python main.py evaluate-program-fidelity --author-id ExampleAuthor --work-id work-001 `
-  --index runs/ExampleAuthor/chapter-plan-work/expansion_plan_index.json `
-  --sequence runs/ExampleAuthor/first5-test/program_sequence/sequence_summary.json `
-  --annotation-limit 20 --run-id first5-fidelity
-```
-
-The report contains a local style-similarity measurement and a strict model judgment over anonymised facts, events, scenes, state changes and time/space relations. Any explicit omission or contradiction forces the structural result to fail even if the model's numeric score is high.
-
-## Run options
-
-```powershell
-python main.py run --author-id ExampleAuthor --work-id work-001 `
-  --chapter-limit 20 --annotation-input-chars 1200 --annotation-overlap-units 1 `
-  --template-batch-size 5 --style-batch-size 5
-```
-
-To include planning for the first five chapters after stages 1–6:
-
-```powershell
-python main.py run --author-id ExampleAuthor --work-id work-001 --chapter-limit 20 `
-  --expansion-chapters 5 --target-char-min 4000 --target-char-max 5000
-```
-
-All model-facing structured prompts are Chinese and give a concrete JSON example. Strict JSON validation accepts exactly the declared V3 format; it also recognises the earlier faithful chapter-program schema with its documented defaults, so existing faithful program artifacts remain readable.
-
-Use `--offline` only for deterministic structural smoke tests after annotation has completed; high-density evidence annotation itself requires a model. Configure a compatible model in `config.yaml` for annotation, template mining, style synthesis and generation. Analyse only novels you are permitted to process.

@@ -1,0 +1,22 @@
+modules:
+  ingestion:
+    entrypoint: pipeline.modules.module_00_ingestion.api:run
+  narrative_extraction:
+    entrypoint: pipeline.modules.module_01_narrative_extraction_private.api:run
+  hierarchical_outline:
+    entrypoint: pipeline.modules.module_02_hierarchical_outline.api:run
+  fact_hydration:
+    entrypoint: pipeline.modules.module_03_fact_hydration.api:run
+  narrative_graph:
+    entrypoint: pipeline.modules.module_04_narrative_graph.api:run
+  template_mining:
+    entrypoint: pipeline.modules.module_05_template_mining.api:run
+  style_distillation:
+    entrypoint: pipeline.modules.module_06_style_distillation.api:run
+  skill_compiler:
+    entrypoint: pipeline.modules.module_07_skill_compiler.api:run
+  generation:
+    entrypoint: pipeline.modules.module_08_generation.api:run
+  evaluation:
+    entrypoint: pipeline.modules.module_09_evaluation.api:run
+

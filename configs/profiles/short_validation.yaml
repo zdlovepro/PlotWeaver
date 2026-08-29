@@ -1,0 +1,14 @@
+profile: short_validation
+chapter_limit: 20
+
+hierarchy:
+  aggregation_ceiling: local_arc
+  top_down_start: local_arc
+
+templates:
+  release_status: candidate
+
+skill:
+  allow_final_export: false
+  allow_experimental_export: true
+

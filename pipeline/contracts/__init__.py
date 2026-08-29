@@ -14,11 +14,26 @@ from .continuity import (
     WorkContinuity,
 )
 from .graph import NarrativeGraph, NarrativeGraphEdge, NarrativeGraphNode
+from .fact_hydration import (
+    FACT_HYDRATION_SCHEMA_VERSION,
+    FactHydrationBundle,
+    FactRequirement,
+    HydratedFact,
+)
+from .author_skill import AuthorSkillBundle, DistilledAuthorTrait, SkillQualification
+from .generation_plan import ChapterContract, EventGraph, EventGraphEvent, StoryStage, WorkStoryPlan
+from .outline import (
+    OUTLINE_SCHEMA_VERSION,
+    CharacterArcOutline,
+    HierarchicalOutlineBundle,
+    OutlineNode,
+)
 from .narrative import (
     ChapterAnnotation,
     Entity,
     EventAtom,
     Fact,
+    NarrativeMechanism,
     SceneCard,
     SpatialRelation,
     StateChange,
@@ -26,9 +41,22 @@ from .narrative import (
     TimeAnchor,
 )
 from .program import ChapterProgram, EntityBinding, EventProgram, FactContract, NarrativeBeat, ParagraphProgram, SceneProgram
-from .scene_output import ParagraphDraft, ParagraphIssue, SceneDraft, SceneProseValidation, SceneValidation
+from .scene_output import AffordanceIssue, ParagraphDraft, ParagraphIssue, ParagraphValidation, SceneAffordanceValidation, SceneDraft, SceneProseValidation, SceneValidation
+from .semantic_audit import SemanticAuditBatch, SemanticAuditIssue, SemanticAuditReport
 from .skill import AuthorProfile, PromptProgram, Template
 from .source import ChapterDocument, SourceSpan, SourceUnit, build_chapter_document, build_paragraph_units, classify_chapter_content
+from .synopsis import (
+    SYNOPSIS_SCHEMA_VERSION,
+    ChapterPhaseSynopsis,
+    ChapterPlotNode,
+    ChapterSynopsis,
+    ChapterSynopsisBundle,
+    LocalPlotSegment,
+    LocalSynopsis,
+    SynopsisStatement,
+    SynopsisIssue,
+    SynopsisQuality,
+)
 from .style import ChapterStyleCard, StyleMetric, StylePatternObservation
 from .style_profile import AuthorStyleProfile, StyleBaseline, StyleConstraint
 from .template_library import NarrativeTemplate, NarrativeTemplateLibrary
@@ -36,12 +64,15 @@ from .validation import ContractValidationError, ValidationIssue, ValidationRepo
 
 __all__ = [
     "AuthorProfile",
+    "AuthorSkillBundle",
     "AuthorStyleProfile",
+    "AffordanceIssue",
     "build_chapter_document",
     "build_paragraph_units",
     "ChapterAnnotation",
     "ChapterDocument",
     "ChapterProgram",
+    "ChapterContract",
     "ChapterRecord",
     "ChapterState",
     "ChapterStyleCard",
@@ -50,15 +81,19 @@ __all__ = [
     "ContinuityIssue",
     "Entity",
     "EntityBinding",
+    "EventGraph",
+    "EventGraphEvent",
     "EventAtom",
     "EventProgram",
     "Fact",
     "FactContract",
     "GlobalEntity",
+    "DistilledAuthorTrait",
     "LocationTransition",
     "NarrativeTemplate",
     "NarrativeTemplateLibrary",
     "NarrativeBeat",
+    "NarrativeMechanism",
     "NarrativeGraph",
     "NarrativeGraphEdge",
     "NarrativeGraphNode",
@@ -66,11 +101,16 @@ __all__ = [
     "ParagraphProgram",
     "ParagraphDraft",
     "ParagraphIssue",
+    "ParagraphValidation",
     "SceneCard",
+    "SceneAffordanceValidation",
     "SceneDraft",
     "SceneProgram",
     "SceneProseValidation",
     "SceneValidation",
+    "SemanticAuditBatch",
+    "SemanticAuditIssue",
+    "SemanticAuditReport",
     "SpatialRelation",
     "SourceSpan",
     "SourceUnit",
@@ -79,10 +119,12 @@ __all__ = [
     "TemporalRelation",
     "TimeAnchor",
     "StoryState",
+    "StoryStage",
     "StyleMetric",
     "StyleBaseline",
     "StyleConstraint",
     "StylePatternObservation",
+    "SkillQualification",
     "Template",
     "TimelineEvent",
     "ValidationIssue",
@@ -90,4 +132,23 @@ __all__ = [
     "validate_annotation",
     "validate_document",
     "WorkContinuity",
+    "WorkStoryPlan",
+    "SYNOPSIS_SCHEMA_VERSION",
+    "ChapterPhaseSynopsis",
+    "ChapterPlotNode",
+    "ChapterSynopsis",
+    "ChapterSynopsisBundle",
+    "LocalPlotSegment",
+    "LocalSynopsis",
+    "SynopsisStatement",
+    "SynopsisIssue",
+    "SynopsisQuality",
+    "FACT_HYDRATION_SCHEMA_VERSION",
+    "FactHydrationBundle",
+    "FactRequirement",
+    "HydratedFact",
+    "OUTLINE_SCHEMA_VERSION",
+    "CharacterArcOutline",
+    "HierarchicalOutlineBundle",
+    "OutlineNode",
 ]

@@ -8,13 +8,30 @@ from typing import Any
 from .source import SourceSpan
 
 
-ENTITY_KINDS = frozenset({"person", "organization", "location", "item", "concept", "creature"})
+ENTITY_KINDS = frozenset({
+    "person", "group", "organization", "location", "item", "concept", "creature",
+})
 FACT_KINDS = frozenset({"identity", "goal", "emotion", "relationship", "location", "resource", "knowledge", "rule", "progression", "information"})
 STATE_OPERATIONS = frozenset({"add", "update", "remove"})
 TIME_ANCHOR_KINDS = frozenset({"explicit", "relative"})
 TEMPORAL_RELATION_KINDS = frozenset({"before", "simultaneous"})
 TEMPORAL_RELATION_BASES = frozenset({"document_order", "explicit_anchor"})
-SPATIAL_RELATION_KINDS = frozenset({"at", "moves_to", "enters", "leaves"})
+SPATIAL_RELATION_KINDS = frozenset({"at", "approaches", "moves_to", "enters", "leaves"})
+EVENT_ACTION_TYPES = frozenset({
+    "speech", "movement", "transfer", "perception", "decision",
+    "confrontation", "state_change", "other",
+})
+NARRATIVE_MECHANISM_KINDS = frozenset({
+    "character_drive", "constraint_pressure", "contrast", "information_control",
+    "characterization", "emotional_turn", "scene_transition", "setup",
+    "payoff", "thematic_echo",
+})
+NARRATIVE_LOGIC_RELATIONS = frozenset({
+    "cause", "goal", "obstacle", "contrast", "reveal", "response",
+    "escalation", "relief", "transition", "parallel",
+})
+NARRATIVE_INFERENCE_LEVELS = frozenset({"explicit", "structural"})
+NARRATIVE_SETUP_STATUSES = frozenset({"not_applicable", "open_setup", "verified_payoff"})
 
 
 def _required(value: str, field_name: str) -> str:
@@ -127,6 +144,15 @@ class EventAtom:
     outcome_fact_ids: tuple[str, ...]
     cost_fact_ids: tuple[str, ...] = field(default_factory=tuple)
     evidence: tuple[SourceSpan, ...] = field(default_factory=tuple)
+    # A model-independent semantic frame.  Downstream code validates and
+    # stages an event from these explicit roles instead of scanning Chinese
+    # verbs for one-off cues such as “告知” or “返回”.  Empty/default values keep
+    # older stored annotations readable; newly extracted schema-2.2 atoms are
+    # required to populate the frame by the annotation quality gate.
+    action_type: str = "other"
+    actor_id: str = ""
+    target_ids: tuple[str, ...] = field(default_factory=tuple)
+    basis_fact_ids: tuple[str, ...] = field(default_factory=tuple)
 
     def validate(self) -> None:
         _required(self.event_id, "event_id")
@@ -137,6 +163,16 @@ class EventAtom:
         if not self.participant_ids:
             raise ValueError("event must have participants")
         _unique(self.participant_ids, "event participants")
+        if self.action_type not in EVENT_ACTION_TYPES:
+            raise ValueError(f"unsupported event action type: {self.action_type}")
+        if self.actor_id and self.actor_id not in self.participant_ids:
+            raise ValueError("event actor must be one of its participants")
+        _unique(self.target_ids, "event targets")
+        if any(item not in self.participant_ids for item in self.target_ids):
+            raise ValueError("event targets must be participants")
+        if self.actor_id and self.actor_id in self.target_ids:
+            raise ValueError("event actor cannot also be a target")
+        _unique(self.basis_fact_ids, "event basis facts")
         _required(self.action, "event action")
         if not self.outcome_fact_ids:
             raise ValueError("event must declare outcome facts")
@@ -148,12 +184,39 @@ class EventAtom:
                 raise ValueError("event evidence chapter does not match event")
 
     def to_dict(self) -> dict[str, Any]:
-        return {**asdict(self), "participant_ids": list(self.participant_ids), "trigger_fact_ids": list(self.trigger_fact_ids), "precondition_fact_ids": list(self.precondition_fact_ids), "outcome_fact_ids": list(self.outcome_fact_ids), "cost_fact_ids": list(self.cost_fact_ids), "evidence": [span.to_dict() for span in self.evidence]}
+        return {
+            **asdict(self),
+            "participant_ids": list(self.participant_ids),
+            "trigger_fact_ids": list(self.trigger_fact_ids),
+            "precondition_fact_ids": list(self.precondition_fact_ids),
+            "outcome_fact_ids": list(self.outcome_fact_ids),
+            "cost_fact_ids": list(self.cost_fact_ids),
+            "target_ids": list(self.target_ids),
+            "basis_fact_ids": list(self.basis_fact_ids),
+            "evidence": [span.to_dict() for span in self.evidence],
+        }
 
     @classmethod
     def from_dict(cls, payload: dict[str, Any]) -> "EventAtom":
-        fields = ("participant_ids", "trigger_fact_ids", "precondition_fact_ids", "outcome_fact_ids", "cost_fact_ids")
+        fields = (
+            "participant_ids", "trigger_fact_ids", "precondition_fact_ids",
+            "outcome_fact_ids", "cost_fact_ids", "target_ids", "basis_fact_ids",
+        )
         values = {field: tuple(str(item) for item in payload.get(field, []) if str(item).strip()) for field in fields}
+        participant_ids = values["participant_ids"]
+        linked_fact_ids = tuple(dict.fromkeys((
+            *values["trigger_fact_ids"], *values["precondition_fact_ids"],
+            *values["outcome_fact_ids"], *values["cost_fact_ids"],
+        )))
+        # Read-only migration for annotations created before semantic event
+        # frames existed. New model payloads are still rejected unless they
+        # supply all frame fields; persisted legacy artifacts remain usable.
+        has_frame = all(field in payload for field in ("action_type", "actor_id", "target_ids", "basis_fact_ids"))
+        actor_id = str(payload.get("actor_id", "")).strip()
+        basis_fact_ids = values["basis_fact_ids"]
+        if not has_frame:
+            actor_id = actor_id or (participant_ids[0] if participant_ids else "")
+            basis_fact_ids = basis_fact_ids or linked_fact_ids
         return cls(
             event_id=str(payload.get("event_id", "")),
             chapter_id=str(payload.get("chapter_id", "")),
@@ -163,7 +226,9 @@ class EventAtom:
             obstacle=str(payload.get("obstacle", "")),
             decision=str(payload.get("decision", "")),
             evidence=tuple(SourceSpan.from_dict(item) for item in payload.get("evidence", []) if isinstance(item, dict)),
-            **values,
+            action_type=str(payload.get("action_type", "other")),
+            actor_id=actor_id,
+            **{**values, "basis_fact_ids": basis_fact_ids},
         )
 
 
@@ -394,6 +459,102 @@ class StateChange:
 
 
 @dataclass(frozen=True)
+class NarrativeMechanism:
+    """Evidence-linked explanation of why a narrative arrangement works.
+
+    Facts say what is true and events say what changed.  A mechanism records
+    the deeper connective tissue used by prose planning: desire versus
+    pressure, contrast, information release, emotional modulation, setup and
+    payoff.  ``counterfactual_loss`` makes the interpretation testable by
+    stating what would disappear if the linked material were removed.
+    """
+
+    mechanism_id: str
+    chapter_id: str
+    order: int
+    kind: str
+    logic_relation: str
+    summary: str
+    narrative_function: str
+    counterfactual_loss: str
+    fact_ids: tuple[str, ...] = field(default_factory=tuple)
+    event_ids: tuple[str, ...] = field(default_factory=tuple)
+    participant_ids: tuple[str, ...] = field(default_factory=tuple)
+    inference_level: str = "structural"
+    setup_status: str = "not_applicable"
+    confidence: float = 1.0
+    evidence: tuple[SourceSpan, ...] = field(default_factory=tuple)
+
+    def validate(self) -> None:
+        _required(self.mechanism_id, "narrative mechanism_id")
+        _required(self.chapter_id, "narrative mechanism chapter_id")
+        if self.order < 0:
+            raise ValueError("narrative mechanism order must be non-negative")
+        if self.kind not in NARRATIVE_MECHANISM_KINDS:
+            raise ValueError(f"unsupported narrative mechanism kind: {self.kind}")
+        if self.logic_relation not in NARRATIVE_LOGIC_RELATIONS:
+            raise ValueError(f"unsupported narrative logic relation: {self.logic_relation}")
+        _required(self.summary, "narrative mechanism summary")
+        _required(self.narrative_function, "narrative mechanism function")
+        _required(self.counterfactual_loss, "narrative mechanism counterfactual_loss")
+        if not self.fact_ids and not self.event_ids:
+            raise ValueError("narrative mechanism needs linked facts or events")
+        for values, name in (
+            (self.fact_ids, "narrative mechanism fact_ids"),
+            (self.event_ids, "narrative mechanism event_ids"),
+            (self.participant_ids, "narrative mechanism participant_ids"),
+        ):
+            _unique(values, name)
+        if self.inference_level not in NARRATIVE_INFERENCE_LEVELS:
+            raise ValueError(f"unsupported narrative inference level: {self.inference_level}")
+        if self.setup_status not in NARRATIVE_SETUP_STATUSES:
+            raise ValueError(f"unsupported narrative setup status: {self.setup_status}")
+        if self.kind == "setup" and self.setup_status != "open_setup":
+            raise ValueError("a local setup must remain open until a later verified payoff links it")
+        if self.kind == "payoff" and self.setup_status != "verified_payoff":
+            raise ValueError("a payoff mechanism must be explicitly verified")
+        if self.kind not in {"setup", "payoff"} and self.setup_status != "not_applicable":
+            raise ValueError("non setup/payoff mechanism cannot carry a setup lifecycle")
+        if not 0.0 < self.confidence <= 1.0:
+            raise ValueError("narrative mechanism confidence must be in (0, 1]")
+        if not self.evidence:
+            raise ValueError("narrative mechanism needs source evidence")
+        for span in self.evidence:
+            span.validate()
+            if span.chapter_id != self.chapter_id:
+                raise ValueError("narrative mechanism evidence chapter does not match mechanism")
+
+    def to_dict(self) -> dict[str, Any]:
+        return {
+            **asdict(self),
+            "fact_ids": list(self.fact_ids),
+            "event_ids": list(self.event_ids),
+            "participant_ids": list(self.participant_ids),
+            "evidence": [span.to_dict() for span in self.evidence],
+        }
+
+    @classmethod
+    def from_dict(cls, payload: dict[str, Any]) -> "NarrativeMechanism":
+        return cls(
+            mechanism_id=str(payload.get("mechanism_id", "")),
+            chapter_id=str(payload.get("chapter_id", "")),
+            order=int(payload.get("order", -1)),
+            kind=str(payload.get("kind", "")),
+            logic_relation=str(payload.get("logic_relation", "")),
+            summary=str(payload.get("summary", "")),
+            narrative_function=str(payload.get("narrative_function", "")),
+            counterfactual_loss=str(payload.get("counterfactual_loss", "")),
+            fact_ids=tuple(str(item) for item in payload.get("fact_ids", []) if str(item).strip()),
+            event_ids=tuple(str(item) for item in payload.get("event_ids", []) if str(item).strip()),
+            participant_ids=tuple(str(item) for item in payload.get("participant_ids", []) if str(item).strip()),
+            inference_level=str(payload.get("inference_level", "structural")),
+            setup_status=str(payload.get("setup_status", "not_applicable")),
+            confidence=float(payload.get("confidence", 1.0)),
+            evidence=tuple(SourceSpan.from_dict(item) for item in payload.get("evidence", []) if isinstance(item, dict)),
+        )
+
+
+@dataclass(frozen=True)
 class ChapterAnnotation:
     """Complete structural annotation for one chapter, excluding style metrics."""
 
@@ -408,6 +569,7 @@ class ChapterAnnotation:
     time_anchors: tuple[TimeAnchor, ...] = field(default_factory=tuple)
     temporal_relations: tuple[TemporalRelation, ...] = field(default_factory=tuple)
     spatial_relations: tuple[SpatialRelation, ...] = field(default_factory=tuple)
+    narrative_mechanisms: tuple[NarrativeMechanism, ...] = field(default_factory=tuple)
 
     def to_dict(self) -> dict[str, Any]:
         return {
@@ -421,6 +583,7 @@ class ChapterAnnotation:
             "time_anchors": [item.to_dict() for item in self.time_anchors],
             "temporal_relations": [item.to_dict() for item in self.temporal_relations],
             "spatial_relations": [item.to_dict() for item in self.spatial_relations],
+            "narrative_mechanisms": [item.to_dict() for item in self.narrative_mechanisms],
             "schema_version": self.schema_version,
         }
 
@@ -438,4 +601,5 @@ class ChapterAnnotation:
             time_anchors=tuple(TimeAnchor.from_dict(item) for item in payload.get("time_anchors", []) if isinstance(item, dict)),
             temporal_relations=tuple(TemporalRelation.from_dict(item) for item in payload.get("temporal_relations", []) if isinstance(item, dict)),
             spatial_relations=tuple(SpatialRelation.from_dict(item) for item in payload.get("spatial_relations", []) if isinstance(item, dict)),
+            narrative_mechanisms=tuple(NarrativeMechanism.from_dict(item) for item in payload.get("narrative_mechanisms", []) if isinstance(item, dict)),
         )

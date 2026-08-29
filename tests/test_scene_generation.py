@@ -9,7 +9,8 @@ from unittest.mock import patch
 
 from pipeline.contracts import ChapterProgram, EntityBinding, EventProgram, FactContract, NarrativeBeat, ParagraphDraft, ParagraphProgram, SceneDraft, SceneProgram
 from pipeline.contracts.program_llm import chapter_program_to_llm_dict
-from pipeline.contracts.scene_output import scene_draft_from_llm, scene_draft_to_llm_dict, scene_prose_validation_from_llm, scene_prose_validation_to_llm_dict, scene_validation_from_llm, scene_validation_to_llm_dict
+from pipeline.contracts.scene_output import paragraph_validation_from_llm, scene_affordance_validation_from_llm, scene_draft_from_llm, scene_draft_to_llm_dict, scene_prose_validation_from_llm, scene_prose_validation_to_llm_dict, scene_validation_from_llm, scene_validation_to_llm_dict
+from pipeline.graph_runtime import paragraph_writer_packet
 from pipeline.jsonio import read_json, write_json
 from pipeline.model import ModelSettings
 from pipeline.scene_generation import _batch_scene_payload, _paragraph_minimum, _paragraph_role_issues, _paragraph_style_budgets, _prefer_style_assessment, _replace_non_role_marker, _scene_blueprint, _style_targets, _unlicensed_entity_issues, generate_from_program
@@ -60,6 +61,14 @@ class SceneGenerationTests(unittest.TestCase):
             "提前泄露事件ID": [], "未授权断言段落ID": [], "段落问题": [], "修复段落ID": [],
         }
 
+    def _paragraph_validation_payload(self) -> dict[str, object]:
+        return {
+            "段落ID": "scene-001:paragraph-00", "通过": True,
+            "已实现事实ID": ["fact-001"], "缺失事实ID": [],
+            "已实现事件ID": ["event-001"], "缺失事件ID": [],
+            "未授权断言": [], "问题": [],
+        }
+
     def test_strict_chinese_scene_payloads_round_trip_through_contracts(self) -> None:
         scene = self._scene()
         draft = scene_draft_from_llm(self._draft_payload(), scene, minimum_chars=20)
@@ -95,11 +104,72 @@ class SceneGenerationTests(unittest.TestCase):
         self.assertEqual({item["节拍ID"] for item in batch["戏剧节拍"]}, {"scene-001:beat-00", "scene-001:beat-01"})
         self.assertEqual(batch["出场状态事实ID"], [])
 
+    def test_writer_packet_exposes_deep_mechanism_and_gate_accounts_for_it(self) -> None:
+        scene = self._beat_scene()
+        beat = replace(
+            scene.narrative_beats[0],
+            mechanism_ids=("mechanism-001",),
+            narrative_function="让外部催促真正改变人物的取舍，而不是只交代离开结果",
+            counterfactual_guard="删去催促造成的压力后，离开会变成没有触发因素的动作",
+        )
+        scene = replace(scene, narrative_beats=(beat,))
+        program = ChapterProgram(
+            "chapter-001", "source-hash", (scene,), schema_version="2.1",
+            entities=(EntityBinding("person-001", "人物甲", "person"),),
+        )
+
+        packet = paragraph_writer_packet(
+            None, {}, program, scene, scene.paragraphs[0],
+        )
+        packet_beat = packet["当前段落节拍"][0]
+        self.assertEqual(packet_beat["叙事机制ID"], ["mechanism-001"])
+        self.assertIn("改变人物的取舍", packet_beat["叙事任务"])
+        self.assertIn("没有触发因素", packet_beat["反事实守卫"])
+
+        legacy = self._paragraph_validation_payload()
+        with self.assertRaisesRegex(ValueError, "全部叙事机制"):
+            paragraph_validation_from_llm(
+                legacy, scene,
+                paragraph_id=scene.paragraphs[0].paragraph_id,
+                expected_fact_ids=("fact-001",),
+                expected_event_ids=("event-001",),
+                expected_mechanism_ids=("mechanism-001",),
+            )
+        expanded = {
+            **legacy,
+            "已实现叙事机制ID": ["mechanism-001"],
+            "缺失叙事机制ID": [],
+        }
+        validation = paragraph_validation_from_llm(
+            expanded, scene,
+            paragraph_id=scene.paragraphs[0].paragraph_id,
+            expected_fact_ids=("fact-001",),
+            expected_event_ids=("event-001",),
+            expected_mechanism_ids=("mechanism-001",),
+        )
+        self.assertTrue(validation.passed)
+
     def test_scene_validation_rejects_incomplete_fact_accounting(self) -> None:
         payload = self._validation_payload()
         payload["已实现事实ID"] = []
         with self.assertRaises(ValueError):
             scene_validation_from_llm(payload, self._scene())
+
+    def test_scene_affordance_preflight_requires_each_uncovered_obligation_to_be_explained(self) -> None:
+        scene = self._beat_scene()
+        payload = {
+            "场景ID": "scene-001", "通过": False,
+            "不可执行事件ID": ["event-001"], "不可执行节拍ID": [],
+            "问题": [{
+                "对象类型": "事件", "对象ID": "event-001",
+                "问题": "缺少行动者", "修复方向": "补充参与实体",
+            }],
+        }
+        validation = scene_affordance_validation_from_llm(payload, scene)
+        self.assertFalse(validation.passed)
+        payload["问题"] = []
+        with self.assertRaises(ValueError):
+            scene_affordance_validation_from_llm(payload, scene)
 
     def test_scene_validation_requires_an_unsupported_claim_to_be_repaired(self) -> None:
         payload = self._validation_payload()
@@ -259,12 +329,12 @@ class SceneGenerationTests(unittest.TestCase):
                  patch("pipeline.scene_generation._render", side_effect=capture_render), \
                  patch("pipeline.scene_generation.runs_dir", return_value=base / "runs"), \
                  patch("pipeline.scene_generation.ModelSettings.from_environment", return_value=ModelSettings(api_key="test", max_tokens=3000)), \
-                 patch("pipeline.scene_generation.complete_json", side_effect=[self._draft_payload(), self._validation_payload()]) as complete, \
+                 patch("pipeline.scene_generation.complete_json", side_effect=[self._draft_payload(), self._paragraph_validation_payload(), self._validation_payload()]) as complete, \
                  patch("pipeline.scene_generation.assess_style_budget", return_value={"passed": True}):
                 result = generate_from_program("Example", program_path, run_id="scene-test")
             self.assertTrue(result["semantic_passed"])
             self.assertTrue(result["style_passed"])
-            self.assertEqual(complete.call_count, 2)
+            self.assertEqual(complete.call_count, 3)
             output = Path(str(result["output_dir"]))
             self.assertTrue((output / "generated_draft.txt").exists())
             self.assertTrue((output / "scene-01.result.json").exists())
@@ -274,10 +344,11 @@ class SceneGenerationTests(unittest.TestCase):
             self.assertTrue((output / "runtime_graph_state.json").exists())
             writer_inputs = next(item for item in rendered_inputs if "AUTHOR_STYLE_PROFILE_JSON" in item)
             self.assertNotIn("STORY_STATE_JSON", writer_inputs)
-            subgraphs = writer_inputs["NARRATIVE_SUBGRAPH_JSON"]
-            self.assertEqual(len(subgraphs["段落子图"]), 1)
-            self.assertNotIn("evidence", json.dumps(subgraphs, ensure_ascii=False))
-            self.assertNotIn("quote", json.dumps(subgraphs, ensure_ascii=False))
+            packet = writer_inputs["PARAGRAPH_WRITER_PACKET_JSON"]
+            self.assertEqual(packet["当前段落程序"]["段落ID"], "scene-001:paragraph-00")
+            self.assertIn("叙事事实子图", packet)
+            self.assertNotIn("evidence", json.dumps(packet, ensure_ascii=False))
+            self.assertNotIn("quote", json.dumps(packet, ensure_ascii=False))
 
     def test_controlled_expansion_refuses_a_non_graph_fallback(self) -> None:
         program = ChapterProgram(
@@ -310,13 +381,13 @@ class SceneGenerationTests(unittest.TestCase):
                  patch("pipeline.scene_generation._render", return_value="中文提示词"), \
                  patch("pipeline.scene_generation.runs_dir", return_value=base / "runs"), \
                  patch("pipeline.scene_generation.ModelSettings.from_environment", return_value=ModelSettings(api_key="test", max_tokens=3000)), \
-                 patch("pipeline.scene_generation.complete_json", side_effect=[self._draft_payload(), self._validation_payload(), prose_payload]) as complete, \
+                 patch("pipeline.scene_generation.complete_json", side_effect=[self._draft_payload(), self._paragraph_validation_payload(), self._validation_payload(), prose_payload]) as complete, \
                  patch("pipeline.scene_generation.assess_style_budget", return_value={"passed": True}):
                 result = generate_from_program("Example", program_path, run_id="prose-test")
             self.assertTrue(result["structural_passed"])
             self.assertTrue(result["prose_passed"])
             self.assertTrue(result["overall_passed"])
-            self.assertEqual(complete.call_count, 3)
+            self.assertEqual(complete.call_count, 4)
 
     def test_failed_prose_audit_keeps_only_candidate_draft(self) -> None:
         scene = self._beat_scene()
@@ -343,7 +414,7 @@ class SceneGenerationTests(unittest.TestCase):
                  patch("pipeline.scene_generation._render", return_value="中文提示词"), \
                  patch("pipeline.scene_generation.runs_dir", return_value=base / "runs"), \
                  patch("pipeline.scene_generation.ModelSettings.from_environment", return_value=ModelSettings(api_key="test", max_tokens=3000)), \
-                 patch("pipeline.scene_generation.complete_json", side_effect=[self._draft_payload(), self._validation_payload(), failed_prose_payload]), \
+                 patch("pipeline.scene_generation.complete_json", side_effect=[self._draft_payload(), self._paragraph_validation_payload(), self._validation_payload(), failed_prose_payload]), \
                  patch("pipeline.scene_generation.assess_style_budget", return_value={"passed": True}):
                 result = generate_from_program("Example", program_path, run_id="rejected-prose-test", max_repairs=0)
             output = Path(str(result["output_dir"]))
@@ -358,6 +429,7 @@ class SceneGenerationTests(unittest.TestCase):
         event = EventProgram(
             "event-001", "scene-001", "两人确认去向", "向同伴确认前往", ("person-001", "person-002"), (),
             ("fact-001",), ("fact-001",), "同伴质疑", "前往",
+            action_type="speech", actor_id="person-001", target_ids=("person-002",), basis_fact_ids=("fact-001",),
         )
         paragraph = ParagraphProgram(
             "scene-001:paragraph-00", "scene-001", 0, "action_progression", ("fact-001",),
@@ -392,6 +464,7 @@ class SceneGenerationTests(unittest.TestCase):
                 "自检兑现事实ID": ["fact-001"], "自检兑现事件ID": ["event-001"],
             }],
         }
+        paragraph_repair = {"场景ID": repair["场景ID"], "段落正文": repair["修复段落"]}
         execution_spec = {"metrics": [
             {"metric_id": "dialogue_char_ratio", "target": 0.4, "preferred_min": 0.2, "preferred_max": 0.6, "priority": "high"},
         ]}
@@ -403,11 +476,12 @@ class SceneGenerationTests(unittest.TestCase):
                  patch("pipeline.scene_generation._render", return_value="中文提示词"), \
                  patch("pipeline.scene_generation.runs_dir", return_value=base / "runs"), \
                  patch("pipeline.scene_generation.ModelSettings.from_environment", return_value=ModelSettings(api_key="test", max_tokens=3000)), \
-                 patch("pipeline.scene_generation.complete_json", side_effect=[draft, validation, repair, validation]) as complete, \
+                 patch("pipeline.scene_generation.complete_json", side_effect=[draft, self._paragraph_validation_payload(), paragraph_repair, self._paragraph_validation_payload(), validation]) as complete, \
                  patch("pipeline.scene_generation.assess_style_budget", return_value={"passed": True}):
                 result = generate_from_program("Example", program_path, run_id="role-test", max_repairs=1)
             self.assertTrue(result["semantic_passed"])
-            self.assertEqual(complete.call_count, 4)
+            self.assertTrue(result["overall_passed"])
+            self.assertEqual(complete.call_count, 5)
             scene_result = read_json(Path(str(result["output_dir"])) / "scene-01.result.json")
             self.assertTrue(scene_result["role_passed"])
-            self.assertEqual(scene_result["repairs_used"], 1)
+            self.assertEqual(scene_result["repairs_used"], 0)

@@ -26,6 +26,13 @@ class TemplateMiningTests(unittest.TestCase):
         )
         self.assertEqual(short_macro, ())
 
+    def test_shallow_macro_candidate_is_discarded_before_library_validation(self) -> None:
+        chapter_ids = [f"Author/work/{index:04d}" for index in range(1, 11)]
+        draft = _offline_draft([{"chapter_id": chapter_id} for chapter_id in chapter_ids], ("macro",))
+        draft["macro_templates"][0]["beat_sequence"] = ["进入", "转折", "退出"]
+        templates = _templates_from_draft(draft, ("macro",), set(chapter_ids), "test")
+        self.assertEqual(templates, ())
+
 
 if __name__ == "__main__":
     unittest.main()

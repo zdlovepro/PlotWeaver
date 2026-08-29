@@ -14,10 +14,14 @@ class ProgramSequenceTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as temp_dir:
             base = Path(temp_dir)
             programs = []
+            contracts = []
             for number in range(1, 4):
                 path = base / f"chapter-{number:04d}.program.json"
                 path.write_text("{}", encoding="utf-8")
                 programs.append(path)
+                contract = base / f"chapter-{number:04d}.chapter-contract.json"
+                contract.write_text("{}", encoding="utf-8")
+                contracts.append(contract)
             graph_path = base / "narrative_graph.json"
             graph_path.write_text("{}", encoding="utf-8")
             index = base / "index.json"
@@ -25,7 +29,12 @@ class ProgramSequenceTests(unittest.TestCase):
                 "author_id": "Example", "generation_mode": "controlled_expansion", "passed": True,
                 "narrative_graph": str(graph_path),
                 "chapters": [
-                    {"chapter_no": number, "chapter_id": f"chapter-{number}", "program": str(path)}
+                    {
+                        "chapter_no": number,
+                        "chapter_id": f"chapter-{number}",
+                        "program": str(path),
+                        "chapter_contract": str(contracts[number - 1]),
+                    }
                     for number, path in enumerate(programs, start=1)
                 ],
             })
