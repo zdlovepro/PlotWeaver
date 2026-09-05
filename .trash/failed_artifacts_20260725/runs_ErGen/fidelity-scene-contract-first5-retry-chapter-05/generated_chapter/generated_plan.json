@@ -1,0 +1,322 @@
+{
+  "chapter_goal": "完整重建目标事件：测试不合格回家及父亲失望。",
+  "selected_template_ids": [
+    "library:event-005",
+    "library:micro-001"
+  ],
+  "scenes": [
+    {
+      "scene_no": 1,
+      "entry_state": [],
+      "objective": "完成恒岳派测试并得到结果",
+      "pressure": "测试不合格导致被遣散",
+      "turn": "王林被判定不合格，众少年被遣散，王林被送回家",
+      "exit_state": [
+        "王林 测试结果 不合格",
+        "恒岳派青年 遣散 众少年",
+        "王林 被送回家 回家"
+      ]
+    },
+    {
+      "scene_no": 2,
+      "entry_state": [
+        "王林 被送回家 回家"
+      ],
+      "objective": "父亲发现王林情绪异常",
+      "pressure": "王林情绪低落",
+      "turn": "父亲从王林脸上看到没落，升起不妙的预感",
+      "exit_state": [
+        "王天水 情绪 不妙的预感"
+      ]
+    }
+  ],
+  "chapter_state_changes": [
+    {
+      "slot": "test_result",
+      "before": "",
+      "after": "王林 测试结果 不合格",
+      "cause_scene_no": 1
+    },
+    {
+      "slot": "dispersal",
+      "before": "",
+      "after": "恒岳派青年 遣散 众少年",
+      "cause_scene_no": 1
+    },
+    {
+      "slot": "return_home",
+      "before": "",
+      "after": "王林 被送回家 回家",
+      "cause_scene_no": 1
+    },
+    {
+      "slot": "father_feeling",
+      "before": "",
+      "after": "王天水 情绪 不妙的预感",
+      "cause_scene_no": 2
+    }
+  ],
+  "covered_required_event_ids": [
+    "target-event-001",
+    "target-event-002"
+  ],
+  "covered_required_state_change_ids": [
+    "target-change-001",
+    "target-change-002",
+    "target-change-003",
+    "target-change-004"
+  ],
+  "chapter_end_contract": [
+    "本章在王林回家、父亲升起不妙预感后收束",
+    "不提前进入王林后续修仙之路或四叔的再次出现等未提供事件"
+  ],
+  "style_budget": {
+    "schema_version": "1.0",
+    "mode": "fidelity_test_override",
+    "instruction": "仅用于重建实验的量化验收；正常原创写作应使用作者级柔性预算。",
+    "metrics": [
+      {
+        "metric_id": "chapter_char_count",
+        "unit": "count",
+        "target": 1999.0,
+        "preferred_min": 1499.0,
+        "preferred_max": 2499.0,
+        "priority": "high"
+      },
+      {
+        "metric_id": "mean_sentence_chars",
+        "unit": "mean_chars",
+        "target": 42.0,
+        "preferred_min": 35.7,
+        "preferred_max": 48.3,
+        "priority": "high"
+      },
+      {
+        "metric_id": "mean_paragraph_chars",
+        "unit": "mean_chars",
+        "target": 54.555556,
+        "preferred_min": 46.372223,
+        "preferred_max": 62.738889,
+        "priority": "high"
+      },
+      {
+        "metric_id": "short_paragraph_ratio",
+        "unit": "ratio",
+        "target": 0.138889,
+        "preferred_min": 0.104167,
+        "preferred_max": 0.173611,
+        "priority": "high"
+      },
+      {
+        "metric_id": "dialogue_char_ratio",
+        "unit": "ratio",
+        "target": 0.354177,
+        "preferred_min": 0.265633,
+        "preferred_max": 0.442721,
+        "priority": "high"
+      },
+      {
+        "metric_id": "perception_marker_ratio",
+        "unit": "ratio",
+        "target": 0.152174,
+        "preferred_min": 0.11413,
+        "preferred_max": 0.190218,
+        "priority": "high"
+      },
+      {
+        "metric_id": "transition_marker_ratio",
+        "unit": "ratio",
+        "target": 0.021739,
+        "preferred_min": 0.001739,
+        "preferred_max": 0.041739,
+        "priority": "high"
+      },
+      {
+        "metric_id": "question_sentence_ratio",
+        "unit": "ratio",
+        "target": 0.065217,
+        "preferred_min": 0.045217,
+        "preferred_max": 0.085217,
+        "priority": "medium"
+      },
+      {
+        "metric_id": "exclamation_sentence_ratio",
+        "unit": "ratio",
+        "target": 0.043478,
+        "preferred_min": 0.023478,
+        "preferred_max": 0.063478,
+        "priority": "medium"
+      },
+      {
+        "metric_id": "ellipsis_per_sentence",
+        "unit": "ratio",
+        "target": 0.043478,
+        "preferred_min": 0.023478,
+        "preferred_max": 0.063478,
+        "priority": "medium"
+      }
+    ]
+  },
+  "continuity_checks": [
+    "时间：本章发生在第四章剑灵测试之后，王林被遣散并送回家。",
+    "位置：王林从恒岳派山门被送回家中，符合逻辑。",
+    "知识：王林已知自己不合格，父亲从表情察觉异常。"
+  ],
+  "style_execution_directives": [
+    {
+      "metric_id": "short_paragraph_ratio",
+      "direction": "decrease",
+      "target_range": "0.104167–0.173611",
+      "action": "把非关键短段与相邻的因果或反应合并，避免阅读碎片化。"
+    },
+    {
+      "metric_id": "dialogue_char_ratio",
+      "direction": "increase",
+      "target_range": "0.265633–0.442721",
+      "action": "在冲突、试探或信息交接处增加有结果的直接对话，并用动作承接每轮话语。"
+    },
+    {
+      "metric_id": "perception_marker_ratio",
+      "direction": "increase",
+      "target_range": "0.11413–0.190218",
+      "action": "在关键动作或信息变化后补入角色看到、听到、感到或察觉到的具体反应。"
+    },
+    {
+      "metric_id": "exclamation_sentence_ratio",
+      "direction": "increase",
+      "target_range": "0.023478–0.063478",
+      "action": "在真正的情绪落点保留感叹句，并让前后的陈述句提供蓄势。"
+    },
+    {
+      "metric_id": "ellipsis_per_sentence",
+      "direction": "increase",
+      "target_range": "0.023478–0.063478",
+      "action": "在话语中断、犹豫或未尽之意处谨慎保留省略号。"
+    },
+    {
+      "metric_id": "mean_sentence_chars",
+      "direction": "increase",
+      "target_range": "35.7–48.3",
+      "action": "把动作、感知、判断或结果组合为完整复句，减少单个动作单独成句。"
+    }
+  ],
+  "style_execution_blueprint": {
+    "instruction": "按此蓝图安排正文，但不得删改计划事件或以凑数破坏可读性。",
+    "chapter_char_count": {
+      "target": 1999,
+      "minimum": 1499,
+      "maximum": 2499
+    },
+    "paragraph_count": {
+      "target": 37,
+      "minimum": 24,
+      "maximum": 54
+    },
+    "short_paragraph_count": {
+      "target": 5,
+      "minimum": 3,
+      "maximum": 9
+    },
+    "sentence_count": {
+      "target": 48,
+      "minimum": 31,
+      "maximum": 70
+    },
+    "dialogue_char_count": {
+      "target": 708,
+      "minimum": 398,
+      "maximum": 1106
+    },
+    "perception_sentence_count": {
+      "target": 7,
+      "minimum": 5,
+      "maximum": 9
+    },
+    "transition_sentence_count": {
+      "target": 1,
+      "minimum": 0,
+      "maximum": 2
+    }
+  },
+  "reconstruction_mode": "fidelity_test_only",
+  "scene_contracts": [
+    {
+      "order": 0,
+      "participants": [
+        "王林",
+        "恒岳派青年"
+      ],
+      "events": [
+        {
+          "order": 0,
+          "summary": "恒岳派测试王林不合格，众少年被遣散，王林被送回家",
+          "participants": [
+            "王林",
+            "恒岳派青年"
+          ],
+          "action": "测试不合格",
+          "obstacle": "",
+          "decision": "",
+          "preconditions": [],
+          "outcomes": [
+            "王林 测试结果 不合格",
+            "恒岳派青年 遣散 众少年",
+            "王林 被送回家 回家"
+          ],
+          "costs": [],
+          "contract_id": "target-event-001"
+        }
+      ],
+      "objective": "完成恒岳派测试",
+      "entry_facts": [],
+      "exit_facts": [
+        "王林 测试结果 不合格",
+        "恒岳派青年 遣散 众少年",
+        "王林 被送回家 回家"
+      ],
+      "tension": 0,
+      "locations": [],
+      "time_anchors": [],
+      "contract_id": "target-scene-001"
+    },
+    {
+      "order": 1,
+      "participants": [
+        "王林",
+        "王天水"
+      ],
+      "events": [
+        {
+          "order": 1,
+          "summary": "王林回家后，父亲从其脸上看到没落，升起不妙的预感",
+          "participants": [
+            "王林",
+            "王天水"
+          ],
+          "action": "表现出没落",
+          "obstacle": "",
+          "decision": "",
+          "preconditions": [
+            "王林 被送回家 回家"
+          ],
+          "outcomes": [
+            "王天水 情绪 不妙的预感"
+          ],
+          "costs": [],
+          "contract_id": "target-event-002"
+        }
+      ],
+      "objective": "父亲发现王林情绪异常",
+      "entry_facts": [
+        "王林 被送回家 回家"
+      ],
+      "exit_facts": [
+        "王天水 情绪 不妙的预感"
+      ],
+      "tension": 0,
+      "locations": [],
+      "time_anchors": [],
+      "contract_id": "target-scene-002"
+    }
+  ]
+}

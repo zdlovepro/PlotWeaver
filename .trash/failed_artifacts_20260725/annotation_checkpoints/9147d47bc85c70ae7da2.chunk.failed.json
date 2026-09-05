@@ -1,0 +1,344 @@
+{
+  "chapter_id": "ErGen/work-001/0001",
+  "chunk_index": 1,
+  "errors": [
+    "facts[6].kind: 不支持“期望”，应映射为 emotion、goal、identity、information、knowledge、location、progression、relationship、resource、rule"
+  ],
+  "last_model_draft": {
+    "entities": [
+      {
+        "id": "e1",
+        "name": "铁柱",
+        "kind": "人物",
+        "aliases": [
+          "王林"
+        ],
+        "evidence": [
+          {
+            "unit_id": "ErGen/work-001/0001:p0000",
+            "quote": "铁柱不是他的本名，而是从小因为身体瘦弱，父亲怕养不活，于是按照习俗称呼的小名。他的本名叫做王林"
+          }
+        ]
+      },
+      {
+        "id": "e2",
+        "name": "父亲",
+        "kind": "人物",
+        "aliases": [],
+        "evidence": [
+          {
+            "unit_id": "ErGen/work-001/0001:p0001",
+            "quote": "铁柱的父亲是家族内庶出的次子"
+          }
+        ]
+      },
+      {
+        "id": "e3",
+        "name": "母亲",
+        "kind": "人物",
+        "aliases": [],
+        "evidence": [
+          {
+            "unit_id": "ErGen/work-001/0001:p0004",
+            "quote": "母亲更是对他关心有佳"
+          }
+        ]
+      },
+      {
+        "id": "e4",
+        "name": "四叔",
+        "kind": "人物",
+        "aliases": [],
+        "evidence": [
+          {
+            "unit_id": "ErGen/work-001/0001:p0011",
+            "quote": "你四叔比爹有出息"
+          }
+        ]
+      }
+    ],
+    "facts": [
+      {
+        "id": "f1",
+        "kind": "关系",
+        "subject_id": "e1",
+        "predicate": "小名",
+        "value": "铁柱",
+        "object_id": "",
+        "certainty": "明确",
+        "evidence": [
+          {
+            "unit_id": "ErGen/work-001/0001:p0000",
+            "quote": "铁柱不是他的本名，而是从小因为身体瘦弱，父亲怕养不活，于是按照习俗称呼的小名"
+          }
+        ]
+      },
+      {
+        "id": "f2",
+        "kind": "身份",
+        "subject_id": "e2",
+        "predicate": "是",
+        "value": "家族内庶出的次子",
+        "object_id": "",
+        "certainty": "明确",
+        "evidence": [
+          {
+            "unit_id": "ErGen/work-001/0001:p0001",
+            "quote": "铁柱的父亲是家族内庶出的次子"
+          }
+        ]
+      },
+      {
+        "id": "f3",
+        "kind": "状态",
+        "subject_id": "e1",
+        "predicate": "是",
+        "value": "神童",
+        "object_id": "",
+        "certainty": "明确",
+        "evidence": [
+          {
+            "unit_id": "ErGen/work-001/0001:p0003",
+            "quote": "几乎是村子内公认的神童"
+          }
+        ]
+      },
+      {
+        "id": "f4",
+        "kind": "状态",
+        "subject_id": "e1",
+        "predicate": "对",
+        "value": "山村外世界充满向往",
+        "object_id": "",
+        "certainty": "明确",
+        "evidence": [
+          {
+            "unit_id": "ErGen/work-001/0001:p0005",
+            "quote": "对于山村外的世界，他充满向往"
+          }
+        ]
+      },
+      {
+        "id": "f5",
+        "kind": "事件",
+        "subject_id": "e1",
+        "predicate": "读书",
+        "value": "在家读书",
+        "object_id": "",
+        "certainty": "明确",
+        "evidence": [
+          {
+            "unit_id": "ErGen/work-001/0001:p0004",
+            "quote": "别人家的孩子在他这个年纪都已经下地干农活了，可他却在家读书"
+          }
+        ]
+      },
+      {
+        "id": "f6",
+        "kind": "事件",
+        "subject_id": "e4",
+        "predicate": "到来",
+        "value": "四叔到来",
+        "object_id": "",
+        "certainty": "明确",
+        "evidence": [
+          {
+            "unit_id": "ErGen/work-001/0001:p0013",
+            "quote": "正说着，忽然门外传来马声，接着马车轱辘压地的哗哗声随之而来，一个爽朗的声音在外面响起"
+          }
+        ]
+      },
+      {
+        "id": "f7",
+        "kind": "期望",
+        "subject_id": "e2",
+        "predicate": "期望",
+        "value": "铁柱考上县里大考",
+        "object_id": "e1",
+        "certainty": "明确",
+        "evidence": [
+          {
+            "unit_id": "ErGen/work-001/0001:p0007",
+            "quote": "你要好好读书，明年就是县里大考了，你以后有没有出息，可就全看这次了"
+          }
+        ]
+      }
+    ],
+    "events": [
+      {
+        "id": "v1",
+        "order": 1,
+        "summary": "铁柱因读了书而生出对山外世界的向往",
+        "participant_ids": [
+          "e1"
+        ],
+        "trigger_fact_ids": [
+          "f5"
+        ],
+        "precondition_fact_ids": [
+          "f3"
+        ],
+        "action": "读书",
+        "obstacle": "",
+        "decision": "",
+        "outcome_fact_ids": [
+          "f4"
+        ],
+        "cost_fact_ids": [],
+        "evidence": [
+          {
+            "unit_id": "ErGen/work-001/0001:p0005",
+            "quote": "书读的多了，想法自然也就随之而来，对于山村外的世界，他充满向往"
+          }
+        ]
+      },
+      {
+        "id": "v2",
+        "order": 2,
+        "summary": "父亲期望铁柱通过县考改变命运",
+        "participant_ids": [
+          "e1",
+          "e2"
+        ],
+        "trigger_fact_ids": [],
+        "precondition_fact_ids": [
+          "f1",
+          "f2"
+        ],
+        "action": "叮嘱",
+        "obstacle": "",
+        "decision": "",
+        "outcome_fact_ids": [
+          "f7"
+        ],
+        "cost_fact_ids": [],
+        "evidence": [
+          {
+            "unit_id": "ErGen/work-001/0001:p0007",
+            "quote": "铁柱啊，你要好好读书，明年就是县里大考了，你以后有没有出息，可就全看这次了"
+          }
+        ]
+      },
+      {
+        "id": "v3",
+        "order": 3,
+        "summary": "四叔到来",
+        "participant_ids": [
+          "e4"
+        ],
+        "trigger_fact_ids": [],
+        "precondition_fact_ids": [],
+        "action": "到来",
+        "obstacle": "",
+        "decision": "",
+        "outcome_fact_ids": [
+          "f6"
+        ],
+        "cost_fact_ids": [],
+        "evidence": [
+          {
+            "unit_id": "ErGen/work-001/0001:p0013",
+            "quote": "正说着，忽然门外传来马声，接着马车轱辘压地的哗哗声随之而来，一个爽朗的声音在外面响起"
+          }
+        ]
+      }
+    ],
+    "scenes": [
+      {
+        "id": "s1",
+        "order": 1,
+        "participant_ids": [
+          "e1"
+        ],
+        "event_ids": [
+          "v1"
+        ],
+        "objective": "展现铁柱因读书而向往外界",
+        "entry_fact_ids": [
+          "f3"
+        ],
+        "exit_fact_ids": [
+          "f4"
+        ],
+        "tension": 0,
+        "evidence": [
+          {
+            "unit_id": "ErGen/work-001/0001:p0005",
+            "quote": "书读的多了，想法自然也就随之而来，对于山村外的世界，他充满向往"
+          }
+        ]
+      },
+      {
+        "id": "s2",
+        "order": 2,
+        "participant_ids": [
+          "e1",
+          "e2"
+        ],
+        "event_ids": [
+          "v2"
+        ],
+        "objective": "父亲对铁柱的期望与叮嘱",
+        "entry_fact_ids": [
+          "f1",
+          "f2"
+        ],
+        "exit_fact_ids": [
+          "f7"
+        ],
+        "tension": 0,
+        "evidence": [
+          {
+            "unit_id": "ErGen/work-001/0001:p0007",
+            "quote": "铁柱啊，你要好好读书，明年就是县里大考了，你以后有没有出息，可就全看这次了"
+          }
+        ]
+      },
+      {
+        "id": "s3",
+        "order": 3,
+        "participant_ids": [
+          "e4"
+        ],
+        "event_ids": [
+          "v3"
+        ],
+        "objective": "四叔到来",
+        "entry_fact_ids": [],
+        "exit_fact_ids": [
+          "f6"
+        ],
+        "tension": 0,
+        "evidence": [
+          {
+            "unit_id": "ErGen/work-001/0001:p0013",
+            "quote": "正说着，忽然门外传来马声，接着马车轱辘压地的哗哗声随之而来，一个爽朗的声音在外面响起"
+          }
+        ]
+      }
+    ],
+    "state_changes": [
+      {
+        "id": "c1",
+        "event_id": "v1",
+        "operation": "add",
+        "before_fact_id": "",
+        "after_fact_id": "f4"
+      },
+      {
+        "id": "c2",
+        "event_id": "v2",
+        "operation": "add",
+        "before_fact_id": "",
+        "after_fact_id": "f7"
+      },
+      {
+        "id": "c3",
+        "event_id": "v3",
+        "operation": "add",
+        "before_fact_id": "",
+        "after_fact_id": "f6"
+      }
+    ]
+  }
+}

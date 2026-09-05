@@ -1,0 +1,257 @@
+{
+  "reconstruction_mode": "fidelity_test_only",
+  "chapter_goal": "完整重建已提供的目标事件、场景、状态变化与结局，不新增输入外情节。",
+  "required_events": [
+    {
+      "order": 0,
+      "summary": "黑衣中年人宣布灵根测试开始，众少年依次测试",
+      "participants": [
+        "黑衣中年人",
+        "众少年"
+      ],
+      "action": "宣布测试规则并逐个测试",
+      "obstacle": "",
+      "decision": "",
+      "preconditions": [],
+      "outcomes": [
+        "王卓 被选中 合格者",
+        "王浩 被收为 药童",
+        "王林 被判定为 不合格"
+      ],
+      "costs": []
+    },
+    {
+      "order": 1,
+      "summary": "王卓被测试并选中",
+      "participants": [
+        "王卓",
+        "黑衣中年人"
+      ],
+      "action": "被测试后得到合格评价",
+      "obstacle": "",
+      "decision": "",
+      "preconditions": [],
+      "outcomes": [
+        "王卓 被选中 合格者"
+      ],
+      "costs": []
+    },
+    {
+      "order": 2,
+      "summary": "王浩献灵芝后被收为药童",
+      "participants": [
+        "王浩",
+        "黑衣中年人"
+      ],
+      "action": "献玉盒和灵芝，请求做药童",
+      "obstacle": "最初被说资质差",
+      "decision": "献出宝物",
+      "preconditions": [],
+      "outcomes": [
+        "王浩 被收为 药童"
+      ],
+      "costs": [
+        "王浩 献出 玉盒与灵芝"
+      ]
+    },
+    {
+      "order": 3,
+      "summary": "王林被测试为不合格",
+      "participants": [
+        "王林",
+        "黑衣中年人"
+      ],
+      "action": "接受灵根测试",
+      "obstacle": "",
+      "decision": "",
+      "preconditions": [],
+      "outcomes": [
+        "王林 被判定为 不合格"
+      ],
+      "costs": []
+    },
+    {
+      "order": 4,
+      "summary": "黑衣人宣布第二项毅力测试，王林开始攀登石阶",
+      "participants": [
+        "黑衣中年人",
+        "王林",
+        "众少年"
+      ],
+      "action": "宣布毅力测试规则",
+      "obstacle": "",
+      "decision": "王林决定参加",
+      "preconditions": [
+        "王林 被判定为 不合格"
+      ],
+      "outcomes": [
+        "王林 成为 毅力测试参与者"
+      ],
+      "costs": []
+    }
+  ],
+  "required_scenes": [
+    {
+      "order": 0,
+      "participants": [
+        "黑衣中年人",
+        "众少年",
+        "王卓",
+        "王浩",
+        "王林"
+      ],
+      "events": [
+        "黑衣中年人宣布灵根测试开始，众少年依次测试",
+        "王卓被测试并选中",
+        "王浩献灵芝后被收为药童",
+        "王林被测试为不合格"
+      ],
+      "objective": "筛选出灵根充足的弟子",
+      "entry_facts": [
+        "王林 处于 灵根测试"
+      ],
+      "exit_facts": [
+        "王卓 被选中 合格者",
+        "王浩 被收为 药童",
+        "王林 被判定为 不合格"
+      ],
+      "tension": 3,
+      "locations": [],
+      "time_anchors": []
+    },
+    {
+      "order": 1,
+      "participants": [
+        "黑衣中年人",
+        "王林",
+        "众少年"
+      ],
+      "events": [
+        "黑衣人宣布第二项毅力测试，王林开始攀登石阶"
+      ],
+      "objective": "完成毅力测试",
+      "entry_facts": [
+        "众少年 开始 第二项测试"
+      ],
+      "exit_facts": [
+        "王林 成为 毅力测试参与者"
+      ],
+      "tension": 4,
+      "locations": [],
+      "time_anchors": []
+    }
+  ],
+  "required_state_changes": [
+    {
+      "operation": "add",
+      "event": "王卓被测试并选中",
+      "before": "",
+      "after": "王卓 被选中 合格者"
+    },
+    {
+      "operation": "add",
+      "event": "王浩献灵芝后被收为药童",
+      "before": "",
+      "after": "王浩 被收为 药童"
+    },
+    {
+      "operation": "add",
+      "event": "王林被测试为不合格",
+      "before": "",
+      "after": "王林 被判定为 不合格"
+    },
+    {
+      "operation": "add",
+      "event": "黑衣人宣布第二项毅力测试，王林开始攀登石阶",
+      "before": "",
+      "after": "王林 成为 毅力测试参与者"
+    }
+  ],
+  "style_budget_override": {
+    "schema_version": "1.0",
+    "mode": "fidelity_test_override",
+    "instruction": "仅用于重建实验的量化验收；正常原创写作应使用作者级柔性预算。",
+    "metrics": [
+      {
+        "metric_id": "chapter_char_count",
+        "unit": "count",
+        "target": 2036.0,
+        "preferred_min": 1536.0,
+        "preferred_max": 2536.0,
+        "priority": "high"
+      },
+      {
+        "metric_id": "mean_sentence_chars",
+        "unit": "mean_chars",
+        "target": 33.655172,
+        "preferred_min": 28.606896,
+        "preferred_max": 38.703448,
+        "priority": "high"
+      },
+      {
+        "metric_id": "mean_paragraph_chars",
+        "unit": "mean_chars",
+        "target": 44.266667,
+        "preferred_min": 37.626667,
+        "preferred_max": 50.906667,
+        "priority": "high"
+      },
+      {
+        "metric_id": "short_paragraph_ratio",
+        "unit": "ratio",
+        "target": 0.488889,
+        "preferred_min": 0.366667,
+        "preferred_max": 0.611111,
+        "priority": "high"
+      },
+      {
+        "metric_id": "dialogue_char_ratio",
+        "unit": "ratio",
+        "target": 0.278978,
+        "preferred_min": 0.209234,
+        "preferred_max": 0.348722,
+        "priority": "high"
+      },
+      {
+        "metric_id": "perception_marker_ratio",
+        "unit": "ratio",
+        "target": 0.068966,
+        "preferred_min": 0.048966,
+        "preferred_max": 0.088966,
+        "priority": "high"
+      },
+      {
+        "metric_id": "transition_marker_ratio",
+        "unit": "ratio",
+        "target": 0.034483,
+        "preferred_min": 0.014483,
+        "preferred_max": 0.054483,
+        "priority": "high"
+      },
+      {
+        "metric_id": "question_sentence_ratio",
+        "unit": "ratio",
+        "target": 0.051724,
+        "preferred_min": 0.031724,
+        "preferred_max": 0.071724,
+        "priority": "medium"
+      },
+      {
+        "metric_id": "exclamation_sentence_ratio",
+        "unit": "ratio",
+        "target": 0.086207,
+        "preferred_min": 0.064655,
+        "preferred_max": 0.107759,
+        "priority": "medium"
+      },
+      {
+        "metric_id": "ellipsis_per_sentence",
+        "unit": "ratio",
+        "target": 0.017241,
+        "preferred_min": 0.0,
+        "preferred_max": 0.037241,
+        "priority": "medium"
+      }
+    ]
+  }
+}

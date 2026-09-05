@@ -1,0 +1,20 @@
+{
+  "author_id": "ErGen",
+  "program_path": "runs\\ErGen\\prose-architecture-smoke\\chapter_programs\\chapter-0001.program.json",
+  "story_state_path": "",
+  "chapter_plan_path": "",
+  "selected_template_ids": [
+    "library:micro-001",
+    "library:micro-002",
+    "library:micro-003",
+    "library:event-004"
+  ],
+  "scene_count": 3,
+  "repairs_used": 0,
+  "style_repairs_used": 0,
+  "semantic_passed": true,
+  "structural_passed": true,
+  "prose_passed": false,
+  "style_passed": true,
+  "overall_passed": false
+}

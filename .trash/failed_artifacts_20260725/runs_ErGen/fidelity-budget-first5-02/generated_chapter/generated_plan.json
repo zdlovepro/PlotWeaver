@@ -1,0 +1,167 @@
+{
+  "chapter_goal": "让王林离开山村，经过家族团聚，被仙人带走，到达恒岳派山门，开始修仙之路的前奏。",
+  "selected_template_ids": [
+    "library:chapter-013",
+    "library:event-005",
+    "library:scene-008"
+  ],
+  "scenes": [
+    {
+      "scene_no": 1,
+      "entry_state": [
+        "王林在村庄，四叔来接他"
+      ],
+      "objective": "离开山村到达四叔家",
+      "pressure": "对未来的不安，不确定能否被选中",
+      "turn": "四叔的鼓励和父亲的期望",
+      "exit_state": [
+        "王林到达四叔家"
+      ]
+    },
+    {
+      "scene_no": 2,
+      "entry_state": [
+        "王林在四叔家",
+        "四叔带他去宅子"
+      ],
+      "objective": "前往王氏家族宅子等待仙人测试",
+      "pressure": "王卓的轻视，测试结果的未知",
+      "turn": "白衣青年出现，询问后卷起三人飞走",
+      "exit_state": [
+        "王林到达王氏家族宅子",
+        "三人被仙人带走"
+      ]
+    },
+    {
+      "scene_no": 3,
+      "entry_state": [
+        "三人被仙人带走飞行"
+      ],
+      "objective": "到达恒岳派山门",
+      "pressure": "飞行中的紧张和未知",
+      "turn": "落地后见到黑衣中年人",
+      "exit_state": [
+        "王林到达恒岳派山门",
+        "黑衣中年人出现"
+      ]
+    }
+  ],
+  "chapter_state_changes": [
+    {
+      "slot": "location:王林",
+      "before": "山村",
+      "after": "四叔家",
+      "cause_scene_no": 1
+    },
+    {
+      "slot": "location:王林",
+      "before": "四叔家",
+      "after": "王氏家族宅子",
+      "cause_scene_no": 2
+    },
+    {
+      "slot": "progression:王林被带走",
+      "before": null,
+      "after": "三人被仙人带走",
+      "cause_scene_no": 2
+    },
+    {
+      "slot": "location:王林",
+      "before": "王氏家族宅子",
+      "after": "恒岳派山门",
+      "cause_scene_no": 3
+    },
+    {
+      "slot": "knowledge:黑衣中年人出现",
+      "before": null,
+      "after": "黑衣中年人在恒岳派山门",
+      "cause_scene_no": 3
+    }
+  ],
+  "style_budget": {
+    "schema_version": "1.0",
+    "mode": "fidelity_test_override",
+    "instruction": "仅用于重建实验的量化验收；正常原创写作应使用作者级柔性预算。",
+    "metrics": [
+      {
+        "metric_id": "mean_sentence_chars",
+        "unit": "mean_chars",
+        "target": 44.06383,
+        "preferred_min": 37.454256,
+        "preferred_max": 50.673405,
+        "priority": "high"
+      },
+      {
+        "metric_id": "mean_paragraph_chars",
+        "unit": "mean_chars",
+        "target": 53.923077,
+        "preferred_min": 45.834615,
+        "preferred_max": 62.011539,
+        "priority": "high"
+      },
+      {
+        "metric_id": "short_paragraph_ratio",
+        "unit": "ratio",
+        "target": 0.307692,
+        "preferred_min": 0.230769,
+        "preferred_max": 0.384615,
+        "priority": "high"
+      },
+      {
+        "metric_id": "dialogue_char_ratio",
+        "unit": "ratio",
+        "target": 0.175619,
+        "preferred_min": 0.131714,
+        "preferred_max": 0.219524,
+        "priority": "high"
+      },
+      {
+        "metric_id": "perception_marker_ratio",
+        "unit": "ratio",
+        "target": 0.191489,
+        "preferred_min": 0.143617,
+        "preferred_max": 0.239361,
+        "priority": "high"
+      },
+      {
+        "metric_id": "transition_marker_ratio",
+        "unit": "ratio",
+        "target": 0.0,
+        "preferred_min": 0.0,
+        "preferred_max": 0.02,
+        "priority": "high"
+      },
+      {
+        "metric_id": "question_sentence_ratio",
+        "unit": "ratio",
+        "target": 0.085106,
+        "preferred_min": 0.063829,
+        "preferred_max": 0.106383,
+        "priority": "medium"
+      },
+      {
+        "metric_id": "exclamation_sentence_ratio",
+        "unit": "ratio",
+        "target": 0.06383,
+        "preferred_min": 0.04383,
+        "preferred_max": 0.08383,
+        "priority": "medium"
+      },
+      {
+        "metric_id": "ellipsis_per_sentence",
+        "unit": "ratio",
+        "target": 0.0,
+        "preferred_min": 0.0,
+        "preferred_max": 0.02,
+        "priority": "medium"
+      }
+    ]
+  },
+  "continuity_checks": [
+    "时间从第二天开始，与第一章结尾'第二天'连续",
+    "位置变化：山村→四叔家→王氏家族宅子→恒岳派山门，依次连续",
+    "资源：王林携带两本书，但本室不涉及资源变化",
+    "知识：王林对仙人好奇，见到仙人后增加认知",
+    "关系：与四叔、王卓等人的互动，不矛盾"
+  ]
+}

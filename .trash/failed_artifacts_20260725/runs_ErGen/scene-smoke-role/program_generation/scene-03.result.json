@@ -1,0 +1,43 @@
+{
+  "scene_no": 3,
+  "scene_id": "ErGen/work-001/0001:chunk-01:scene-003",
+  "minimum_paragraph_chars": 20,
+  "repairs_used": 0,
+  "passed": true,
+  "draft": {
+    "scene_id": "ErGen/work-001/0001:chunk-01:scene-003",
+    "paragraphs": [
+      {
+        "paragraph_id": "ErGen/work-001/0001:chunk-01:scene-003:paragraph-00",
+        "text": "四叔站在村口，对铁柱道：“时候不早了，咱们这就动身去恒岳派吧。”铁柱点了点头，背起包袱，最后看了一眼家的方向，跟上了四叔的脚步。",
+        "claimed_fact_ids": [
+          "ErGen/work-001/0001:chunk-01:fact-010"
+        ],
+        "claimed_event_ids": [
+          "ErGen/work-001/0001:chunk-01:event-003"
+        ]
+      }
+    ]
+  },
+  "validations": [
+    {
+      "scene_id": "ErGen/work-001/0001:chunk-01:scene-003",
+      "reported_passed": true,
+      "realized_fact_ids": [
+        "ErGen/work-001/0001:chunk-01:fact-010"
+      ],
+      "missing_fact_ids": [],
+      "realized_event_ids": [
+        "ErGen/work-001/0001:chunk-01:event-003"
+      ],
+      "missing_event_ids": [],
+      "premature_event_ids": [],
+      "paragraph_issues": [],
+      "repair_paragraph_ids": [],
+      "passed": true
+    }
+  ],
+  "style_repair_errors": [
+    "ValueError: 模型 JSON 连续不符合场景契约：段落修复 字段必须严格匹配；缺少=['修复段落', '场景ID']，多出=[]"
+  ]
+}

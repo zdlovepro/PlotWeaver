@@ -1,0 +1,496 @@
+{
+  "reconstruction_mode": "fidelity_test_only",
+  "chapter_id": "ErGen/work-001/0004",
+  "known_prior_chapters": [
+    {
+      "chapter_id": "ErGen/work-001/0001",
+      "events": [
+        {
+          "order": 0,
+          "summary": "铁柱在村口小路边读书后回家",
+          "participants": [
+            "铁柱"
+          ],
+          "action": "回家",
+          "obstacle": "",
+          "decision": "",
+          "preconditions": [],
+          "outcomes": [
+            "铁柱 回到 家中"
+          ],
+          "costs": []
+        },
+        {
+          "order": 1,
+          "summary": "父亲劝铁柱好好读书，准备县考",
+          "participants": [
+            "铁柱",
+            "父亲"
+          ],
+          "action": "对话",
+          "obstacle": "",
+          "decision": "",
+          "preconditions": [],
+          "outcomes": [
+            "父亲 期望 铁柱好好读书"
+          ],
+          "costs": []
+        },
+        {
+          "order": 2,
+          "summary": "四叔到来并送给铁柱两本书",
+          "participants": [
+            "铁柱",
+            "父亲",
+            "母亲",
+            "四叔"
+          ],
+          "action": "四叔给书",
+          "obstacle": "",
+          "decision": "",
+          "preconditions": [],
+          "outcomes": [
+            "四叔 到达 铁柱家",
+            "四叔 给予 两本线状书"
+          ],
+          "costs": []
+        },
+        {
+          "order": 3,
+          "summary": "四叔告知恒岳派招收弟子并推荐铁柱",
+          "participants": [
+            "铁柱",
+            "父亲",
+            "母亲",
+            "四叔"
+          ],
+          "action": "告知推荐",
+          "obstacle": "",
+          "decision": "",
+          "preconditions": [],
+          "outcomes": [
+            "四叔 告知 恒岳派今年收取弟子",
+            "四叔 让出 恒岳派推荐名额"
+          ],
+          "costs": []
+        },
+        {
+          "order": 4,
+          "summary": "四叔第二天一早离开村子",
+          "participants": [
+            "四叔"
+          ],
+          "action": "离开",
+          "obstacle": "",
+          "decision": "",
+          "preconditions": [],
+          "outcomes": [
+            "四叔 离开 村子"
+          ],
+          "costs": []
+        },
+        {
+          "order": 5,
+          "summary": "村民和家族亲戚前来道贺，举办宴席",
+          "participants": [
+            "铁柱",
+            "父亲",
+            "母亲"
+          ],
+          "action": "举办宴席",
+          "obstacle": "",
+          "decision": "",
+          "preconditions": [],
+          "outcomes": [
+            "父亲 举办 数百桌宴席"
+          ],
+          "costs": []
+        },
+        {
+          "order": 6,
+          "summary": "铁柱暗自决心被恒岳派选中",
+          "participants": [
+            "铁柱"
+          ],
+          "action": "决心",
+          "obstacle": "",
+          "decision": "",
+          "preconditions": [],
+          "outcomes": [
+            "铁柱 决心 被恒岳派选中"
+          ],
+          "costs": []
+        },
+        {
+          "order": 7,
+          "summary": "四叔接铁柱离开去恒岳派",
+          "participants": [
+            "铁柱",
+            "四叔"
+          ],
+          "action": "接走",
+          "obstacle": "",
+          "decision": "",
+          "preconditions": [],
+          "outcomes": [
+            "四叔 接 铁柱上马车"
+          ],
+          "costs": []
+        }
+      ],
+      "state_changes": [
+        {
+          "operation": "add",
+          "event": "铁柱在村口小路边读书后回家",
+          "before": "",
+          "after": "铁柱 回到 家中"
+        },
+        {
+          "operation": "add",
+          "event": "父亲劝铁柱好好读书，准备县考",
+          "before": "",
+          "after": "父亲 期望 铁柱好好读书"
+        },
+        {
+          "operation": "add",
+          "event": "四叔到来并送给铁柱两本书",
+          "before": "",
+          "after": "四叔 到达 铁柱家"
+        },
+        {
+          "operation": "add",
+          "event": "四叔到来并送给铁柱两本书",
+          "before": "",
+          "after": "四叔 给予 两本线状书"
+        },
+        {
+          "operation": "add",
+          "event": "四叔告知恒岳派招收弟子并推荐铁柱",
+          "before": "",
+          "after": "四叔 告知 恒岳派今年收取弟子"
+        },
+        {
+          "operation": "add",
+          "event": "四叔告知恒岳派招收弟子并推荐铁柱",
+          "before": "",
+          "after": "四叔 让出 恒岳派推荐名额"
+        },
+        {
+          "operation": "add",
+          "event": "四叔第二天一早离开村子",
+          "before": "",
+          "after": "四叔 离开 村子"
+        },
+        {
+          "operation": "add",
+          "event": "村民和家族亲戚前来道贺，举办宴席",
+          "before": "",
+          "after": "父亲 举办 数百桌宴席"
+        },
+        {
+          "operation": "add",
+          "event": "铁柱暗自决心被恒岳派选中",
+          "before": "",
+          "after": "铁柱 决心 被恒岳派选中"
+        },
+        {
+          "operation": "add",
+          "event": "四叔接铁柱离开去恒岳派",
+          "before": "",
+          "after": "四叔 接 铁柱上马车"
+        }
+      ]
+    },
+    {
+      "chapter_id": "ErGen/work-001/0002",
+      "events": [
+        {
+          "order": 0,
+          "summary": "王林离开山村，随四叔到达四叔家",
+          "participants": [
+            "王林",
+            "四叔"
+          ],
+          "action": "乘马车离开山村并到达四叔家",
+          "obstacle": "",
+          "decision": "",
+          "preconditions": [],
+          "outcomes": [
+            "王林 到达 四叔家"
+          ],
+          "costs": []
+        },
+        {
+          "order": 1,
+          "summary": "王林随四叔到达王氏家族大宅子",
+          "participants": [
+            "王林",
+            "四叔"
+          ],
+          "action": "前往大宅子",
+          "obstacle": "",
+          "decision": "",
+          "preconditions": [],
+          "outcomes": [
+            "王林 到达 王氏家族大宅子"
+          ],
+          "costs": []
+        },
+        {
+          "order": 2,
+          "summary": "在家族大宅院中，白衣青年出现并带走三个少年",
+          "participants": [
+            "王林",
+            "四叔",
+            "老者",
+            "王卓",
+            "王浩",
+            "白衣青年"
+          ],
+          "action": "白衣青年询问并带走少年",
+          "obstacle": "",
+          "decision": "",
+          "preconditions": [
+            "王林 到达 王氏家族大宅子"
+          ],
+          "outcomes": [
+            "白衣青年 带走 三个少年"
+          ],
+          "costs": []
+        }
+      ],
+      "state_changes": [
+        {
+          "operation": "add",
+          "event": "王林离开山村，随四叔到达四叔家",
+          "before": "",
+          "after": "王林 到达 四叔家"
+        },
+        {
+          "operation": "add",
+          "event": "王林随四叔到达王氏家族大宅子",
+          "before": "",
+          "after": "王林 到达 王氏家族大宅子"
+        },
+        {
+          "operation": "add",
+          "event": "在家族大宅院中，白衣青年出现并带走三个少年",
+          "before": "",
+          "after": "白衣青年 带走 三个少年"
+        }
+      ]
+    },
+    {
+      "chapter_id": "ErGen/work-001/0003",
+      "events": [
+        {
+          "order": 0,
+          "summary": "黑衣中年人宣布灵根测试开始，众少年依次测试",
+          "participants": [
+            "黑衣中年人",
+            "众少年"
+          ],
+          "action": "宣布测试规则并逐个测试",
+          "obstacle": "",
+          "decision": "",
+          "preconditions": [],
+          "outcomes": [
+            "王卓 被选中 合格者",
+            "王浩 被收为 药童",
+            "王林 被判定为 不合格"
+          ],
+          "costs": []
+        },
+        {
+          "order": 1,
+          "summary": "王卓被测试并选中",
+          "participants": [
+            "王卓",
+            "黑衣中年人"
+          ],
+          "action": "被测试后得到合格评价",
+          "obstacle": "",
+          "decision": "",
+          "preconditions": [],
+          "outcomes": [
+            "王卓 被选中 合格者"
+          ],
+          "costs": []
+        },
+        {
+          "order": 2,
+          "summary": "王浩献灵芝后被收为药童",
+          "participants": [
+            "王浩",
+            "黑衣中年人"
+          ],
+          "action": "献玉盒和灵芝，请求做药童",
+          "obstacle": "最初被说资质差",
+          "decision": "献出宝物",
+          "preconditions": [],
+          "outcomes": [
+            "王浩 被收为 药童"
+          ],
+          "costs": [
+            "王浩 献出 玉盒与灵芝"
+          ]
+        },
+        {
+          "order": 3,
+          "summary": "王林被测试为不合格",
+          "participants": [
+            "王林",
+            "黑衣中年人"
+          ],
+          "action": "接受灵根测试",
+          "obstacle": "",
+          "decision": "",
+          "preconditions": [],
+          "outcomes": [
+            "王林 被判定为 不合格"
+          ],
+          "costs": []
+        },
+        {
+          "order": 4,
+          "summary": "黑衣人宣布第二项毅力测试，王林开始攀登石阶",
+          "participants": [
+            "黑衣中年人",
+            "王林",
+            "众少年"
+          ],
+          "action": "宣布毅力测试规则",
+          "obstacle": "",
+          "decision": "王林决定参加",
+          "preconditions": [
+            "王林 被判定为 不合格"
+          ],
+          "outcomes": [
+            "王林 成为 毅力测试参与者"
+          ],
+          "costs": []
+        }
+      ],
+      "state_changes": [
+        {
+          "operation": "add",
+          "event": "王卓被测试并选中",
+          "before": "",
+          "after": "王卓 被选中 合格者"
+        },
+        {
+          "operation": "add",
+          "event": "王浩献灵芝后被收为药童",
+          "before": "",
+          "after": "王浩 被收为 药童"
+        },
+        {
+          "operation": "add",
+          "event": "王林被测试为不合格",
+          "before": "",
+          "after": "王林 被判定为 不合格"
+        },
+        {
+          "operation": "add",
+          "event": "黑衣人宣布第二项毅力测试，王林开始攀登石阶",
+          "before": "",
+          "after": "王林 成为 毅力测试参与者"
+        }
+      ]
+    }
+  ],
+  "known_entities": [
+    {
+      "name": "王林",
+      "kind": "person",
+      "aliases": []
+    },
+    {
+      "name": "黑衣中年人",
+      "kind": "person",
+      "aliases": []
+    },
+    {
+      "name": "面色蜡黄中年人",
+      "kind": "person",
+      "aliases": []
+    },
+    {
+      "name": "白衣青年",
+      "kind": "person",
+      "aliases": []
+    },
+    {
+      "name": "恒岳派女弟子",
+      "kind": "person",
+      "aliases": []
+    },
+    {
+      "name": "石阶小径",
+      "kind": "location",
+      "aliases": []
+    },
+    {
+      "name": "剑灵阁",
+      "kind": "location",
+      "aliases": []
+    }
+  ],
+  "known_facts": [
+    {
+      "kind": "location",
+      "statement": "王林 爬行于 石阶小径",
+      "certainty": 1.0
+    },
+    {
+      "kind": "emotion",
+      "statement": "王林 感到 双腿如灌铅",
+      "certainty": 1.0
+    },
+    {
+      "kind": "knowledge",
+      "statement": "王林 目睹 一个少年踩空",
+      "certainty": 1.0
+    },
+    {
+      "kind": "knowledge",
+      "statement": "面色蜡黄中年人 评价 可惜资质太过普通",
+      "certainty": 1.0
+    },
+    {
+      "kind": "knowledge",
+      "statement": "黑衣中年人 宣布 时间已到，只有三人合格，其余……失败",
+      "certainty": 1.0
+    },
+    {
+      "kind": "progression",
+      "statement": "王林 昏迷 昏迷",
+      "certainty": 1.0
+    },
+    {
+      "kind": "location",
+      "statement": "王林 位于 剑灵阁",
+      "certainty": 1.0
+    },
+    {
+      "kind": "progression",
+      "statement": "王林 走进五丈 五丈处",
+      "certainty": 1.0
+    },
+    {
+      "kind": "progression",
+      "statement": "王林 被弹回 十多丈处",
+      "certainty": 1.0
+    },
+    {
+      "kind": "knowledge",
+      "statement": "白衣青年 宣布 不合格",
+      "certainty": 1.0
+    }
+  ],
+  "current_chapter_target": {
+    "time_anchors": [],
+    "temporal_relations": [],
+    "spatial_relations": []
+  }
+}

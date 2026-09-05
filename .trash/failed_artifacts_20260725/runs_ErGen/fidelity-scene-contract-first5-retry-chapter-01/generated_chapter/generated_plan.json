@@ -1,0 +1,540 @@
+{
+  "chapter_goal": "重建第一章，覆盖所有规定事件和场景，展现铁柱获得推荐及离家的过程。",
+  "selected_template_ids": [
+    "library:chapter-010",
+    "library:micro-001",
+    "library:micro-002"
+  ],
+  "scenes": [
+    {
+      "scene_no": 1,
+      "entry_state": [],
+      "objective": "读书后回家",
+      "pressure": "无直接阻力",
+      "turn": "完成读书后动身回家",
+      "exit_state": [
+        "铁柱 回到 家中"
+      ]
+    },
+    {
+      "scene_no": 2,
+      "entry_state": [
+        "铁柱 回到 家中"
+      ],
+      "objective": "家庭互动及获得推荐",
+      "pressure": "父亲对读书的期望与家庭处境",
+      "turn": "四叔到来带来恒岳派机会",
+      "exit_state": [
+        "四叔 告知 恒岳派今年收取弟子",
+        "四叔 让出 恒岳派推荐名额"
+      ]
+    },
+    {
+      "scene_no": 3,
+      "entry_state": [
+        "四叔 离开 村子"
+      ],
+      "objective": "庆祝铁柱获得推荐",
+      "pressure": "宴席筹备开销暗藏压力",
+      "turn": "四叔离开后家长决定举办宴席",
+      "exit_state": [
+        "父亲 举办 数百桌宴席"
+      ]
+    },
+    {
+      "scene_no": 4,
+      "entry_state": [
+        "父亲 举办 数百桌宴席"
+      ],
+      "objective": "铁柱决心并离家",
+      "pressure": "对未知前程的忐忑",
+      "turn": "铁柱暗自下定决心",
+      "exit_state": [
+        "四叔 接 铁柱上马车"
+      ]
+    }
+  ],
+  "chapter_state_changes": [
+    {
+      "slot": "事实：铁柱 回到 家中",
+      "before": "",
+      "after": "铁柱 回到 家中",
+      "cause_scene_no": 1
+    },
+    {
+      "slot": "事实：父亲 期望 铁柱好好读书",
+      "before": "",
+      "after": "父亲 期望 铁柱好好读书",
+      "cause_scene_no": 2
+    },
+    {
+      "slot": "事实：四叔 到达 铁柱家",
+      "before": "",
+      "after": "四叔 到达 铁柱家",
+      "cause_scene_no": 2
+    },
+    {
+      "slot": "事实：四叔 给予 两本线状书",
+      "before": "",
+      "after": "四叔 给予 两本线状书",
+      "cause_scene_no": 2
+    },
+    {
+      "slot": "事实：四叔 告知 恒岳派今年收取弟子",
+      "before": "",
+      "after": "四叔 告知 恒岳派今年收取弟子",
+      "cause_scene_no": 2
+    },
+    {
+      "slot": "事实：四叔 让出 恒岳派推荐名额",
+      "before": "",
+      "after": "四叔 让出 恒岳派推荐名额",
+      "cause_scene_no": 2
+    },
+    {
+      "slot": "事实：四叔 离开 村子",
+      "before": "",
+      "after": "四叔 离开 村子",
+      "cause_scene_no": 3
+    },
+    {
+      "slot": "事实：父亲 举办 数百桌宴席",
+      "before": "",
+      "after": "父亲 举办 数百桌宴席",
+      "cause_scene_no": 3
+    },
+    {
+      "slot": "事实：铁柱 决心 被恒岳派选中",
+      "before": "",
+      "after": "铁柱 决心 被恒岳派选中",
+      "cause_scene_no": 4
+    },
+    {
+      "slot": "事实：四叔 接 铁柱上马车",
+      "before": "",
+      "after": "四叔 接 铁柱上马车",
+      "cause_scene_no": 4
+    }
+  ],
+  "covered_required_event_ids": [
+    "target-event-001",
+    "target-event-002",
+    "target-event-003",
+    "target-event-004",
+    "target-event-005",
+    "target-event-006",
+    "target-event-007",
+    "target-event-008"
+  ],
+  "covered_required_state_change_ids": [
+    "target-change-001",
+    "target-change-002",
+    "target-change-003",
+    "target-change-004",
+    "target-change-005",
+    "target-change-006",
+    "target-change-007",
+    "target-change-008",
+    "target-change-009",
+    "target-change-010"
+  ],
+  "chapter_end_contract": [
+    "本章在四叔接铁柱上马车后收束，不提前进入恒岳派或后续情节。"
+  ],
+  "style_budget": {
+    "schema_version": "1.0",
+    "mode": "fidelity_test_override",
+    "instruction": "仅用于重建实验的量化验收；正常原创写作应使用作者级柔性预算。",
+    "metrics": [
+      {
+        "metric_id": "chapter_char_count",
+        "unit": "count",
+        "target": 5449.0,
+        "preferred_min": 4359.2,
+        "preferred_max": 6538.8,
+        "priority": "high"
+      },
+      {
+        "metric_id": "mean_sentence_chars",
+        "unit": "mean_chars",
+        "target": 43.958333,
+        "preferred_min": 37.364583,
+        "preferred_max": 50.552083,
+        "priority": "high"
+      },
+      {
+        "metric_id": "mean_paragraph_chars",
+        "unit": "mean_chars",
+        "target": 54.050505,
+        "preferred_min": 45.942929,
+        "preferred_max": 62.158081,
+        "priority": "high"
+      },
+      {
+        "metric_id": "short_paragraph_ratio",
+        "unit": "ratio",
+        "target": 0.282828,
+        "preferred_min": 0.212121,
+        "preferred_max": 0.353535,
+        "priority": "high"
+      },
+      {
+        "metric_id": "dialogue_char_ratio",
+        "unit": "ratio",
+        "target": 0.36025,
+        "preferred_min": 0.270188,
+        "preferred_max": 0.450313,
+        "priority": "high"
+      },
+      {
+        "metric_id": "perception_marker_ratio",
+        "unit": "ratio",
+        "target": 0.158333,
+        "preferred_min": 0.11875,
+        "preferred_max": 0.197916,
+        "priority": "high"
+      },
+      {
+        "metric_id": "transition_marker_ratio",
+        "unit": "ratio",
+        "target": 0.033333,
+        "preferred_min": 0.013333,
+        "preferred_max": 0.053333,
+        "priority": "high"
+      },
+      {
+        "metric_id": "question_sentence_ratio",
+        "unit": "ratio",
+        "target": 0.1,
+        "preferred_min": 0.075,
+        "preferred_max": 0.125,
+        "priority": "medium"
+      },
+      {
+        "metric_id": "exclamation_sentence_ratio",
+        "unit": "ratio",
+        "target": 0.058333,
+        "preferred_min": 0.038333,
+        "preferred_max": 0.078333,
+        "priority": "medium"
+      },
+      {
+        "metric_id": "ellipsis_per_sentence",
+        "unit": "ratio",
+        "target": 0.075,
+        "preferred_min": 0.055,
+        "preferred_max": 0.095,
+        "priority": "medium"
+      }
+    ]
+  },
+  "continuity_checks": [
+    "时间顺序：从铁柱回家到离家，历时约两天，顺序连贯。",
+    "位置连续：铁柱从村中回家，在家中接待四叔，四叔离开后举办宴席，最后在家门口上马车，位置无跳跃。",
+    "资源连续：四叔给予两本书，铁柱获得推荐名额，资源合理增加。",
+    "知识与认知：铁柱逐步获知恒岳派信息，决心被选中，认知状态递进。",
+    "人物关系：父子、母子、叔侄关系保持稳定，四叔推荐符合亲戚关系。"
+  ],
+  "style_execution_directives": [
+    {
+      "metric_id": "perception_marker_ratio",
+      "direction": "increase",
+      "target_range": "0.11875–0.197916",
+      "action": "在关键动作或信息变化后补入角色看到、听到、感到或察觉到的具体反应。"
+    },
+    {
+      "metric_id": "short_paragraph_ratio",
+      "direction": "decrease",
+      "target_range": "0.212121–0.353535",
+      "action": "把非关键短段与相邻的因果或反应合并，避免阅读碎片化。"
+    },
+    {
+      "metric_id": "ellipsis_per_sentence",
+      "direction": "increase",
+      "target_range": "0.055–0.095",
+      "action": "在话语中断、犹豫或未尽之意处谨慎保留省略号。"
+    },
+    {
+      "metric_id": "transition_marker_ratio",
+      "direction": "increase",
+      "target_range": "0.013333–0.053333",
+      "action": "在场景、时间或注意力变化处加入自然的承接词或结果性过渡，再继续推进。"
+    },
+    {
+      "metric_id": "mean_sentence_chars",
+      "direction": "increase",
+      "target_range": "37.364583–50.552083",
+      "action": "把动作、感知、判断或结果组合为完整复句，减少单个动作单独成句。"
+    },
+    {
+      "metric_id": "dialogue_char_ratio",
+      "direction": "increase",
+      "target_range": "0.270188–0.450313",
+      "action": "在冲突、试探或信息交接处增加有结果的直接对话，并用动作承接每轮话语。"
+    }
+  ],
+  "style_execution_blueprint": {
+    "instruction": "按此蓝图安排正文，但不得删改计划事件或以凑数破坏可读性。",
+    "chapter_char_count": {
+      "target": 5449,
+      "minimum": 4359,
+      "maximum": 6539
+    },
+    "paragraph_count": {
+      "target": 101,
+      "minimum": 70,
+      "maximum": 142
+    },
+    "short_paragraph_count": {
+      "target": 29,
+      "minimum": 15,
+      "maximum": 50
+    },
+    "sentence_count": {
+      "target": 124,
+      "minimum": 86,
+      "maximum": 175
+    },
+    "dialogue_char_count": {
+      "target": 1963,
+      "minimum": 1178,
+      "maximum": 2945
+    },
+    "perception_sentence_count": {
+      "target": 20,
+      "minimum": 15,
+      "maximum": 25
+    },
+    "transition_sentence_count": {
+      "target": 4,
+      "minimum": 2,
+      "maximum": 7
+    }
+  },
+  "reconstruction_mode": "fidelity_test_only",
+  "scene_contracts": [
+    {
+      "order": 0,
+      "participants": [
+        "铁柱"
+      ],
+      "events": [
+        {
+          "order": 0,
+          "summary": "铁柱在村口小路边读书后回家",
+          "participants": [
+            "铁柱"
+          ],
+          "action": "回家",
+          "obstacle": "",
+          "decision": "",
+          "preconditions": [],
+          "outcomes": [
+            "铁柱 回到 家中"
+          ],
+          "costs": [],
+          "contract_id": "target-event-001"
+        }
+      ],
+      "objective": "读书后回家",
+      "entry_facts": [],
+      "exit_facts": [
+        "铁柱 回到 家中"
+      ],
+      "tension": 1,
+      "locations": [],
+      "time_anchors": [],
+      "contract_id": "target-scene-001"
+    },
+    {
+      "order": 1,
+      "participants": [
+        "铁柱",
+        "父亲",
+        "母亲",
+        "四叔"
+      ],
+      "events": [
+        {
+          "order": 1,
+          "summary": "父亲劝铁柱好好读书，准备县考",
+          "participants": [
+            "铁柱",
+            "父亲"
+          ],
+          "action": "对话",
+          "obstacle": "",
+          "decision": "",
+          "preconditions": [],
+          "outcomes": [
+            "父亲 期望 铁柱好好读书"
+          ],
+          "costs": [],
+          "contract_id": "target-event-002"
+        },
+        {
+          "order": 2,
+          "summary": "四叔到来并送给铁柱两本书",
+          "participants": [
+            "铁柱",
+            "父亲",
+            "母亲",
+            "四叔"
+          ],
+          "action": "四叔给书",
+          "obstacle": "",
+          "decision": "",
+          "preconditions": [],
+          "outcomes": [
+            "四叔 到达 铁柱家",
+            "四叔 给予 两本线状书"
+          ],
+          "costs": [],
+          "contract_id": "target-event-003"
+        },
+        {
+          "order": 3,
+          "summary": "四叔告知恒岳派招收弟子并推荐铁柱",
+          "participants": [
+            "铁柱",
+            "父亲",
+            "母亲",
+            "四叔"
+          ],
+          "action": "告知推荐",
+          "obstacle": "",
+          "decision": "",
+          "preconditions": [],
+          "outcomes": [
+            "四叔 告知 恒岳派今年收取弟子",
+            "四叔 让出 恒岳派推荐名额"
+          ],
+          "costs": [],
+          "contract_id": "target-event-004"
+        }
+      ],
+      "objective": "家庭互动及获得推荐",
+      "entry_facts": [
+        "铁柱 回到 家中"
+      ],
+      "exit_facts": [
+        "四叔 告知 恒岳派今年收取弟子",
+        "四叔 让出 恒岳派推荐名额"
+      ],
+      "tension": 3,
+      "locations": [],
+      "time_anchors": [],
+      "contract_id": "target-scene-002"
+    },
+    {
+      "order": 2,
+      "participants": [
+        "铁柱",
+        "父亲",
+        "母亲"
+      ],
+      "events": [
+        {
+          "order": 4,
+          "summary": "四叔第二天一早离开村子",
+          "participants": [
+            "四叔"
+          ],
+          "action": "离开",
+          "obstacle": "",
+          "decision": "",
+          "preconditions": [],
+          "outcomes": [
+            "四叔 离开 村子"
+          ],
+          "costs": [],
+          "contract_id": "target-event-005"
+        },
+        {
+          "order": 5,
+          "summary": "村民和家族亲戚前来道贺，举办宴席",
+          "participants": [
+            "铁柱",
+            "父亲",
+            "母亲"
+          ],
+          "action": "举办宴席",
+          "obstacle": "",
+          "decision": "",
+          "preconditions": [],
+          "outcomes": [
+            "父亲 举办 数百桌宴席"
+          ],
+          "costs": [],
+          "contract_id": "target-event-006"
+        }
+      ],
+      "objective": "庆祝铁柱获得推荐",
+      "entry_facts": [
+        "四叔 离开 村子"
+      ],
+      "exit_facts": [
+        "父亲 举办 数百桌宴席"
+      ],
+      "tension": 4,
+      "locations": [],
+      "time_anchors": [],
+      "contract_id": "target-scene-003"
+    },
+    {
+      "order": 3,
+      "participants": [
+        "铁柱",
+        "父亲",
+        "母亲",
+        "四叔"
+      ],
+      "events": [
+        {
+          "order": 6,
+          "summary": "铁柱暗自决心被恒岳派选中",
+          "participants": [
+            "铁柱"
+          ],
+          "action": "决心",
+          "obstacle": "",
+          "decision": "",
+          "preconditions": [],
+          "outcomes": [
+            "铁柱 决心 被恒岳派选中"
+          ],
+          "costs": [],
+          "contract_id": "target-event-007"
+        },
+        {
+          "order": 7,
+          "summary": "四叔接铁柱离开去恒岳派",
+          "participants": [
+            "铁柱",
+            "四叔"
+          ],
+          "action": "接走",
+          "obstacle": "",
+          "decision": "",
+          "preconditions": [],
+          "outcomes": [
+            "四叔 接 铁柱上马车"
+          ],
+          "costs": [],
+          "contract_id": "target-event-008"
+        }
+      ],
+      "objective": "铁柱决心并离家",
+      "entry_facts": [
+        "父亲 举办 数百桌宴席"
+      ],
+      "exit_facts": [
+        "四叔 接 铁柱上马车"
+      ],
+      "tension": 4,
+      "locations": [],
+      "time_anchors": [],
+      "contract_id": "target-scene-004"
+    }
+  ]
+}

@@ -1,0 +1,184 @@
+{
+  "chapter_goal": "让铁柱获得恒岳派推荐名额，在挑衅中坚定决心，并离开家乡踏上修行之路。",
+  "selected_template_ids": [
+    "library:chapter-010",
+    "library:chapter-011"
+  ],
+  "scenes": [
+    {
+      "scene_no": 1,
+      "entry_state": [],
+      "objective": "四叔推荐恒岳派名额，铁柱父母同意，铁柱对仙人生出好奇",
+      "pressure": "四叔带来的突然机会需要铁柱一家快速决定",
+      "turn": "铁柱听到仙人后产生强烈好奇",
+      "exit_state": [
+        "铁柱被推荐至恒岳派",
+        "铁柱对仙人好奇"
+      ]
+    },
+    {
+      "scene_no": 2,
+      "entry_state": [
+        "铁柱被推荐至恒岳派"
+      ],
+      "objective": "庆祝及王卓挑衅，铁柱内心决定被选中",
+      "pressure": "王卓的轻视与嘲讽给铁柱带来心理压力",
+      "turn": "铁柱在父亲的回护下暗下决心要证明自己",
+      "exit_state": [
+        "铁柱下定决心要被恒岳派选中"
+      ]
+    },
+    {
+      "scene_no": 3,
+      "entry_state": [
+        "铁柱下定决心要被恒岳派选中"
+      ],
+      "objective": "四叔接铁柱，铁柱告别父母，第一次离开家乡",
+      "pressure": "离开熟悉的家和亲人，前路未知",
+      "turn": "铁柱毅然踏上征途，不再回头",
+      "exit_state": [
+        "铁柱离开家乡前往恒岳派"
+      ]
+    }
+  ],
+  "chapter_state_changes": [
+    {
+      "slot": "knowledge:铁柱对仙人好奇",
+      "before": null,
+      "after": "好奇",
+      "cause_scene_no": 1
+    },
+    {
+      "slot": "progression:铁柱被推荐",
+      "before": null,
+      "after": "恒岳派",
+      "cause_scene_no": 1
+    },
+    {
+      "slot": "goal:铁柱下定决心",
+      "before": null,
+      "after": "被选中",
+      "cause_scene_no": 2
+    },
+    {
+      "slot": "progression:铁柱离开家乡",
+      "before": null,
+      "after": "前往恒岳派",
+      "cause_scene_no": 3
+    }
+  ],
+  "style_budget": {
+    "schema_version": "1.0",
+    "mode": "fidelity_test_override",
+    "instruction": "仅用于重建实验的量化验收；正常原创写作应使用作者级柔性预算。",
+    "metrics": [
+      {
+        "metric_id": "mean_sentence_chars",
+        "unit": "mean_chars",
+        "target": 43.958333,
+        "preferred_min": 37.364583,
+        "preferred_max": 50.552083,
+        "priority": "high"
+      },
+      {
+        "metric_id": "mean_paragraph_chars",
+        "unit": "mean_chars",
+        "target": 54.050505,
+        "preferred_min": 45.942929,
+        "preferred_max": 62.158081,
+        "priority": "high"
+      },
+      {
+        "metric_id": "short_paragraph_ratio",
+        "unit": "ratio",
+        "target": 0.282828,
+        "preferred_min": 0.212121,
+        "preferred_max": 0.353535,
+        "priority": "high"
+      },
+      {
+        "metric_id": "dialogue_char_ratio",
+        "unit": "ratio",
+        "target": 0.36025,
+        "preferred_min": 0.270188,
+        "preferred_max": 0.450313,
+        "priority": "high"
+      },
+      {
+        "metric_id": "perception_marker_ratio",
+        "unit": "ratio",
+        "target": 0.158333,
+        "preferred_min": 0.11875,
+        "preferred_max": 0.197916,
+        "priority": "high"
+      },
+      {
+        "metric_id": "transition_marker_ratio",
+        "unit": "ratio",
+        "target": 0.033333,
+        "preferred_min": 0.013333,
+        "preferred_max": 0.053333,
+        "priority": "high"
+      },
+      {
+        "metric_id": "question_sentence_ratio",
+        "unit": "ratio",
+        "target": 0.1,
+        "preferred_min": 0.075,
+        "preferred_max": 0.125,
+        "priority": "medium"
+      },
+      {
+        "metric_id": "exclamation_sentence_ratio",
+        "unit": "ratio",
+        "target": 0.058333,
+        "preferred_min": 0.038333,
+        "preferred_max": 0.078333,
+        "priority": "medium"
+      },
+      {
+        "metric_id": "ellipsis_per_sentence",
+        "unit": "ratio",
+        "target": 0.075,
+        "preferred_min": 0.055,
+        "preferred_max": 0.095,
+        "priority": "medium"
+      }
+    ]
+  },
+  "continuity_checks": [
+    "所有事件和场景顺序与ChapterBrief一致，时间锚点（随后、第二天、此时等）保留原样。",
+    "铁柱身份（本名王林）、家庭关系（父亲王天水、母亲、四叔）与OriginalStoryState一致。",
+    "王卓的轻视情感和王天水的期望情感在场景2中体现，与facts_to_preserve相符。",
+    "铁柱获得的两本书作为静态资源未在场景中改变，符合原始状态。",
+    "位置变化：从村子到恒岳派方向，通过场景3的离开实现，无跳跃。",
+    "状态变化由场景因果驱动：场景1产生好奇和推荐，场景2产生决心，场景3执行离开。"
+  ],
+  "style_execution_directives": [
+    {
+      "metric_id": "short_paragraph_ratio",
+      "direction": "increase",
+      "target_range": "0.212121–0.353535",
+      "action": "在关键判断、转折或情绪落点保留独立短段，其余信息保持连续段落。"
+    },
+    {
+      "metric_id": "mean_paragraph_chars",
+      "direction": "decrease",
+      "target_range": "45.942929–62.158081",
+      "action": "把并列的信息单元拆开，保留关键落点作为短段。"
+    },
+    {
+      "metric_id": "perception_marker_ratio",
+      "direction": "increase",
+      "target_range": "0.11875–0.197916",
+      "action": "在关键动作或信息变化后补入角色看到、听到、感到或察觉到的具体反应。"
+    },
+    {
+      "metric_id": "transition_marker_ratio",
+      "direction": "increase",
+      "target_range": "0.013333–0.053333",
+      "action": "在场景、时间或注意力变化处加入自然的承接词或结果性过渡，再继续推进。"
+    }
+  ],
+  "reconstruction_mode": "fidelity_test_only"
+}

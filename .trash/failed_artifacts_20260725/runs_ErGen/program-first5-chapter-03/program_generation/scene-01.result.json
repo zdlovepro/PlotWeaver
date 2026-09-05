@@ -1,0 +1,134 @@
+{
+  "scene_no": 1,
+  "scene_id": "ErGen/work-001/0003:chunk-01:scene-001",
+  "minimum_paragraph_chars": 20,
+  "repairs_used": 1,
+  "passed": true,
+  "role_passed": true,
+  "draft": {
+    "scene_id": "ErGen/work-001/0003:chunk-01:scene-001",
+    "paragraphs": [
+      {
+        "paragraph_id": "ErGen/work-001/0003:chunk-01:scene-001:paragraph-00",
+        "text": "王林站在石阶上，灵根测试正在进行，王卓已被选中去见掌门，王浩也随中年人前往丹房。",
+        "claimed_fact_ids": [
+          "ErGen/work-001/0003:chunk-01:fact-001",
+          "ErGen/work-001/0003:chunk-01:fact-008",
+          "ErGen/work-001/0003:chunk-01:fact-009"
+        ],
+        "claimed_event_ids": []
+      },
+      {
+        "paragraph_id": "ErGen/work-001/0003:chunk-01:scene-001:paragraph-01",
+        "text": "黑衣中年人沉声道：“灵根测试开始！王卓，你合格，随我去见掌门。王浩，你献上灵芝，可收为药童，随我去丹房。王林，你不合格，自行离去。”",
+        "claimed_fact_ids": [
+          "ErGen/work-001/0003:chunk-01:fact-002",
+          "ErGen/work-001/0003:chunk-01:fact-003",
+          "ErGen/work-001/0003:chunk-01:fact-005"
+        ],
+        "claimed_event_ids": [
+          "ErGen/work-001/0003:chunk-01:event-001"
+        ]
+      },
+      {
+        "paragraph_id": "ErGen/work-001/0003:chunk-01:scene-001:paragraph-02",
+        "text": "轮至王卓时，他将手放在测灵石上，很快被确认合格，黑衣中年人点了点头。",
+        "claimed_fact_ids": [
+          "ErGen/work-001/0003:chunk-01:fact-002"
+        ],
+        "claimed_event_ids": [
+          "ErGen/work-001/0003:chunk-01:event-002"
+        ]
+      },
+      {
+        "paragraph_id": "ErGen/work-001/0003:chunk-01:scene-001:paragraph-03",
+        "text": "王浩上前一步，捧着玉盒道：“前辈，弟子资质虽差，但愿献上灵芝，求收为药童，定当尽心竭力。”黑衣人接过玉盒，沉吟道：“此物倒是难得，也罢，你便随我去丹房吧。”",
+        "claimed_fact_ids": [
+          "ErGen/work-001/0003:chunk-01:fact-004",
+          "ErGen/work-001/0003:chunk-01:fact-003"
+        ],
+        "claimed_event_ids": [
+          "ErGen/work-001/0003:chunk-01:event-003"
+        ]
+      },
+      {
+        "paragraph_id": "ErGen/work-001/0003:chunk-01:scene-001:paragraph-04",
+        "text": "王林深吸一口气，将手按在测灵石上，却见灵光黯淡，黑衣中年人摇头道：“不合格。”",
+        "claimed_fact_ids": [
+          "ErGen/work-001/0003:chunk-01:fact-005"
+        ],
+        "claimed_event_ids": [
+          "ErGen/work-001/0003:chunk-01:event-004"
+        ]
+      }
+    ]
+  },
+  "validations": [
+    {
+      "scene_id": "ErGen/work-001/0003:chunk-01:scene-001",
+      "reported_passed": true,
+      "realized_fact_ids": [
+        "ErGen/work-001/0003:chunk-01:fact-001",
+        "ErGen/work-001/0003:chunk-01:fact-002",
+        "ErGen/work-001/0003:chunk-01:fact-003",
+        "ErGen/work-001/0003:chunk-01:fact-004",
+        "ErGen/work-001/0003:chunk-01:fact-005",
+        "ErGen/work-001/0003:chunk-01:fact-008",
+        "ErGen/work-001/0003:chunk-01:fact-009"
+      ],
+      "missing_fact_ids": [],
+      "realized_event_ids": [
+        "ErGen/work-001/0003:chunk-01:event-001",
+        "ErGen/work-001/0003:chunk-01:event-002",
+        "ErGen/work-001/0003:chunk-01:event-003",
+        "ErGen/work-001/0003:chunk-01:event-004"
+      ],
+      "missing_event_ids": [],
+      "premature_event_ids": [],
+      "paragraph_issues": [],
+      "repair_paragraph_ids": [],
+      "passed": true
+    },
+    {
+      "scene_id": "ErGen/work-001/0003:chunk-01:scene-001",
+      "reported_passed": true,
+      "realized_fact_ids": [
+        "ErGen/work-001/0003:chunk-01:fact-001",
+        "ErGen/work-001/0003:chunk-01:fact-002",
+        "ErGen/work-001/0003:chunk-01:fact-003",
+        "ErGen/work-001/0003:chunk-01:fact-004",
+        "ErGen/work-001/0003:chunk-01:fact-005",
+        "ErGen/work-001/0003:chunk-01:fact-008",
+        "ErGen/work-001/0003:chunk-01:fact-009"
+      ],
+      "missing_fact_ids": [],
+      "realized_event_ids": [
+        "ErGen/work-001/0003:chunk-01:event-001",
+        "ErGen/work-001/0003:chunk-01:event-002",
+        "ErGen/work-001/0003:chunk-01:event-003",
+        "ErGen/work-001/0003:chunk-01:event-004"
+      ],
+      "missing_event_ids": [],
+      "premature_event_ids": [],
+      "paragraph_issues": [],
+      "repair_paragraph_ids": [],
+      "passed": true
+    }
+  ],
+  "role_checks": [
+    {
+      "attempt": 0,
+      "passed": false,
+      "paragraph_issues": {
+        "ErGen/work-001/0003:chunk-01:scene-001:paragraph-01": [
+          "对话职责要求中文引号内对白不少于40字，当前为0字"
+        ]
+      }
+    },
+    {
+      "attempt": 1,
+      "passed": true,
+      "paragraph_issues": {}
+    }
+  ]
+}

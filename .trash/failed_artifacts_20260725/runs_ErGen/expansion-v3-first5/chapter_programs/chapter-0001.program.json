@@ -1,0 +1,2781 @@
+{
+  "chapter_id": "ErGen/work-001/0001",
+  "source_hash": "c6b903e4e5dcaa6bd9660b93734172e8e3ff61b47c5d77589f44f7e8fab70f22",
+  "schema_version": "3.0",
+  "entities": [
+    {
+      "entity_id": "ErGen/work-001/0001:chunk-01:entity-001",
+      "canonical_name": "铁柱",
+      "kind": "person"
+    },
+    {
+      "entity_id": "ErGen/work-001/0001:chunk-01:entity-002",
+      "canonical_name": "王天水",
+      "kind": "person"
+    },
+    {
+      "entity_id": "ErGen/work-001/0001:chunk-01:entity-003",
+      "canonical_name": "母亲",
+      "kind": "person"
+    },
+    {
+      "entity_id": "ErGen/work-001/0001:chunk-01:entity-004",
+      "canonical_name": "四叔",
+      "kind": "person"
+    },
+    {
+      "entity_id": "ErGen/work-001/0001:chunk-01:entity-005",
+      "canonical_name": "王卓",
+      "kind": "person"
+    },
+    {
+      "entity_id": "ErGen/work-001/0001:chunk-01:entity-006",
+      "canonical_name": "王卓父亲",
+      "kind": "person"
+    },
+    {
+      "entity_id": "ErGen/work-001/0001:chunk-01:entity-007",
+      "canonical_name": "村子",
+      "kind": "location"
+    },
+    {
+      "entity_id": "ErGen/work-001/0001:chunk-01:entity-008",
+      "canonical_name": "恒岳派",
+      "kind": "organization"
+    },
+    {
+      "entity_id": "ErGen/work-001/0001:chunk-01:entity-009",
+      "canonical_name": "王氏家族",
+      "kind": "organization"
+    }
+  ],
+  "scene_programs": [
+    {
+      "scene_id": "ErGen/work-001/0001:chunk-01:scene-001",
+      "chapter_id": "ErGen/work-001/0001",
+      "order": 0,
+      "objective": "四叔推荐恒岳派名额",
+      "participant_ids": [
+        "ErGen/work-001/0001:chunk-01:entity-001",
+        "ErGen/work-001/0001:chunk-01:entity-002",
+        "ErGen/work-001/0001:chunk-01:entity-003",
+        "ErGen/work-001/0001:chunk-01:entity-004"
+      ],
+      "entry_state_fact_ids": [],
+      "event_programs": [
+        {
+          "event_id": "ErGen/work-001/0001:chunk-01:event-001",
+          "scene_id": "ErGen/work-001/0001:chunk-01:scene-001",
+          "summary": "四叔推荐铁柱去恒岳派",
+          "action": "四叔向铁柱父母提出恒岳派推荐名额，铁柱父母同意，铁柱对仙人生出好奇",
+          "participant_ids": [
+            "ErGen/work-001/0001:chunk-01:entity-001",
+            "ErGen/work-001/0001:chunk-01:entity-002",
+            "ErGen/work-001/0001:chunk-01:entity-003",
+            "ErGen/work-001/0001:chunk-01:entity-004"
+          ],
+          "obstacle": "",
+          "decision": "",
+          "precondition_fact_ids": [],
+          "required_fact_ids": [
+            "ErGen/work-001/0001:chunk-01:fact-006",
+            "ErGen/work-001/0001:chunk-01:fact-004"
+          ],
+          "outcome_fact_ids": [
+            "ErGen/work-001/0001:chunk-01:fact-006",
+            "ErGen/work-001/0001:chunk-01:fact-004"
+          ]
+        }
+      ],
+      "fact_contracts": [
+        {
+          "fact_id": "ErGen/work-001/0001:chunk-01:fact-001",
+          "scene_id": "ErGen/work-001/0001:chunk-01:scene-001",
+          "fact_kind": "identity",
+          "subject_id": "ErGen/work-001/0001:chunk-01:entity-001",
+          "predicate": "本名",
+          "value": "王林",
+          "object_id": "",
+          "expression_mode": "narration",
+          "must_realize": true,
+          "forbidden_inverse_meanings": []
+        },
+        {
+          "fact_id": "ErGen/work-001/0001:chunk-01:fact-002",
+          "scene_id": "ErGen/work-001/0001:chunk-01:scene-001",
+          "fact_kind": "relationship",
+          "subject_id": "ErGen/work-001/0001:chunk-01:entity-001",
+          "predicate": "父亲是",
+          "value": "",
+          "object_id": "ErGen/work-001/0001:chunk-01:entity-002",
+          "expression_mode": "narration",
+          "must_realize": true,
+          "forbidden_inverse_meanings": []
+        },
+        {
+          "fact_id": "ErGen/work-001/0001:chunk-01:fact-003",
+          "scene_id": "ErGen/work-001/0001:chunk-01:scene-001",
+          "fact_kind": "relationship",
+          "subject_id": "ErGen/work-001/0001:chunk-01:entity-001",
+          "predicate": "母亲是",
+          "value": "",
+          "object_id": "ErGen/work-001/0001:chunk-01:entity-003",
+          "expression_mode": "narration",
+          "must_realize": true,
+          "forbidden_inverse_meanings": []
+        },
+        {
+          "fact_id": "ErGen/work-001/0001:chunk-01:fact-011",
+          "scene_id": "ErGen/work-001/0001:chunk-01:scene-001",
+          "fact_kind": "relationship",
+          "subject_id": "ErGen/work-001/0001:chunk-01:entity-001",
+          "predicate": "四叔是",
+          "value": "",
+          "object_id": "ErGen/work-001/0001:chunk-01:entity-004",
+          "expression_mode": "narration",
+          "must_realize": true,
+          "forbidden_inverse_meanings": []
+        },
+        {
+          "fact_id": "ErGen/work-001/0001:chunk-01:fact-005",
+          "scene_id": "ErGen/work-001/0001:chunk-01:scene-001",
+          "fact_kind": "resource",
+          "subject_id": "ErGen/work-001/0001:chunk-01:entity-001",
+          "predicate": "获得",
+          "value": "两本书",
+          "object_id": "",
+          "expression_mode": "action",
+          "must_realize": true,
+          "forbidden_inverse_meanings": []
+        },
+        {
+          "fact_id": "ErGen/work-001/0001:chunk-01:fact-006",
+          "scene_id": "ErGen/work-001/0001:chunk-01:scene-001",
+          "fact_kind": "progression",
+          "subject_id": "ErGen/work-001/0001:chunk-01:entity-001",
+          "predicate": "被推荐",
+          "value": "恒岳派",
+          "object_id": "ErGen/work-001/0001:chunk-01:entity-008",
+          "expression_mode": "action",
+          "must_realize": true,
+          "forbidden_inverse_meanings": []
+        },
+        {
+          "fact_id": "ErGen/work-001/0001:chunk-01:fact-004",
+          "scene_id": "ErGen/work-001/0001:chunk-01:scene-001",
+          "fact_kind": "knowledge",
+          "subject_id": "ErGen/work-001/0001:chunk-01:entity-001",
+          "predicate": "对仙人好奇",
+          "value": "好奇",
+          "object_id": "",
+          "expression_mode": "narration",
+          "must_realize": true,
+          "forbidden_inverse_meanings": []
+        }
+      ],
+      "paragraphs": [
+        {
+          "paragraph_id": "ErGen/work-001/0001:chunk-01:scene-001:paragraph-00",
+          "scene_id": "ErGen/work-001/0001:chunk-01:scene-001",
+          "order": 0,
+          "function": "orientation",
+          "required_fact_ids": [
+            "ErGen/work-001/0001:chunk-01:fact-001",
+            "ErGen/work-001/0001:chunk-01:fact-002"
+          ],
+          "event_ids": [],
+          "viewpoint_entity_id": "ErGen/work-001/0001:chunk-01:entity-001",
+          "dialogue_act": "",
+          "beat_ids": [
+            "ErGen/work-001/0001:chunk-01:scene-001:beat-00"
+          ],
+          "target_chars": 64,
+          "minimum_chars": 45
+        },
+        {
+          "paragraph_id": "ErGen/work-001/0001:chunk-01:scene-001:expansion-paragraph-001",
+          "scene_id": "ErGen/work-001/0001:chunk-01:scene-001",
+          "order": 1,
+          "function": "perception_reaction",
+          "required_fact_ids": [],
+          "event_ids": [],
+          "viewpoint_entity_id": "ErGen/work-001/0001:chunk-01:entity-001",
+          "dialogue_act": "",
+          "beat_ids": [
+            "ErGen/work-001/0001:chunk-01:scene-001:expansion-001"
+          ],
+          "target_chars": 64,
+          "minimum_chars": 45
+        },
+        {
+          "paragraph_id": "ErGen/work-001/0001:chunk-01:scene-001:expansion-paragraph-002",
+          "scene_id": "ErGen/work-001/0001:chunk-01:scene-001",
+          "order": 2,
+          "function": "action_progression",
+          "required_fact_ids": [],
+          "event_ids": [],
+          "viewpoint_entity_id": "ErGen/work-001/0001:chunk-01:entity-001",
+          "dialogue_act": "",
+          "beat_ids": [
+            "ErGen/work-001/0001:chunk-01:scene-001:expansion-002"
+          ],
+          "target_chars": 64,
+          "minimum_chars": 45
+        },
+        {
+          "paragraph_id": "ErGen/work-001/0001:chunk-01:scene-001:expansion-paragraph-003",
+          "scene_id": "ErGen/work-001/0001:chunk-01:scene-001",
+          "order": 3,
+          "function": "aftermath",
+          "required_fact_ids": [],
+          "event_ids": [],
+          "viewpoint_entity_id": "ErGen/work-001/0001:chunk-01:entity-001",
+          "dialogue_act": "",
+          "beat_ids": [
+            "ErGen/work-001/0001:chunk-01:scene-001:expansion-003"
+          ],
+          "target_chars": 64,
+          "minimum_chars": 45
+        },
+        {
+          "paragraph_id": "ErGen/work-001/0001:chunk-01:scene-001:expansion-paragraph-004",
+          "scene_id": "ErGen/work-001/0001:chunk-01:scene-001",
+          "order": 4,
+          "function": "transition",
+          "required_fact_ids": [],
+          "event_ids": [],
+          "viewpoint_entity_id": "ErGen/work-001/0001:chunk-01:entity-001",
+          "dialogue_act": "",
+          "beat_ids": [
+            "ErGen/work-001/0001:chunk-01:scene-001:expansion-004"
+          ],
+          "target_chars": 64,
+          "minimum_chars": 45
+        },
+        {
+          "paragraph_id": "ErGen/work-001/0001:chunk-01:scene-001:expansion-paragraph-005",
+          "scene_id": "ErGen/work-001/0001:chunk-01:scene-001",
+          "order": 5,
+          "function": "perception_reaction",
+          "required_fact_ids": [],
+          "event_ids": [],
+          "viewpoint_entity_id": "ErGen/work-001/0001:chunk-01:entity-001",
+          "dialogue_act": "",
+          "beat_ids": [
+            "ErGen/work-001/0001:chunk-01:scene-001:expansion-005"
+          ],
+          "target_chars": 64,
+          "minimum_chars": 45
+        },
+        {
+          "paragraph_id": "ErGen/work-001/0001:chunk-01:scene-001:expansion-paragraph-006",
+          "scene_id": "ErGen/work-001/0001:chunk-01:scene-001",
+          "order": 6,
+          "function": "action_progression",
+          "required_fact_ids": [],
+          "event_ids": [],
+          "viewpoint_entity_id": "ErGen/work-001/0001:chunk-01:entity-001",
+          "dialogue_act": "",
+          "beat_ids": [
+            "ErGen/work-001/0001:chunk-01:scene-001:expansion-006"
+          ],
+          "target_chars": 64,
+          "minimum_chars": 45
+        },
+        {
+          "paragraph_id": "ErGen/work-001/0001:chunk-01:scene-001:expansion-paragraph-007",
+          "scene_id": "ErGen/work-001/0001:chunk-01:scene-001",
+          "order": 7,
+          "function": "aftermath",
+          "required_fact_ids": [],
+          "event_ids": [],
+          "viewpoint_entity_id": "ErGen/work-001/0001:chunk-01:entity-001",
+          "dialogue_act": "",
+          "beat_ids": [
+            "ErGen/work-001/0001:chunk-01:scene-001:expansion-007"
+          ],
+          "target_chars": 64,
+          "minimum_chars": 45
+        },
+        {
+          "paragraph_id": "ErGen/work-001/0001:chunk-01:scene-001:paragraph-01",
+          "scene_id": "ErGen/work-001/0001:chunk-01:scene-001",
+          "order": 8,
+          "function": "orientation",
+          "required_fact_ids": [
+            "ErGen/work-001/0001:chunk-01:fact-003",
+            "ErGen/work-001/0001:chunk-01:fact-011"
+          ],
+          "event_ids": [],
+          "viewpoint_entity_id": "ErGen/work-001/0001:chunk-01:entity-001",
+          "dialogue_act": "",
+          "beat_ids": [
+            "ErGen/work-001/0001:chunk-01:scene-001:beat-01"
+          ],
+          "target_chars": 64,
+          "minimum_chars": 45
+        },
+        {
+          "paragraph_id": "ErGen/work-001/0001:chunk-01:scene-001:expansion-paragraph-008",
+          "scene_id": "ErGen/work-001/0001:chunk-01:scene-001",
+          "order": 9,
+          "function": "transition",
+          "required_fact_ids": [],
+          "event_ids": [],
+          "viewpoint_entity_id": "ErGen/work-001/0001:chunk-01:entity-001",
+          "dialogue_act": "",
+          "beat_ids": [
+            "ErGen/work-001/0001:chunk-01:scene-001:expansion-008"
+          ],
+          "target_chars": 64,
+          "minimum_chars": 45
+        },
+        {
+          "paragraph_id": "ErGen/work-001/0001:chunk-01:scene-001:expansion-paragraph-009",
+          "scene_id": "ErGen/work-001/0001:chunk-01:scene-001",
+          "order": 10,
+          "function": "perception_reaction",
+          "required_fact_ids": [],
+          "event_ids": [],
+          "viewpoint_entity_id": "ErGen/work-001/0001:chunk-01:entity-001",
+          "dialogue_act": "",
+          "beat_ids": [
+            "ErGen/work-001/0001:chunk-01:scene-001:expansion-009"
+          ],
+          "target_chars": 64,
+          "minimum_chars": 45
+        },
+        {
+          "paragraph_id": "ErGen/work-001/0001:chunk-01:scene-001:expansion-paragraph-010",
+          "scene_id": "ErGen/work-001/0001:chunk-01:scene-001",
+          "order": 11,
+          "function": "action_progression",
+          "required_fact_ids": [],
+          "event_ids": [],
+          "viewpoint_entity_id": "ErGen/work-001/0001:chunk-01:entity-001",
+          "dialogue_act": "",
+          "beat_ids": [
+            "ErGen/work-001/0001:chunk-01:scene-001:expansion-010"
+          ],
+          "target_chars": 64,
+          "minimum_chars": 45
+        },
+        {
+          "paragraph_id": "ErGen/work-001/0001:chunk-01:scene-001:expansion-paragraph-011",
+          "scene_id": "ErGen/work-001/0001:chunk-01:scene-001",
+          "order": 12,
+          "function": "aftermath",
+          "required_fact_ids": [],
+          "event_ids": [],
+          "viewpoint_entity_id": "ErGen/work-001/0001:chunk-01:entity-001",
+          "dialogue_act": "",
+          "beat_ids": [
+            "ErGen/work-001/0001:chunk-01:scene-001:expansion-011"
+          ],
+          "target_chars": 64,
+          "minimum_chars": 45
+        },
+        {
+          "paragraph_id": "ErGen/work-001/0001:chunk-01:scene-001:expansion-paragraph-012",
+          "scene_id": "ErGen/work-001/0001:chunk-01:scene-001",
+          "order": 13,
+          "function": "transition",
+          "required_fact_ids": [],
+          "event_ids": [],
+          "viewpoint_entity_id": "ErGen/work-001/0001:chunk-01:entity-001",
+          "dialogue_act": "",
+          "beat_ids": [
+            "ErGen/work-001/0001:chunk-01:scene-001:expansion-012"
+          ],
+          "target_chars": 64,
+          "minimum_chars": 45
+        },
+        {
+          "paragraph_id": "ErGen/work-001/0001:chunk-01:scene-001:expansion-paragraph-013",
+          "scene_id": "ErGen/work-001/0001:chunk-01:scene-001",
+          "order": 14,
+          "function": "perception_reaction",
+          "required_fact_ids": [],
+          "event_ids": [],
+          "viewpoint_entity_id": "ErGen/work-001/0001:chunk-01:entity-001",
+          "dialogue_act": "",
+          "beat_ids": [
+            "ErGen/work-001/0001:chunk-01:scene-001:expansion-013"
+          ],
+          "target_chars": 64,
+          "minimum_chars": 45
+        },
+        {
+          "paragraph_id": "ErGen/work-001/0001:chunk-01:scene-001:paragraph-02",
+          "scene_id": "ErGen/work-001/0001:chunk-01:scene-001",
+          "order": 15,
+          "function": "action_progression",
+          "required_fact_ids": [
+            "ErGen/work-001/0001:chunk-01:fact-006"
+          ],
+          "event_ids": [
+            "ErGen/work-001/0001:chunk-01:event-001"
+          ],
+          "viewpoint_entity_id": "ErGen/work-001/0001:chunk-01:entity-001",
+          "dialogue_act": "",
+          "beat_ids": [
+            "ErGen/work-001/0001:chunk-01:scene-001:beat-02"
+          ],
+          "target_chars": 64,
+          "minimum_chars": 45
+        },
+        {
+          "paragraph_id": "ErGen/work-001/0001:chunk-01:scene-001:expansion-paragraph-014",
+          "scene_id": "ErGen/work-001/0001:chunk-01:scene-001",
+          "order": 16,
+          "function": "action_progression",
+          "required_fact_ids": [],
+          "event_ids": [],
+          "viewpoint_entity_id": "ErGen/work-001/0001:chunk-01:entity-001",
+          "dialogue_act": "",
+          "beat_ids": [
+            "ErGen/work-001/0001:chunk-01:scene-001:expansion-014"
+          ],
+          "target_chars": 64,
+          "minimum_chars": 45
+        },
+        {
+          "paragraph_id": "ErGen/work-001/0001:chunk-01:scene-001:expansion-paragraph-015",
+          "scene_id": "ErGen/work-001/0001:chunk-01:scene-001",
+          "order": 17,
+          "function": "aftermath",
+          "required_fact_ids": [],
+          "event_ids": [],
+          "viewpoint_entity_id": "ErGen/work-001/0001:chunk-01:entity-001",
+          "dialogue_act": "",
+          "beat_ids": [
+            "ErGen/work-001/0001:chunk-01:scene-001:expansion-015"
+          ],
+          "target_chars": 64,
+          "minimum_chars": 45
+        },
+        {
+          "paragraph_id": "ErGen/work-001/0001:chunk-01:scene-001:expansion-paragraph-016",
+          "scene_id": "ErGen/work-001/0001:chunk-01:scene-001",
+          "order": 18,
+          "function": "transition",
+          "required_fact_ids": [],
+          "event_ids": [],
+          "viewpoint_entity_id": "ErGen/work-001/0001:chunk-01:entity-001",
+          "dialogue_act": "",
+          "beat_ids": [
+            "ErGen/work-001/0001:chunk-01:scene-001:expansion-016"
+          ],
+          "target_chars": 64,
+          "minimum_chars": 45
+        },
+        {
+          "paragraph_id": "ErGen/work-001/0001:chunk-01:scene-001:expansion-paragraph-017",
+          "scene_id": "ErGen/work-001/0001:chunk-01:scene-001",
+          "order": 19,
+          "function": "perception_reaction",
+          "required_fact_ids": [],
+          "event_ids": [],
+          "viewpoint_entity_id": "ErGen/work-001/0001:chunk-01:entity-001",
+          "dialogue_act": "",
+          "beat_ids": [
+            "ErGen/work-001/0001:chunk-01:scene-001:expansion-017"
+          ],
+          "target_chars": 64,
+          "minimum_chars": 45
+        },
+        {
+          "paragraph_id": "ErGen/work-001/0001:chunk-01:scene-001:expansion-paragraph-018",
+          "scene_id": "ErGen/work-001/0001:chunk-01:scene-001",
+          "order": 20,
+          "function": "action_progression",
+          "required_fact_ids": [],
+          "event_ids": [],
+          "viewpoint_entity_id": "ErGen/work-001/0001:chunk-01:entity-001",
+          "dialogue_act": "",
+          "beat_ids": [
+            "ErGen/work-001/0001:chunk-01:scene-001:expansion-018"
+          ],
+          "target_chars": 64,
+          "minimum_chars": 45
+        },
+        {
+          "paragraph_id": "ErGen/work-001/0001:chunk-01:scene-001:expansion-paragraph-019",
+          "scene_id": "ErGen/work-001/0001:chunk-01:scene-001",
+          "order": 21,
+          "function": "aftermath",
+          "required_fact_ids": [],
+          "event_ids": [],
+          "viewpoint_entity_id": "ErGen/work-001/0001:chunk-01:entity-001",
+          "dialogue_act": "",
+          "beat_ids": [
+            "ErGen/work-001/0001:chunk-01:scene-001:expansion-019"
+          ],
+          "target_chars": 64,
+          "minimum_chars": 45
+        },
+        {
+          "paragraph_id": "ErGen/work-001/0001:chunk-01:scene-001:paragraph-03",
+          "scene_id": "ErGen/work-001/0001:chunk-01:scene-001",
+          "order": 22,
+          "function": "perception_reaction",
+          "required_fact_ids": [
+            "ErGen/work-001/0001:chunk-01:fact-004"
+          ],
+          "event_ids": [],
+          "viewpoint_entity_id": "ErGen/work-001/0001:chunk-01:entity-001",
+          "dialogue_act": "",
+          "beat_ids": [
+            "ErGen/work-001/0001:chunk-01:scene-001:beat-03"
+          ],
+          "target_chars": 64,
+          "minimum_chars": 45
+        },
+        {
+          "paragraph_id": "ErGen/work-001/0001:chunk-01:scene-001:expansion-paragraph-020",
+          "scene_id": "ErGen/work-001/0001:chunk-01:scene-001",
+          "order": 23,
+          "function": "transition",
+          "required_fact_ids": [],
+          "event_ids": [],
+          "viewpoint_entity_id": "ErGen/work-001/0001:chunk-01:entity-001",
+          "dialogue_act": "",
+          "beat_ids": [
+            "ErGen/work-001/0001:chunk-01:scene-001:expansion-020"
+          ],
+          "target_chars": 64,
+          "minimum_chars": 45
+        },
+        {
+          "paragraph_id": "ErGen/work-001/0001:chunk-01:scene-001:expansion-paragraph-021",
+          "scene_id": "ErGen/work-001/0001:chunk-01:scene-001",
+          "order": 24,
+          "function": "perception_reaction",
+          "required_fact_ids": [],
+          "event_ids": [],
+          "viewpoint_entity_id": "ErGen/work-001/0001:chunk-01:entity-001",
+          "dialogue_act": "",
+          "beat_ids": [
+            "ErGen/work-001/0001:chunk-01:scene-001:expansion-021"
+          ],
+          "target_chars": 64,
+          "minimum_chars": 45
+        },
+        {
+          "paragraph_id": "ErGen/work-001/0001:chunk-01:scene-001:expansion-paragraph-022",
+          "scene_id": "ErGen/work-001/0001:chunk-01:scene-001",
+          "order": 25,
+          "function": "action_progression",
+          "required_fact_ids": [],
+          "event_ids": [],
+          "viewpoint_entity_id": "ErGen/work-001/0001:chunk-01:entity-001",
+          "dialogue_act": "",
+          "beat_ids": [
+            "ErGen/work-001/0001:chunk-01:scene-001:expansion-022"
+          ],
+          "target_chars": 64,
+          "minimum_chars": 45
+        },
+        {
+          "paragraph_id": "ErGen/work-001/0001:chunk-01:scene-001:expansion-paragraph-023",
+          "scene_id": "ErGen/work-001/0001:chunk-01:scene-001",
+          "order": 26,
+          "function": "aftermath",
+          "required_fact_ids": [],
+          "event_ids": [],
+          "viewpoint_entity_id": "ErGen/work-001/0001:chunk-01:entity-001",
+          "dialogue_act": "",
+          "beat_ids": [
+            "ErGen/work-001/0001:chunk-01:scene-001:expansion-023"
+          ],
+          "target_chars": 64,
+          "minimum_chars": 45
+        },
+        {
+          "paragraph_id": "ErGen/work-001/0001:chunk-01:scene-001:expansion-paragraph-024",
+          "scene_id": "ErGen/work-001/0001:chunk-01:scene-001",
+          "order": 27,
+          "function": "transition",
+          "required_fact_ids": [],
+          "event_ids": [],
+          "viewpoint_entity_id": "ErGen/work-001/0001:chunk-01:entity-001",
+          "dialogue_act": "",
+          "beat_ids": [
+            "ErGen/work-001/0001:chunk-01:scene-001:expansion-024"
+          ],
+          "target_chars": 63,
+          "minimum_chars": 44
+        },
+        {
+          "paragraph_id": "ErGen/work-001/0001:chunk-01:scene-001:expansion-paragraph-025",
+          "scene_id": "ErGen/work-001/0001:chunk-01:scene-001",
+          "order": 28,
+          "function": "perception_reaction",
+          "required_fact_ids": [],
+          "event_ids": [],
+          "viewpoint_entity_id": "ErGen/work-001/0001:chunk-01:entity-001",
+          "dialogue_act": "",
+          "beat_ids": [
+            "ErGen/work-001/0001:chunk-01:scene-001:expansion-025"
+          ],
+          "target_chars": 63,
+          "minimum_chars": 44
+        },
+        {
+          "paragraph_id": "ErGen/work-001/0001:chunk-01:scene-001:paragraph-04",
+          "scene_id": "ErGen/work-001/0001:chunk-01:scene-001",
+          "order": 29,
+          "function": "aftermath",
+          "required_fact_ids": [
+            "ErGen/work-001/0001:chunk-01:fact-005"
+          ],
+          "event_ids": [],
+          "viewpoint_entity_id": "ErGen/work-001/0001:chunk-01:entity-001",
+          "dialogue_act": "",
+          "beat_ids": [
+            "ErGen/work-001/0001:chunk-01:scene-001:beat-04"
+          ],
+          "target_chars": 63,
+          "minimum_chars": 44
+        },
+        {
+          "paragraph_id": "ErGen/work-001/0001:chunk-01:scene-001:expansion-paragraph-026",
+          "scene_id": "ErGen/work-001/0001:chunk-01:scene-001",
+          "order": 30,
+          "function": "action_progression",
+          "required_fact_ids": [],
+          "event_ids": [],
+          "viewpoint_entity_id": "ErGen/work-001/0001:chunk-01:entity-001",
+          "dialogue_act": "",
+          "beat_ids": [
+            "ErGen/work-001/0001:chunk-01:scene-001:expansion-026"
+          ],
+          "target_chars": 63,
+          "minimum_chars": 44
+        },
+        {
+          "paragraph_id": "ErGen/work-001/0001:chunk-01:scene-001:expansion-paragraph-027",
+          "scene_id": "ErGen/work-001/0001:chunk-01:scene-001",
+          "order": 31,
+          "function": "aftermath",
+          "required_fact_ids": [],
+          "event_ids": [],
+          "viewpoint_entity_id": "ErGen/work-001/0001:chunk-01:entity-001",
+          "dialogue_act": "",
+          "beat_ids": [
+            "ErGen/work-001/0001:chunk-01:scene-001:expansion-027"
+          ],
+          "target_chars": 63,
+          "minimum_chars": 44
+        },
+        {
+          "paragraph_id": "ErGen/work-001/0001:chunk-01:scene-001:expansion-paragraph-028",
+          "scene_id": "ErGen/work-001/0001:chunk-01:scene-001",
+          "order": 32,
+          "function": "transition",
+          "required_fact_ids": [],
+          "event_ids": [],
+          "viewpoint_entity_id": "ErGen/work-001/0001:chunk-01:entity-001",
+          "dialogue_act": "",
+          "beat_ids": [
+            "ErGen/work-001/0001:chunk-01:scene-001:expansion-028"
+          ],
+          "target_chars": 63,
+          "minimum_chars": 44
+        },
+        {
+          "paragraph_id": "ErGen/work-001/0001:chunk-01:scene-001:expansion-paragraph-029",
+          "scene_id": "ErGen/work-001/0001:chunk-01:scene-001",
+          "order": 33,
+          "function": "perception_reaction",
+          "required_fact_ids": [],
+          "event_ids": [],
+          "viewpoint_entity_id": "ErGen/work-001/0001:chunk-01:entity-001",
+          "dialogue_act": "",
+          "beat_ids": [
+            "ErGen/work-001/0001:chunk-01:scene-001:expansion-029"
+          ],
+          "target_chars": 63,
+          "minimum_chars": 44
+        },
+        {
+          "paragraph_id": "ErGen/work-001/0001:chunk-01:scene-001:expansion-paragraph-030",
+          "scene_id": "ErGen/work-001/0001:chunk-01:scene-001",
+          "order": 34,
+          "function": "action_progression",
+          "required_fact_ids": [],
+          "event_ids": [],
+          "viewpoint_entity_id": "ErGen/work-001/0001:chunk-01:entity-001",
+          "dialogue_act": "",
+          "beat_ids": [
+            "ErGen/work-001/0001:chunk-01:scene-001:expansion-030"
+          ],
+          "target_chars": 63,
+          "minimum_chars": 44
+        },
+        {
+          "paragraph_id": "ErGen/work-001/0001:chunk-01:scene-001:expansion-paragraph-031",
+          "scene_id": "ErGen/work-001/0001:chunk-01:scene-001",
+          "order": 35,
+          "function": "aftermath",
+          "required_fact_ids": [],
+          "event_ids": [],
+          "viewpoint_entity_id": "ErGen/work-001/0001:chunk-01:entity-001",
+          "dialogue_act": "",
+          "beat_ids": [
+            "ErGen/work-001/0001:chunk-01:scene-001:expansion-031"
+          ],
+          "target_chars": 63,
+          "minimum_chars": 44
+        }
+      ],
+      "exit_state_fact_ids": [
+        "ErGen/work-001/0001:chunk-01:fact-006",
+        "ErGen/work-001/0001:chunk-01:fact-004"
+      ],
+      "forbidden_event_ids": [
+        "ErGen/work-001/0001:chunk-01:event-002",
+        "ErGen/work-001/0001:chunk-01:event-003"
+      ],
+      "narrative_beats": [
+        {
+          "beat_id": "ErGen/work-001/0001:chunk-01:scene-001:beat-00",
+          "scene_id": "ErGen/work-001/0001:chunk-01:scene-001",
+          "order": 0,
+          "beat_type": "setup",
+          "actor_id": "ErGen/work-001/0001:chunk-01:entity-001",
+          "objective": "四叔推荐恒岳派名额",
+          "pressure": "",
+          "observable_action": "以人物在场内的动作或停顿落定当前处境",
+          "focal_detail": "让视角人物注意到与当前处境直接相关的可观察细节",
+          "state_change": "读者明确当前人物、位置或关系所构成的起点",
+          "required_fact_ids": [
+            "ErGen/work-001/0001:chunk-01:fact-001",
+            "ErGen/work-001/0001:chunk-01:fact-002"
+          ],
+          "event_ids": [],
+          "dialogue_pressure": "",
+          "expansion_license": "source",
+          "support_fact_ids": []
+        },
+        {
+          "beat_id": "ErGen/work-001/0001:chunk-01:scene-001:expansion-001",
+          "scene_id": "ErGen/work-001/0001:chunk-01:scene-001",
+          "order": 1,
+          "beat_type": "reaction",
+          "actor_id": "ErGen/work-001/0001:chunk-01:entity-001",
+          "objective": "四叔推荐恒岳派名额",
+          "pressure": "",
+          "observable_action": "让视角人物对既有动作作出可观察的感知或身体反应，不新增事实。",
+          "focal_detail": "只展开当前场景已经可见的人物动作、感知、环境或对白反应。",
+          "state_change": "不新增硬事实；使既有状态在正文中获得可感知的过程。",
+          "required_fact_ids": [],
+          "event_ids": [],
+          "dialogue_pressure": "",
+          "expansion_license": "inference",
+          "support_fact_ids": [
+            "ErGen/work-001/0001:chunk-01:fact-001"
+          ]
+        },
+        {
+          "beat_id": "ErGen/work-001/0001:chunk-01:scene-001:expansion-002",
+          "scene_id": "ErGen/work-001/0001:chunk-01:scene-001",
+          "order": 2,
+          "beat_type": "action",
+          "actor_id": "ErGen/work-001/0001:chunk-01:entity-001",
+          "objective": "四叔推荐恒岳派名额",
+          "pressure": "",
+          "observable_action": "把已知行动拆成一个可见的准备、停顿或回应，不改变事件结果。",
+          "focal_detail": "只展开当前场景已经可见的人物动作、感知、环境或对白反应。",
+          "state_change": "不新增硬事实；使既有状态在正文中获得可感知的过程。",
+          "required_fact_ids": [],
+          "event_ids": [],
+          "dialogue_pressure": "",
+          "expansion_license": "inference",
+          "support_fact_ids": [
+            "ErGen/work-001/0001:chunk-01:fact-001"
+          ]
+        },
+        {
+          "beat_id": "ErGen/work-001/0001:chunk-01:scene-001:expansion-003",
+          "scene_id": "ErGen/work-001/0001:chunk-01:scene-001",
+          "order": 3,
+          "beat_type": "aftermath",
+          "actor_id": "ErGen/work-001/0001:chunk-01:entity-001",
+          "objective": "四叔推荐恒岳派名额",
+          "pressure": "",
+          "observable_action": "写出既有结果留下的局面余波，只承接已存在的状态。",
+          "focal_detail": "只展开当前场景已经可见的人物动作、感知、环境或对白反应。",
+          "state_change": "不新增硬事实；使既有状态在正文中获得可感知的过程。",
+          "required_fact_ids": [],
+          "event_ids": [],
+          "dialogue_pressure": "",
+          "expansion_license": "inference",
+          "support_fact_ids": [
+            "ErGen/work-001/0001:chunk-01:fact-001"
+          ]
+        },
+        {
+          "beat_id": "ErGen/work-001/0001:chunk-01:scene-001:expansion-004",
+          "scene_id": "ErGen/work-001/0001:chunk-01:scene-001",
+          "order": 4,
+          "beat_type": "transition",
+          "actor_id": "ErGen/work-001/0001:chunk-01:entity-001",
+          "objective": "四叔推荐恒岳派名额",
+          "pressure": "",
+          "observable_action": "用环境、距离或注意力变化承接既有状态，不新增人物、设定或事件。",
+          "focal_detail": "只展开当前场景已经可见的人物动作、感知、环境或对白反应。",
+          "state_change": "不新增硬事实；使既有状态在正文中获得可感知的过程。",
+          "required_fact_ids": [],
+          "event_ids": [],
+          "dialogue_pressure": "",
+          "expansion_license": "atmosphere",
+          "support_fact_ids": [
+            "ErGen/work-001/0001:chunk-01:fact-001"
+          ]
+        },
+        {
+          "beat_id": "ErGen/work-001/0001:chunk-01:scene-001:expansion-005",
+          "scene_id": "ErGen/work-001/0001:chunk-01:scene-001",
+          "order": 5,
+          "beat_type": "reaction",
+          "actor_id": "ErGen/work-001/0001:chunk-01:entity-001",
+          "objective": "四叔推荐恒岳派名额",
+          "pressure": "",
+          "observable_action": "让视角人物对既有动作作出可观察的感知或身体反应，不新增事实。",
+          "focal_detail": "只展开当前场景已经可见的人物动作、感知、环境或对白反应。",
+          "state_change": "不新增硬事实；使既有状态在正文中获得可感知的过程。",
+          "required_fact_ids": [],
+          "event_ids": [],
+          "dialogue_pressure": "",
+          "expansion_license": "inference",
+          "support_fact_ids": [
+            "ErGen/work-001/0001:chunk-01:fact-001"
+          ]
+        },
+        {
+          "beat_id": "ErGen/work-001/0001:chunk-01:scene-001:expansion-006",
+          "scene_id": "ErGen/work-001/0001:chunk-01:scene-001",
+          "order": 6,
+          "beat_type": "action",
+          "actor_id": "ErGen/work-001/0001:chunk-01:entity-001",
+          "objective": "四叔推荐恒岳派名额",
+          "pressure": "",
+          "observable_action": "把已知行动拆成一个可见的准备、停顿或回应，不改变事件结果。",
+          "focal_detail": "只展开当前场景已经可见的人物动作、感知、环境或对白反应。",
+          "state_change": "不新增硬事实；使既有状态在正文中获得可感知的过程。",
+          "required_fact_ids": [],
+          "event_ids": [],
+          "dialogue_pressure": "",
+          "expansion_license": "inference",
+          "support_fact_ids": [
+            "ErGen/work-001/0001:chunk-01:fact-001"
+          ]
+        },
+        {
+          "beat_id": "ErGen/work-001/0001:chunk-01:scene-001:expansion-007",
+          "scene_id": "ErGen/work-001/0001:chunk-01:scene-001",
+          "order": 7,
+          "beat_type": "aftermath",
+          "actor_id": "ErGen/work-001/0001:chunk-01:entity-001",
+          "objective": "四叔推荐恒岳派名额",
+          "pressure": "",
+          "observable_action": "写出既有结果留下的局面余波，只承接已存在的状态。",
+          "focal_detail": "只展开当前场景已经可见的人物动作、感知、环境或对白反应。",
+          "state_change": "不新增硬事实；使既有状态在正文中获得可感知的过程。",
+          "required_fact_ids": [],
+          "event_ids": [],
+          "dialogue_pressure": "",
+          "expansion_license": "inference",
+          "support_fact_ids": [
+            "ErGen/work-001/0001:chunk-01:fact-001"
+          ]
+        },
+        {
+          "beat_id": "ErGen/work-001/0001:chunk-01:scene-001:beat-01",
+          "scene_id": "ErGen/work-001/0001:chunk-01:scene-001",
+          "order": 8,
+          "beat_type": "setup",
+          "actor_id": "ErGen/work-001/0001:chunk-01:entity-001",
+          "objective": "四叔推荐恒岳派名额",
+          "pressure": "",
+          "observable_action": "以人物在场内的动作或停顿落定当前处境",
+          "focal_detail": "让视角人物注意到与当前处境直接相关的可观察细节",
+          "state_change": "读者明确当前人物、位置或关系所构成的起点",
+          "required_fact_ids": [
+            "ErGen/work-001/0001:chunk-01:fact-003",
+            "ErGen/work-001/0001:chunk-01:fact-011"
+          ],
+          "event_ids": [],
+          "dialogue_pressure": "",
+          "expansion_license": "source",
+          "support_fact_ids": []
+        },
+        {
+          "beat_id": "ErGen/work-001/0001:chunk-01:scene-001:expansion-008",
+          "scene_id": "ErGen/work-001/0001:chunk-01:scene-001",
+          "order": 9,
+          "beat_type": "transition",
+          "actor_id": "ErGen/work-001/0001:chunk-01:entity-001",
+          "objective": "四叔推荐恒岳派名额",
+          "pressure": "",
+          "observable_action": "用环境、距离或注意力变化承接既有状态，不新增人物、设定或事件。",
+          "focal_detail": "只展开当前场景已经可见的人物动作、感知、环境或对白反应。",
+          "state_change": "不新增硬事实；使既有状态在正文中获得可感知的过程。",
+          "required_fact_ids": [],
+          "event_ids": [],
+          "dialogue_pressure": "",
+          "expansion_license": "atmosphere",
+          "support_fact_ids": [
+            "ErGen/work-001/0001:chunk-01:fact-003"
+          ]
+        },
+        {
+          "beat_id": "ErGen/work-001/0001:chunk-01:scene-001:expansion-009",
+          "scene_id": "ErGen/work-001/0001:chunk-01:scene-001",
+          "order": 10,
+          "beat_type": "reaction",
+          "actor_id": "ErGen/work-001/0001:chunk-01:entity-001",
+          "objective": "四叔推荐恒岳派名额",
+          "pressure": "",
+          "observable_action": "让视角人物对既有动作作出可观察的感知或身体反应，不新增事实。",
+          "focal_detail": "只展开当前场景已经可见的人物动作、感知、环境或对白反应。",
+          "state_change": "不新增硬事实；使既有状态在正文中获得可感知的过程。",
+          "required_fact_ids": [],
+          "event_ids": [],
+          "dialogue_pressure": "",
+          "expansion_license": "inference",
+          "support_fact_ids": [
+            "ErGen/work-001/0001:chunk-01:fact-003"
+          ]
+        },
+        {
+          "beat_id": "ErGen/work-001/0001:chunk-01:scene-001:expansion-010",
+          "scene_id": "ErGen/work-001/0001:chunk-01:scene-001",
+          "order": 11,
+          "beat_type": "action",
+          "actor_id": "ErGen/work-001/0001:chunk-01:entity-001",
+          "objective": "四叔推荐恒岳派名额",
+          "pressure": "",
+          "observable_action": "把已知行动拆成一个可见的准备、停顿或回应，不改变事件结果。",
+          "focal_detail": "只展开当前场景已经可见的人物动作、感知、环境或对白反应。",
+          "state_change": "不新增硬事实；使既有状态在正文中获得可感知的过程。",
+          "required_fact_ids": [],
+          "event_ids": [],
+          "dialogue_pressure": "",
+          "expansion_license": "inference",
+          "support_fact_ids": [
+            "ErGen/work-001/0001:chunk-01:fact-003"
+          ]
+        },
+        {
+          "beat_id": "ErGen/work-001/0001:chunk-01:scene-001:expansion-011",
+          "scene_id": "ErGen/work-001/0001:chunk-01:scene-001",
+          "order": 12,
+          "beat_type": "aftermath",
+          "actor_id": "ErGen/work-001/0001:chunk-01:entity-001",
+          "objective": "四叔推荐恒岳派名额",
+          "pressure": "",
+          "observable_action": "写出既有结果留下的局面余波，只承接已存在的状态。",
+          "focal_detail": "只展开当前场景已经可见的人物动作、感知、环境或对白反应。",
+          "state_change": "不新增硬事实；使既有状态在正文中获得可感知的过程。",
+          "required_fact_ids": [],
+          "event_ids": [],
+          "dialogue_pressure": "",
+          "expansion_license": "inference",
+          "support_fact_ids": [
+            "ErGen/work-001/0001:chunk-01:fact-003"
+          ]
+        },
+        {
+          "beat_id": "ErGen/work-001/0001:chunk-01:scene-001:expansion-012",
+          "scene_id": "ErGen/work-001/0001:chunk-01:scene-001",
+          "order": 13,
+          "beat_type": "transition",
+          "actor_id": "ErGen/work-001/0001:chunk-01:entity-001",
+          "objective": "四叔推荐恒岳派名额",
+          "pressure": "",
+          "observable_action": "用环境、距离或注意力变化承接既有状态，不新增人物、设定或事件。",
+          "focal_detail": "只展开当前场景已经可见的人物动作、感知、环境或对白反应。",
+          "state_change": "不新增硬事实；使既有状态在正文中获得可感知的过程。",
+          "required_fact_ids": [],
+          "event_ids": [],
+          "dialogue_pressure": "",
+          "expansion_license": "atmosphere",
+          "support_fact_ids": [
+            "ErGen/work-001/0001:chunk-01:fact-003"
+          ]
+        },
+        {
+          "beat_id": "ErGen/work-001/0001:chunk-01:scene-001:expansion-013",
+          "scene_id": "ErGen/work-001/0001:chunk-01:scene-001",
+          "order": 14,
+          "beat_type": "reaction",
+          "actor_id": "ErGen/work-001/0001:chunk-01:entity-001",
+          "objective": "四叔推荐恒岳派名额",
+          "pressure": "",
+          "observable_action": "让视角人物对既有动作作出可观察的感知或身体反应，不新增事实。",
+          "focal_detail": "只展开当前场景已经可见的人物动作、感知、环境或对白反应。",
+          "state_change": "不新增硬事实；使既有状态在正文中获得可感知的过程。",
+          "required_fact_ids": [],
+          "event_ids": [],
+          "dialogue_pressure": "",
+          "expansion_license": "inference",
+          "support_fact_ids": [
+            "ErGen/work-001/0001:chunk-01:fact-003"
+          ]
+        },
+        {
+          "beat_id": "ErGen/work-001/0001:chunk-01:scene-001:beat-02",
+          "scene_id": "ErGen/work-001/0001:chunk-01:scene-001",
+          "order": 15,
+          "beat_type": "action",
+          "actor_id": "ErGen/work-001/0001:chunk-01:entity-001",
+          "objective": "四叔向铁柱父母提出恒岳派推荐名额，铁柱父母同意，铁柱对仙人生出好奇",
+          "pressure": "",
+          "observable_action": "四叔向铁柱父母提出恒岳派推荐名额，铁柱父母同意，铁柱对仙人生出好奇",
+          "focal_detail": "让视角人物先捕捉到行动引起的具体变化",
+          "state_change": "行动已经开始，并对场内其他人或局势施加影响",
+          "required_fact_ids": [
+            "ErGen/work-001/0001:chunk-01:fact-006"
+          ],
+          "event_ids": [
+            "ErGen/work-001/0001:chunk-01:event-001"
+          ],
+          "dialogue_pressure": "",
+          "expansion_license": "source",
+          "support_fact_ids": []
+        },
+        {
+          "beat_id": "ErGen/work-001/0001:chunk-01:scene-001:expansion-014",
+          "scene_id": "ErGen/work-001/0001:chunk-01:scene-001",
+          "order": 16,
+          "beat_type": "action",
+          "actor_id": "ErGen/work-001/0001:chunk-01:entity-001",
+          "objective": "四叔推荐恒岳派名额",
+          "pressure": "",
+          "observable_action": "把已知行动拆成一个可见的准备、停顿或回应，不改变事件结果。",
+          "focal_detail": "只展开当前场景已经可见的人物动作、感知、环境或对白反应。",
+          "state_change": "不新增硬事实；使既有状态在正文中获得可感知的过程。",
+          "required_fact_ids": [],
+          "event_ids": [],
+          "dialogue_pressure": "",
+          "expansion_license": "inference",
+          "support_fact_ids": [
+            "ErGen/work-001/0001:chunk-01:fact-006"
+          ]
+        },
+        {
+          "beat_id": "ErGen/work-001/0001:chunk-01:scene-001:expansion-015",
+          "scene_id": "ErGen/work-001/0001:chunk-01:scene-001",
+          "order": 17,
+          "beat_type": "aftermath",
+          "actor_id": "ErGen/work-001/0001:chunk-01:entity-001",
+          "objective": "四叔推荐恒岳派名额",
+          "pressure": "",
+          "observable_action": "写出既有结果留下的局面余波，只承接已存在的状态。",
+          "focal_detail": "只展开当前场景已经可见的人物动作、感知、环境或对白反应。",
+          "state_change": "不新增硬事实；使既有状态在正文中获得可感知的过程。",
+          "required_fact_ids": [],
+          "event_ids": [],
+          "dialogue_pressure": "",
+          "expansion_license": "inference",
+          "support_fact_ids": [
+            "ErGen/work-001/0001:chunk-01:fact-006"
+          ]
+        },
+        {
+          "beat_id": "ErGen/work-001/0001:chunk-01:scene-001:expansion-016",
+          "scene_id": "ErGen/work-001/0001:chunk-01:scene-001",
+          "order": 18,
+          "beat_type": "transition",
+          "actor_id": "ErGen/work-001/0001:chunk-01:entity-001",
+          "objective": "四叔推荐恒岳派名额",
+          "pressure": "",
+          "observable_action": "用环境、距离或注意力变化承接既有状态，不新增人物、设定或事件。",
+          "focal_detail": "只展开当前场景已经可见的人物动作、感知、环境或对白反应。",
+          "state_change": "不新增硬事实；使既有状态在正文中获得可感知的过程。",
+          "required_fact_ids": [],
+          "event_ids": [],
+          "dialogue_pressure": "",
+          "expansion_license": "atmosphere",
+          "support_fact_ids": [
+            "ErGen/work-001/0001:chunk-01:fact-006"
+          ]
+        },
+        {
+          "beat_id": "ErGen/work-001/0001:chunk-01:scene-001:expansion-017",
+          "scene_id": "ErGen/work-001/0001:chunk-01:scene-001",
+          "order": 19,
+          "beat_type": "reaction",
+          "actor_id": "ErGen/work-001/0001:chunk-01:entity-001",
+          "objective": "四叔推荐恒岳派名额",
+          "pressure": "",
+          "observable_action": "让视角人物对既有动作作出可观察的感知或身体反应，不新增事实。",
+          "focal_detail": "只展开当前场景已经可见的人物动作、感知、环境或对白反应。",
+          "state_change": "不新增硬事实；使既有状态在正文中获得可感知的过程。",
+          "required_fact_ids": [],
+          "event_ids": [],
+          "dialogue_pressure": "",
+          "expansion_license": "inference",
+          "support_fact_ids": [
+            "ErGen/work-001/0001:chunk-01:fact-006"
+          ]
+        },
+        {
+          "beat_id": "ErGen/work-001/0001:chunk-01:scene-001:expansion-018",
+          "scene_id": "ErGen/work-001/0001:chunk-01:scene-001",
+          "order": 20,
+          "beat_type": "action",
+          "actor_id": "ErGen/work-001/0001:chunk-01:entity-001",
+          "objective": "四叔推荐恒岳派名额",
+          "pressure": "",
+          "observable_action": "把已知行动拆成一个可见的准备、停顿或回应，不改变事件结果。",
+          "focal_detail": "只展开当前场景已经可见的人物动作、感知、环境或对白反应。",
+          "state_change": "不新增硬事实；使既有状态在正文中获得可感知的过程。",
+          "required_fact_ids": [],
+          "event_ids": [],
+          "dialogue_pressure": "",
+          "expansion_license": "inference",
+          "support_fact_ids": [
+            "ErGen/work-001/0001:chunk-01:fact-006"
+          ]
+        },
+        {
+          "beat_id": "ErGen/work-001/0001:chunk-01:scene-001:expansion-019",
+          "scene_id": "ErGen/work-001/0001:chunk-01:scene-001",
+          "order": 21,
+          "beat_type": "aftermath",
+          "actor_id": "ErGen/work-001/0001:chunk-01:entity-001",
+          "objective": "四叔推荐恒岳派名额",
+          "pressure": "",
+          "observable_action": "写出既有结果留下的局面余波，只承接已存在的状态。",
+          "focal_detail": "只展开当前场景已经可见的人物动作、感知、环境或对白反应。",
+          "state_change": "不新增硬事实；使既有状态在正文中获得可感知的过程。",
+          "required_fact_ids": [],
+          "event_ids": [],
+          "dialogue_pressure": "",
+          "expansion_license": "inference",
+          "support_fact_ids": [
+            "ErGen/work-001/0001:chunk-01:fact-006"
+          ]
+        },
+        {
+          "beat_id": "ErGen/work-001/0001:chunk-01:scene-001:beat-03",
+          "scene_id": "ErGen/work-001/0001:chunk-01:scene-001",
+          "order": 22,
+          "beat_type": "reaction",
+          "actor_id": "ErGen/work-001/0001:chunk-01:entity-001",
+          "objective": "四叔向铁柱父母提出恒岳派推荐名额，铁柱父母同意，铁柱对仙人生出好奇",
+          "pressure": "",
+          "observable_action": "写出人物在压力后的具体回应、取舍或下一步动作",
+          "focal_detail": "让视角人物的感知或身体反应改变其判断",
+          "state_change": "人物对局势作出可见回应，结果开始成立",
+          "required_fact_ids": [
+            "ErGen/work-001/0001:chunk-01:fact-004"
+          ],
+          "event_ids": [],
+          "dialogue_pressure": "",
+          "expansion_license": "source",
+          "support_fact_ids": []
+        },
+        {
+          "beat_id": "ErGen/work-001/0001:chunk-01:scene-001:expansion-020",
+          "scene_id": "ErGen/work-001/0001:chunk-01:scene-001",
+          "order": 23,
+          "beat_type": "transition",
+          "actor_id": "ErGen/work-001/0001:chunk-01:entity-001",
+          "objective": "四叔推荐恒岳派名额",
+          "pressure": "",
+          "observable_action": "用环境、距离或注意力变化承接既有状态，不新增人物、设定或事件。",
+          "focal_detail": "只展开当前场景已经可见的人物动作、感知、环境或对白反应。",
+          "state_change": "不新增硬事实；使既有状态在正文中获得可感知的过程。",
+          "required_fact_ids": [],
+          "event_ids": [],
+          "dialogue_pressure": "",
+          "expansion_license": "atmosphere",
+          "support_fact_ids": [
+            "ErGen/work-001/0001:chunk-01:fact-004"
+          ]
+        },
+        {
+          "beat_id": "ErGen/work-001/0001:chunk-01:scene-001:expansion-021",
+          "scene_id": "ErGen/work-001/0001:chunk-01:scene-001",
+          "order": 24,
+          "beat_type": "reaction",
+          "actor_id": "ErGen/work-001/0001:chunk-01:entity-001",
+          "objective": "四叔推荐恒岳派名额",
+          "pressure": "",
+          "observable_action": "让视角人物对既有动作作出可观察的感知或身体反应，不新增事实。",
+          "focal_detail": "只展开当前场景已经可见的人物动作、感知、环境或对白反应。",
+          "state_change": "不新增硬事实；使既有状态在正文中获得可感知的过程。",
+          "required_fact_ids": [],
+          "event_ids": [],
+          "dialogue_pressure": "",
+          "expansion_license": "inference",
+          "support_fact_ids": [
+            "ErGen/work-001/0001:chunk-01:fact-004"
+          ]
+        },
+        {
+          "beat_id": "ErGen/work-001/0001:chunk-01:scene-001:expansion-022",
+          "scene_id": "ErGen/work-001/0001:chunk-01:scene-001",
+          "order": 25,
+          "beat_type": "action",
+          "actor_id": "ErGen/work-001/0001:chunk-01:entity-001",
+          "objective": "四叔推荐恒岳派名额",
+          "pressure": "",
+          "observable_action": "把已知行动拆成一个可见的准备、停顿或回应，不改变事件结果。",
+          "focal_detail": "只展开当前场景已经可见的人物动作、感知、环境或对白反应。",
+          "state_change": "不新增硬事实；使既有状态在正文中获得可感知的过程。",
+          "required_fact_ids": [],
+          "event_ids": [],
+          "dialogue_pressure": "",
+          "expansion_license": "inference",
+          "support_fact_ids": [
+            "ErGen/work-001/0001:chunk-01:fact-004"
+          ]
+        },
+        {
+          "beat_id": "ErGen/work-001/0001:chunk-01:scene-001:expansion-023",
+          "scene_id": "ErGen/work-001/0001:chunk-01:scene-001",
+          "order": 26,
+          "beat_type": "aftermath",
+          "actor_id": "ErGen/work-001/0001:chunk-01:entity-001",
+          "objective": "四叔推荐恒岳派名额",
+          "pressure": "",
+          "observable_action": "写出既有结果留下的局面余波，只承接已存在的状态。",
+          "focal_detail": "只展开当前场景已经可见的人物动作、感知、环境或对白反应。",
+          "state_change": "不新增硬事实；使既有状态在正文中获得可感知的过程。",
+          "required_fact_ids": [],
+          "event_ids": [],
+          "dialogue_pressure": "",
+          "expansion_license": "inference",
+          "support_fact_ids": [
+            "ErGen/work-001/0001:chunk-01:fact-004"
+          ]
+        },
+        {
+          "beat_id": "ErGen/work-001/0001:chunk-01:scene-001:expansion-024",
+          "scene_id": "ErGen/work-001/0001:chunk-01:scene-001",
+          "order": 27,
+          "beat_type": "transition",
+          "actor_id": "ErGen/work-001/0001:chunk-01:entity-001",
+          "objective": "四叔推荐恒岳派名额",
+          "pressure": "",
+          "observable_action": "用环境、距离或注意力变化承接既有状态，不新增人物、设定或事件。",
+          "focal_detail": "只展开当前场景已经可见的人物动作、感知、环境或对白反应。",
+          "state_change": "不新增硬事实；使既有状态在正文中获得可感知的过程。",
+          "required_fact_ids": [],
+          "event_ids": [],
+          "dialogue_pressure": "",
+          "expansion_license": "atmosphere",
+          "support_fact_ids": [
+            "ErGen/work-001/0001:chunk-01:fact-004"
+          ]
+        },
+        {
+          "beat_id": "ErGen/work-001/0001:chunk-01:scene-001:expansion-025",
+          "scene_id": "ErGen/work-001/0001:chunk-01:scene-001",
+          "order": 28,
+          "beat_type": "reaction",
+          "actor_id": "ErGen/work-001/0001:chunk-01:entity-001",
+          "objective": "四叔推荐恒岳派名额",
+          "pressure": "",
+          "observable_action": "让视角人物对既有动作作出可观察的感知或身体反应，不新增事实。",
+          "focal_detail": "只展开当前场景已经可见的人物动作、感知、环境或对白反应。",
+          "state_change": "不新增硬事实；使既有状态在正文中获得可感知的过程。",
+          "required_fact_ids": [],
+          "event_ids": [],
+          "dialogue_pressure": "",
+          "expansion_license": "inference",
+          "support_fact_ids": [
+            "ErGen/work-001/0001:chunk-01:fact-004"
+          ]
+        },
+        {
+          "beat_id": "ErGen/work-001/0001:chunk-01:scene-001:beat-04",
+          "scene_id": "ErGen/work-001/0001:chunk-01:scene-001",
+          "order": 29,
+          "beat_type": "aftermath",
+          "actor_id": "ErGen/work-001/0001:chunk-01:entity-001",
+          "objective": "四叔推荐恒岳派名额",
+          "pressure": "",
+          "observable_action": "写出行动结束后的收束动作或局面余波",
+          "focal_detail": "让视角人物注意到结果留下的具体痕迹",
+          "state_change": "场景结果稳定下来，并为下一场留下压力",
+          "required_fact_ids": [
+            "ErGen/work-001/0001:chunk-01:fact-005"
+          ],
+          "event_ids": [],
+          "dialogue_pressure": "",
+          "expansion_license": "source",
+          "support_fact_ids": []
+        },
+        {
+          "beat_id": "ErGen/work-001/0001:chunk-01:scene-001:expansion-026",
+          "scene_id": "ErGen/work-001/0001:chunk-01:scene-001",
+          "order": 30,
+          "beat_type": "action",
+          "actor_id": "ErGen/work-001/0001:chunk-01:entity-001",
+          "objective": "四叔推荐恒岳派名额",
+          "pressure": "",
+          "observable_action": "把已知行动拆成一个可见的准备、停顿或回应，不改变事件结果。",
+          "focal_detail": "只展开当前场景已经可见的人物动作、感知、环境或对白反应。",
+          "state_change": "不新增硬事实；使既有状态在正文中获得可感知的过程。",
+          "required_fact_ids": [],
+          "event_ids": [],
+          "dialogue_pressure": "",
+          "expansion_license": "inference",
+          "support_fact_ids": [
+            "ErGen/work-001/0001:chunk-01:fact-005"
+          ]
+        },
+        {
+          "beat_id": "ErGen/work-001/0001:chunk-01:scene-001:expansion-027",
+          "scene_id": "ErGen/work-001/0001:chunk-01:scene-001",
+          "order": 31,
+          "beat_type": "aftermath",
+          "actor_id": "ErGen/work-001/0001:chunk-01:entity-001",
+          "objective": "四叔推荐恒岳派名额",
+          "pressure": "",
+          "observable_action": "写出既有结果留下的局面余波，只承接已存在的状态。",
+          "focal_detail": "只展开当前场景已经可见的人物动作、感知、环境或对白反应。",
+          "state_change": "不新增硬事实；使既有状态在正文中获得可感知的过程。",
+          "required_fact_ids": [],
+          "event_ids": [],
+          "dialogue_pressure": "",
+          "expansion_license": "inference",
+          "support_fact_ids": [
+            "ErGen/work-001/0001:chunk-01:fact-005"
+          ]
+        },
+        {
+          "beat_id": "ErGen/work-001/0001:chunk-01:scene-001:expansion-028",
+          "scene_id": "ErGen/work-001/0001:chunk-01:scene-001",
+          "order": 32,
+          "beat_type": "transition",
+          "actor_id": "ErGen/work-001/0001:chunk-01:entity-001",
+          "objective": "四叔推荐恒岳派名额",
+          "pressure": "",
+          "observable_action": "用环境、距离或注意力变化承接既有状态，不新增人物、设定或事件。",
+          "focal_detail": "只展开当前场景已经可见的人物动作、感知、环境或对白反应。",
+          "state_change": "不新增硬事实；使既有状态在正文中获得可感知的过程。",
+          "required_fact_ids": [],
+          "event_ids": [],
+          "dialogue_pressure": "",
+          "expansion_license": "atmosphere",
+          "support_fact_ids": [
+            "ErGen/work-001/0001:chunk-01:fact-005"
+          ]
+        },
+        {
+          "beat_id": "ErGen/work-001/0001:chunk-01:scene-001:expansion-029",
+          "scene_id": "ErGen/work-001/0001:chunk-01:scene-001",
+          "order": 33,
+          "beat_type": "reaction",
+          "actor_id": "ErGen/work-001/0001:chunk-01:entity-001",
+          "objective": "四叔推荐恒岳派名额",
+          "pressure": "",
+          "observable_action": "让视角人物对既有动作作出可观察的感知或身体反应，不新增事实。",
+          "focal_detail": "只展开当前场景已经可见的人物动作、感知、环境或对白反应。",
+          "state_change": "不新增硬事实；使既有状态在正文中获得可感知的过程。",
+          "required_fact_ids": [],
+          "event_ids": [],
+          "dialogue_pressure": "",
+          "expansion_license": "inference",
+          "support_fact_ids": [
+            "ErGen/work-001/0001:chunk-01:fact-005"
+          ]
+        },
+        {
+          "beat_id": "ErGen/work-001/0001:chunk-01:scene-001:expansion-030",
+          "scene_id": "ErGen/work-001/0001:chunk-01:scene-001",
+          "order": 34,
+          "beat_type": "action",
+          "actor_id": "ErGen/work-001/0001:chunk-01:entity-001",
+          "objective": "四叔推荐恒岳派名额",
+          "pressure": "",
+          "observable_action": "把已知行动拆成一个可见的准备、停顿或回应，不改变事件结果。",
+          "focal_detail": "只展开当前场景已经可见的人物动作、感知、环境或对白反应。",
+          "state_change": "不新增硬事实；使既有状态在正文中获得可感知的过程。",
+          "required_fact_ids": [],
+          "event_ids": [],
+          "dialogue_pressure": "",
+          "expansion_license": "inference",
+          "support_fact_ids": [
+            "ErGen/work-001/0001:chunk-01:fact-005"
+          ]
+        },
+        {
+          "beat_id": "ErGen/work-001/0001:chunk-01:scene-001:expansion-031",
+          "scene_id": "ErGen/work-001/0001:chunk-01:scene-001",
+          "order": 35,
+          "beat_type": "aftermath",
+          "actor_id": "ErGen/work-001/0001:chunk-01:entity-001",
+          "objective": "四叔推荐恒岳派名额",
+          "pressure": "",
+          "observable_action": "写出既有结果留下的局面余波，只承接已存在的状态。",
+          "focal_detail": "只展开当前场景已经可见的人物动作、感知、环境或对白反应。",
+          "state_change": "不新增硬事实；使既有状态在正文中获得可感知的过程。",
+          "required_fact_ids": [],
+          "event_ids": [],
+          "dialogue_pressure": "",
+          "expansion_license": "inference",
+          "support_fact_ids": [
+            "ErGen/work-001/0001:chunk-01:fact-005"
+          ]
+        }
+      ]
+    },
+    {
+      "scene_id": "ErGen/work-001/0001:chunk-01:scene-002",
+      "chapter_id": "ErGen/work-001/0001",
+      "order": 1,
+      "objective": "庆祝及王卓挑衅",
+      "participant_ids": [
+        "ErGen/work-001/0001:chunk-01:entity-001",
+        "ErGen/work-001/0001:chunk-01:entity-002",
+        "ErGen/work-001/0001:chunk-01:entity-005",
+        "ErGen/work-001/0001:chunk-01:entity-006"
+      ],
+      "entry_state_fact_ids": [
+        "ErGen/work-001/0001:chunk-01:fact-006"
+      ],
+      "event_programs": [
+        {
+          "event_id": "ErGen/work-001/0001:chunk-01:event-002",
+          "scene_id": "ErGen/work-001/0001:chunk-01:scene-002",
+          "summary": "宴席上王卓轻视铁柱，铁柱下定决心",
+          "action": "王卓出言轻视，铁柱父亲反驳，铁柱内心决定被选中",
+          "participant_ids": [
+            "ErGen/work-001/0001:chunk-01:entity-001",
+            "ErGen/work-001/0001:chunk-01:entity-002",
+            "ErGen/work-001/0001:chunk-01:entity-005",
+            "ErGen/work-001/0001:chunk-01:entity-006"
+          ],
+          "obstacle": "",
+          "decision": "",
+          "precondition_fact_ids": [],
+          "required_fact_ids": [
+            "ErGen/work-001/0001:chunk-01:fact-009"
+          ],
+          "outcome_fact_ids": [
+            "ErGen/work-001/0001:chunk-01:fact-009"
+          ]
+        }
+      ],
+      "fact_contracts": [
+        {
+          "fact_id": "ErGen/work-001/0001:chunk-01:fact-008",
+          "scene_id": "ErGen/work-001/0001:chunk-01:scene-002",
+          "fact_kind": "emotion",
+          "subject_id": "ErGen/work-001/0001:chunk-01:entity-005",
+          "predicate": "轻视",
+          "value": "",
+          "object_id": "ErGen/work-001/0001:chunk-01:entity-001",
+          "expression_mode": "internal",
+          "must_realize": true,
+          "forbidden_inverse_meanings": []
+        },
+        {
+          "fact_id": "ErGen/work-001/0001:chunk-01:fact-007",
+          "scene_id": "ErGen/work-001/0001:chunk-01:scene-002",
+          "fact_kind": "emotion",
+          "subject_id": "ErGen/work-001/0001:chunk-01:entity-002",
+          "predicate": "期望",
+          "value": "",
+          "object_id": "ErGen/work-001/0001:chunk-01:entity-001",
+          "expression_mode": "internal",
+          "must_realize": true,
+          "forbidden_inverse_meanings": []
+        },
+        {
+          "fact_id": "ErGen/work-001/0001:chunk-01:fact-009",
+          "scene_id": "ErGen/work-001/0001:chunk-01:scene-002",
+          "fact_kind": "goal",
+          "subject_id": "ErGen/work-001/0001:chunk-01:entity-001",
+          "predicate": "下定决心",
+          "value": "被选中",
+          "object_id": "",
+          "expression_mode": "internal",
+          "must_realize": true,
+          "forbidden_inverse_meanings": []
+        }
+      ],
+      "paragraphs": [
+        {
+          "paragraph_id": "ErGen/work-001/0001:chunk-01:scene-002:paragraph-00",
+          "scene_id": "ErGen/work-001/0001:chunk-01:scene-002",
+          "order": 0,
+          "function": "action_progression",
+          "required_fact_ids": [
+            "ErGen/work-001/0001:chunk-01:fact-009"
+          ],
+          "event_ids": [
+            "ErGen/work-001/0001:chunk-01:event-002"
+          ],
+          "viewpoint_entity_id": "ErGen/work-001/0001:chunk-01:entity-001",
+          "dialogue_act": "",
+          "beat_ids": [
+            "ErGen/work-001/0001:chunk-01:scene-002:beat-00"
+          ],
+          "target_chars": 63,
+          "minimum_chars": 44
+        },
+        {
+          "paragraph_id": "ErGen/work-001/0001:chunk-01:scene-002:expansion-paragraph-001",
+          "scene_id": "ErGen/work-001/0001:chunk-01:scene-002",
+          "order": 1,
+          "function": "perception_reaction",
+          "required_fact_ids": [],
+          "event_ids": [],
+          "viewpoint_entity_id": "ErGen/work-001/0001:chunk-01:entity-001",
+          "dialogue_act": "",
+          "beat_ids": [
+            "ErGen/work-001/0001:chunk-01:scene-002:expansion-001"
+          ],
+          "target_chars": 63,
+          "minimum_chars": 44
+        },
+        {
+          "paragraph_id": "ErGen/work-001/0001:chunk-01:scene-002:expansion-paragraph-002",
+          "scene_id": "ErGen/work-001/0001:chunk-01:scene-002",
+          "order": 2,
+          "function": "action_progression",
+          "required_fact_ids": [],
+          "event_ids": [],
+          "viewpoint_entity_id": "ErGen/work-001/0001:chunk-01:entity-001",
+          "dialogue_act": "",
+          "beat_ids": [
+            "ErGen/work-001/0001:chunk-01:scene-002:expansion-002"
+          ],
+          "target_chars": 63,
+          "minimum_chars": 44
+        },
+        {
+          "paragraph_id": "ErGen/work-001/0001:chunk-01:scene-002:expansion-paragraph-003",
+          "scene_id": "ErGen/work-001/0001:chunk-01:scene-002",
+          "order": 3,
+          "function": "aftermath",
+          "required_fact_ids": [],
+          "event_ids": [],
+          "viewpoint_entity_id": "ErGen/work-001/0001:chunk-01:entity-001",
+          "dialogue_act": "",
+          "beat_ids": [
+            "ErGen/work-001/0001:chunk-01:scene-002:expansion-003"
+          ],
+          "target_chars": 63,
+          "minimum_chars": 44
+        },
+        {
+          "paragraph_id": "ErGen/work-001/0001:chunk-01:scene-002:expansion-paragraph-004",
+          "scene_id": "ErGen/work-001/0001:chunk-01:scene-002",
+          "order": 4,
+          "function": "transition",
+          "required_fact_ids": [],
+          "event_ids": [],
+          "viewpoint_entity_id": "ErGen/work-001/0001:chunk-01:entity-001",
+          "dialogue_act": "",
+          "beat_ids": [
+            "ErGen/work-001/0001:chunk-01:scene-002:expansion-004"
+          ],
+          "target_chars": 63,
+          "minimum_chars": 44
+        },
+        {
+          "paragraph_id": "ErGen/work-001/0001:chunk-01:scene-002:expansion-paragraph-005",
+          "scene_id": "ErGen/work-001/0001:chunk-01:scene-002",
+          "order": 5,
+          "function": "perception_reaction",
+          "required_fact_ids": [],
+          "event_ids": [],
+          "viewpoint_entity_id": "ErGen/work-001/0001:chunk-01:entity-001",
+          "dialogue_act": "",
+          "beat_ids": [
+            "ErGen/work-001/0001:chunk-01:scene-002:expansion-005"
+          ],
+          "target_chars": 63,
+          "minimum_chars": 44
+        },
+        {
+          "paragraph_id": "ErGen/work-001/0001:chunk-01:scene-002:expansion-paragraph-006",
+          "scene_id": "ErGen/work-001/0001:chunk-01:scene-002",
+          "order": 6,
+          "function": "action_progression",
+          "required_fact_ids": [],
+          "event_ids": [],
+          "viewpoint_entity_id": "ErGen/work-001/0001:chunk-01:entity-001",
+          "dialogue_act": "",
+          "beat_ids": [
+            "ErGen/work-001/0001:chunk-01:scene-002:expansion-006"
+          ],
+          "target_chars": 63,
+          "minimum_chars": 44
+        },
+        {
+          "paragraph_id": "ErGen/work-001/0001:chunk-01:scene-002:paragraph-01",
+          "scene_id": "ErGen/work-001/0001:chunk-01:scene-002",
+          "order": 7,
+          "function": "perception_reaction",
+          "required_fact_ids": [],
+          "event_ids": [],
+          "viewpoint_entity_id": "ErGen/work-001/0001:chunk-01:entity-001",
+          "dialogue_act": "",
+          "beat_ids": [
+            "ErGen/work-001/0001:chunk-01:scene-002:beat-01"
+          ],
+          "target_chars": 63,
+          "minimum_chars": 44
+        },
+        {
+          "paragraph_id": "ErGen/work-001/0001:chunk-01:scene-002:expansion-paragraph-007",
+          "scene_id": "ErGen/work-001/0001:chunk-01:scene-002",
+          "order": 8,
+          "function": "aftermath",
+          "required_fact_ids": [],
+          "event_ids": [],
+          "viewpoint_entity_id": "ErGen/work-001/0001:chunk-01:entity-001",
+          "dialogue_act": "",
+          "beat_ids": [
+            "ErGen/work-001/0001:chunk-01:scene-002:expansion-007"
+          ],
+          "target_chars": 63,
+          "minimum_chars": 44
+        },
+        {
+          "paragraph_id": "ErGen/work-001/0001:chunk-01:scene-002:expansion-paragraph-008",
+          "scene_id": "ErGen/work-001/0001:chunk-01:scene-002",
+          "order": 9,
+          "function": "transition",
+          "required_fact_ids": [],
+          "event_ids": [],
+          "viewpoint_entity_id": "ErGen/work-001/0001:chunk-01:entity-001",
+          "dialogue_act": "",
+          "beat_ids": [
+            "ErGen/work-001/0001:chunk-01:scene-002:expansion-008"
+          ],
+          "target_chars": 63,
+          "minimum_chars": 44
+        },
+        {
+          "paragraph_id": "ErGen/work-001/0001:chunk-01:scene-002:expansion-paragraph-009",
+          "scene_id": "ErGen/work-001/0001:chunk-01:scene-002",
+          "order": 10,
+          "function": "perception_reaction",
+          "required_fact_ids": [],
+          "event_ids": [],
+          "viewpoint_entity_id": "ErGen/work-001/0001:chunk-01:entity-001",
+          "dialogue_act": "",
+          "beat_ids": [
+            "ErGen/work-001/0001:chunk-01:scene-002:expansion-009"
+          ],
+          "target_chars": 63,
+          "minimum_chars": 44
+        },
+        {
+          "paragraph_id": "ErGen/work-001/0001:chunk-01:scene-002:expansion-paragraph-010",
+          "scene_id": "ErGen/work-001/0001:chunk-01:scene-002",
+          "order": 11,
+          "function": "action_progression",
+          "required_fact_ids": [],
+          "event_ids": [],
+          "viewpoint_entity_id": "ErGen/work-001/0001:chunk-01:entity-001",
+          "dialogue_act": "",
+          "beat_ids": [
+            "ErGen/work-001/0001:chunk-01:scene-002:expansion-010"
+          ],
+          "target_chars": 63,
+          "minimum_chars": 44
+        },
+        {
+          "paragraph_id": "ErGen/work-001/0001:chunk-01:scene-002:expansion-paragraph-011",
+          "scene_id": "ErGen/work-001/0001:chunk-01:scene-002",
+          "order": 12,
+          "function": "aftermath",
+          "required_fact_ids": [],
+          "event_ids": [],
+          "viewpoint_entity_id": "ErGen/work-001/0001:chunk-01:entity-001",
+          "dialogue_act": "",
+          "beat_ids": [
+            "ErGen/work-001/0001:chunk-01:scene-002:expansion-011"
+          ],
+          "target_chars": 63,
+          "minimum_chars": 44
+        },
+        {
+          "paragraph_id": "ErGen/work-001/0001:chunk-01:scene-002:expansion-paragraph-012",
+          "scene_id": "ErGen/work-001/0001:chunk-01:scene-002",
+          "order": 13,
+          "function": "transition",
+          "required_fact_ids": [],
+          "event_ids": [],
+          "viewpoint_entity_id": "ErGen/work-001/0001:chunk-01:entity-001",
+          "dialogue_act": "",
+          "beat_ids": [
+            "ErGen/work-001/0001:chunk-01:scene-002:expansion-012"
+          ],
+          "target_chars": 63,
+          "minimum_chars": 44
+        },
+        {
+          "paragraph_id": "ErGen/work-001/0001:chunk-01:scene-002:paragraph-02",
+          "scene_id": "ErGen/work-001/0001:chunk-01:scene-002",
+          "order": 14,
+          "function": "perception_reaction",
+          "required_fact_ids": [
+            "ErGen/work-001/0001:chunk-01:fact-008",
+            "ErGen/work-001/0001:chunk-01:fact-007"
+          ],
+          "event_ids": [],
+          "viewpoint_entity_id": "ErGen/work-001/0001:chunk-01:entity-001",
+          "dialogue_act": "",
+          "beat_ids": [
+            "ErGen/work-001/0001:chunk-01:scene-002:beat-02"
+          ],
+          "target_chars": 63,
+          "minimum_chars": 44
+        },
+        {
+          "paragraph_id": "ErGen/work-001/0001:chunk-01:scene-002:expansion-paragraph-013",
+          "scene_id": "ErGen/work-001/0001:chunk-01:scene-002",
+          "order": 15,
+          "function": "perception_reaction",
+          "required_fact_ids": [],
+          "event_ids": [],
+          "viewpoint_entity_id": "ErGen/work-001/0001:chunk-01:entity-001",
+          "dialogue_act": "",
+          "beat_ids": [
+            "ErGen/work-001/0001:chunk-01:scene-002:expansion-013"
+          ],
+          "target_chars": 63,
+          "minimum_chars": 44
+        },
+        {
+          "paragraph_id": "ErGen/work-001/0001:chunk-01:scene-002:expansion-paragraph-014",
+          "scene_id": "ErGen/work-001/0001:chunk-01:scene-002",
+          "order": 16,
+          "function": "action_progression",
+          "required_fact_ids": [],
+          "event_ids": [],
+          "viewpoint_entity_id": "ErGen/work-001/0001:chunk-01:entity-001",
+          "dialogue_act": "",
+          "beat_ids": [
+            "ErGen/work-001/0001:chunk-01:scene-002:expansion-014"
+          ],
+          "target_chars": 63,
+          "minimum_chars": 44
+        },
+        {
+          "paragraph_id": "ErGen/work-001/0001:chunk-01:scene-002:expansion-paragraph-015",
+          "scene_id": "ErGen/work-001/0001:chunk-01:scene-002",
+          "order": 17,
+          "function": "aftermath",
+          "required_fact_ids": [],
+          "event_ids": [],
+          "viewpoint_entity_id": "ErGen/work-001/0001:chunk-01:entity-001",
+          "dialogue_act": "",
+          "beat_ids": [
+            "ErGen/work-001/0001:chunk-01:scene-002:expansion-015"
+          ],
+          "target_chars": 63,
+          "minimum_chars": 44
+        },
+        {
+          "paragraph_id": "ErGen/work-001/0001:chunk-01:scene-002:expansion-paragraph-016",
+          "scene_id": "ErGen/work-001/0001:chunk-01:scene-002",
+          "order": 18,
+          "function": "transition",
+          "required_fact_ids": [],
+          "event_ids": [],
+          "viewpoint_entity_id": "ErGen/work-001/0001:chunk-01:entity-001",
+          "dialogue_act": "",
+          "beat_ids": [
+            "ErGen/work-001/0001:chunk-01:scene-002:expansion-016"
+          ],
+          "target_chars": 63,
+          "minimum_chars": 44
+        },
+        {
+          "paragraph_id": "ErGen/work-001/0001:chunk-01:scene-002:expansion-paragraph-017",
+          "scene_id": "ErGen/work-001/0001:chunk-01:scene-002",
+          "order": 19,
+          "function": "perception_reaction",
+          "required_fact_ids": [],
+          "event_ids": [],
+          "viewpoint_entity_id": "ErGen/work-001/0001:chunk-01:entity-001",
+          "dialogue_act": "",
+          "beat_ids": [
+            "ErGen/work-001/0001:chunk-01:scene-002:expansion-017"
+          ],
+          "target_chars": 63,
+          "minimum_chars": 44
+        },
+        {
+          "paragraph_id": "ErGen/work-001/0001:chunk-01:scene-002:expansion-paragraph-018",
+          "scene_id": "ErGen/work-001/0001:chunk-01:scene-002",
+          "order": 20,
+          "function": "action_progression",
+          "required_fact_ids": [],
+          "event_ids": [],
+          "viewpoint_entity_id": "ErGen/work-001/0001:chunk-01:entity-001",
+          "dialogue_act": "",
+          "beat_ids": [
+            "ErGen/work-001/0001:chunk-01:scene-002:expansion-018"
+          ],
+          "target_chars": 63,
+          "minimum_chars": 44
+        }
+      ],
+      "exit_state_fact_ids": [
+        "ErGen/work-001/0001:chunk-01:fact-009"
+      ],
+      "forbidden_event_ids": [
+        "ErGen/work-001/0001:chunk-01:event-003"
+      ],
+      "narrative_beats": [
+        {
+          "beat_id": "ErGen/work-001/0001:chunk-01:scene-002:beat-00",
+          "scene_id": "ErGen/work-001/0001:chunk-01:scene-002",
+          "order": 0,
+          "beat_type": "action",
+          "actor_id": "ErGen/work-001/0001:chunk-01:entity-001",
+          "objective": "王卓出言轻视，铁柱父亲反驳，铁柱内心决定被选中",
+          "pressure": "",
+          "observable_action": "王卓出言轻视，铁柱父亲反驳，铁柱内心决定被选中",
+          "focal_detail": "让视角人物先捕捉到行动引起的具体变化",
+          "state_change": "行动已经开始，并对场内其他人或局势施加影响",
+          "required_fact_ids": [
+            "ErGen/work-001/0001:chunk-01:fact-009"
+          ],
+          "event_ids": [
+            "ErGen/work-001/0001:chunk-01:event-002"
+          ],
+          "dialogue_pressure": "",
+          "expansion_license": "source",
+          "support_fact_ids": []
+        },
+        {
+          "beat_id": "ErGen/work-001/0001:chunk-01:scene-002:expansion-001",
+          "scene_id": "ErGen/work-001/0001:chunk-01:scene-002",
+          "order": 1,
+          "beat_type": "reaction",
+          "actor_id": "ErGen/work-001/0001:chunk-01:entity-001",
+          "objective": "庆祝及王卓挑衅",
+          "pressure": "",
+          "observable_action": "让视角人物对既有动作作出可观察的感知或身体反应，不新增事实。",
+          "focal_detail": "只展开当前场景已经可见的人物动作、感知、环境或对白反应。",
+          "state_change": "不新增硬事实；使既有状态在正文中获得可感知的过程。",
+          "required_fact_ids": [],
+          "event_ids": [],
+          "dialogue_pressure": "",
+          "expansion_license": "inference",
+          "support_fact_ids": [
+            "ErGen/work-001/0001:chunk-01:fact-009"
+          ]
+        },
+        {
+          "beat_id": "ErGen/work-001/0001:chunk-01:scene-002:expansion-002",
+          "scene_id": "ErGen/work-001/0001:chunk-01:scene-002",
+          "order": 2,
+          "beat_type": "action",
+          "actor_id": "ErGen/work-001/0001:chunk-01:entity-001",
+          "objective": "庆祝及王卓挑衅",
+          "pressure": "",
+          "observable_action": "把已知行动拆成一个可见的准备、停顿或回应，不改变事件结果。",
+          "focal_detail": "只展开当前场景已经可见的人物动作、感知、环境或对白反应。",
+          "state_change": "不新增硬事实；使既有状态在正文中获得可感知的过程。",
+          "required_fact_ids": [],
+          "event_ids": [],
+          "dialogue_pressure": "",
+          "expansion_license": "inference",
+          "support_fact_ids": [
+            "ErGen/work-001/0001:chunk-01:fact-009"
+          ]
+        },
+        {
+          "beat_id": "ErGen/work-001/0001:chunk-01:scene-002:expansion-003",
+          "scene_id": "ErGen/work-001/0001:chunk-01:scene-002",
+          "order": 3,
+          "beat_type": "aftermath",
+          "actor_id": "ErGen/work-001/0001:chunk-01:entity-001",
+          "objective": "庆祝及王卓挑衅",
+          "pressure": "",
+          "observable_action": "写出既有结果留下的局面余波，只承接已存在的状态。",
+          "focal_detail": "只展开当前场景已经可见的人物动作、感知、环境或对白反应。",
+          "state_change": "不新增硬事实；使既有状态在正文中获得可感知的过程。",
+          "required_fact_ids": [],
+          "event_ids": [],
+          "dialogue_pressure": "",
+          "expansion_license": "inference",
+          "support_fact_ids": [
+            "ErGen/work-001/0001:chunk-01:fact-009"
+          ]
+        },
+        {
+          "beat_id": "ErGen/work-001/0001:chunk-01:scene-002:expansion-004",
+          "scene_id": "ErGen/work-001/0001:chunk-01:scene-002",
+          "order": 4,
+          "beat_type": "transition",
+          "actor_id": "ErGen/work-001/0001:chunk-01:entity-001",
+          "objective": "庆祝及王卓挑衅",
+          "pressure": "",
+          "observable_action": "用环境、距离或注意力变化承接既有状态，不新增人物、设定或事件。",
+          "focal_detail": "只展开当前场景已经可见的人物动作、感知、环境或对白反应。",
+          "state_change": "不新增硬事实；使既有状态在正文中获得可感知的过程。",
+          "required_fact_ids": [],
+          "event_ids": [],
+          "dialogue_pressure": "",
+          "expansion_license": "atmosphere",
+          "support_fact_ids": [
+            "ErGen/work-001/0001:chunk-01:fact-009"
+          ]
+        },
+        {
+          "beat_id": "ErGen/work-001/0001:chunk-01:scene-002:expansion-005",
+          "scene_id": "ErGen/work-001/0001:chunk-01:scene-002",
+          "order": 5,
+          "beat_type": "reaction",
+          "actor_id": "ErGen/work-001/0001:chunk-01:entity-001",
+          "objective": "庆祝及王卓挑衅",
+          "pressure": "",
+          "observable_action": "让视角人物对既有动作作出可观察的感知或身体反应，不新增事实。",
+          "focal_detail": "只展开当前场景已经可见的人物动作、感知、环境或对白反应。",
+          "state_change": "不新增硬事实；使既有状态在正文中获得可感知的过程。",
+          "required_fact_ids": [],
+          "event_ids": [],
+          "dialogue_pressure": "",
+          "expansion_license": "inference",
+          "support_fact_ids": [
+            "ErGen/work-001/0001:chunk-01:fact-009"
+          ]
+        },
+        {
+          "beat_id": "ErGen/work-001/0001:chunk-01:scene-002:expansion-006",
+          "scene_id": "ErGen/work-001/0001:chunk-01:scene-002",
+          "order": 6,
+          "beat_type": "action",
+          "actor_id": "ErGen/work-001/0001:chunk-01:entity-001",
+          "objective": "庆祝及王卓挑衅",
+          "pressure": "",
+          "observable_action": "把已知行动拆成一个可见的准备、停顿或回应，不改变事件结果。",
+          "focal_detail": "只展开当前场景已经可见的人物动作、感知、环境或对白反应。",
+          "state_change": "不新增硬事实；使既有状态在正文中获得可感知的过程。",
+          "required_fact_ids": [],
+          "event_ids": [],
+          "dialogue_pressure": "",
+          "expansion_license": "inference",
+          "support_fact_ids": [
+            "ErGen/work-001/0001:chunk-01:fact-009"
+          ]
+        },
+        {
+          "beat_id": "ErGen/work-001/0001:chunk-01:scene-002:beat-01",
+          "scene_id": "ErGen/work-001/0001:chunk-01:scene-002",
+          "order": 7,
+          "beat_type": "reaction",
+          "actor_id": "ErGen/work-001/0001:chunk-01:entity-001",
+          "objective": "王卓出言轻视，铁柱父亲反驳，铁柱内心决定被选中",
+          "pressure": "",
+          "observable_action": "写出人物在压力后的具体回应、取舍或下一步动作",
+          "focal_detail": "让视角人物的感知或身体反应改变其判断",
+          "state_change": "人物对局势作出可见回应，结果开始成立",
+          "required_fact_ids": [],
+          "event_ids": [],
+          "dialogue_pressure": "",
+          "expansion_license": "source",
+          "support_fact_ids": []
+        },
+        {
+          "beat_id": "ErGen/work-001/0001:chunk-01:scene-002:expansion-007",
+          "scene_id": "ErGen/work-001/0001:chunk-01:scene-002",
+          "order": 8,
+          "beat_type": "aftermath",
+          "actor_id": "ErGen/work-001/0001:chunk-01:entity-001",
+          "objective": "庆祝及王卓挑衅",
+          "pressure": "",
+          "observable_action": "写出既有结果留下的局面余波，只承接已存在的状态。",
+          "focal_detail": "只展开当前场景已经可见的人物动作、感知、环境或对白反应。",
+          "state_change": "不新增硬事实；使既有状态在正文中获得可感知的过程。",
+          "required_fact_ids": [],
+          "event_ids": [],
+          "dialogue_pressure": "",
+          "expansion_license": "inference",
+          "support_fact_ids": [
+            "ErGen/work-001/0001:chunk-01:fact-009"
+          ]
+        },
+        {
+          "beat_id": "ErGen/work-001/0001:chunk-01:scene-002:expansion-008",
+          "scene_id": "ErGen/work-001/0001:chunk-01:scene-002",
+          "order": 9,
+          "beat_type": "transition",
+          "actor_id": "ErGen/work-001/0001:chunk-01:entity-001",
+          "objective": "庆祝及王卓挑衅",
+          "pressure": "",
+          "observable_action": "用环境、距离或注意力变化承接既有状态，不新增人物、设定或事件。",
+          "focal_detail": "只展开当前场景已经可见的人物动作、感知、环境或对白反应。",
+          "state_change": "不新增硬事实；使既有状态在正文中获得可感知的过程。",
+          "required_fact_ids": [],
+          "event_ids": [],
+          "dialogue_pressure": "",
+          "expansion_license": "atmosphere",
+          "support_fact_ids": [
+            "ErGen/work-001/0001:chunk-01:fact-009"
+          ]
+        },
+        {
+          "beat_id": "ErGen/work-001/0001:chunk-01:scene-002:expansion-009",
+          "scene_id": "ErGen/work-001/0001:chunk-01:scene-002",
+          "order": 10,
+          "beat_type": "reaction",
+          "actor_id": "ErGen/work-001/0001:chunk-01:entity-001",
+          "objective": "庆祝及王卓挑衅",
+          "pressure": "",
+          "observable_action": "让视角人物对既有动作作出可观察的感知或身体反应，不新增事实。",
+          "focal_detail": "只展开当前场景已经可见的人物动作、感知、环境或对白反应。",
+          "state_change": "不新增硬事实；使既有状态在正文中获得可感知的过程。",
+          "required_fact_ids": [],
+          "event_ids": [],
+          "dialogue_pressure": "",
+          "expansion_license": "inference",
+          "support_fact_ids": [
+            "ErGen/work-001/0001:chunk-01:fact-009"
+          ]
+        },
+        {
+          "beat_id": "ErGen/work-001/0001:chunk-01:scene-002:expansion-010",
+          "scene_id": "ErGen/work-001/0001:chunk-01:scene-002",
+          "order": 11,
+          "beat_type": "action",
+          "actor_id": "ErGen/work-001/0001:chunk-01:entity-001",
+          "objective": "庆祝及王卓挑衅",
+          "pressure": "",
+          "observable_action": "把已知行动拆成一个可见的准备、停顿或回应，不改变事件结果。",
+          "focal_detail": "只展开当前场景已经可见的人物动作、感知、环境或对白反应。",
+          "state_change": "不新增硬事实；使既有状态在正文中获得可感知的过程。",
+          "required_fact_ids": [],
+          "event_ids": [],
+          "dialogue_pressure": "",
+          "expansion_license": "inference",
+          "support_fact_ids": [
+            "ErGen/work-001/0001:chunk-01:fact-009"
+          ]
+        },
+        {
+          "beat_id": "ErGen/work-001/0001:chunk-01:scene-002:expansion-011",
+          "scene_id": "ErGen/work-001/0001:chunk-01:scene-002",
+          "order": 12,
+          "beat_type": "aftermath",
+          "actor_id": "ErGen/work-001/0001:chunk-01:entity-001",
+          "objective": "庆祝及王卓挑衅",
+          "pressure": "",
+          "observable_action": "写出既有结果留下的局面余波，只承接已存在的状态。",
+          "focal_detail": "只展开当前场景已经可见的人物动作、感知、环境或对白反应。",
+          "state_change": "不新增硬事实；使既有状态在正文中获得可感知的过程。",
+          "required_fact_ids": [],
+          "event_ids": [],
+          "dialogue_pressure": "",
+          "expansion_license": "inference",
+          "support_fact_ids": [
+            "ErGen/work-001/0001:chunk-01:fact-009"
+          ]
+        },
+        {
+          "beat_id": "ErGen/work-001/0001:chunk-01:scene-002:expansion-012",
+          "scene_id": "ErGen/work-001/0001:chunk-01:scene-002",
+          "order": 13,
+          "beat_type": "transition",
+          "actor_id": "ErGen/work-001/0001:chunk-01:entity-001",
+          "objective": "庆祝及王卓挑衅",
+          "pressure": "",
+          "observable_action": "用环境、距离或注意力变化承接既有状态，不新增人物、设定或事件。",
+          "focal_detail": "只展开当前场景已经可见的人物动作、感知、环境或对白反应。",
+          "state_change": "不新增硬事实；使既有状态在正文中获得可感知的过程。",
+          "required_fact_ids": [],
+          "event_ids": [],
+          "dialogue_pressure": "",
+          "expansion_license": "atmosphere",
+          "support_fact_ids": [
+            "ErGen/work-001/0001:chunk-01:fact-009"
+          ]
+        },
+        {
+          "beat_id": "ErGen/work-001/0001:chunk-01:scene-002:beat-02",
+          "scene_id": "ErGen/work-001/0001:chunk-01:scene-002",
+          "order": 14,
+          "beat_type": "reaction",
+          "actor_id": "ErGen/work-001/0001:chunk-01:entity-001",
+          "objective": "庆祝及王卓挑衅",
+          "pressure": "",
+          "observable_action": "以人物对已发生变化的可见反应推进叙事",
+          "focal_detail": "写出影响判断的感知、身体反应或注意力变化",
+          "state_change": "人物的认识或情绪获得可观察的落点",
+          "required_fact_ids": [
+            "ErGen/work-001/0001:chunk-01:fact-008",
+            "ErGen/work-001/0001:chunk-01:fact-007"
+          ],
+          "event_ids": [],
+          "dialogue_pressure": "",
+          "expansion_license": "source",
+          "support_fact_ids": []
+        },
+        {
+          "beat_id": "ErGen/work-001/0001:chunk-01:scene-002:expansion-013",
+          "scene_id": "ErGen/work-001/0001:chunk-01:scene-002",
+          "order": 15,
+          "beat_type": "reaction",
+          "actor_id": "ErGen/work-001/0001:chunk-01:entity-001",
+          "objective": "庆祝及王卓挑衅",
+          "pressure": "",
+          "observable_action": "让视角人物对既有动作作出可观察的感知或身体反应，不新增事实。",
+          "focal_detail": "只展开当前场景已经可见的人物动作、感知、环境或对白反应。",
+          "state_change": "不新增硬事实；使既有状态在正文中获得可感知的过程。",
+          "required_fact_ids": [],
+          "event_ids": [],
+          "dialogue_pressure": "",
+          "expansion_license": "inference",
+          "support_fact_ids": [
+            "ErGen/work-001/0001:chunk-01:fact-008"
+          ]
+        },
+        {
+          "beat_id": "ErGen/work-001/0001:chunk-01:scene-002:expansion-014",
+          "scene_id": "ErGen/work-001/0001:chunk-01:scene-002",
+          "order": 16,
+          "beat_type": "action",
+          "actor_id": "ErGen/work-001/0001:chunk-01:entity-001",
+          "objective": "庆祝及王卓挑衅",
+          "pressure": "",
+          "observable_action": "把已知行动拆成一个可见的准备、停顿或回应，不改变事件结果。",
+          "focal_detail": "只展开当前场景已经可见的人物动作、感知、环境或对白反应。",
+          "state_change": "不新增硬事实；使既有状态在正文中获得可感知的过程。",
+          "required_fact_ids": [],
+          "event_ids": [],
+          "dialogue_pressure": "",
+          "expansion_license": "inference",
+          "support_fact_ids": [
+            "ErGen/work-001/0001:chunk-01:fact-008"
+          ]
+        },
+        {
+          "beat_id": "ErGen/work-001/0001:chunk-01:scene-002:expansion-015",
+          "scene_id": "ErGen/work-001/0001:chunk-01:scene-002",
+          "order": 17,
+          "beat_type": "aftermath",
+          "actor_id": "ErGen/work-001/0001:chunk-01:entity-001",
+          "objective": "庆祝及王卓挑衅",
+          "pressure": "",
+          "observable_action": "写出既有结果留下的局面余波，只承接已存在的状态。",
+          "focal_detail": "只展开当前场景已经可见的人物动作、感知、环境或对白反应。",
+          "state_change": "不新增硬事实；使既有状态在正文中获得可感知的过程。",
+          "required_fact_ids": [],
+          "event_ids": [],
+          "dialogue_pressure": "",
+          "expansion_license": "inference",
+          "support_fact_ids": [
+            "ErGen/work-001/0001:chunk-01:fact-008"
+          ]
+        },
+        {
+          "beat_id": "ErGen/work-001/0001:chunk-01:scene-002:expansion-016",
+          "scene_id": "ErGen/work-001/0001:chunk-01:scene-002",
+          "order": 18,
+          "beat_type": "transition",
+          "actor_id": "ErGen/work-001/0001:chunk-01:entity-001",
+          "objective": "庆祝及王卓挑衅",
+          "pressure": "",
+          "observable_action": "用环境、距离或注意力变化承接既有状态，不新增人物、设定或事件。",
+          "focal_detail": "只展开当前场景已经可见的人物动作、感知、环境或对白反应。",
+          "state_change": "不新增硬事实；使既有状态在正文中获得可感知的过程。",
+          "required_fact_ids": [],
+          "event_ids": [],
+          "dialogue_pressure": "",
+          "expansion_license": "atmosphere",
+          "support_fact_ids": [
+            "ErGen/work-001/0001:chunk-01:fact-008"
+          ]
+        },
+        {
+          "beat_id": "ErGen/work-001/0001:chunk-01:scene-002:expansion-017",
+          "scene_id": "ErGen/work-001/0001:chunk-01:scene-002",
+          "order": 19,
+          "beat_type": "reaction",
+          "actor_id": "ErGen/work-001/0001:chunk-01:entity-001",
+          "objective": "庆祝及王卓挑衅",
+          "pressure": "",
+          "observable_action": "让视角人物对既有动作作出可观察的感知或身体反应，不新增事实。",
+          "focal_detail": "只展开当前场景已经可见的人物动作、感知、环境或对白反应。",
+          "state_change": "不新增硬事实；使既有状态在正文中获得可感知的过程。",
+          "required_fact_ids": [],
+          "event_ids": [],
+          "dialogue_pressure": "",
+          "expansion_license": "inference",
+          "support_fact_ids": [
+            "ErGen/work-001/0001:chunk-01:fact-008"
+          ]
+        },
+        {
+          "beat_id": "ErGen/work-001/0001:chunk-01:scene-002:expansion-018",
+          "scene_id": "ErGen/work-001/0001:chunk-01:scene-002",
+          "order": 20,
+          "beat_type": "action",
+          "actor_id": "ErGen/work-001/0001:chunk-01:entity-001",
+          "objective": "庆祝及王卓挑衅",
+          "pressure": "",
+          "observable_action": "把已知行动拆成一个可见的准备、停顿或回应，不改变事件结果。",
+          "focal_detail": "只展开当前场景已经可见的人物动作、感知、环境或对白反应。",
+          "state_change": "不新增硬事实；使既有状态在正文中获得可感知的过程。",
+          "required_fact_ids": [],
+          "event_ids": [],
+          "dialogue_pressure": "",
+          "expansion_license": "inference",
+          "support_fact_ids": [
+            "ErGen/work-001/0001:chunk-01:fact-008"
+          ]
+        }
+      ]
+    },
+    {
+      "scene_id": "ErGen/work-001/0001:chunk-01:scene-003",
+      "chapter_id": "ErGen/work-001/0001",
+      "order": 2,
+      "objective": "铁柱离开家乡",
+      "participant_ids": [
+        "ErGen/work-001/0001:chunk-01:entity-001",
+        "ErGen/work-001/0001:chunk-01:entity-004"
+      ],
+      "entry_state_fact_ids": [
+        "ErGen/work-001/0001:chunk-01:fact-009"
+      ],
+      "event_programs": [
+        {
+          "event_id": "ErGen/work-001/0001:chunk-01:event-003",
+          "scene_id": "ErGen/work-001/0001:chunk-01:scene-003",
+          "summary": "铁柱离开家乡前往恒岳派",
+          "action": "四叔接铁柱，铁柱告别父母，第一次离开家乡",
+          "participant_ids": [
+            "ErGen/work-001/0001:chunk-01:entity-001",
+            "ErGen/work-001/0001:chunk-01:entity-004"
+          ],
+          "obstacle": "",
+          "decision": "",
+          "precondition_fact_ids": [
+            "ErGen/work-001/0001:chunk-01:fact-009"
+          ],
+          "required_fact_ids": [
+            "ErGen/work-001/0001:chunk-01:fact-010"
+          ],
+          "outcome_fact_ids": [
+            "ErGen/work-001/0001:chunk-01:fact-010"
+          ]
+        }
+      ],
+      "fact_contracts": [
+        {
+          "fact_id": "ErGen/work-001/0001:chunk-01:fact-010",
+          "scene_id": "ErGen/work-001/0001:chunk-01:scene-003",
+          "fact_kind": "progression",
+          "subject_id": "ErGen/work-001/0001:chunk-01:entity-001",
+          "predicate": "离开家乡",
+          "value": "前往恒岳派",
+          "object_id": "ErGen/work-001/0001:chunk-01:entity-008",
+          "expression_mode": "action",
+          "must_realize": true,
+          "forbidden_inverse_meanings": []
+        }
+      ],
+      "paragraphs": [
+        {
+          "paragraph_id": "ErGen/work-001/0001:chunk-01:scene-003:paragraph-00",
+          "scene_id": "ErGen/work-001/0001:chunk-01:scene-003",
+          "order": 0,
+          "function": "action_progression",
+          "required_fact_ids": [
+            "ErGen/work-001/0001:chunk-01:fact-010"
+          ],
+          "event_ids": [
+            "ErGen/work-001/0001:chunk-01:event-003"
+          ],
+          "viewpoint_entity_id": "ErGen/work-001/0001:chunk-01:entity-001",
+          "dialogue_act": "",
+          "beat_ids": [
+            "ErGen/work-001/0001:chunk-01:scene-003:beat-00"
+          ],
+          "target_chars": 63,
+          "minimum_chars": 44
+        },
+        {
+          "paragraph_id": "ErGen/work-001/0001:chunk-01:scene-003:expansion-paragraph-001",
+          "scene_id": "ErGen/work-001/0001:chunk-01:scene-003",
+          "order": 1,
+          "function": "perception_reaction",
+          "required_fact_ids": [],
+          "event_ids": [],
+          "viewpoint_entity_id": "ErGen/work-001/0001:chunk-01:entity-001",
+          "dialogue_act": "",
+          "beat_ids": [
+            "ErGen/work-001/0001:chunk-01:scene-003:expansion-001"
+          ],
+          "target_chars": 63,
+          "minimum_chars": 44
+        },
+        {
+          "paragraph_id": "ErGen/work-001/0001:chunk-01:scene-003:expansion-paragraph-002",
+          "scene_id": "ErGen/work-001/0001:chunk-01:scene-003",
+          "order": 2,
+          "function": "action_progression",
+          "required_fact_ids": [],
+          "event_ids": [],
+          "viewpoint_entity_id": "ErGen/work-001/0001:chunk-01:entity-001",
+          "dialogue_act": "",
+          "beat_ids": [
+            "ErGen/work-001/0001:chunk-01:scene-003:expansion-002"
+          ],
+          "target_chars": 63,
+          "minimum_chars": 44
+        },
+        {
+          "paragraph_id": "ErGen/work-001/0001:chunk-01:scene-003:expansion-paragraph-003",
+          "scene_id": "ErGen/work-001/0001:chunk-01:scene-003",
+          "order": 3,
+          "function": "aftermath",
+          "required_fact_ids": [],
+          "event_ids": [],
+          "viewpoint_entity_id": "ErGen/work-001/0001:chunk-01:entity-001",
+          "dialogue_act": "",
+          "beat_ids": [
+            "ErGen/work-001/0001:chunk-01:scene-003:expansion-003"
+          ],
+          "target_chars": 63,
+          "minimum_chars": 44
+        },
+        {
+          "paragraph_id": "ErGen/work-001/0001:chunk-01:scene-003:expansion-paragraph-004",
+          "scene_id": "ErGen/work-001/0001:chunk-01:scene-003",
+          "order": 4,
+          "function": "transition",
+          "required_fact_ids": [],
+          "event_ids": [],
+          "viewpoint_entity_id": "ErGen/work-001/0001:chunk-01:entity-001",
+          "dialogue_act": "",
+          "beat_ids": [
+            "ErGen/work-001/0001:chunk-01:scene-003:expansion-004"
+          ],
+          "target_chars": 63,
+          "minimum_chars": 44
+        },
+        {
+          "paragraph_id": "ErGen/work-001/0001:chunk-01:scene-003:expansion-paragraph-005",
+          "scene_id": "ErGen/work-001/0001:chunk-01:scene-003",
+          "order": 5,
+          "function": "perception_reaction",
+          "required_fact_ids": [],
+          "event_ids": [],
+          "viewpoint_entity_id": "ErGen/work-001/0001:chunk-01:entity-001",
+          "dialogue_act": "",
+          "beat_ids": [
+            "ErGen/work-001/0001:chunk-01:scene-003:expansion-005"
+          ],
+          "target_chars": 63,
+          "minimum_chars": 44
+        },
+        {
+          "paragraph_id": "ErGen/work-001/0001:chunk-01:scene-003:expansion-paragraph-006",
+          "scene_id": "ErGen/work-001/0001:chunk-01:scene-003",
+          "order": 6,
+          "function": "action_progression",
+          "required_fact_ids": [],
+          "event_ids": [],
+          "viewpoint_entity_id": "ErGen/work-001/0001:chunk-01:entity-001",
+          "dialogue_act": "",
+          "beat_ids": [
+            "ErGen/work-001/0001:chunk-01:scene-003:expansion-006"
+          ],
+          "target_chars": 63,
+          "minimum_chars": 44
+        },
+        {
+          "paragraph_id": "ErGen/work-001/0001:chunk-01:scene-003:paragraph-01",
+          "scene_id": "ErGen/work-001/0001:chunk-01:scene-003",
+          "order": 7,
+          "function": "perception_reaction",
+          "required_fact_ids": [],
+          "event_ids": [],
+          "viewpoint_entity_id": "ErGen/work-001/0001:chunk-01:entity-001",
+          "dialogue_act": "",
+          "beat_ids": [
+            "ErGen/work-001/0001:chunk-01:scene-003:beat-01"
+          ],
+          "target_chars": 63,
+          "minimum_chars": 44
+        },
+        {
+          "paragraph_id": "ErGen/work-001/0001:chunk-01:scene-003:expansion-paragraph-007",
+          "scene_id": "ErGen/work-001/0001:chunk-01:scene-003",
+          "order": 8,
+          "function": "aftermath",
+          "required_fact_ids": [],
+          "event_ids": [],
+          "viewpoint_entity_id": "ErGen/work-001/0001:chunk-01:entity-001",
+          "dialogue_act": "",
+          "beat_ids": [
+            "ErGen/work-001/0001:chunk-01:scene-003:expansion-007"
+          ],
+          "target_chars": 63,
+          "minimum_chars": 44
+        },
+        {
+          "paragraph_id": "ErGen/work-001/0001:chunk-01:scene-003:expansion-paragraph-008",
+          "scene_id": "ErGen/work-001/0001:chunk-01:scene-003",
+          "order": 9,
+          "function": "transition",
+          "required_fact_ids": [],
+          "event_ids": [],
+          "viewpoint_entity_id": "ErGen/work-001/0001:chunk-01:entity-001",
+          "dialogue_act": "",
+          "beat_ids": [
+            "ErGen/work-001/0001:chunk-01:scene-003:expansion-008"
+          ],
+          "target_chars": 63,
+          "minimum_chars": 44
+        },
+        {
+          "paragraph_id": "ErGen/work-001/0001:chunk-01:scene-003:expansion-paragraph-009",
+          "scene_id": "ErGen/work-001/0001:chunk-01:scene-003",
+          "order": 10,
+          "function": "perception_reaction",
+          "required_fact_ids": [],
+          "event_ids": [],
+          "viewpoint_entity_id": "ErGen/work-001/0001:chunk-01:entity-001",
+          "dialogue_act": "",
+          "beat_ids": [
+            "ErGen/work-001/0001:chunk-01:scene-003:expansion-009"
+          ],
+          "target_chars": 63,
+          "minimum_chars": 44
+        },
+        {
+          "paragraph_id": "ErGen/work-001/0001:chunk-01:scene-003:expansion-paragraph-010",
+          "scene_id": "ErGen/work-001/0001:chunk-01:scene-003",
+          "order": 11,
+          "function": "action_progression",
+          "required_fact_ids": [],
+          "event_ids": [],
+          "viewpoint_entity_id": "ErGen/work-001/0001:chunk-01:entity-001",
+          "dialogue_act": "",
+          "beat_ids": [
+            "ErGen/work-001/0001:chunk-01:scene-003:expansion-010"
+          ],
+          "target_chars": 63,
+          "minimum_chars": 44
+        },
+        {
+          "paragraph_id": "ErGen/work-001/0001:chunk-01:scene-003:expansion-paragraph-011",
+          "scene_id": "ErGen/work-001/0001:chunk-01:scene-003",
+          "order": 12,
+          "function": "aftermath",
+          "required_fact_ids": [],
+          "event_ids": [],
+          "viewpoint_entity_id": "ErGen/work-001/0001:chunk-01:entity-001",
+          "dialogue_act": "",
+          "beat_ids": [
+            "ErGen/work-001/0001:chunk-01:scene-003:expansion-011"
+          ],
+          "target_chars": 63,
+          "minimum_chars": 44
+        },
+        {
+          "paragraph_id": "ErGen/work-001/0001:chunk-01:scene-003:expansion-paragraph-012",
+          "scene_id": "ErGen/work-001/0001:chunk-01:scene-003",
+          "order": 13,
+          "function": "transition",
+          "required_fact_ids": [],
+          "event_ids": [],
+          "viewpoint_entity_id": "ErGen/work-001/0001:chunk-01:entity-001",
+          "dialogue_act": "",
+          "beat_ids": [
+            "ErGen/work-001/0001:chunk-01:scene-003:expansion-012"
+          ],
+          "target_chars": 63,
+          "minimum_chars": 44
+        }
+      ],
+      "exit_state_fact_ids": [
+        "ErGen/work-001/0001:chunk-01:fact-010"
+      ],
+      "forbidden_event_ids": [],
+      "narrative_beats": [
+        {
+          "beat_id": "ErGen/work-001/0001:chunk-01:scene-003:beat-00",
+          "scene_id": "ErGen/work-001/0001:chunk-01:scene-003",
+          "order": 0,
+          "beat_type": "action",
+          "actor_id": "ErGen/work-001/0001:chunk-01:entity-001",
+          "objective": "四叔接铁柱，铁柱告别父母，第一次离开家乡",
+          "pressure": "",
+          "observable_action": "四叔接铁柱，铁柱告别父母，第一次离开家乡",
+          "focal_detail": "让视角人物先捕捉到行动引起的具体变化",
+          "state_change": "行动已经开始，并对场内其他人或局势施加影响",
+          "required_fact_ids": [
+            "ErGen/work-001/0001:chunk-01:fact-010"
+          ],
+          "event_ids": [
+            "ErGen/work-001/0001:chunk-01:event-003"
+          ],
+          "dialogue_pressure": "",
+          "expansion_license": "source",
+          "support_fact_ids": []
+        },
+        {
+          "beat_id": "ErGen/work-001/0001:chunk-01:scene-003:expansion-001",
+          "scene_id": "ErGen/work-001/0001:chunk-01:scene-003",
+          "order": 1,
+          "beat_type": "reaction",
+          "actor_id": "ErGen/work-001/0001:chunk-01:entity-001",
+          "objective": "铁柱离开家乡",
+          "pressure": "",
+          "observable_action": "让视角人物对既有动作作出可观察的感知或身体反应，不新增事实。",
+          "focal_detail": "只展开当前场景已经可见的人物动作、感知、环境或对白反应。",
+          "state_change": "不新增硬事实；使既有状态在正文中获得可感知的过程。",
+          "required_fact_ids": [],
+          "event_ids": [],
+          "dialogue_pressure": "",
+          "expansion_license": "inference",
+          "support_fact_ids": [
+            "ErGen/work-001/0001:chunk-01:fact-010"
+          ]
+        },
+        {
+          "beat_id": "ErGen/work-001/0001:chunk-01:scene-003:expansion-002",
+          "scene_id": "ErGen/work-001/0001:chunk-01:scene-003",
+          "order": 2,
+          "beat_type": "action",
+          "actor_id": "ErGen/work-001/0001:chunk-01:entity-001",
+          "objective": "铁柱离开家乡",
+          "pressure": "",
+          "observable_action": "把已知行动拆成一个可见的准备、停顿或回应，不改变事件结果。",
+          "focal_detail": "只展开当前场景已经可见的人物动作、感知、环境或对白反应。",
+          "state_change": "不新增硬事实；使既有状态在正文中获得可感知的过程。",
+          "required_fact_ids": [],
+          "event_ids": [],
+          "dialogue_pressure": "",
+          "expansion_license": "inference",
+          "support_fact_ids": [
+            "ErGen/work-001/0001:chunk-01:fact-010"
+          ]
+        },
+        {
+          "beat_id": "ErGen/work-001/0001:chunk-01:scene-003:expansion-003",
+          "scene_id": "ErGen/work-001/0001:chunk-01:scene-003",
+          "order": 3,
+          "beat_type": "aftermath",
+          "actor_id": "ErGen/work-001/0001:chunk-01:entity-001",
+          "objective": "铁柱离开家乡",
+          "pressure": "",
+          "observable_action": "写出既有结果留下的局面余波，只承接已存在的状态。",
+          "focal_detail": "只展开当前场景已经可见的人物动作、感知、环境或对白反应。",
+          "state_change": "不新增硬事实；使既有状态在正文中获得可感知的过程。",
+          "required_fact_ids": [],
+          "event_ids": [],
+          "dialogue_pressure": "",
+          "expansion_license": "inference",
+          "support_fact_ids": [
+            "ErGen/work-001/0001:chunk-01:fact-010"
+          ]
+        },
+        {
+          "beat_id": "ErGen/work-001/0001:chunk-01:scene-003:expansion-004",
+          "scene_id": "ErGen/work-001/0001:chunk-01:scene-003",
+          "order": 4,
+          "beat_type": "transition",
+          "actor_id": "ErGen/work-001/0001:chunk-01:entity-001",
+          "objective": "铁柱离开家乡",
+          "pressure": "",
+          "observable_action": "用环境、距离或注意力变化承接既有状态，不新增人物、设定或事件。",
+          "focal_detail": "只展开当前场景已经可见的人物动作、感知、环境或对白反应。",
+          "state_change": "不新增硬事实；使既有状态在正文中获得可感知的过程。",
+          "required_fact_ids": [],
+          "event_ids": [],
+          "dialogue_pressure": "",
+          "expansion_license": "atmosphere",
+          "support_fact_ids": [
+            "ErGen/work-001/0001:chunk-01:fact-010"
+          ]
+        },
+        {
+          "beat_id": "ErGen/work-001/0001:chunk-01:scene-003:expansion-005",
+          "scene_id": "ErGen/work-001/0001:chunk-01:scene-003",
+          "order": 5,
+          "beat_type": "reaction",
+          "actor_id": "ErGen/work-001/0001:chunk-01:entity-001",
+          "objective": "铁柱离开家乡",
+          "pressure": "",
+          "observable_action": "让视角人物对既有动作作出可观察的感知或身体反应，不新增事实。",
+          "focal_detail": "只展开当前场景已经可见的人物动作、感知、环境或对白反应。",
+          "state_change": "不新增硬事实；使既有状态在正文中获得可感知的过程。",
+          "required_fact_ids": [],
+          "event_ids": [],
+          "dialogue_pressure": "",
+          "expansion_license": "inference",
+          "support_fact_ids": [
+            "ErGen/work-001/0001:chunk-01:fact-010"
+          ]
+        },
+        {
+          "beat_id": "ErGen/work-001/0001:chunk-01:scene-003:expansion-006",
+          "scene_id": "ErGen/work-001/0001:chunk-01:scene-003",
+          "order": 6,
+          "beat_type": "action",
+          "actor_id": "ErGen/work-001/0001:chunk-01:entity-001",
+          "objective": "铁柱离开家乡",
+          "pressure": "",
+          "observable_action": "把已知行动拆成一个可见的准备、停顿或回应，不改变事件结果。",
+          "focal_detail": "只展开当前场景已经可见的人物动作、感知、环境或对白反应。",
+          "state_change": "不新增硬事实；使既有状态在正文中获得可感知的过程。",
+          "required_fact_ids": [],
+          "event_ids": [],
+          "dialogue_pressure": "",
+          "expansion_license": "inference",
+          "support_fact_ids": [
+            "ErGen/work-001/0001:chunk-01:fact-010"
+          ]
+        },
+        {
+          "beat_id": "ErGen/work-001/0001:chunk-01:scene-003:beat-01",
+          "scene_id": "ErGen/work-001/0001:chunk-01:scene-003",
+          "order": 7,
+          "beat_type": "reaction",
+          "actor_id": "ErGen/work-001/0001:chunk-01:entity-001",
+          "objective": "四叔接铁柱，铁柱告别父母，第一次离开家乡",
+          "pressure": "",
+          "observable_action": "写出人物在压力后的具体回应、取舍或下一步动作",
+          "focal_detail": "让视角人物的感知或身体反应改变其判断",
+          "state_change": "人物对局势作出可见回应，结果开始成立",
+          "required_fact_ids": [],
+          "event_ids": [],
+          "dialogue_pressure": "",
+          "expansion_license": "source",
+          "support_fact_ids": []
+        },
+        {
+          "beat_id": "ErGen/work-001/0001:chunk-01:scene-003:expansion-007",
+          "scene_id": "ErGen/work-001/0001:chunk-01:scene-003",
+          "order": 8,
+          "beat_type": "aftermath",
+          "actor_id": "ErGen/work-001/0001:chunk-01:entity-001",
+          "objective": "铁柱离开家乡",
+          "pressure": "",
+          "observable_action": "写出既有结果留下的局面余波，只承接已存在的状态。",
+          "focal_detail": "只展开当前场景已经可见的人物动作、感知、环境或对白反应。",
+          "state_change": "不新增硬事实；使既有状态在正文中获得可感知的过程。",
+          "required_fact_ids": [],
+          "event_ids": [],
+          "dialogue_pressure": "",
+          "expansion_license": "inference",
+          "support_fact_ids": [
+            "ErGen/work-001/0001:chunk-01:fact-010"
+          ]
+        },
+        {
+          "beat_id": "ErGen/work-001/0001:chunk-01:scene-003:expansion-008",
+          "scene_id": "ErGen/work-001/0001:chunk-01:scene-003",
+          "order": 9,
+          "beat_type": "transition",
+          "actor_id": "ErGen/work-001/0001:chunk-01:entity-001",
+          "objective": "铁柱离开家乡",
+          "pressure": "",
+          "observable_action": "用环境、距离或注意力变化承接既有状态，不新增人物、设定或事件。",
+          "focal_detail": "只展开当前场景已经可见的人物动作、感知、环境或对白反应。",
+          "state_change": "不新增硬事实；使既有状态在正文中获得可感知的过程。",
+          "required_fact_ids": [],
+          "event_ids": [],
+          "dialogue_pressure": "",
+          "expansion_license": "atmosphere",
+          "support_fact_ids": [
+            "ErGen/work-001/0001:chunk-01:fact-010"
+          ]
+        },
+        {
+          "beat_id": "ErGen/work-001/0001:chunk-01:scene-003:expansion-009",
+          "scene_id": "ErGen/work-001/0001:chunk-01:scene-003",
+          "order": 10,
+          "beat_type": "reaction",
+          "actor_id": "ErGen/work-001/0001:chunk-01:entity-001",
+          "objective": "铁柱离开家乡",
+          "pressure": "",
+          "observable_action": "让视角人物对既有动作作出可观察的感知或身体反应，不新增事实。",
+          "focal_detail": "只展开当前场景已经可见的人物动作、感知、环境或对白反应。",
+          "state_change": "不新增硬事实；使既有状态在正文中获得可感知的过程。",
+          "required_fact_ids": [],
+          "event_ids": [],
+          "dialogue_pressure": "",
+          "expansion_license": "inference",
+          "support_fact_ids": [
+            "ErGen/work-001/0001:chunk-01:fact-010"
+          ]
+        },
+        {
+          "beat_id": "ErGen/work-001/0001:chunk-01:scene-003:expansion-010",
+          "scene_id": "ErGen/work-001/0001:chunk-01:scene-003",
+          "order": 11,
+          "beat_type": "action",
+          "actor_id": "ErGen/work-001/0001:chunk-01:entity-001",
+          "objective": "铁柱离开家乡",
+          "pressure": "",
+          "observable_action": "把已知行动拆成一个可见的准备、停顿或回应，不改变事件结果。",
+          "focal_detail": "只展开当前场景已经可见的人物动作、感知、环境或对白反应。",
+          "state_change": "不新增硬事实；使既有状态在正文中获得可感知的过程。",
+          "required_fact_ids": [],
+          "event_ids": [],
+          "dialogue_pressure": "",
+          "expansion_license": "inference",
+          "support_fact_ids": [
+            "ErGen/work-001/0001:chunk-01:fact-010"
+          ]
+        },
+        {
+          "beat_id": "ErGen/work-001/0001:chunk-01:scene-003:expansion-011",
+          "scene_id": "ErGen/work-001/0001:chunk-01:scene-003",
+          "order": 12,
+          "beat_type": "aftermath",
+          "actor_id": "ErGen/work-001/0001:chunk-01:entity-001",
+          "objective": "铁柱离开家乡",
+          "pressure": "",
+          "observable_action": "写出既有结果留下的局面余波，只承接已存在的状态。",
+          "focal_detail": "只展开当前场景已经可见的人物动作、感知、环境或对白反应。",
+          "state_change": "不新增硬事实；使既有状态在正文中获得可感知的过程。",
+          "required_fact_ids": [],
+          "event_ids": [],
+          "dialogue_pressure": "",
+          "expansion_license": "inference",
+          "support_fact_ids": [
+            "ErGen/work-001/0001:chunk-01:fact-010"
+          ]
+        },
+        {
+          "beat_id": "ErGen/work-001/0001:chunk-01:scene-003:expansion-012",
+          "scene_id": "ErGen/work-001/0001:chunk-01:scene-003",
+          "order": 13,
+          "beat_type": "transition",
+          "actor_id": "ErGen/work-001/0001:chunk-01:entity-001",
+          "objective": "铁柱离开家乡",
+          "pressure": "",
+          "observable_action": "用环境、距离或注意力变化承接既有状态，不新增人物、设定或事件。",
+          "focal_detail": "只展开当前场景已经可见的人物动作、感知、环境或对白反应。",
+          "state_change": "不新增硬事实；使既有状态在正文中获得可感知的过程。",
+          "required_fact_ids": [],
+          "event_ids": [],
+          "dialogue_pressure": "",
+          "expansion_license": "atmosphere",
+          "support_fact_ids": [
+            "ErGen/work-001/0001:chunk-01:fact-010"
+          ]
+        }
+      ]
+    }
+  ],
+  "generation_mode": "controlled_expansion",
+  "target_char_min": 4000,
+  "target_char_max": 5000
+}

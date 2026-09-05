@@ -1,0 +1,15 @@
+{
+  "scene_id": "ErGen/work-001/0001:chunk-01:scene-003",
+  "paragraphs": [
+    {
+      "paragraph_id": "ErGen/work-001/0001:chunk-01:scene-003:paragraph-00",
+      "text": "铁柱跟在四叔身后，回头望了一眼村口的母亲，用力抿了抿嘴唇，然后大步踏上往山外去的路，他知道这一去便是前往恒岳派。",
+      "claimed_fact_ids": [
+        "ErGen/work-001/0001:chunk-01:fact-010"
+      ],
+      "claimed_event_ids": [
+        "ErGen/work-001/0001:chunk-01:event-003"
+      ]
+    }
+  ]
+}

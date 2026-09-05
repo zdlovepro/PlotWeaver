@@ -1,0 +1,40 @@
+{
+  "scene_no": 2,
+  "scene_id": "ErGen/work-001/0001:chunk-01:scene-002",
+  "minimum_paragraph_chars": 35,
+  "repairs_used": 0,
+  "passed": true,
+  "draft": {
+    "scene_id": "ErGen/work-001/0001:chunk-01:scene-002",
+    "paragraphs": [
+      {
+        "paragraph_id": "ErGen/work-001/0001:chunk-01:scene-002:paragraph-00",
+        "text": "宴席上，王卓轻蔑地扫了一眼铁柱，嘴角挂着不屑的笑意，说：“就凭他也想进恒岳派？”王天水脸色一沉正要反驳，铁柱却攥紧拳头，心中暗暗发誓：无论如何，这次一定要被选中。",
+        "claimed_fact_ids": [
+          "ErGen/work-001/0001:chunk-01:fact-009"
+        ],
+        "claimed_event_ids": [
+          "ErGen/work-001/0001:chunk-01:event-002"
+        ]
+      }
+    ]
+  },
+  "validations": [
+    {
+      "scene_id": "ErGen/work-001/0001:chunk-01:scene-002",
+      "reported_passed": true,
+      "realized_fact_ids": [
+        "ErGen/work-001/0001:chunk-01:fact-009"
+      ],
+      "missing_fact_ids": [],
+      "realized_event_ids": [
+        "ErGen/work-001/0001:chunk-01:event-002"
+      ],
+      "missing_event_ids": [],
+      "premature_event_ids": [],
+      "paragraph_issues": [],
+      "repair_paragraph_ids": [],
+      "passed": true
+    }
+  ]
+}

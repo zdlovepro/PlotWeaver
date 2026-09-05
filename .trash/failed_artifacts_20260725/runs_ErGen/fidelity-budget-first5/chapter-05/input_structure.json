@@ -1,0 +1,235 @@
+{
+  "entities": [
+    {
+      "name": "王林",
+      "kind": "person"
+    },
+    {
+      "name": "王卓",
+      "kind": "person"
+    },
+    {
+      "name": "王天水",
+      "kind": "person"
+    },
+    {
+      "name": "铁柱母亲",
+      "kind": "person"
+    },
+    {
+      "name": "王卓父亲",
+      "kind": "person"
+    },
+    {
+      "name": "王浩父亲",
+      "kind": "person"
+    },
+    {
+      "name": "恒岳派青年",
+      "kind": "person"
+    },
+    {
+      "name": "恒岳派山门",
+      "kind": "location"
+    },
+    {
+      "name": "王氏家族大宅子",
+      "kind": "location"
+    }
+  ],
+  "facts": [
+    {
+      "kind": "progression",
+      "subject": "王林",
+      "predicate": "测试结果",
+      "value": "不合格",
+      "object": ""
+    },
+    {
+      "kind": "identity",
+      "subject": "王卓",
+      "predicate": "成为",
+      "value": "道虚弟子",
+      "object": ""
+    },
+    {
+      "kind": "progression",
+      "subject": "恒岳派青年",
+      "predicate": "遣散",
+      "value": "众少年",
+      "object": ""
+    },
+    {
+      "kind": "location",
+      "subject": "王林",
+      "predicate": "被送回家",
+      "value": "回家",
+      "object": ""
+    },
+    {
+      "kind": "goal",
+      "subject": "王卓",
+      "predicate": "计划",
+      "value": "回家处理俗事",
+      "object": ""
+    },
+    {
+      "kind": "progression",
+      "subject": "恒岳派青年",
+      "predicate": "带离",
+      "value": "消失",
+      "object": ""
+    },
+    {
+      "kind": "emotion",
+      "subject": "王林",
+      "predicate": "情绪",
+      "value": "绝望",
+      "object": ""
+    },
+    {
+      "kind": "location",
+      "subject": "王氏家族大宅子",
+      "predicate": "设有宴席",
+      "value": "宴席",
+      "object": ""
+    },
+    {
+      "kind": "emotion",
+      "subject": "王浩父亲",
+      "predicate": "情绪",
+      "value": "焦急",
+      "object": ""
+    },
+    {
+      "kind": "emotion",
+      "subject": "王天水",
+      "predicate": "情绪",
+      "value": "不妙的预感",
+      "object": ""
+    },
+    {
+      "kind": "progression",
+      "subject": "铁柱母亲",
+      "predicate": "询问",
+      "value": "结果",
+      "object": ""
+    }
+  ],
+  "events": [
+    {
+      "order": 0,
+      "participants": [
+        "王林",
+        "恒岳派青年"
+      ],
+      "action": "测试不合格",
+      "obstacle": "",
+      "decision": "",
+      "outcomes": [
+        {
+          "kind": "progression",
+          "subject": "王林",
+          "predicate": "测试结果",
+          "value": "不合格",
+          "object": ""
+        },
+        {
+          "kind": "progression",
+          "subject": "恒岳派青年",
+          "predicate": "遣散",
+          "value": "众少年",
+          "object": ""
+        },
+        {
+          "kind": "location",
+          "subject": "王林",
+          "predicate": "被送回家",
+          "value": "回家",
+          "object": ""
+        }
+      ],
+      "costs": []
+    },
+    {
+      "order": 1,
+      "participants": [
+        "王林",
+        "王天水"
+      ],
+      "action": "表现出没落",
+      "obstacle": "",
+      "decision": "",
+      "outcomes": [
+        {
+          "kind": "emotion",
+          "subject": "王天水",
+          "predicate": "情绪",
+          "value": "不妙的预感",
+          "object": ""
+        }
+      ],
+      "costs": []
+    }
+  ],
+  "scenes": [
+    {
+      "order": 0,
+      "objective": "完成恒岳派测试",
+      "entry_facts": [],
+      "exit_facts": [
+        {
+          "kind": "progression",
+          "subject": "王林",
+          "predicate": "测试结果",
+          "value": "不合格",
+          "object": ""
+        },
+        {
+          "kind": "progression",
+          "subject": "恒岳派青年",
+          "predicate": "遣散",
+          "value": "众少年",
+          "object": ""
+        },
+        {
+          "kind": "location",
+          "subject": "王林",
+          "predicate": "被送回家",
+          "value": "回家",
+          "object": ""
+        }
+      ],
+      "tension": 0
+    },
+    {
+      "order": 1,
+      "objective": "父亲发现王林情绪异常",
+      "entry_facts": [
+        {
+          "kind": "location",
+          "subject": "王林",
+          "predicate": "被送回家",
+          "value": "回家",
+          "object": ""
+        }
+      ],
+      "exit_facts": [
+        {
+          "kind": "emotion",
+          "subject": "王天水",
+          "predicate": "情绪",
+          "value": "不妙的预感",
+          "object": ""
+        }
+      ],
+      "tension": 0
+    }
+  ],
+  "time_anchors": [
+    "当日",
+    "三天后",
+    "此时"
+  ],
+  "spatial_relation_count": 0
+}

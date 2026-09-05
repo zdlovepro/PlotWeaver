@@ -1,0 +1,296 @@
+{
+  "reconstruction_mode": "fidelity_test_only",
+  "chapter_goal": "完整重建已提供的目标事件、场景、状态变化与结局，不新增输入外情节。",
+  "required_events": [
+    {
+      "order": 0,
+      "summary": "王林离开山村，随四叔到达四叔家",
+      "participants": [
+        "王林",
+        "四叔"
+      ],
+      "action": "乘马车离开山村并到达四叔家",
+      "obstacle": "",
+      "decision": "",
+      "preconditions": [],
+      "outcomes": [
+        "王林 到达 四叔家"
+      ],
+      "costs": [],
+      "contract_id": "target-event-001"
+    },
+    {
+      "order": 1,
+      "summary": "王林随四叔到达王氏家族大宅子",
+      "participants": [
+        "王林",
+        "四叔"
+      ],
+      "action": "前往大宅子",
+      "obstacle": "",
+      "decision": "",
+      "preconditions": [],
+      "outcomes": [
+        "王林 到达 王氏家族大宅子"
+      ],
+      "costs": [],
+      "contract_id": "target-event-002"
+    },
+    {
+      "order": 2,
+      "summary": "在家族大宅院中，白衣青年出现并带走三个少年",
+      "participants": [
+        "王林",
+        "四叔",
+        "老者",
+        "王卓",
+        "王浩",
+        "白衣青年"
+      ],
+      "action": "白衣青年询问并带走少年",
+      "obstacle": "",
+      "decision": "",
+      "preconditions": [
+        "王林 到达 王氏家族大宅子"
+      ],
+      "outcomes": [
+        "白衣青年 带走 三个少年"
+      ],
+      "costs": [],
+      "contract_id": "target-event-003"
+    }
+  ],
+  "required_scenes": [
+    {
+      "order": 0,
+      "participants": [
+        "王林",
+        "四叔"
+      ],
+      "events": [
+        {
+          "order": 0,
+          "summary": "王林离开山村，随四叔到达四叔家",
+          "participants": [
+            "王林",
+            "四叔"
+          ],
+          "action": "乘马车离开山村并到达四叔家",
+          "obstacle": "",
+          "decision": "",
+          "preconditions": [],
+          "outcomes": [
+            "王林 到达 四叔家"
+          ],
+          "costs": [],
+          "contract_id": "target-event-001"
+        }
+      ],
+      "objective": "离开山村前往县城（到达四叔家）",
+      "entry_facts": [
+        "王林 离开 山村"
+      ],
+      "exit_facts": [
+        "王林 到达 四叔家"
+      ],
+      "tension": 1,
+      "locations": [],
+      "time_anchors": [],
+      "contract_id": "target-scene-001"
+    },
+    {
+      "order": 1,
+      "participants": [
+        "王林",
+        "四叔"
+      ],
+      "events": [
+        {
+          "order": 1,
+          "summary": "王林随四叔到达王氏家族大宅子",
+          "participants": [
+            "王林",
+            "四叔"
+          ],
+          "action": "前往大宅子",
+          "obstacle": "",
+          "decision": "",
+          "preconditions": [],
+          "outcomes": [
+            "王林 到达 王氏家族大宅子"
+          ],
+          "costs": [],
+          "contract_id": "target-event-002"
+        }
+      ],
+      "objective": "到达王氏家族大宅子参加仙人选拔",
+      "entry_facts": [
+        "王林 到达 四叔家"
+      ],
+      "exit_facts": [
+        "王林 到达 王氏家族大宅子"
+      ],
+      "tension": 2,
+      "locations": [],
+      "time_anchors": [],
+      "contract_id": "target-scene-002"
+    },
+    {
+      "order": 2,
+      "participants": [
+        "王林",
+        "四叔",
+        "老者",
+        "王卓",
+        "王浩",
+        "白衣青年"
+      ],
+      "events": [
+        {
+          "order": 2,
+          "summary": "在家族大宅院中，白衣青年出现并带走三个少年",
+          "participants": [
+            "王林",
+            "四叔",
+            "老者",
+            "王卓",
+            "王浩",
+            "白衣青年"
+          ],
+          "action": "白衣青年询问并带走少年",
+          "obstacle": "",
+          "decision": "",
+          "preconditions": [
+            "王林 到达 王氏家族大宅子"
+          ],
+          "outcomes": [
+            "白衣青年 带走 三个少年"
+          ],
+          "costs": [],
+          "contract_id": "target-event-003"
+        }
+      ],
+      "objective": "等待仙人并接受选拔",
+      "entry_facts": [
+        "王林 到达 王氏家族大宅子"
+      ],
+      "exit_facts": [
+        "白衣青年 带走 三个少年"
+      ],
+      "tension": 4,
+      "locations": [],
+      "time_anchors": [],
+      "contract_id": "target-scene-003"
+    }
+  ],
+  "required_state_changes": [
+    {
+      "operation": "add",
+      "event": "王林离开山村，随四叔到达四叔家",
+      "before": "",
+      "after": "王林 到达 四叔家",
+      "contract_id": "target-change-001"
+    },
+    {
+      "operation": "add",
+      "event": "王林随四叔到达王氏家族大宅子",
+      "before": "",
+      "after": "王林 到达 王氏家族大宅子",
+      "contract_id": "target-change-002"
+    },
+    {
+      "operation": "add",
+      "event": "在家族大宅院中，白衣青年出现并带走三个少年",
+      "before": "",
+      "after": "白衣青年 带走 三个少年",
+      "contract_id": "target-change-003"
+    }
+  ],
+  "style_budget_override": {
+    "schema_version": "1.0",
+    "mode": "fidelity_test_override",
+    "instruction": "仅用于重建实验的量化验收；正常原创写作应使用作者级柔性预算。",
+    "metrics": [
+      {
+        "metric_id": "chapter_char_count",
+        "unit": "count",
+        "target": 2141.0,
+        "preferred_min": 1641.0,
+        "preferred_max": 2641.0,
+        "priority": "high"
+      },
+      {
+        "metric_id": "mean_sentence_chars",
+        "unit": "mean_chars",
+        "target": 44.06383,
+        "preferred_min": 37.454256,
+        "preferred_max": 50.673405,
+        "priority": "high"
+      },
+      {
+        "metric_id": "mean_paragraph_chars",
+        "unit": "mean_chars",
+        "target": 53.923077,
+        "preferred_min": 45.834615,
+        "preferred_max": 62.011539,
+        "priority": "high"
+      },
+      {
+        "metric_id": "short_paragraph_ratio",
+        "unit": "ratio",
+        "target": 0.307692,
+        "preferred_min": 0.230769,
+        "preferred_max": 0.384615,
+        "priority": "high"
+      },
+      {
+        "metric_id": "dialogue_char_ratio",
+        "unit": "ratio",
+        "target": 0.175619,
+        "preferred_min": 0.131714,
+        "preferred_max": 0.219524,
+        "priority": "high"
+      },
+      {
+        "metric_id": "perception_marker_ratio",
+        "unit": "ratio",
+        "target": 0.191489,
+        "preferred_min": 0.143617,
+        "preferred_max": 0.239361,
+        "priority": "high"
+      },
+      {
+        "metric_id": "transition_marker_ratio",
+        "unit": "ratio",
+        "target": 0.0,
+        "preferred_min": 0.0,
+        "preferred_max": 0.02,
+        "priority": "high"
+      },
+      {
+        "metric_id": "question_sentence_ratio",
+        "unit": "ratio",
+        "target": 0.085106,
+        "preferred_min": 0.063829,
+        "preferred_max": 0.106383,
+        "priority": "medium"
+      },
+      {
+        "metric_id": "exclamation_sentence_ratio",
+        "unit": "ratio",
+        "target": 0.06383,
+        "preferred_min": 0.04383,
+        "preferred_max": 0.08383,
+        "priority": "medium"
+      },
+      {
+        "metric_id": "ellipsis_per_sentence",
+        "unit": "ratio",
+        "target": 0.0,
+        "preferred_min": 0.0,
+        "preferred_max": 0.02,
+        "priority": "medium"
+      }
+    ]
+  }
+}

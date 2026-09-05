@@ -1,0 +1,35 @@
+{
+  "structural": {
+    "schema_version": "1.0",
+    "chapter_id": "ErGen/work-001/0002",
+    "passed": true,
+    "counts": {
+      "scene_count": 3,
+      "fact_contract_count": 8,
+      "must_realize_fact_count": 8,
+      "paragraph_bound_fact_count": 8,
+      "event_program_count": 4,
+      "paragraph_bound_event_count": 4,
+      "paragraph_program_count": 71,
+      "narrative_beat_count": 71,
+      "licensed_expansion_beat_count": 60,
+      "planned_char_count": 4500,
+      "max_facts_per_paragraph": 1,
+      "future_event_barrier_count": 4
+    },
+    "issues": []
+  },
+  "length_plan": {
+    "schema_version": "1.0",
+    "chapter_id": "ErGen/work-001/0002",
+    "generation_mode": "controlled_expansion",
+    "planned_char_count": 4500,
+    "target_char_min": 4000,
+    "target_char_max": 5000,
+    "paragraph_count": 71,
+    "dramatic_beat_count": 71,
+    "expanded_beat_count": 60,
+    "passed": true,
+    "issues": []
+  }
+}

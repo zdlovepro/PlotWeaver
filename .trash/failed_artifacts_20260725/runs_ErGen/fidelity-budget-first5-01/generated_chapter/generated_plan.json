@@ -1,0 +1,161 @@
+{
+  "chapter_goal": "铁柱被四叔推荐加入恒岳派，之后在庆祝宴上遭王卓轻视，内心下定决心必须被选中，最后告别父母随四叔离开家乡，踏上前往恒岳派的旅程。",
+  "selected_template_ids": [
+    "library:chapter-010",
+    "library:event-004",
+    "library:micro-001"
+  ],
+  "scenes": [
+    {
+      "scene_no": 0,
+      "entry_state": [
+        "铁柱与父母、四叔在村子家中",
+        "铁柱对仙人一无所知"
+      ],
+      "objective": "四叔提出恒岳派推荐名额，铁柱父母同意，铁柱对仙人生出好奇",
+      "pressure": "推荐机会难得，铁柱父母需权衡家庭劳力和未来",
+      "turn": "四叔以家族利益和铁柱前途为由说服父母，铁柱首次听闻仙人信息",
+      "exit_state": [
+        "铁柱被推荐加入恒岳派",
+        "铁柱对仙人感到好奇"
+      ]
+    },
+    {
+      "scene_no": 1,
+      "entry_state": [
+        "铁柱已被推荐至恒岳派",
+        "铁柱怀着好奇与期待"
+      ],
+      "objective": "庆祝宴上王卓出言轻视，铁柱在父亲反驳后内心决定一定要被选中",
+      "pressure": "王卓当众贬低铁柱资质，引发铁柱羞愤与不甘",
+      "turn": "王卓父亲打圆场，但铁柱父亲维护儿子尊严，铁柱暗下决心",
+      "exit_state": [
+        "铁柱下定决心要成为恒岳派弟子"
+      ]
+    },
+    {
+      "scene_no": 2,
+      "entry_state": [
+        "铁柱已下定决心",
+        "即将启程前往恒岳派"
+      ],
+      "objective": "四叔接铁柱离开，铁柱告别父母，第一次离开家乡",
+      "pressure": "离别的不舍与对未知旅程的忐忑",
+      "turn": "母亲含泪叮嘱，父亲沉默鼓励，铁柱强忍眼泪随四叔上路",
+      "exit_state": [
+        "铁柱离开家乡，正在前往恒岳派的路上"
+      ]
+    }
+  ],
+  "chapter_state_changes": [
+    {
+      "slot": "铁柱.知识.对仙人好奇",
+      "before": false,
+      "after": true,
+      "cause_scene_no": 0
+    },
+    {
+      "slot": "铁柱.进展.被推荐恒岳派",
+      "before": false,
+      "after": true,
+      "cause_scene_no": 0
+    },
+    {
+      "slot": "铁柱.目标.被选中",
+      "before": false,
+      "after": true,
+      "cause_scene_no": 1
+    },
+    {
+      "slot": "铁柱.进展.离开家乡前往恒岳派",
+      "before": false,
+      "after": true,
+      "cause_scene_no": 2
+    }
+  ],
+  "style_budget": {
+    "schema_version": "1.0",
+    "mode": "fidelity_test_override",
+    "instruction": "仅用于重建实验的量化验收；正常原创写作应使用作者级柔性预算。",
+    "metrics": [
+      {
+        "metric_id": "mean_sentence_chars",
+        "unit": "mean_chars",
+        "target": 43.958333,
+        "preferred_min": 37.364583,
+        "preferred_max": 50.552083,
+        "priority": "high"
+      },
+      {
+        "metric_id": "mean_paragraph_chars",
+        "unit": "mean_chars",
+        "target": 54.050505,
+        "preferred_min": 45.942929,
+        "preferred_max": 62.158081,
+        "priority": "high"
+      },
+      {
+        "metric_id": "short_paragraph_ratio",
+        "unit": "ratio",
+        "target": 0.282828,
+        "preferred_min": 0.212121,
+        "preferred_max": 0.353535,
+        "priority": "high"
+      },
+      {
+        "metric_id": "dialogue_char_ratio",
+        "unit": "ratio",
+        "target": 0.36025,
+        "preferred_min": 0.270188,
+        "preferred_max": 0.450313,
+        "priority": "high"
+      },
+      {
+        "metric_id": "perception_marker_ratio",
+        "unit": "ratio",
+        "target": 0.158333,
+        "preferred_min": 0.11875,
+        "preferred_max": 0.197916,
+        "priority": "high"
+      },
+      {
+        "metric_id": "transition_marker_ratio",
+        "unit": "ratio",
+        "target": 0.033333,
+        "preferred_min": 0.013333,
+        "preferred_max": 0.053333,
+        "priority": "high"
+      },
+      {
+        "metric_id": "question_sentence_ratio",
+        "unit": "ratio",
+        "target": 0.1,
+        "preferred_min": 0.075,
+        "preferred_max": 0.125,
+        "priority": "medium"
+      },
+      {
+        "metric_id": "exclamation_sentence_ratio",
+        "unit": "ratio",
+        "target": 0.058333,
+        "preferred_min": 0.038333,
+        "preferred_max": 0.078333,
+        "priority": "medium"
+      },
+      {
+        "metric_id": "ellipsis_per_sentence",
+        "unit": "ratio",
+        "target": 0.075,
+        "preferred_min": 0.055,
+        "preferred_max": 0.095,
+        "priority": "medium"
+      }
+    ]
+  },
+  "continuity_checks": [
+    "时间顺序：场景0之后发生场景1（第二天庆祝），场景2在场景1之后（随后离开），符合ChapterBrief时序。",
+    "位置连续性：场景0在村子家中，场景1在同一村子（庆祝宴），场景2从村子出发离开。",
+    "因果链：推荐产生好奇与期待，王卓挑衅激发决心，决心导致离开家乡。",
+    "状态一致性：每个场景的entry_state恰好是前一个场景的exit_state，无跳跃。"
+  ]
+}

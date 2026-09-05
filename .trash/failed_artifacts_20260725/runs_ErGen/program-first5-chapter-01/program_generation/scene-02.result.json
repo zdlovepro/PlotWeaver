@@ -1,0 +1,48 @@
+{
+  "scene_no": 2,
+  "scene_id": "ErGen/work-001/0001:chunk-01:scene-002",
+  "minimum_paragraph_chars": 20,
+  "repairs_used": 0,
+  "passed": true,
+  "role_passed": true,
+  "draft": {
+    "scene_id": "ErGen/work-001/0001:chunk-01:scene-002",
+    "paragraphs": [
+      {
+        "paragraph_id": "ErGen/work-001/0001:chunk-01:scene-002:paragraph-00",
+        "text": "王卓冷笑着对铁柱说：“就你这模样，也想被选中？真是笑死人了。”铁柱的父亲王天水立刻回击：“你少在这里胡说八道！”王卓父亲淡淡道：“实话实说罢了。”铁柱抬起头，目光如铁：“我，一定会被选中的。”",
+        "claimed_fact_ids": [
+          "ErGen/work-001/0001:chunk-01:fact-009"
+        ],
+        "claimed_event_ids": [
+          "ErGen/work-001/0001:chunk-01:event-002"
+        ]
+      }
+    ]
+  },
+  "validations": [
+    {
+      "scene_id": "ErGen/work-001/0001:chunk-01:scene-002",
+      "reported_passed": true,
+      "realized_fact_ids": [
+        "ErGen/work-001/0001:chunk-01:fact-009"
+      ],
+      "missing_fact_ids": [],
+      "realized_event_ids": [
+        "ErGen/work-001/0001:chunk-01:event-002"
+      ],
+      "missing_event_ids": [],
+      "premature_event_ids": [],
+      "paragraph_issues": [],
+      "repair_paragraph_ids": [],
+      "passed": true
+    }
+  ],
+  "role_checks": [
+    {
+      "attempt": 0,
+      "passed": true,
+      "paragraph_issues": {}
+    }
+  ]
+}

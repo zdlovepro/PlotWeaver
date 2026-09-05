@@ -1,0 +1,38 @@
+{
+  "attempted": true,
+  "directives": [
+    {
+      "metric_id": "dialogue_char_ratio",
+      "direction": "increase",
+      "target_range": "0.151359–0.434032",
+      "action": "在冲突、试探或信息交接处增加有结果的直接对话，并用动作承接每轮话语。"
+    },
+    {
+      "metric_id": "question_sentence_ratio",
+      "direction": "increase",
+      "target_range": "0.05671–0.176926",
+      "action": "只在试探、疑问或需要推动回应时保留问句，其余信息用陈述句交代。"
+    },
+    {
+      "metric_id": "exclamation_sentence_ratio",
+      "direction": "increase",
+      "target_range": "0.043584–0.122458",
+      "action": "在真正的情绪落点保留感叹句，并让前后的陈述句提供蓄势。"
+    },
+    {
+      "metric_id": "transition_marker_ratio",
+      "direction": "increase",
+      "target_range": "0.020393–0.077211",
+      "action": "在场景、时间或注意力变化处加入自然的承接词或结果性过渡，再继续推进。"
+    },
+    {
+      "metric_id": "ellipsis_per_sentence",
+      "direction": "increase",
+      "target_range": "0.019341–0.133627",
+      "action": "在话语中断、犹豫或未尽之意处谨慎保留省略号。"
+    },
+    "在合适的行动结果或注意力切换处使用一次自然的承接标记，例如“随后”“此时”或“片刻后”。"
+  ],
+  "repairs_used": 0,
+  "style_passed": false
+}

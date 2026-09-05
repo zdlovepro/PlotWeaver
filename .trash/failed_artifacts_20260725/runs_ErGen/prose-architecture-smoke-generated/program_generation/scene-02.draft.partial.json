@@ -1,0 +1,21 @@
+{
+  "scene_id": "ErGen/work-001/0001:chunk-01:scene-002",
+  "paragraphs": [
+    {
+      "paragraph_id": "ErGen/work-001/0001:chunk-01:scene-002:paragraph-00",
+      "text": "宴席上，王卓端起酒杯，斜眼看着铁柱：“铁柱，你连武都没练几天，去了恒岳派也是丢人。我看你还是老老实实种地吧。”铁柱父亲王天水一拍桌子，怒道：“王卓，你少在这里放屁！我儿子天资聪颖，轮不到你指手画脚。恒岳派收不收人，不是你能定的！”铁柱握紧拳头，心中暗暗下定决心：一定要被选中。",
+      "claimed_fact_ids": [
+        "ErGen/work-001/0001:chunk-01:fact-009"
+      ],
+      "claimed_event_ids": [
+        "ErGen/work-001/0001:chunk-01:event-002"
+      ]
+    },
+    {
+      "paragraph_id": "ErGen/work-001/0001:chunk-01:scene-002:paragraph-01",
+      "text": "铁柱看到父亲为自己挺身而出，心中涌起一股暖流。他环顾四周，发现村里不少人正盯着自己，目光中带着审视和怀疑。他深吸一口气，感到一种前所未有的压力，但更坚定了自己的决心：必须证明给他们看。",
+      "claimed_fact_ids": [],
+      "claimed_event_ids": []
+    }
+  ]
+}

@@ -1,0 +1,370 @@
+{
+  "chapter_goal": "完整重建已提供的目标事件、场景、状态变化与结局，不新增输入外情节。",
+  "selected_template_ids": [
+    "library:chapter-013",
+    "library:event-005"
+  ],
+  "scenes": [
+    {
+      "scene_no": 1,
+      "entry_state": [
+        "王林 离开 山村"
+      ],
+      "objective": "离开山村前往县城（到达四叔家）",
+      "pressure": "旅途劳顿",
+      "turn": "四叔的马车一路前行",
+      "exit_state": [
+        "王林 到达 四叔家"
+      ]
+    },
+    {
+      "scene_no": 2,
+      "entry_state": [
+        "王林 到达 四叔家"
+      ],
+      "objective": "到达王氏家族大宅子参加仙人选拔",
+      "pressure": "时间紧迫",
+      "turn": "四叔引路前往大宅子",
+      "exit_state": [
+        "王林 到达 王氏家族大宅子"
+      ]
+    },
+    {
+      "scene_no": 3,
+      "entry_state": [
+        "王林 到达 王氏家族大宅子"
+      ],
+      "objective": "等待仙人并接受选拔",
+      "pressure": "选拔结果未知",
+      "turn": "白衣青年出现并询问",
+      "exit_state": [
+        "白衣青年 带走 三个少年"
+      ]
+    }
+  ],
+  "chapter_state_changes": [
+    {
+      "slot": "王林位置",
+      "before": "",
+      "after": "王林 到达 四叔家",
+      "cause_scene_no": 1
+    },
+    {
+      "slot": "王林位置",
+      "before": "",
+      "after": "王林 到达 王氏家族大宅子",
+      "cause_scene_no": 2
+    },
+    {
+      "slot": "选拔结果",
+      "before": "",
+      "after": "白衣青年 带走 三个少年",
+      "cause_scene_no": 3
+    }
+  ],
+  "covered_required_event_ids": [
+    "target-event-001",
+    "target-event-002",
+    "target-event-003"
+  ],
+  "covered_required_state_change_ids": [
+    "target-change-001",
+    "target-change-002",
+    "target-change-003"
+  ],
+  "chapter_end_contract": [
+    "本章结束于白衣青年带走三个少年，不提前进入恒岳派内部情节。"
+  ],
+  "style_budget": {
+    "schema_version": "1.0",
+    "mode": "fidelity_test_override",
+    "instruction": "仅用于重建实验的量化验收；正常原创写作应使用作者级柔性预算。",
+    "metrics": [
+      {
+        "metric_id": "chapter_char_count",
+        "unit": "count",
+        "target": 2141.0,
+        "preferred_min": 1641.0,
+        "preferred_max": 2641.0,
+        "priority": "high"
+      },
+      {
+        "metric_id": "mean_sentence_chars",
+        "unit": "mean_chars",
+        "target": 44.06383,
+        "preferred_min": 37.454256,
+        "preferred_max": 50.673405,
+        "priority": "high"
+      },
+      {
+        "metric_id": "mean_paragraph_chars",
+        "unit": "mean_chars",
+        "target": 53.923077,
+        "preferred_min": 45.834615,
+        "preferred_max": 62.011539,
+        "priority": "high"
+      },
+      {
+        "metric_id": "short_paragraph_ratio",
+        "unit": "ratio",
+        "target": 0.307692,
+        "preferred_min": 0.230769,
+        "preferred_max": 0.384615,
+        "priority": "high"
+      },
+      {
+        "metric_id": "dialogue_char_ratio",
+        "unit": "ratio",
+        "target": 0.175619,
+        "preferred_min": 0.131714,
+        "preferred_max": 0.219524,
+        "priority": "high"
+      },
+      {
+        "metric_id": "perception_marker_ratio",
+        "unit": "ratio",
+        "target": 0.191489,
+        "preferred_min": 0.143617,
+        "preferred_max": 0.239361,
+        "priority": "high"
+      },
+      {
+        "metric_id": "transition_marker_ratio",
+        "unit": "ratio",
+        "target": 0.0,
+        "preferred_min": 0.0,
+        "preferred_max": 0.02,
+        "priority": "high"
+      },
+      {
+        "metric_id": "question_sentence_ratio",
+        "unit": "ratio",
+        "target": 0.085106,
+        "preferred_min": 0.063829,
+        "preferred_max": 0.106383,
+        "priority": "medium"
+      },
+      {
+        "metric_id": "exclamation_sentence_ratio",
+        "unit": "ratio",
+        "target": 0.06383,
+        "preferred_min": 0.04383,
+        "preferred_max": 0.08383,
+        "priority": "medium"
+      },
+      {
+        "metric_id": "ellipsis_per_sentence",
+        "unit": "ratio",
+        "target": 0.0,
+        "preferred_min": 0.0,
+        "preferred_max": 0.02,
+        "priority": "medium"
+      }
+    ]
+  },
+  "continuity_checks": [
+    "时间：本章连续无跳跃，从王林离开山村至被白衣青年带走。",
+    "位置：王林位置从山村到四叔家再到王氏家族大宅子，呈连续空间移动。",
+    "知识：王林已从四叔处得知恒岳派招收弟子，符合剧情前提。"
+  ],
+  "style_execution_directives": [
+    {
+      "metric_id": "exclamation_sentence_ratio",
+      "direction": "increase",
+      "target_range": "0.04383–0.08383",
+      "action": "在真正的情绪落点保留感叹句，并让前后的陈述句提供蓄势。"
+    },
+    {
+      "metric_id": "perception_marker_ratio",
+      "direction": "increase",
+      "target_range": "0.143617–0.239361",
+      "action": "在关键动作或信息变化后补入角色看到、听到、感到或察觉到的具体反应。"
+    },
+    {
+      "metric_id": "mean_sentence_chars",
+      "direction": "increase",
+      "target_range": "37.454256–50.673405",
+      "action": "把动作、感知、判断或结果组合为完整复句，减少单个动作单独成句。"
+    },
+    {
+      "metric_id": "short_paragraph_ratio",
+      "direction": "decrease",
+      "target_range": "0.230769–0.384615",
+      "action": "把非关键短段与相邻的因果或反应合并，避免阅读碎片化。"
+    },
+    {
+      "metric_id": "chapter_char_count",
+      "direction": "increase",
+      "target_range": "1641.0–2641.0",
+      "action": "在不新增计划外情节的前提下，补足已计划场景中的动作、对话、感知、阻力与结果，使篇幅覆盖完整事件链。"
+    },
+    {
+      "metric_id": "dialogue_char_ratio",
+      "direction": "maintain",
+      "target_range": "0.131714–0.219524",
+      "action": "保持当前做法，只在不破坏剧情时微调。"
+    }
+  ],
+  "style_execution_blueprint": {
+    "instruction": "按此蓝图安排正文，但不得删改计划事件或以凑数破坏可读性。",
+    "chapter_char_count": {
+      "target": 2141,
+      "minimum": 1641,
+      "maximum": 2641
+    },
+    "paragraph_count": {
+      "target": 40,
+      "minimum": 26,
+      "maximum": 58
+    },
+    "short_paragraph_count": {
+      "target": 12,
+      "minimum": 6,
+      "maximum": 22
+    },
+    "sentence_count": {
+      "target": 49,
+      "minimum": 32,
+      "maximum": 71
+    },
+    "dialogue_char_count": {
+      "target": 376,
+      "minimum": 216,
+      "maximum": 580
+    },
+    "perception_sentence_count": {
+      "target": 9,
+      "minimum": 7,
+      "maximum": 12
+    },
+    "transition_sentence_count": {
+      "target": 0,
+      "minimum": 0,
+      "maximum": 1
+    }
+  },
+  "reconstruction_mode": "fidelity_test_only",
+  "scene_contracts": [
+    {
+      "order": 0,
+      "participants": [
+        "王林",
+        "四叔"
+      ],
+      "events": [
+        {
+          "order": 0,
+          "summary": "王林离开山村，随四叔到达四叔家",
+          "participants": [
+            "王林",
+            "四叔"
+          ],
+          "action": "乘马车离开山村并到达四叔家",
+          "obstacle": "",
+          "decision": "",
+          "preconditions": [],
+          "outcomes": [
+            "王林 到达 四叔家"
+          ],
+          "costs": [],
+          "contract_id": "target-event-001"
+        }
+      ],
+      "objective": "离开山村前往县城（到达四叔家）",
+      "entry_facts": [
+        "王林 离开 山村"
+      ],
+      "exit_facts": [
+        "王林 到达 四叔家"
+      ],
+      "tension": 1,
+      "locations": [],
+      "time_anchors": [],
+      "contract_id": "target-scene-001"
+    },
+    {
+      "order": 1,
+      "participants": [
+        "王林",
+        "四叔"
+      ],
+      "events": [
+        {
+          "order": 1,
+          "summary": "王林随四叔到达王氏家族大宅子",
+          "participants": [
+            "王林",
+            "四叔"
+          ],
+          "action": "前往大宅子",
+          "obstacle": "",
+          "decision": "",
+          "preconditions": [],
+          "outcomes": [
+            "王林 到达 王氏家族大宅子"
+          ],
+          "costs": [],
+          "contract_id": "target-event-002"
+        }
+      ],
+      "objective": "到达王氏家族大宅子参加仙人选拔",
+      "entry_facts": [
+        "王林 到达 四叔家"
+      ],
+      "exit_facts": [
+        "王林 到达 王氏家族大宅子"
+      ],
+      "tension": 2,
+      "locations": [],
+      "time_anchors": [],
+      "contract_id": "target-scene-002"
+    },
+    {
+      "order": 2,
+      "participants": [
+        "王林",
+        "四叔",
+        "老者",
+        "王卓",
+        "王浩",
+        "白衣青年"
+      ],
+      "events": [
+        {
+          "order": 2,
+          "summary": "在家族大宅院中，白衣青年出现并带走三个少年",
+          "participants": [
+            "王林",
+            "四叔",
+            "老者",
+            "王卓",
+            "王浩",
+            "白衣青年"
+          ],
+          "action": "白衣青年询问并带走少年",
+          "obstacle": "",
+          "decision": "",
+          "preconditions": [
+            "王林 到达 王氏家族大宅子"
+          ],
+          "outcomes": [
+            "白衣青年 带走 三个少年"
+          ],
+          "costs": [],
+          "contract_id": "target-event-003"
+        }
+      ],
+      "objective": "等待仙人并接受选拔",
+      "entry_facts": [
+        "王林 到达 王氏家族大宅子"
+      ],
+      "exit_facts": [
+        "白衣青年 带走 三个少年"
+      ],
+      "tension": 4,
+      "locations": [],
+      "time_anchors": [],
+      "contract_id": "target-scene-003"
+    }
+  ]
+}

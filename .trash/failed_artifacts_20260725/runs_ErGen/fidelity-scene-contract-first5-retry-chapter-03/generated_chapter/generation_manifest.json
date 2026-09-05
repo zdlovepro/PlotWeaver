@@ -1,0 +1,14 @@
+{
+  "author_id": "ErGen",
+  "run_id": "fidelity-scene-contract-first5-retry-chapter-03",
+  "story_state_path": "D:\\205zd\\Desktop\\PlotWeaver\\runs\\ErGen\\fidelity-scene-contract-first5-retry\\fidelity\\chapter-03\\inputs\\story_state.json",
+  "chapter_brief_path": "D:\\205zd\\Desktop\\PlotWeaver\\runs\\ErGen\\fidelity-scene-contract-first5-retry\\fidelity\\chapter-03\\inputs\\chapter_brief.json",
+  "selected_template_ids": [
+    "library:chapter-011",
+    "library:scene-007"
+  ],
+  "repairs_used": 0,
+  "segmented_generation": false,
+  "continuity_passed": true,
+  "style_passed": false
+}

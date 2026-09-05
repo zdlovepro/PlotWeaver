@@ -1,0 +1,247 @@
+{
+  "scene_no": 1,
+  "scene_id": "ErGen/work-001/0004:chunk-01:scene-001",
+  "minimum_paragraph_chars": 20,
+  "repairs_used": 1,
+  "passed": true,
+  "role_passed": true,
+  "draft": {
+    "scene_id": "ErGen/work-001/0004:chunk-01:scene-001",
+    "paragraphs": [
+      {
+        "paragraph_id": "ErGen/work-001/0004:chunk-01:scene-001:paragraph-00",
+        "text": "王林咬紧牙关，沿着陡峭的石阶小径一步步向上爬行，汗水浸透了衣衫。",
+        "claimed_fact_ids": [
+          "ErGen/work-001/0004:chunk-01:fact-001"
+        ],
+        "claimed_event_ids": []
+      },
+      {
+        "paragraph_id": "ErGen/work-001/0004:chunk-01:scene-001:paragraph-01",
+        "text": "他感到双腿如灌铅般沉重，正咬牙坚持时，忽然瞥见前方一个少年踩空，惊呼着坠落下去。",
+        "claimed_fact_ids": [
+          "ErGen/work-001/0004:chunk-01:fact-002",
+          "ErGen/work-001/0004:chunk-01:fact-003"
+        ],
+        "claimed_event_ids": [
+          "ErGen/work-001/0004:chunk-01:event-001"
+        ]
+      },
+      {
+        "paragraph_id": "ErGen/work-001/0004:chunk-01:scene-001:paragraph-02",
+        "text": "王林感到双腿如灌铅，再也无法前进一步。这一刻黑衣中年人冷冷宣布时间已到，只有三人合格，其余失败。王林眼前一黑，身体软倒，昏迷过去。",
+        "claimed_fact_ids": [
+          "ErGen/work-001/0004:chunk-01:fact-002",
+          "ErGen/work-001/0004:chunk-01:fact-005",
+          "ErGen/work-001/0004:chunk-01:fact-006"
+        ],
+        "claimed_event_ids": [
+          "ErGen/work-001/0004:chunk-01:event-002"
+        ]
+      },
+      {
+        "paragraph_id": "ErGen/work-001/0004:chunk-01:scene-001:paragraph-03",
+        "text": "昏迷前，他隐约听到那个面色蜡黄中年人发出一声叹息，低沉而惋惜：“可惜资质太过普通。”那声音仿佛穿透了意识，随即他便彻底失去了知觉。",
+        "claimed_fact_ids": [
+          "ErGen/work-001/0004:chunk-01:fact-004"
+        ],
+        "claimed_event_ids": []
+      }
+    ]
+  },
+  "validations": [
+    {
+      "scene_id": "ErGen/work-001/0004:chunk-01:scene-001",
+      "reported_passed": false,
+      "realized_fact_ids": [
+        "ErGen/work-001/0004:chunk-01:fact-001",
+        "ErGen/work-001/0004:chunk-01:fact-002",
+        "ErGen/work-001/0004:chunk-01:fact-003",
+        "ErGen/work-001/0004:chunk-01:fact-005",
+        "ErGen/work-001/0004:chunk-01:fact-006"
+      ],
+      "missing_fact_ids": [
+        "ErGen/work-001/0004:chunk-01:fact-004"
+      ],
+      "realized_event_ids": [
+        "ErGen/work-001/0004:chunk-01:event-001",
+        "ErGen/work-001/0004:chunk-01:event-002"
+      ],
+      "missing_event_ids": [],
+      "premature_event_ids": [],
+      "paragraph_issues": [
+        {
+          "paragraph_id": "ErGen/work-001/0004:chunk-01:scene-001:paragraph-03",
+          "problem": "正文未明确发出叹息的是面色蜡黄中年人，导致事实fact-004缺失",
+          "repair": "将‘一个声音’改为‘面色蜡黄中年人’的声音"
+        }
+      ],
+      "repair_paragraph_ids": [
+        "ErGen/work-001/0004:chunk-01:scene-001:paragraph-03"
+      ],
+      "passed": false
+    },
+    {
+      "scene_id": "ErGen/work-001/0004:chunk-01:scene-001",
+      "reported_passed": true,
+      "realized_fact_ids": [
+        "ErGen/work-001/0004:chunk-01:fact-001",
+        "ErGen/work-001/0004:chunk-01:fact-002",
+        "ErGen/work-001/0004:chunk-01:fact-003",
+        "ErGen/work-001/0004:chunk-01:fact-004",
+        "ErGen/work-001/0004:chunk-01:fact-005",
+        "ErGen/work-001/0004:chunk-01:fact-006"
+      ],
+      "missing_fact_ids": [],
+      "realized_event_ids": [
+        "ErGen/work-001/0004:chunk-01:event-001",
+        "ErGen/work-001/0004:chunk-01:event-002"
+      ],
+      "missing_event_ids": [],
+      "premature_event_ids": [],
+      "paragraph_issues": [],
+      "repair_paragraph_ids": [],
+      "passed": true
+    }
+  ],
+  "role_checks": [
+    {
+      "attempt": 0,
+      "passed": true,
+      "paragraph_issues": {}
+    },
+    {
+      "attempt": 1,
+      "passed": true,
+      "paragraph_issues": {}
+    }
+  ],
+  "deterministic_style_repairs": [
+    {
+      "paragraph_id": "ErGen/work-001/0004:chunk-01:scene-001:paragraph-02",
+      "label": "转场",
+      "from": "此时",
+      "to": "这一刻"
+    }
+  ],
+  "style_repair_rejections": [
+    {
+      "reason": "局部修复未带来可测量的风格改进",
+      "style_assessment": {
+        "passed": false,
+        "mean_relative_deviation": 0.640651,
+        "high_priority_in_range": 3,
+        "high_priority_required": 4,
+        "metrics": [
+          {
+            "metric_id": "mean_sentence_chars",
+            "unit": "mean_chars",
+            "target": 49.422016,
+            "preferred_min": 41.538594,
+            "preferred_max": 55.817069,
+            "priority": "high",
+            "actual": 30.266667,
+            "in_preferred_range": false,
+            "relative_deviation": 0.387587
+          },
+          {
+            "metric_id": "mean_paragraph_chars",
+            "unit": "mean_chars",
+            "target": 63.031146,
+            "preferred_min": 53.648906,
+            "preferred_max": 71.055573,
+            "priority": "high",
+            "actual": 66.857143,
+            "in_preferred_range": true,
+            "relative_deviation": 0.0607
+          },
+          {
+            "metric_id": "short_paragraph_ratio",
+            "unit": "ratio",
+            "target": 0.194046,
+            "preferred_min": 0.115542,
+            "preferred_max": 0.341468,
+            "priority": "high",
+            "actual": 0.285714,
+            "in_preferred_range": true,
+            "relative_deviation": 0.472403
+          },
+          {
+            "metric_id": "dialogue_char_ratio",
+            "unit": "ratio",
+            "target": 0.259368,
+            "preferred_min": 0.151359,
+            "preferred_max": 0.434032,
+            "priority": "high",
+            "actual": 0.257384,
+            "in_preferred_range": true,
+            "relative_deviation": 0.007649
+          },
+          {
+            "metric_id": "perception_marker_ratio",
+            "unit": "ratio",
+            "target": 0.106614,
+            "preferred_min": 0.066128,
+            "preferred_max": 0.149052,
+            "priority": "high",
+            "actual": 0.266667,
+            "in_preferred_range": false,
+            "relative_deviation": 1.501238
+          },
+          {
+            "metric_id": "transition_marker_ratio",
+            "unit": "ratio",
+            "target": 0.040787,
+            "preferred_min": 0.020393,
+            "preferred_max": 0.077211,
+            "priority": "high",
+            "actual": 0.133333,
+            "in_preferred_range": false,
+            "relative_deviation": 1.85092
+          },
+          {
+            "metric_id": "question_sentence_ratio",
+            "unit": "ratio",
+            "target": 0.090693,
+            "preferred_min": 0.05671,
+            "preferred_max": 0.176926,
+            "priority": "medium",
+            "actual": 0.133333,
+            "in_preferred_range": true,
+            "relative_deviation": 0.470158
+          },
+          {
+            "metric_id": "exclamation_sentence_ratio",
+            "unit": "ratio",
+            "target": 0.06543,
+            "preferred_min": 0.043584,
+            "preferred_max": 0.122458,
+            "priority": "medium",
+            "actual": 0.066667,
+            "in_preferred_range": true,
+            "relative_deviation": 0.018906
+          },
+          {
+            "metric_id": "ellipsis_per_sentence",
+            "unit": "ratio",
+            "target": 0.038682,
+            "preferred_min": 0.019341,
+            "preferred_max": 0.133627,
+            "priority": "medium",
+            "actual": 0.066667,
+            "in_preferred_range": true,
+            "relative_deviation": 0.5597
+          }
+        ],
+        "repair_priorities": [
+          "transition_marker_ratio",
+          "perception_marker_ratio",
+          "mean_sentence_chars"
+        ]
+      }
+    }
+  ],
+  "style_repair_errors": [
+    "ValueError: 模型 JSON 连续不符合场景契约：段落修复 字段必须严格匹配；缺少=['修复段落', '场景ID']，多出=[]"
+  ]
+}

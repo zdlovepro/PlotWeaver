@@ -1,0 +1,14 @@
+{
+  "author_id": "ErGen",
+  "run_id": "fidelity-budget-first5-02",
+  "story_state_path": "C:\\Users\\zd205\\AppData\\Local\\Temp\\tmpdniy_6u6\\state-2.json",
+  "chapter_brief_path": "C:\\Users\\zd205\\AppData\\Local\\Temp\\tmpdniy_6u6\\brief-2.json",
+  "selected_template_ids": [
+    "library:chapter-013",
+    "library:event-005",
+    "library:scene-008"
+  ],
+  "repairs_used": 2,
+  "continuity_passed": true,
+  "style_passed": false
+}

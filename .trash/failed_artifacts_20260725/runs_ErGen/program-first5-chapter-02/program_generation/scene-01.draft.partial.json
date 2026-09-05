@@ -1,0 +1,31 @@
+{
+  "scene_id": "ErGen/work-001/0002:chunk-01:scene-001",
+  "paragraphs": [
+    {
+      "paragraph_id": "ErGen/work-001/0002:chunk-01:scene-001:paragraph-00",
+      "text": "王林坐上通往四叔家的马车，随着车轮吱呀作响，身后那座生活了多年的小山村逐渐被树木和山石遮挡，直至完全消失不见，他深吸一口气，握紧了拳头。",
+      "claimed_fact_ids": [
+        "ErGen/work-001/0002:chunk-01:fact-001"
+      ],
+      "claimed_event_ids": []
+    },
+    {
+      "paragraph_id": "ErGen/work-001/0002:chunk-01:scene-001:paragraph-01",
+      "text": "马车很快停在四叔家门前，四叔迎出来说道：“王林，到了，快进来吧。”王林跳下马车，低声道：“四叔，麻烦您了，我可能要多住些日子。”",
+      "claimed_fact_ids": [
+        "ErGen/work-001/0002:chunk-01:fact-002"
+      ],
+      "claimed_event_ids": [
+        "ErGen/work-001/0002:chunk-01:event-001"
+      ]
+    },
+    {
+      "paragraph_id": "ErGen/work-001/0002:chunk-01:scene-001:paragraph-02",
+      "text": "王林望着四叔关切的眼神，感到自己心跳加速，手心渗出了汗，深吸一口气却仍无法平复内心的紧张。",
+      "claimed_fact_ids": [
+        "ErGen/work-001/0002:chunk-01:fact-008"
+      ],
+      "claimed_event_ids": []
+    }
+  ]
+}

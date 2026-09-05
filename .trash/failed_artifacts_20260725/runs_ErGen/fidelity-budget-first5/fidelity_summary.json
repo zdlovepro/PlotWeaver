@@ -1,0 +1,118 @@
+{
+  "author_id": "ErGen",
+  "work_id": "work-001",
+  "requested_chapter_count": 5,
+  "completed_chapter_count": 4,
+  "mean_style_similarity": 0.4511,
+  "style_budget_pass_rate": 0.0,
+  "mean_style_deviation": 0.5624,
+  "continuity_pass_rate": 1.0,
+  "mean_repairs_used": 2.0,
+  "mean_structural_scores": {
+    "event_causality": 4.25,
+    "state_coverage": 4.0,
+    "temporal_spatial": 4.0,
+    "scene_pacing": 3.25,
+    "style_execution": 1.25
+  },
+  "chapters": [
+    {
+      "chapter_id": "ErGen/work-001/0001",
+      "failed": false,
+      "style_similarity": 0.2786,
+      "style_budget_passed": false,
+      "style_mean_relative_deviation": 0.543393,
+      "continuity_passed": true,
+      "repairs_used": 2,
+      "scores": {
+        "event_causality": 4,
+        "state_coverage": 5,
+        "temporal_spatial": 4,
+        "scene_pacing": 4,
+        "style_execution": 2
+      },
+      "next_repairs": [
+        "降低question_sentence_ratio（当前0.230，目标0.075-0.125），减少非必要问句",
+        "降低exclamation_sentence_ratio（当前0.122，目标0.038-0.078），控制感叹句数量",
+        "提高perception_marker_ratio（当前0.027，目标0.119-0.198），增加角色看、听、感等描写",
+        "提高transition_marker_ratio（当前0.0，目标0.013-0.053），插入‘然后’‘接着’‘随后’等过渡词"
+      ]
+    },
+    {
+      "chapter_id": "ErGen/work-001/0002",
+      "failed": false,
+      "style_similarity": 0.6249,
+      "style_budget_passed": false,
+      "style_mean_relative_deviation": 0.332646,
+      "continuity_passed": true,
+      "repairs_used": 2,
+      "scores": {
+        "event_causality": 5,
+        "state_coverage": 5,
+        "temporal_spatial": 5,
+        "scene_pacing": 4,
+        "style_execution": 1
+      },
+      "next_repairs": [
+        "优先修复mean_paragraph_chars：当前95.17，目标53.92，需缩短段落长度，将长段落拆分",
+        "修复mean_sentence_chars：当前18.96，目标44.06，需增加句子长度，合并短句",
+        "增加perception_marker_ratio：当前0.091，目标0.191，需添加更多感官描述（如视觉、听觉、触觉标记）",
+        "增加dialogue_char_ratio：当前0.098，目标0.176，需适当增加对话内容",
+        "注意其他指标已在范围内，可保持"
+      ]
+    },
+    {
+      "chapter_id": "ErGen/work-001/0003",
+      "failed": false,
+      "style_similarity": 0.4062,
+      "style_budget_passed": false,
+      "style_mean_relative_deviation": 0.738612,
+      "continuity_passed": true,
+      "repairs_used": 2,
+      "scores": {
+        "event_causality": 4,
+        "state_coverage": 3,
+        "temporal_spatial": 4,
+        "scene_pacing": 3,
+        "style_execution": 1
+      },
+      "next_repairs": [
+        "mean_paragraph_chars",
+        "short_paragraph_ratio",
+        "transition_marker_ratio",
+        "dialogue_char_ratio"
+      ]
+    },
+    {
+      "chapter_id": "ErGen/work-001/0004",
+      "failed": true,
+      "errors": [
+        "Model text request failed after 6 attempt(s)",
+        "Model did not return valid JSON after 6 attempt(s)"
+      ]
+    },
+    {
+      "chapter_id": "ErGen/work-001/0005",
+      "failed": false,
+      "style_similarity": 0.4948,
+      "style_budget_passed": false,
+      "style_mean_relative_deviation": 0.634909,
+      "continuity_passed": true,
+      "repairs_used": 2,
+      "scores": {
+        "event_causality": 4,
+        "state_coverage": 3,
+        "temporal_spatial": 3,
+        "scene_pacing": 2,
+        "style_execution": 1
+      },
+      "next_repairs": [
+        "调整段落长度，增加短段落比例",
+        "增加对话字符占比",
+        "增加感知标记",
+        "调整句子长度"
+      ]
+    }
+  ],
+  "method": "???????????????????????????????????????"
+}

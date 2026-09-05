@@ -1,0 +1,213 @@
+{
+  "scene_no": 1,
+  "scene_id": "ErGen/work-001/0002:chunk-01:scene-001",
+  "minimum_paragraph_chars": 20,
+  "repairs_used": 1,
+  "passed": true,
+  "role_passed": true,
+  "draft": {
+    "scene_id": "ErGen/work-001/0002:chunk-01:scene-001",
+    "paragraphs": [
+      {
+        "paragraph_id": "ErGen/work-001/0002:chunk-01:scene-001:paragraph-00",
+        "text": "王林坐上通往四叔家的马车，随着车轮吱呀作响，身后那座生活了多年的小山村逐渐被树木和山石遮挡，直至完全消失不见，他深吸一口气，握紧了拳头。",
+        "claimed_fact_ids": [
+          "ErGen/work-001/0002:chunk-01:fact-001"
+        ],
+        "claimed_event_ids": []
+      },
+      {
+        "paragraph_id": "ErGen/work-001/0002:chunk-01:scene-001:paragraph-01",
+        "text": "马车很快停在四叔家门前，四叔迎出来说道：“王林，一路辛苦了，快进屋吧，你婶子已经准备好了饭菜。”王林跳下马车，低声道：“四叔，真是麻烦您了，这次可能要住很久，我心里实在过意不去。”",
+        "claimed_fact_ids": [
+          "ErGen/work-001/0002:chunk-01:fact-002"
+        ],
+        "claimed_event_ids": [
+          "ErGen/work-001/0002:chunk-01:event-001"
+        ]
+      },
+      {
+        "paragraph_id": "ErGen/work-001/0002:chunk-01:scene-001:paragraph-02",
+        "text": "王林感到心跳如鼓，手心出汗，紧张得难以平复。",
+        "claimed_fact_ids": [
+          "ErGen/work-001/0002:chunk-01:fact-008"
+        ],
+        "claimed_event_ids": []
+      }
+    ]
+  },
+  "validations": [
+    {
+      "scene_id": "ErGen/work-001/0002:chunk-01:scene-001",
+      "reported_passed": true,
+      "realized_fact_ids": [
+        "ErGen/work-001/0002:chunk-01:fact-001",
+        "ErGen/work-001/0002:chunk-01:fact-002",
+        "ErGen/work-001/0002:chunk-01:fact-008"
+      ],
+      "missing_fact_ids": [],
+      "realized_event_ids": [
+        "ErGen/work-001/0002:chunk-01:event-001"
+      ],
+      "missing_event_ids": [],
+      "premature_event_ids": [],
+      "paragraph_issues": [],
+      "repair_paragraph_ids": [],
+      "passed": true
+    },
+    {
+      "scene_id": "ErGen/work-001/0002:chunk-01:scene-001",
+      "reported_passed": true,
+      "realized_fact_ids": [
+        "ErGen/work-001/0002:chunk-01:fact-001",
+        "ErGen/work-001/0002:chunk-01:fact-002",
+        "ErGen/work-001/0002:chunk-01:fact-008"
+      ],
+      "missing_fact_ids": [],
+      "realized_event_ids": [
+        "ErGen/work-001/0002:chunk-01:event-001"
+      ],
+      "missing_event_ids": [],
+      "premature_event_ids": [],
+      "paragraph_issues": [],
+      "repair_paragraph_ids": [],
+      "passed": true
+    }
+  ],
+  "role_checks": [
+    {
+      "attempt": 0,
+      "passed": false,
+      "paragraph_issues": {
+        "ErGen/work-001/0002:chunk-01:scene-001:paragraph-01": [
+          "对话职责要求中文引号内对白不少于40字，当前为29字"
+        ],
+        "ErGen/work-001/0002:chunk-01:scene-001:paragraph-02": [
+          "短段职责要求不超过35字，当前为45字"
+        ]
+      }
+    },
+    {
+      "attempt": 1,
+      "passed": true,
+      "paragraph_issues": {}
+    }
+  ],
+  "style_repair_rejections": [
+    {
+      "reason": "局部修复未带来可测量的风格改进",
+      "style_assessment": {
+        "passed": false,
+        "mean_relative_deviation": 0.466702,
+        "high_priority_in_range": 4,
+        "high_priority_required": 4,
+        "metrics": [
+          {
+            "metric_id": "mean_sentence_chars",
+            "unit": "mean_chars",
+            "target": 49.422016,
+            "preferred_min": 41.538594,
+            "preferred_max": 55.817069,
+            "priority": "high",
+            "actual": 33.2,
+            "in_preferred_range": false,
+            "relative_deviation": 0.328235
+          },
+          {
+            "metric_id": "mean_paragraph_chars",
+            "unit": "mean_chars",
+            "target": 63.031146,
+            "preferred_min": 53.648906,
+            "preferred_max": 71.055573,
+            "priority": "high",
+            "actual": 73.0,
+            "in_preferred_range": false,
+            "relative_deviation": 0.158158
+          },
+          {
+            "metric_id": "short_paragraph_ratio",
+            "unit": "ratio",
+            "target": 0.194046,
+            "preferred_min": 0.115542,
+            "preferred_max": 0.341468,
+            "priority": "high",
+            "actual": 0.142857,
+            "in_preferred_range": true,
+            "relative_deviation": 0.263798
+          },
+          {
+            "metric_id": "dialogue_char_ratio",
+            "unit": "ratio",
+            "target": 0.259368,
+            "preferred_min": 0.151359,
+            "preferred_max": 0.434032,
+            "priority": "high",
+            "actual": 0.218569,
+            "in_preferred_range": true,
+            "relative_deviation": 0.157302
+          },
+          {
+            "metric_id": "perception_marker_ratio",
+            "unit": "ratio",
+            "target": 0.106614,
+            "preferred_min": 0.066128,
+            "preferred_max": 0.149052,
+            "priority": "high",
+            "actual": 0.066667,
+            "in_preferred_range": true,
+            "relative_deviation": 0.374688
+          },
+          {
+            "metric_id": "transition_marker_ratio",
+            "unit": "ratio",
+            "target": 0.040787,
+            "preferred_min": 0.020393,
+            "preferred_max": 0.077211,
+            "priority": "high",
+            "actual": 0.066667,
+            "in_preferred_range": true,
+            "relative_deviation": 0.5176
+          },
+          {
+            "metric_id": "question_sentence_ratio",
+            "unit": "ratio",
+            "target": 0.090693,
+            "preferred_min": 0.05671,
+            "preferred_max": 0.176926,
+            "priority": "medium",
+            "actual": 0.133333,
+            "in_preferred_range": true,
+            "relative_deviation": 0.470158
+          },
+          {
+            "metric_id": "exclamation_sentence_ratio",
+            "unit": "ratio",
+            "target": 0.06543,
+            "preferred_min": 0.043584,
+            "preferred_max": 0.122458,
+            "priority": "medium",
+            "actual": 0.133333,
+            "in_preferred_range": false,
+            "relative_deviation": 1.037796
+          },
+          {
+            "metric_id": "ellipsis_per_sentence",
+            "unit": "ratio",
+            "target": 0.038682,
+            "preferred_min": 0.019341,
+            "preferred_max": 0.133627,
+            "priority": "medium",
+            "actual": 0.133333,
+            "in_preferred_range": true,
+            "relative_deviation": 1.89302
+          }
+        ],
+        "repair_priorities": [
+          "exclamation_sentence_ratio",
+          "mean_sentence_chars",
+          "mean_paragraph_chars"
+        ]
+      }
+    }
+  ]
+}

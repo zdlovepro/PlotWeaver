@@ -1,1 +1,77 @@
-This is an AI tool that leverages Deepseek and GAN to swap plots between two novel outlines and adjust the overall logic of the outline.
+# PlotWeaver
+
+PlotWeaver 是面向中文长篇小说的“分层梗概—按需事实—叙事图谱—模板与风格—
+作者 Skill—受控生成”流水线。最终目标是从同一小说作者的多部作品中蒸馏可迁移、
+可执行和可评测的写作 Skill。
+
+## 当前统一流程
+
+```text
+原文切章
+→ 局部/场景/章节梗概
+→ 故事弧/卷/全书大纲
+→ 大纲驱动的必要事实补全
+→ 叙事图谱
+→ 多重叙事模板 + 文风档案
+→ {author_id}_skill
+→ 长篇生成与差距评测
+```
+
+最重要的顺序约束是：先形成梗概和分层大纲，再决定需要提取哪些事实。第一模块
+不会生成命题表、实体表或知识图谱；事实提取统一属于第三模块。
+
+## 目录
+
+```text
+input/                                  # 当前导入源，不上传 Git
+novels/                                 # 小说档案，不上传 Git
+corpus/<作者标识>/<作品标识>/             # 不可变章节语料
+runs/<作者标识>/<运行标识>/               # 各模块产物和检查点
+output/<作者标识>_skill/                 # 最终 Skill
+pipeline/contracts/                     # 跨模块公共契约
+pipeline/modules/                       # 00—09 独立业务阶段
+v2/                                     # 历史思路参考，新版不导入
+```
+
+完整模块边界见 [pipeline/modules/README.md](pipeline/modules/README.md)，目标架构见
+[docs/ARCHITECTURE.md](docs/ARCHITECTURE.md)。
+
+## 当前迁移状态
+
+- 模块 00 的语料导入保留；
+- 模块 01 已重建为私有梗概模块，目录和公共契约已经固定，服务正在接入；
+- 模块 02、03 已分别固定为分层大纲和按需事实补全；
+- 放错位置的事实优先和图谱反推大纲实现已移出活动流水线并保留可恢复备份；
+- 后续模块将在新契约接通后逐个恢复，不会通过旧入口悄悄回退。
+
+当前可用的语料导入形式：
+
+```powershell
+py -3.12 main.py ingest --author-id ExampleAuthor --source-dir input
+```
+
+第一模块完成后的目标入口为：
+
+```powershell
+py -3.12 main.py extract-synopsis --author-id ExampleAuthor --work-id work-001 `
+  --limit 5 --run-id synopsis-5
+```
+
+在第一模块服务接通前，该入口会明确报告迁移未完成，不会调用旧事实提取流程。
+
+## 两种样本路线
+
+- 5—20 章：第二模块聚合到局部故事弧，用于程序质量验证。
+- 整本小说：第二模块继续聚合到卷级和全书级，再反向生成事实需求。
+
+两条路线共用同一个梗概提取器和事实补全器。短样本不能证明已经蒸馏出完整作者
+Skill；正式 Skill 还需要多部作品、反例检查和跨作品稳定性验证。
+
+## 关键边界
+
+- 伏笔必须有后文回应证据；只有设置没有回应的是开放线索或未填坑。
+- `narrative_graph.json` 是剧情连续性底座，不等于作者 Skill。
+- 更强模型能改善语义理解和正文质量，但不能修复错误的模块顺序和数据契约。
+- 生成器不能读取待重建章节原文，只能读取大纲、相关图谱子图、状态和 Skill。
+- 公共代码、注释和文档使用通用“小说作者”称谓，具体作者代号由用户输入。
+

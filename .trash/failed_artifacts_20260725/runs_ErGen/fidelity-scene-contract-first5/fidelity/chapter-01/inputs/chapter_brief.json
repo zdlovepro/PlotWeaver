@@ -1,0 +1,530 @@
+{
+  "reconstruction_mode": "fidelity_test_only",
+  "chapter_goal": "完整重建已提供的目标事件、场景、状态变化与结局，不新增输入外情节。",
+  "required_events": [
+    {
+      "order": 0,
+      "summary": "铁柱在村口小路边读书后回家",
+      "participants": [
+        "铁柱"
+      ],
+      "action": "回家",
+      "obstacle": "",
+      "decision": "",
+      "preconditions": [],
+      "outcomes": [
+        "铁柱 回到 家中"
+      ],
+      "costs": [],
+      "contract_id": "target-event-001"
+    },
+    {
+      "order": 1,
+      "summary": "父亲劝铁柱好好读书，准备县考",
+      "participants": [
+        "铁柱",
+        "父亲"
+      ],
+      "action": "对话",
+      "obstacle": "",
+      "decision": "",
+      "preconditions": [],
+      "outcomes": [
+        "父亲 期望 铁柱好好读书"
+      ],
+      "costs": [],
+      "contract_id": "target-event-002"
+    },
+    {
+      "order": 2,
+      "summary": "四叔到来并送给铁柱两本书",
+      "participants": [
+        "铁柱",
+        "父亲",
+        "母亲",
+        "四叔"
+      ],
+      "action": "四叔给书",
+      "obstacle": "",
+      "decision": "",
+      "preconditions": [],
+      "outcomes": [
+        "四叔 到达 铁柱家",
+        "四叔 给予 两本线状书"
+      ],
+      "costs": [],
+      "contract_id": "target-event-003"
+    },
+    {
+      "order": 3,
+      "summary": "四叔告知恒岳派招收弟子并推荐铁柱",
+      "participants": [
+        "铁柱",
+        "父亲",
+        "母亲",
+        "四叔"
+      ],
+      "action": "告知推荐",
+      "obstacle": "",
+      "decision": "",
+      "preconditions": [],
+      "outcomes": [
+        "四叔 告知 恒岳派今年收取弟子",
+        "四叔 让出 恒岳派推荐名额"
+      ],
+      "costs": [],
+      "contract_id": "target-event-004"
+    },
+    {
+      "order": 4,
+      "summary": "四叔第二天一早离开村子",
+      "participants": [
+        "四叔"
+      ],
+      "action": "离开",
+      "obstacle": "",
+      "decision": "",
+      "preconditions": [],
+      "outcomes": [
+        "四叔 离开 村子"
+      ],
+      "costs": [],
+      "contract_id": "target-event-005"
+    },
+    {
+      "order": 5,
+      "summary": "村民和家族亲戚前来道贺，举办宴席",
+      "participants": [
+        "铁柱",
+        "父亲",
+        "母亲"
+      ],
+      "action": "举办宴席",
+      "obstacle": "",
+      "decision": "",
+      "preconditions": [],
+      "outcomes": [
+        "父亲 举办 数百桌宴席"
+      ],
+      "costs": [],
+      "contract_id": "target-event-006"
+    },
+    {
+      "order": 6,
+      "summary": "铁柱暗自决心被恒岳派选中",
+      "participants": [
+        "铁柱"
+      ],
+      "action": "决心",
+      "obstacle": "",
+      "decision": "",
+      "preconditions": [],
+      "outcomes": [
+        "铁柱 决心 被恒岳派选中"
+      ],
+      "costs": [],
+      "contract_id": "target-event-007"
+    },
+    {
+      "order": 7,
+      "summary": "四叔接铁柱离开去恒岳派",
+      "participants": [
+        "铁柱",
+        "四叔"
+      ],
+      "action": "接走",
+      "obstacle": "",
+      "decision": "",
+      "preconditions": [],
+      "outcomes": [
+        "四叔 接 铁柱上马车"
+      ],
+      "costs": [],
+      "contract_id": "target-event-008"
+    }
+  ],
+  "required_scenes": [
+    {
+      "order": 0,
+      "participants": [
+        "铁柱"
+      ],
+      "events": [
+        {
+          "order": 0,
+          "summary": "铁柱在村口小路边读书后回家",
+          "participants": [
+            "铁柱"
+          ],
+          "action": "回家",
+          "obstacle": "",
+          "decision": "",
+          "preconditions": [],
+          "outcomes": [
+            "铁柱 回到 家中"
+          ],
+          "costs": [],
+          "contract_id": "target-event-001"
+        }
+      ],
+      "objective": "读书后回家",
+      "entry_facts": [],
+      "exit_facts": [
+        "铁柱 回到 家中"
+      ],
+      "tension": 1,
+      "locations": [],
+      "time_anchors": [],
+      "contract_id": "target-scene-001"
+    },
+    {
+      "order": 1,
+      "participants": [
+        "铁柱",
+        "父亲",
+        "母亲",
+        "四叔"
+      ],
+      "events": [
+        {
+          "order": 1,
+          "summary": "父亲劝铁柱好好读书，准备县考",
+          "participants": [
+            "铁柱",
+            "父亲"
+          ],
+          "action": "对话",
+          "obstacle": "",
+          "decision": "",
+          "preconditions": [],
+          "outcomes": [
+            "父亲 期望 铁柱好好读书"
+          ],
+          "costs": [],
+          "contract_id": "target-event-002"
+        },
+        {
+          "order": 2,
+          "summary": "四叔到来并送给铁柱两本书",
+          "participants": [
+            "铁柱",
+            "父亲",
+            "母亲",
+            "四叔"
+          ],
+          "action": "四叔给书",
+          "obstacle": "",
+          "decision": "",
+          "preconditions": [],
+          "outcomes": [
+            "四叔 到达 铁柱家",
+            "四叔 给予 两本线状书"
+          ],
+          "costs": [],
+          "contract_id": "target-event-003"
+        },
+        {
+          "order": 3,
+          "summary": "四叔告知恒岳派招收弟子并推荐铁柱",
+          "participants": [
+            "铁柱",
+            "父亲",
+            "母亲",
+            "四叔"
+          ],
+          "action": "告知推荐",
+          "obstacle": "",
+          "decision": "",
+          "preconditions": [],
+          "outcomes": [
+            "四叔 告知 恒岳派今年收取弟子",
+            "四叔 让出 恒岳派推荐名额"
+          ],
+          "costs": [],
+          "contract_id": "target-event-004"
+        }
+      ],
+      "objective": "家庭互动及获得推荐",
+      "entry_facts": [
+        "铁柱 回到 家中"
+      ],
+      "exit_facts": [
+        "四叔 告知 恒岳派今年收取弟子",
+        "四叔 让出 恒岳派推荐名额"
+      ],
+      "tension": 3,
+      "locations": [],
+      "time_anchors": [],
+      "contract_id": "target-scene-002"
+    },
+    {
+      "order": 2,
+      "participants": [
+        "铁柱",
+        "父亲",
+        "母亲"
+      ],
+      "events": [
+        {
+          "order": 4,
+          "summary": "四叔第二天一早离开村子",
+          "participants": [
+            "四叔"
+          ],
+          "action": "离开",
+          "obstacle": "",
+          "decision": "",
+          "preconditions": [],
+          "outcomes": [
+            "四叔 离开 村子"
+          ],
+          "costs": [],
+          "contract_id": "target-event-005"
+        },
+        {
+          "order": 5,
+          "summary": "村民和家族亲戚前来道贺，举办宴席",
+          "participants": [
+            "铁柱",
+            "父亲",
+            "母亲"
+          ],
+          "action": "举办宴席",
+          "obstacle": "",
+          "decision": "",
+          "preconditions": [],
+          "outcomes": [
+            "父亲 举办 数百桌宴席"
+          ],
+          "costs": [],
+          "contract_id": "target-event-006"
+        }
+      ],
+      "objective": "庆祝铁柱获得推荐",
+      "entry_facts": [
+        "四叔 离开 村子"
+      ],
+      "exit_facts": [
+        "父亲 举办 数百桌宴席"
+      ],
+      "tension": 4,
+      "locations": [],
+      "time_anchors": [],
+      "contract_id": "target-scene-003"
+    },
+    {
+      "order": 3,
+      "participants": [
+        "铁柱",
+        "父亲",
+        "母亲",
+        "四叔"
+      ],
+      "events": [
+        {
+          "order": 6,
+          "summary": "铁柱暗自决心被恒岳派选中",
+          "participants": [
+            "铁柱"
+          ],
+          "action": "决心",
+          "obstacle": "",
+          "decision": "",
+          "preconditions": [],
+          "outcomes": [
+            "铁柱 决心 被恒岳派选中"
+          ],
+          "costs": [],
+          "contract_id": "target-event-007"
+        },
+        {
+          "order": 7,
+          "summary": "四叔接铁柱离开去恒岳派",
+          "participants": [
+            "铁柱",
+            "四叔"
+          ],
+          "action": "接走",
+          "obstacle": "",
+          "decision": "",
+          "preconditions": [],
+          "outcomes": [
+            "四叔 接 铁柱上马车"
+          ],
+          "costs": [],
+          "contract_id": "target-event-008"
+        }
+      ],
+      "objective": "铁柱决心并离家",
+      "entry_facts": [
+        "父亲 举办 数百桌宴席"
+      ],
+      "exit_facts": [
+        "四叔 接 铁柱上马车"
+      ],
+      "tension": 4,
+      "locations": [],
+      "time_anchors": [],
+      "contract_id": "target-scene-004"
+    }
+  ],
+  "required_state_changes": [
+    {
+      "operation": "add",
+      "event": "铁柱在村口小路边读书后回家",
+      "before": "",
+      "after": "铁柱 回到 家中",
+      "contract_id": "target-change-001"
+    },
+    {
+      "operation": "add",
+      "event": "父亲劝铁柱好好读书，准备县考",
+      "before": "",
+      "after": "父亲 期望 铁柱好好读书",
+      "contract_id": "target-change-002"
+    },
+    {
+      "operation": "add",
+      "event": "四叔到来并送给铁柱两本书",
+      "before": "",
+      "after": "四叔 到达 铁柱家",
+      "contract_id": "target-change-003"
+    },
+    {
+      "operation": "add",
+      "event": "四叔到来并送给铁柱两本书",
+      "before": "",
+      "after": "四叔 给予 两本线状书",
+      "contract_id": "target-change-004"
+    },
+    {
+      "operation": "add",
+      "event": "四叔告知恒岳派招收弟子并推荐铁柱",
+      "before": "",
+      "after": "四叔 告知 恒岳派今年收取弟子",
+      "contract_id": "target-change-005"
+    },
+    {
+      "operation": "add",
+      "event": "四叔告知恒岳派招收弟子并推荐铁柱",
+      "before": "",
+      "after": "四叔 让出 恒岳派推荐名额",
+      "contract_id": "target-change-006"
+    },
+    {
+      "operation": "add",
+      "event": "四叔第二天一早离开村子",
+      "before": "",
+      "after": "四叔 离开 村子",
+      "contract_id": "target-change-007"
+    },
+    {
+      "operation": "add",
+      "event": "村民和家族亲戚前来道贺，举办宴席",
+      "before": "",
+      "after": "父亲 举办 数百桌宴席",
+      "contract_id": "target-change-008"
+    },
+    {
+      "operation": "add",
+      "event": "铁柱暗自决心被恒岳派选中",
+      "before": "",
+      "after": "铁柱 决心 被恒岳派选中",
+      "contract_id": "target-change-009"
+    },
+    {
+      "operation": "add",
+      "event": "四叔接铁柱离开去恒岳派",
+      "before": "",
+      "after": "四叔 接 铁柱上马车",
+      "contract_id": "target-change-010"
+    }
+  ],
+  "style_budget_override": {
+    "schema_version": "1.0",
+    "mode": "fidelity_test_override",
+    "instruction": "仅用于重建实验的量化验收；正常原创写作应使用作者级柔性预算。",
+    "metrics": [
+      {
+        "metric_id": "chapter_char_count",
+        "unit": "count",
+        "target": 5449.0,
+        "preferred_min": 4359.2,
+        "preferred_max": 6538.8,
+        "priority": "high"
+      },
+      {
+        "metric_id": "mean_sentence_chars",
+        "unit": "mean_chars",
+        "target": 43.958333,
+        "preferred_min": 37.364583,
+        "preferred_max": 50.552083,
+        "priority": "high"
+      },
+      {
+        "metric_id": "mean_paragraph_chars",
+        "unit": "mean_chars",
+        "target": 54.050505,
+        "preferred_min": 45.942929,
+        "preferred_max": 62.158081,
+        "priority": "high"
+      },
+      {
+        "metric_id": "short_paragraph_ratio",
+        "unit": "ratio",
+        "target": 0.282828,
+        "preferred_min": 0.212121,
+        "preferred_max": 0.353535,
+        "priority": "high"
+      },
+      {
+        "metric_id": "dialogue_char_ratio",
+        "unit": "ratio",
+        "target": 0.36025,
+        "preferred_min": 0.270188,
+        "preferred_max": 0.450313,
+        "priority": "high"
+      },
+      {
+        "metric_id": "perception_marker_ratio",
+        "unit": "ratio",
+        "target": 0.158333,
+        "preferred_min": 0.11875,
+        "preferred_max": 0.197916,
+        "priority": "high"
+      },
+      {
+        "metric_id": "transition_marker_ratio",
+        "unit": "ratio",
+        "target": 0.033333,
+        "preferred_min": 0.013333,
+        "preferred_max": 0.053333,
+        "priority": "high"
+      },
+      {
+        "metric_id": "question_sentence_ratio",
+        "unit": "ratio",
+        "target": 0.1,
+        "preferred_min": 0.075,
+        "preferred_max": 0.125,
+        "priority": "medium"
+      },
+      {
+        "metric_id": "exclamation_sentence_ratio",
+        "unit": "ratio",
+        "target": 0.058333,
+        "preferred_min": 0.038333,
+        "preferred_max": 0.078333,
+        "priority": "medium"
+      },
+      {
+        "metric_id": "ellipsis_per_sentence",
+        "unit": "ratio",
+        "target": 0.075,
+        "preferred_min": 0.055,
+        "preferred_max": 0.095,
+        "priority": "medium"
+      }
+    ]
+  }
+}

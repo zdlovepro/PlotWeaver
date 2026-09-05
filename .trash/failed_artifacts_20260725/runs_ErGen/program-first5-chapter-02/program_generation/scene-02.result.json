@@ -1,0 +1,80 @@
+{
+  "scene_no": 2,
+  "scene_id": "ErGen/work-001/0002:chunk-01:scene-002",
+  "minimum_paragraph_chars": 20,
+  "repairs_used": 0,
+  "passed": true,
+  "role_passed": true,
+  "draft": {
+    "scene_id": "ErGen/work-001/0002:chunk-01:scene-002",
+    "paragraphs": [
+      {
+        "paragraph_id": "ErGen/work-001/0002:chunk-01:scene-002:paragraph-00",
+        "text": "此时，一道璀璨的白光自天际划过，一个身穿白衣的青年男子飘然落在王氏家族宅子的庭院中。他神色淡然，周身散发着超凡脱俗的气息，众人心中一惊——这便是传说中的仙人。",
+        "claimed_fact_ids": [
+          "ErGen/work-001/0002:chunk-01:fact-004"
+        ],
+        "claimed_event_ids": []
+      },
+      {
+        "paragraph_id": "ErGen/work-001/0002:chunk-01:scene-002:paragraph-01",
+        "text": "过了一会，王林跟随四叔踏入王氏家族宅子，庭院里已聚集了不少族人，王卓与王浩站在一侧，一位白发老者端坐于主位。王林深吸一口气，知道决定命运的时刻到了。",
+        "claimed_fact_ids": [
+          "ErGen/work-001/0002:chunk-01:fact-003"
+        ],
+        "claimed_event_ids": [
+          "ErGen/work-001/0002:chunk-01:event-002"
+        ]
+      },
+      {
+        "paragraph_id": "ErGen/work-001/0002:chunk-01:scene-002:paragraph-02",
+        "text": "白衣青年目光扫过众人，开口询问几句，王林、王卓、王浩三人依言上前。青年点了点头，大袖一挥，三人顿时被一股无形力量卷起，随他一同升空，转眼消失在天际。",
+        "claimed_fact_ids": [
+          "ErGen/work-001/0002:chunk-01:fact-005"
+        ],
+        "claimed_event_ids": [
+          "ErGen/work-001/0002:chunk-01:event-003"
+        ]
+      }
+    ]
+  },
+  "validations": [
+    {
+      "scene_id": "ErGen/work-001/0002:chunk-01:scene-002",
+      "reported_passed": true,
+      "realized_fact_ids": [
+        "ErGen/work-001/0002:chunk-01:fact-003",
+        "ErGen/work-001/0002:chunk-01:fact-004",
+        "ErGen/work-001/0002:chunk-01:fact-005"
+      ],
+      "missing_fact_ids": [],
+      "realized_event_ids": [
+        "ErGen/work-001/0002:chunk-01:event-002",
+        "ErGen/work-001/0002:chunk-01:event-003"
+      ],
+      "missing_event_ids": [],
+      "premature_event_ids": [],
+      "paragraph_issues": [],
+      "repair_paragraph_ids": [],
+      "passed": true
+    }
+  ],
+  "role_checks": [
+    {
+      "attempt": 0,
+      "passed": true,
+      "paragraph_issues": {}
+    }
+  ],
+  "deterministic_style_repairs": [
+    {
+      "paragraph_id": "ErGen/work-001/0002:chunk-01:scene-002:paragraph-01",
+      "label": "转场",
+      "from": "片刻后",
+      "to": "过了一会"
+    }
+  ],
+  "style_repair_errors": [
+    "RuntimeError: Model did not return valid JSON after 3 attempt(s)"
+  ]
+}

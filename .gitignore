@@ -1,66 +1,55 @@
-# 忽略操作系统文件
+# Operating systems and editors
 Thumbs.db
 .DS_Store
-
-# 忽略临时文件和缓存
-*.tmp
-*.log
+.idea/
+.vscode/
+*.iml
 *.swp
 *.swo
 *.bak
-*.~*
+*~
 
-# 忽略编译生成的文件
-*.class
-*.pyc
-*.o
-*.so
-*.dll
-*.exe
-*.lib
-*.obj
-*.a
-*.out
-
-# 忽略虚拟环境
-venv/
-env/
-__pycache__/
-node_modules/
-.build/
-dist/
-target/
-
-# 忽略 IDE 或编辑器文件
-.idea/
-*.iml
-*.ipynb_checkpoints
-.vscode/
-*.sublime-project
-*.sublime-workspace
-
-# 忽略测试输出文件
-coverage.xml
-nyc_output/
-coverage/
-test-results/
-
-# 忽略日志文件
-logs/
-*.log
-
-# 忽略配置文件中的敏感信息
-*.env
-*.key
-
-# Python-specific
+# Python
 __pycache__/
 *.py[cod]
 *.egg
 *.egg-info/
-.egg-info/
-*.egg-dist-info/
+.pytest_cache/
+.coverage
+coverage.xml
+htmlcov/
+.tox/
+venv/
+env/
+
+# Build outputs
+build/
+dist/
+target/
 *.spec
-*~
-*.suo
-*.tox
+
+# Secrets and local model settings
+config.yaml
+config.local.yaml
+*.env
+*.key
+
+# Copyrighted corpora and active jobs
+input/
+novels/
+corpus/
+
+# Runtime artifacts
+runs/
+output/
+outputs/
+intermediate_data/
+history/
+.trash/
+chroma_data/
+logs/
+*.log
+
+# The first intelligent module is a local/private implementation.
+pipeline/modules/module_01_local_synopsis_private/
+tests/private/

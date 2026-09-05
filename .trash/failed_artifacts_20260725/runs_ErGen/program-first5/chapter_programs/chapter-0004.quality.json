@@ -1,0 +1,17 @@
+{
+  "schema_version": "1.0",
+  "chapter_id": "ErGen/work-001/0004",
+  "passed": true,
+  "counts": {
+    "scene_count": 2,
+    "fact_contract_count": 10,
+    "must_realize_fact_count": 10,
+    "paragraph_bound_fact_count": 10,
+    "event_program_count": 3,
+    "paragraph_bound_event_count": 3,
+    "paragraph_program_count": 7,
+    "max_facts_per_paragraph": 3,
+    "future_event_barrier_count": 1
+  },
+  "issues": []
+}

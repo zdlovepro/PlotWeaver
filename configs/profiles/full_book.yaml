@@ -1,0 +1,13 @@
+profile: full_book
+
+hierarchy:
+  aggregation_ceiling: book
+  top_down_start: volume_or_book
+
+templates:
+  require_cross_chapter_validation: true
+  require_cross_work_validation: true
+
+skill:
+  allow_final_export: true
+

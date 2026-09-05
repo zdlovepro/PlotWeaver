@@ -1,0 +1,473 @@
+{
+  "chapter_id": "ErGen/work-001/0001",
+  "entities": [
+    {
+      "name": "铁柱",
+      "kind": "person",
+      "aliases": [
+        "王林"
+      ]
+    },
+    {
+      "name": "父亲",
+      "kind": "person",
+      "aliases": [
+        "王天水"
+      ]
+    },
+    {
+      "name": "母亲",
+      "kind": "person",
+      "aliases": []
+    },
+    {
+      "name": "四叔",
+      "kind": "person",
+      "aliases": [
+        "老四"
+      ]
+    },
+    {
+      "name": "三祖父",
+      "kind": "person",
+      "aliases": []
+    },
+    {
+      "name": "大哥",
+      "kind": "person",
+      "aliases": []
+    },
+    {
+      "name": "王卓",
+      "kind": "person",
+      "aliases": []
+    },
+    {
+      "name": "村子",
+      "kind": "location",
+      "aliases": []
+    },
+    {
+      "name": "恒岳派",
+      "kind": "organization",
+      "aliases": []
+    },
+    {
+      "name": "王氏家族",
+      "kind": "organization",
+      "aliases": []
+    },
+    {
+      "name": "教书先生",
+      "kind": "person",
+      "aliases": []
+    }
+  ],
+  "facts": [
+    {
+      "kind": "location",
+      "statement": "铁柱 位于 村内小路边",
+      "certainty": 1.0
+    },
+    {
+      "kind": "identity",
+      "statement": "铁柱 本名 王林",
+      "certainty": 1.0
+    },
+    {
+      "kind": "identity",
+      "statement": "父亲 家族地位 庶出次子",
+      "certainty": 1.0
+    },
+    {
+      "kind": "knowledge",
+      "statement": "铁柱 聪明 是",
+      "certainty": 1.0
+    },
+    {
+      "kind": "emotion",
+      "statement": "母亲 关心 有佳",
+      "certainty": 1.0
+    },
+    {
+      "kind": "location",
+      "statement": "铁柱 回到 家中",
+      "certainty": 1.0
+    },
+    {
+      "kind": "goal",
+      "statement": "父亲 期望 铁柱好好读书",
+      "certainty": 1.0
+    },
+    {
+      "kind": "location",
+      "statement": "四叔 到达 铁柱家",
+      "certainty": 1.0
+    },
+    {
+      "kind": "resource",
+      "statement": "四叔 给予 两本线状书",
+      "certainty": 1.0
+    },
+    {
+      "kind": "knowledge",
+      "statement": "四叔 告知 恒岳派今年收取弟子",
+      "certainty": 1.0
+    },
+    {
+      "kind": "goal",
+      "statement": "铁柱 决定 去恒岳派",
+      "certainty": 1.0
+    },
+    {
+      "kind": "resource",
+      "statement": "四叔 让出 恒岳派推荐名额",
+      "certainty": 1.0
+    },
+    {
+      "kind": "emotion",
+      "statement": "父亲 激动 鞠躬",
+      "certainty": 1.0
+    },
+    {
+      "kind": "location",
+      "statement": "四叔 离开 村子",
+      "certainty": 1.0
+    },
+    {
+      "kind": "progression",
+      "statement": "父亲 举办 数百桌宴席",
+      "certainty": 1.0
+    },
+    {
+      "kind": "emotion",
+      "statement": "王卓 轻视 铁柱",
+      "certainty": 1.0
+    },
+    {
+      "kind": "goal",
+      "statement": "铁柱 决心 被恒岳派选中",
+      "certainty": 1.0
+    },
+    {
+      "kind": "location",
+      "statement": "四叔 接 铁柱上马车",
+      "certainty": 1.0
+    },
+    {
+      "kind": "emotion",
+      "statement": "母亲 不舍 流泪",
+      "certainty": 1.0
+    }
+  ],
+  "events": [
+    {
+      "order": 0,
+      "summary": "铁柱在村口小路边读书后回家",
+      "participants": [
+        "铁柱"
+      ],
+      "action": "回家",
+      "obstacle": "",
+      "decision": "",
+      "preconditions": [],
+      "outcomes": [
+        "铁柱 回到 家中"
+      ],
+      "costs": [],
+      "contract_id": "target-event-001"
+    },
+    {
+      "order": 1,
+      "summary": "父亲劝铁柱好好读书，准备县考",
+      "participants": [
+        "铁柱",
+        "父亲"
+      ],
+      "action": "对话",
+      "obstacle": "",
+      "decision": "",
+      "preconditions": [],
+      "outcomes": [
+        "父亲 期望 铁柱好好读书"
+      ],
+      "costs": [],
+      "contract_id": "target-event-002"
+    },
+    {
+      "order": 2,
+      "summary": "四叔到来并送给铁柱两本书",
+      "participants": [
+        "铁柱",
+        "父亲",
+        "母亲",
+        "四叔"
+      ],
+      "action": "四叔给书",
+      "obstacle": "",
+      "decision": "",
+      "preconditions": [],
+      "outcomes": [
+        "四叔 到达 铁柱家",
+        "四叔 给予 两本线状书"
+      ],
+      "costs": [],
+      "contract_id": "target-event-003"
+    },
+    {
+      "order": 3,
+      "summary": "四叔告知恒岳派招收弟子并推荐铁柱",
+      "participants": [
+        "铁柱",
+        "父亲",
+        "母亲",
+        "四叔"
+      ],
+      "action": "告知推荐",
+      "obstacle": "",
+      "decision": "",
+      "preconditions": [],
+      "outcomes": [
+        "四叔 告知 恒岳派今年收取弟子",
+        "四叔 让出 恒岳派推荐名额"
+      ],
+      "costs": [],
+      "contract_id": "target-event-004"
+    },
+    {
+      "order": 4,
+      "summary": "四叔第二天一早离开村子",
+      "participants": [
+        "四叔"
+      ],
+      "action": "离开",
+      "obstacle": "",
+      "decision": "",
+      "preconditions": [],
+      "outcomes": [
+        "四叔 离开 村子"
+      ],
+      "costs": [],
+      "contract_id": "target-event-005"
+    },
+    {
+      "order": 5,
+      "summary": "村民和家族亲戚前来道贺，举办宴席",
+      "participants": [
+        "铁柱",
+        "父亲",
+        "母亲"
+      ],
+      "action": "举办宴席",
+      "obstacle": "",
+      "decision": "",
+      "preconditions": [],
+      "outcomes": [
+        "父亲 举办 数百桌宴席"
+      ],
+      "costs": [],
+      "contract_id": "target-event-006"
+    },
+    {
+      "order": 6,
+      "summary": "铁柱暗自决心被恒岳派选中",
+      "participants": [
+        "铁柱"
+      ],
+      "action": "决心",
+      "obstacle": "",
+      "decision": "",
+      "preconditions": [],
+      "outcomes": [
+        "铁柱 决心 被恒岳派选中"
+      ],
+      "costs": [],
+      "contract_id": "target-event-007"
+    },
+    {
+      "order": 7,
+      "summary": "四叔接铁柱离开去恒岳派",
+      "participants": [
+        "铁柱",
+        "四叔"
+      ],
+      "action": "接走",
+      "obstacle": "",
+      "decision": "",
+      "preconditions": [],
+      "outcomes": [
+        "四叔 接 铁柱上马车"
+      ],
+      "costs": [],
+      "contract_id": "target-event-008"
+    }
+  ],
+  "scenes": [
+    {
+      "order": 0,
+      "participants": [
+        "铁柱"
+      ],
+      "events": [
+        "铁柱在村口小路边读书后回家"
+      ],
+      "objective": "读书后回家",
+      "entry_facts": [],
+      "exit_facts": [
+        "铁柱 回到 家中"
+      ],
+      "tension": 1,
+      "locations": [],
+      "time_anchors": [],
+      "contract_id": "target-scene-001"
+    },
+    {
+      "order": 1,
+      "participants": [
+        "铁柱",
+        "父亲",
+        "母亲",
+        "四叔"
+      ],
+      "events": [
+        "父亲劝铁柱好好读书，准备县考",
+        "四叔到来并送给铁柱两本书",
+        "四叔告知恒岳派招收弟子并推荐铁柱"
+      ],
+      "objective": "家庭互动及获得推荐",
+      "entry_facts": [
+        "铁柱 回到 家中"
+      ],
+      "exit_facts": [
+        "四叔 告知 恒岳派今年收取弟子",
+        "四叔 让出 恒岳派推荐名额"
+      ],
+      "tension": 3,
+      "locations": [],
+      "time_anchors": [],
+      "contract_id": "target-scene-002"
+    },
+    {
+      "order": 2,
+      "participants": [
+        "铁柱",
+        "父亲",
+        "母亲"
+      ],
+      "events": [
+        "四叔第二天一早离开村子",
+        "村民和家族亲戚前来道贺，举办宴席"
+      ],
+      "objective": "庆祝铁柱获得推荐",
+      "entry_facts": [
+        "四叔 离开 村子"
+      ],
+      "exit_facts": [
+        "父亲 举办 数百桌宴席"
+      ],
+      "tension": 4,
+      "locations": [],
+      "time_anchors": [],
+      "contract_id": "target-scene-003"
+    },
+    {
+      "order": 3,
+      "participants": [
+        "铁柱",
+        "父亲",
+        "母亲",
+        "四叔"
+      ],
+      "events": [
+        "铁柱暗自决心被恒岳派选中",
+        "四叔接铁柱离开去恒岳派"
+      ],
+      "objective": "铁柱决心并离家",
+      "entry_facts": [
+        "父亲 举办 数百桌宴席"
+      ],
+      "exit_facts": [
+        "四叔 接 铁柱上马车"
+      ],
+      "tension": 4,
+      "locations": [],
+      "time_anchors": [],
+      "contract_id": "target-scene-004"
+    }
+  ],
+  "state_changes": [
+    {
+      "operation": "add",
+      "event": "铁柱在村口小路边读书后回家",
+      "before": "",
+      "after": "铁柱 回到 家中",
+      "contract_id": "target-change-001"
+    },
+    {
+      "operation": "add",
+      "event": "父亲劝铁柱好好读书，准备县考",
+      "before": "",
+      "after": "父亲 期望 铁柱好好读书",
+      "contract_id": "target-change-002"
+    },
+    {
+      "operation": "add",
+      "event": "四叔到来并送给铁柱两本书",
+      "before": "",
+      "after": "四叔 到达 铁柱家",
+      "contract_id": "target-change-003"
+    },
+    {
+      "operation": "add",
+      "event": "四叔到来并送给铁柱两本书",
+      "before": "",
+      "after": "四叔 给予 两本线状书",
+      "contract_id": "target-change-004"
+    },
+    {
+      "operation": "add",
+      "event": "四叔告知恒岳派招收弟子并推荐铁柱",
+      "before": "",
+      "after": "四叔 告知 恒岳派今年收取弟子",
+      "contract_id": "target-change-005"
+    },
+    {
+      "operation": "add",
+      "event": "四叔告知恒岳派招收弟子并推荐铁柱",
+      "before": "",
+      "after": "四叔 让出 恒岳派推荐名额",
+      "contract_id": "target-change-006"
+    },
+    {
+      "operation": "add",
+      "event": "四叔第二天一早离开村子",
+      "before": "",
+      "after": "四叔 离开 村子",
+      "contract_id": "target-change-007"
+    },
+    {
+      "operation": "add",
+      "event": "村民和家族亲戚前来道贺，举办宴席",
+      "before": "",
+      "after": "父亲 举办 数百桌宴席",
+      "contract_id": "target-change-008"
+    },
+    {
+      "operation": "add",
+      "event": "铁柱暗自决心被恒岳派选中",
+      "before": "",
+      "after": "铁柱 决心 被恒岳派选中",
+      "contract_id": "target-change-009"
+    },
+    {
+      "operation": "add",
+      "event": "四叔接铁柱离开去恒岳派",
+      "before": "",
+      "after": "四叔 接 铁柱上马车",
+      "contract_id": "target-change-010"
+    }
+  ],
+  "time_anchors": [],
+  "temporal_relations": [],
+  "spatial_relations": []
+}

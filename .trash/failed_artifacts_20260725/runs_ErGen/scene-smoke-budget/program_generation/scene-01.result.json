@@ -1,0 +1,202 @@
+{
+  "scene_no": 1,
+  "scene_id": "ErGen/work-001/0001:chunk-01:scene-001",
+  "minimum_paragraph_chars": 20,
+  "repairs_used": 0,
+  "passed": true,
+  "draft": {
+    "scene_id": "ErGen/work-001/0001:chunk-01:scene-001",
+    "paragraphs": [
+      {
+        "paragraph_id": "ErGen/work-001/0001:chunk-01:scene-001:paragraph-00",
+        "text": "铁柱本名王林，父亲王天水是村里老实巴交的庄稼人，母亲则是个温顺的农妇，一家三口日子虽清贫倒也安稳。",
+        "claimed_fact_ids": [
+          "ErGen/work-001/0001:chunk-01:fact-001",
+          "ErGen/work-001/0001:chunk-01:fact-002",
+          "ErGen/work-001/0001:chunk-01:fact-003"
+        ],
+        "claimed_event_ids": []
+      },
+      {
+        "paragraph_id": "ErGen/work-001/0001:chunk-01:scene-001:paragraph-01",
+        "text": "四叔是王林的族亲，常年在外走动，见过些世面，回来后常给王家带来外界的消息。",
+        "claimed_fact_ids": [
+          "ErGen/work-001/0001:chunk-01:fact-011"
+        ],
+        "claimed_event_ids": []
+      },
+      {
+        "paragraph_id": "ErGen/work-001/0001:chunk-01:scene-001:paragraph-02",
+        "text": "这天四叔找到王天水，说恒岳派给了王氏家族一个推荐名额，他看铁柱机灵，打算推荐这孩子去试试，王天水夫妇犹豫后点了头，铁柱在一旁听得心跳加速，对传说中的仙人充满了好奇。",
+        "claimed_fact_ids": [
+          "ErGen/work-001/0001:chunk-01:fact-006",
+          "ErGen/work-001/0001:chunk-01:fact-004"
+        ],
+        "claimed_event_ids": [
+          "ErGen/work-001/0001:chunk-01:event-001"
+        ]
+      },
+      {
+        "paragraph_id": "ErGen/work-001/0001:chunk-01:scene-001:paragraph-03",
+        "text": "王天水望着儿子，眼里既有期望也有不安，而同族的王卓路过时轻哼一声，眼神里满是不屑。",
+        "claimed_fact_ids": [
+          "ErGen/work-001/0001:chunk-01:fact-007",
+          "ErGen/work-001/0001:chunk-01:fact-008"
+        ],
+        "claimed_event_ids": []
+      },
+      {
+        "paragraph_id": "ErGen/work-001/0001:chunk-01:scene-001:paragraph-04",
+        "text": "四叔临走时塞给铁柱两本书，叮嘱他好好研读。",
+        "claimed_fact_ids": [
+          "ErGen/work-001/0001:chunk-01:fact-005"
+        ],
+        "claimed_event_ids": []
+      }
+    ]
+  },
+  "validations": [
+    {
+      "scene_id": "ErGen/work-001/0001:chunk-01:scene-001",
+      "reported_passed": true,
+      "realized_fact_ids": [
+        "ErGen/work-001/0001:chunk-01:fact-001",
+        "ErGen/work-001/0001:chunk-01:fact-002",
+        "ErGen/work-001/0001:chunk-01:fact-003",
+        "ErGen/work-001/0001:chunk-01:fact-004",
+        "ErGen/work-001/0001:chunk-01:fact-005",
+        "ErGen/work-001/0001:chunk-01:fact-006",
+        "ErGen/work-001/0001:chunk-01:fact-007",
+        "ErGen/work-001/0001:chunk-01:fact-008",
+        "ErGen/work-001/0001:chunk-01:fact-011"
+      ],
+      "missing_fact_ids": [],
+      "realized_event_ids": [
+        "ErGen/work-001/0001:chunk-01:event-001"
+      ],
+      "missing_event_ids": [],
+      "premature_event_ids": [],
+      "paragraph_issues": [],
+      "repair_paragraph_ids": [],
+      "passed": true
+    }
+  ],
+  "style_repair_rejections": [
+    {
+      "reason": "局部修复未带来可测量的风格改进",
+      "style_assessment": {
+        "passed": false,
+        "mean_relative_deviation": 1.014609,
+        "high_priority_in_range": 2,
+        "high_priority_required": 4,
+        "metrics": [
+          {
+            "metric_id": "mean_sentence_chars",
+            "unit": "mean_chars",
+            "target": 49.422016,
+            "preferred_min": 41.538594,
+            "preferred_max": 55.817069,
+            "priority": "high",
+            "actual": 35.444444,
+            "in_preferred_range": false,
+            "relative_deviation": 0.282821
+          },
+          {
+            "metric_id": "mean_paragraph_chars",
+            "unit": "mean_chars",
+            "target": 63.031146,
+            "preferred_min": 53.648906,
+            "preferred_max": 71.055573,
+            "priority": "high",
+            "actual": 46.714286,
+            "in_preferred_range": false,
+            "relative_deviation": 0.25887
+          },
+          {
+            "metric_id": "short_paragraph_ratio",
+            "unit": "ratio",
+            "target": 0.194046,
+            "preferred_min": 0.115542,
+            "preferred_max": 0.341468,
+            "priority": "high",
+            "actual": 0.285714,
+            "in_preferred_range": true,
+            "relative_deviation": 0.472403
+          },
+          {
+            "metric_id": "dialogue_char_ratio",
+            "unit": "ratio",
+            "target": 0.259368,
+            "preferred_min": 0.151359,
+            "preferred_max": 0.434032,
+            "priority": "high",
+            "actual": 0.129129,
+            "in_preferred_range": false,
+            "relative_deviation": 0.50214
+          },
+          {
+            "metric_id": "perception_marker_ratio",
+            "unit": "ratio",
+            "target": 0.106614,
+            "preferred_min": 0.066128,
+            "preferred_max": 0.149052,
+            "priority": "high",
+            "actual": 0.111111,
+            "in_preferred_range": true,
+            "relative_deviation": 0.04218
+          },
+          {
+            "metric_id": "transition_marker_ratio",
+            "unit": "ratio",
+            "target": 0.040787,
+            "preferred_min": 0.020393,
+            "preferred_max": 0.077211,
+            "priority": "high",
+            "actual": 0.222222,
+            "in_preferred_range": false,
+            "relative_deviation": 3.6287
+          },
+          {
+            "metric_id": "question_sentence_ratio",
+            "unit": "ratio",
+            "target": 0.090693,
+            "preferred_min": 0.05671,
+            "preferred_max": 0.176926,
+            "priority": "medium",
+            "actual": 0.0,
+            "in_preferred_range": false,
+            "relative_deviation": 1.0
+          },
+          {
+            "metric_id": "exclamation_sentence_ratio",
+            "unit": "ratio",
+            "target": 0.06543,
+            "preferred_min": 0.043584,
+            "preferred_max": 0.122458,
+            "priority": "medium",
+            "actual": 0.222222,
+            "in_preferred_range": false,
+            "relative_deviation": 2.396332
+          },
+          {
+            "metric_id": "ellipsis_per_sentence",
+            "unit": "ratio",
+            "target": 0.038682,
+            "preferred_min": 0.019341,
+            "preferred_max": 0.133627,
+            "priority": "medium",
+            "actual": 0.111111,
+            "in_preferred_range": true,
+            "relative_deviation": 1.44858
+          }
+        ],
+        "repair_priorities": [
+          "transition_marker_ratio",
+          "exclamation_sentence_ratio",
+          "question_sentence_ratio",
+          "dialogue_char_ratio"
+        ]
+      }
+    }
+  ]
+}

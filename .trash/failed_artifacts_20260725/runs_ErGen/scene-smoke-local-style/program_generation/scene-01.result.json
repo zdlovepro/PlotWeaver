@@ -1,0 +1,111 @@
+{
+  "scene_no": 1,
+  "scene_id": "ErGen/work-001/0001:chunk-01:scene-001",
+  "minimum_paragraph_chars": 35,
+  "repairs_used": 0,
+  "passed": true,
+  "draft": {
+    "scene_id": "ErGen/work-001/0001:chunk-01:scene-001",
+    "paragraphs": [
+      {
+        "paragraph_id": "ErGen/work-001/0001:chunk-01:scene-001:paragraph-00",
+        "text": "铁柱本名王林，父亲王天水，母亲是村里一个普通的妇人。一家三口住在村子东头，日子虽清贫却也安稳。铁柱常常望着远处的山出神，听大人说那山里有仙人。",
+        "claimed_fact_ids": [
+          "ErGen/work-001/0001:chunk-01:fact-001",
+          "ErGen/work-001/0001:chunk-01:fact-002",
+          "ErGen/work-001/0001:chunk-01:fact-003"
+        ],
+        "claimed_event_ids": []
+      },
+      {
+        "paragraph_id": "ErGen/work-001/0001:chunk-01:scene-001:paragraph-01",
+        "text": "铁柱的四叔，王天水的亲弟弟，在村里颇有声望。这日傍晚，他忽然登门，铁柱父母连忙起身相迎。四叔摆摆手，示意他们坐下，神色间带着几分郑重。",
+        "claimed_fact_ids": [
+          "ErGen/work-001/0001:chunk-01:fact-011"
+        ],
+        "claimed_event_ids": []
+      },
+      {
+        "paragraph_id": "ErGen/work-001/0001:chunk-01:scene-001:paragraph-02",
+        "text": "四叔坐定后，开门见山道：「恒岳派这次招人，我给铁柱弄了个名额。」王天水与妻子对视一眼，脸上满是喜色。铁柱站在一旁，心中猛地一跳——仙人？他忍不住多问了一句：「四叔，恒岳派真有仙人吗？」四叔笑了，点点头。铁柱心里头便生出一股好奇来。",
+        "claimed_fact_ids": [
+          "ErGen/work-001/0001:chunk-01:fact-006",
+          "ErGen/work-001/0001:chunk-01:fact-004"
+        ],
+        "claimed_event_ids": [
+          "ErGen/work-001/0001:chunk-01:event-001"
+        ]
+      },
+      {
+        "paragraph_id": "ErGen/work-001/0001:chunk-01:scene-001:paragraph-03",
+        "text": "王天水拍了拍铁柱的肩膀，眼中满是期许。一旁的王卓却撇了撇嘴，冷哼一声：「就他？能行吗？」语气里满是不屑。铁柱低着头没说话，但握紧了拳头。",
+        "claimed_fact_ids": [
+          "ErGen/work-001/0001:chunk-01:fact-007",
+          "ErGen/work-001/0001:chunk-01:fact-008"
+        ],
+        "claimed_event_ids": []
+      },
+      {
+        "paragraph_id": "ErGen/work-001/0001:chunk-01:scene-001:paragraph-04",
+        "text": "四叔从怀里掏出两本书，递给铁柱。铁柱接过，翻了几页——全是看不懂的文字，心里更添期待了。",
+        "claimed_fact_ids": [
+          "ErGen/work-001/0001:chunk-01:fact-005"
+        ],
+        "claimed_event_ids": []
+      }
+    ]
+  },
+  "validations": [
+    {
+      "scene_id": "ErGen/work-001/0001:chunk-01:scene-001",
+      "reported_passed": true,
+      "realized_fact_ids": [
+        "ErGen/work-001/0001:chunk-01:fact-001",
+        "ErGen/work-001/0001:chunk-01:fact-002",
+        "ErGen/work-001/0001:chunk-01:fact-003",
+        "ErGen/work-001/0001:chunk-01:fact-004",
+        "ErGen/work-001/0001:chunk-01:fact-005",
+        "ErGen/work-001/0001:chunk-01:fact-006",
+        "ErGen/work-001/0001:chunk-01:fact-007",
+        "ErGen/work-001/0001:chunk-01:fact-008",
+        "ErGen/work-001/0001:chunk-01:fact-011"
+      ],
+      "missing_fact_ids": [],
+      "realized_event_ids": [
+        "ErGen/work-001/0001:chunk-01:event-001"
+      ],
+      "missing_event_ids": [],
+      "premature_event_ids": [],
+      "paragraph_issues": [],
+      "repair_paragraph_ids": [],
+      "passed": true
+    }
+  ],
+  "style_validations": [
+    {
+      "scene_id": "ErGen/work-001/0001:chunk-01:scene-001",
+      "reported_passed": true,
+      "realized_fact_ids": [
+        "ErGen/work-001/0001:chunk-01:fact-001",
+        "ErGen/work-001/0001:chunk-01:fact-002",
+        "ErGen/work-001/0001:chunk-01:fact-003",
+        "ErGen/work-001/0001:chunk-01:fact-004",
+        "ErGen/work-001/0001:chunk-01:fact-005",
+        "ErGen/work-001/0001:chunk-01:fact-006",
+        "ErGen/work-001/0001:chunk-01:fact-007",
+        "ErGen/work-001/0001:chunk-01:fact-008",
+        "ErGen/work-001/0001:chunk-01:fact-011"
+      ],
+      "missing_fact_ids": [],
+      "realized_event_ids": [
+        "ErGen/work-001/0001:chunk-01:event-001"
+      ],
+      "missing_event_ids": [],
+      "premature_event_ids": [],
+      "paragraph_issues": [],
+      "repair_paragraph_ids": [],
+      "passed": true
+    }
+  ],
+  "style_repairs_used": 1
+}

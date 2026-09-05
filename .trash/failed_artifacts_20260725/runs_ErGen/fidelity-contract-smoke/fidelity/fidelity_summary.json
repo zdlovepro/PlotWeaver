@@ -1,0 +1,294 @@
+{
+  "schema_version": "1.0",
+  "mode": "fidelity_regression",
+  "author_id": "ErGen",
+  "work_id": "work-001",
+  "chapter_limit": 1,
+  "successful_chapters": 1,
+  "failed_chapters": 0,
+  "mean_style_similarity": 0.546,
+  "mean_char_count_ratio": 0.3876,
+  "style_budget_pass_rate": 0.0,
+  "continuity_pass_rate": 0.0,
+  "mean_structure_score": 4.8,
+  "chapters": [
+    {
+      "chapter_no": 1,
+      "chapter_id": "ErGen/work-001/0001",
+      "generation": {
+        "output_dir": "D:\\205zd\\Desktop\\PlotWeaver\\runs\\ErGen\\fidelity-contract-smoke-chapter-01\\generated_chapter",
+        "repairs_used": 3,
+        "continuity_passed": false,
+        "style_passed": false
+      },
+      "generated_dir": "D:\\205zd\\Desktop\\PlotWeaver\\runs\\ErGen\\fidelity-contract-smoke-chapter-01\\generated_chapter",
+      "style_comparison": {
+        "style_similarity": 0.546,
+        "target_char_count": 5449,
+        "generated_char_count": 2112,
+        "char_count_ratio": 0.3876,
+        "metrics": [
+          {
+            "metric_id": "paragraph_count",
+            "target": 99.0,
+            "actual": 27.0,
+            "relative_difference": 0.727273
+          },
+          {
+            "metric_id": "mean_paragraph_chars",
+            "target": 54.050505,
+            "actual": 76.296296,
+            "relative_difference": 0.411574
+          },
+          {
+            "metric_id": "short_paragraph_ratio",
+            "target": 0.282828,
+            "actual": 0.296296,
+            "relative_difference": 0.047619
+          },
+          {
+            "metric_id": "sentence_count",
+            "target": 120.0,
+            "actual": 104.0,
+            "relative_difference": 0.133333
+          },
+          {
+            "metric_id": "mean_sentence_chars",
+            "target": 43.958333,
+            "actual": 18.875,
+            "relative_difference": 0.570616
+          },
+          {
+            "metric_id": "dialogue_char_ratio",
+            "target": 0.36025,
+            "actual": 0.16443,
+            "relative_difference": 0.543567
+          },
+          {
+            "metric_id": "dialogue_turn_count",
+            "target": 59.0,
+            "actual": 27.0,
+            "relative_difference": 0.542373
+          },
+          {
+            "metric_id": "dialogue_question_ratio",
+            "target": 0.169492,
+            "actual": 0.37037,
+            "relative_difference": 1.185177
+          },
+          {
+            "metric_id": "dialogue_exclamation_ratio",
+            "target": 0.084746,
+            "actual": 0.074074,
+            "relative_difference": 0.125929
+          },
+          {
+            "metric_id": "dialogue_ellipsis_per_turn",
+            "target": 0.135593,
+            "actual": 0.259259,
+            "relative_difference": 0.912038
+          },
+          {
+            "metric_id": "exclamation_sentence_ratio",
+            "target": 0.058333,
+            "actual": 0.019231,
+            "relative_difference": 0.670324
+          },
+          {
+            "metric_id": "question_sentence_ratio",
+            "target": 0.1,
+            "actual": 0.105769,
+            "relative_difference": 0.05769
+          },
+          {
+            "metric_id": "ellipsis_per_sentence",
+            "target": 0.075,
+            "actual": 0.067308,
+            "relative_difference": 0.10256
+          },
+          {
+            "metric_id": "transition_marker_ratio",
+            "target": 0.033333,
+            "actual": 0.0,
+            "relative_difference": 0.66666
+          },
+          {
+            "metric_id": "perception_marker_ratio",
+            "target": 0.158333,
+            "actual": 0.057692,
+            "relative_difference": 0.635629
+          },
+          {
+            "metric_id": "interior_marker_ratio",
+            "target": 0.008333,
+            "actual": 0.076923,
+            "relative_difference": 1.3718
+          },
+          {
+            "metric_id": "comparison_marker_ratio",
+            "target": 0.0,
+            "actual": 0.0,
+            "relative_difference": 0.0
+          },
+          {
+            "metric_id": "intensity_marker_ratio",
+            "target": 0.008333,
+            "actual": 0.009615,
+            "relative_difference": 0.02564
+          }
+        ]
+      },
+      "style_assessment": {
+        "passed": false,
+        "mean_relative_deviation": 0.459219,
+        "high_priority_in_range": 1,
+        "high_priority_required": 5,
+        "metrics": [
+          {
+            "metric_id": "chapter_char_count",
+            "unit": "count",
+            "target": 5449.0,
+            "preferred_min": 4359.2,
+            "preferred_max": 6538.8,
+            "priority": "high",
+            "actual": 2112.0,
+            "in_preferred_range": false,
+            "relative_deviation": 0.612406
+          },
+          {
+            "metric_id": "mean_sentence_chars",
+            "unit": "mean_chars",
+            "target": 43.958333,
+            "preferred_min": 37.364583,
+            "preferred_max": 50.552083,
+            "priority": "high",
+            "actual": 18.875,
+            "in_preferred_range": false,
+            "relative_deviation": 0.570616
+          },
+          {
+            "metric_id": "mean_paragraph_chars",
+            "unit": "mean_chars",
+            "target": 54.050505,
+            "preferred_min": 45.942929,
+            "preferred_max": 62.158081,
+            "priority": "high",
+            "actual": 76.296296,
+            "in_preferred_range": false,
+            "relative_deviation": 0.411574
+          },
+          {
+            "metric_id": "short_paragraph_ratio",
+            "unit": "ratio",
+            "target": 0.282828,
+            "preferred_min": 0.212121,
+            "preferred_max": 0.353535,
+            "priority": "high",
+            "actual": 0.296296,
+            "in_preferred_range": true,
+            "relative_deviation": 0.047619
+          },
+          {
+            "metric_id": "dialogue_char_ratio",
+            "unit": "ratio",
+            "target": 0.36025,
+            "preferred_min": 0.270188,
+            "preferred_max": 0.450313,
+            "priority": "high",
+            "actual": 0.16443,
+            "in_preferred_range": false,
+            "relative_deviation": 0.543567
+          },
+          {
+            "metric_id": "perception_marker_ratio",
+            "unit": "ratio",
+            "target": 0.158333,
+            "preferred_min": 0.11875,
+            "preferred_max": 0.197916,
+            "priority": "high",
+            "actual": 0.057692,
+            "in_preferred_range": false,
+            "relative_deviation": 0.635629
+          },
+          {
+            "metric_id": "transition_marker_ratio",
+            "unit": "ratio",
+            "target": 0.033333,
+            "preferred_min": 0.013333,
+            "preferred_max": 0.053333,
+            "priority": "high",
+            "actual": 0.0,
+            "in_preferred_range": false,
+            "relative_deviation": 0.66666
+          },
+          {
+            "metric_id": "question_sentence_ratio",
+            "unit": "ratio",
+            "target": 0.1,
+            "preferred_min": 0.075,
+            "preferred_max": 0.125,
+            "priority": "medium",
+            "actual": 0.105769,
+            "in_preferred_range": true,
+            "relative_deviation": 0.05769
+          },
+          {
+            "metric_id": "exclamation_sentence_ratio",
+            "unit": "ratio",
+            "target": 0.058333,
+            "preferred_min": 0.038333,
+            "preferred_max": 0.078333,
+            "priority": "medium",
+            "actual": 0.019231,
+            "in_preferred_range": false,
+            "relative_deviation": 0.670324
+          },
+          {
+            "metric_id": "ellipsis_per_sentence",
+            "unit": "ratio",
+            "target": 0.075,
+            "preferred_min": 0.055,
+            "preferred_max": 0.095,
+            "priority": "medium",
+            "actual": 0.067308,
+            "in_preferred_range": true,
+            "relative_deviation": 0.10256
+          }
+        ],
+        "repair_priorities": [
+          "exclamation_sentence_ratio",
+          "transition_marker_ratio",
+          "perception_marker_ratio",
+          "chapter_char_count"
+        ]
+      },
+      "structure_judgment": {
+        "scores": {
+          "event_causality": 5,
+          "state_coverage": 4,
+          "temporal_spatial": 5,
+          "scene_pacing": 5,
+          "logic": 5
+        },
+        "missing_requirements": [
+          "事实：铁柱 本名 王林（未提及本名）",
+          "事实：父亲 家族地位 庶出次子（未提及庶出次子身份）",
+          "事实：铁柱 聪明 是（未明确描述聪明）"
+        ],
+        "contradictions": [],
+        "strengths": [
+          "完整覆盖了所有8个目标事件和10个状态变化，事件顺序和因果链清晰",
+          "四个场景的节奏合理，关键转折点（四叔到来、宴席、决心、离别）都有充分展现",
+          "人物情感刻画细腻（父亲激动鞠躬、母亲不舍流泪、铁柱内心波动），符合预期",
+          "时空转换连续（村口→家→宴席→马车），无跳跃或矛盾"
+        ],
+        "next_repairs": [
+          "扩充各场景细节以达字符数最低要求（4359字），如在回家路上补充环境与内心活动，在四叔到来时增加对话和反应，在宴席上补充宾客互动，在王卓轻视处增加铁柱内心博弈，在离别时增加情感渲染",
+          "在合适位置补充缺失事实：通过对话或叙述点明铁柱本名王林、父亲为庶出次子、铁柱聪明等",
+          "微调风格指标，如适当增加感叹句比例（如父亲激动时）、过渡句比例（场景切换处）、感知句比例（关键动作后增加角色感知）"
+        ]
+      },
+      "structure_score_mean": 4.8
+    }
+  ]
+}

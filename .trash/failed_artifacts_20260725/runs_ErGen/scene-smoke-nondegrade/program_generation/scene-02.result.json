@@ -1,0 +1,60 @@
+{
+  "scene_no": 2,
+  "scene_id": "ErGen/work-001/0001:chunk-01:scene-002",
+  "minimum_paragraph_chars": 35,
+  "repairs_used": 0,
+  "passed": true,
+  "draft": {
+    "scene_id": "ErGen/work-001/0001:chunk-01:scene-002",
+    "paragraphs": [
+      {
+        "paragraph_id": "ErGen/work-001/0001:chunk-01:scene-002:paragraph-00",
+        "text": "宴席上，王卓轻蔑地说：“就凭你也想入选恒岳派？”王天水立刻反驳：“我家铁柱可不比谁差。”铁柱握紧拳头，感到一股热血冲上头顶，暗暗发誓：无论如何也要被选中！",
+        "claimed_fact_ids": [
+          "ErGen/work-001/0001:chunk-01:fact-009"
+        ],
+        "claimed_event_ids": [
+          "ErGen/work-001/0001:chunk-01:event-002"
+        ]
+      }
+    ]
+  },
+  "validations": [
+    {
+      "scene_id": "ErGen/work-001/0001:chunk-01:scene-002",
+      "reported_passed": true,
+      "realized_fact_ids": [
+        "ErGen/work-001/0001:chunk-01:fact-009"
+      ],
+      "missing_fact_ids": [],
+      "realized_event_ids": [
+        "ErGen/work-001/0001:chunk-01:event-002"
+      ],
+      "missing_event_ids": [],
+      "premature_event_ids": [],
+      "paragraph_issues": [],
+      "repair_paragraph_ids": [],
+      "passed": true
+    }
+  ],
+  "resumed": true,
+  "style_validations": [
+    {
+      "scene_id": "ErGen/work-001/0001:chunk-01:scene-002",
+      "reported_passed": true,
+      "realized_fact_ids": [
+        "ErGen/work-001/0001:chunk-01:fact-009"
+      ],
+      "missing_fact_ids": [],
+      "realized_event_ids": [
+        "ErGen/work-001/0001:chunk-01:event-002"
+      ],
+      "missing_event_ids": [],
+      "premature_event_ids": [],
+      "paragraph_issues": [],
+      "repair_paragraph_ids": [],
+      "passed": true
+    }
+  ],
+  "style_repairs_used": 1
+}

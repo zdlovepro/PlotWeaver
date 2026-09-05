@@ -1,0 +1,27 @@
+{
+  "scores": {
+    "event_causality": 4,
+    "state_coverage": 3,
+    "temporal_spatial": 4,
+    "scene_pacing": 3,
+    "style_execution": 1
+  },
+  "missing_requirements": [
+    "mean_paragraph_chars",
+    "short_paragraph_ratio",
+    "transition_marker_ratio",
+    "dialogue_char_ratio"
+  ],
+  "contradictions": [],
+  "strengths": [
+    "perception_marker_ratio",
+    "exclamation_sentence_ratio",
+    "ellipsis_per_sentence"
+  ],
+  "next_repairs": [
+    "mean_paragraph_chars",
+    "short_paragraph_ratio",
+    "transition_marker_ratio",
+    "dialogue_char_ratio"
+  ]
+}

@@ -1,0 +1,7 @@
+{
+  "stage": "scene_drafting",
+  "status": "failed",
+  "scene_no": 2,
+  "scene_id": "ErGen/work-001/0003:chunk-01:scene-002",
+  "error": "RuntimeError: Model did not return valid JSON after 3 attempt(s)"
+}

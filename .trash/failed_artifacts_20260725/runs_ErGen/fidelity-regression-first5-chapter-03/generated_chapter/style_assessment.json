@@ -1,0 +1,124 @@
+{
+  "passed": false,
+  "mean_relative_deviation": 0.383619,
+  "high_priority_in_range": 1,
+  "high_priority_required": 5,
+  "metrics": [
+    {
+      "metric_id": "chapter_char_count",
+      "unit": "count",
+      "target": 2036.0,
+      "preferred_min": 1536.0,
+      "preferred_max": 2536.0,
+      "priority": "high",
+      "actual": 1488.0,
+      "in_preferred_range": false,
+      "relative_deviation": 0.269155
+    },
+    {
+      "metric_id": "mean_sentence_chars",
+      "unit": "mean_chars",
+      "target": 33.655172,
+      "preferred_min": 28.606896,
+      "preferred_max": 38.703448,
+      "priority": "high",
+      "actual": 20.014493,
+      "in_preferred_range": false,
+      "relative_deviation": 0.405307
+    },
+    {
+      "metric_id": "mean_paragraph_chars",
+      "unit": "mean_chars",
+      "target": 44.266667,
+      "preferred_min": 37.626667,
+      "preferred_max": 50.906667,
+      "priority": "high",
+      "actual": 62.782609,
+      "in_preferred_range": false,
+      "relative_deviation": 0.418282
+    },
+    {
+      "metric_id": "short_paragraph_ratio",
+      "unit": "ratio",
+      "target": 0.488889,
+      "preferred_min": 0.366667,
+      "preferred_max": 0.611111,
+      "priority": "high",
+      "actual": 0.391304,
+      "in_preferred_range": true,
+      "relative_deviation": 0.199606
+    },
+    {
+      "metric_id": "dialogue_char_ratio",
+      "unit": "ratio",
+      "target": 0.278978,
+      "preferred_min": 0.209234,
+      "preferred_max": 0.348722,
+      "priority": "high",
+      "actual": 0.154161,
+      "in_preferred_range": false,
+      "relative_deviation": 0.447408
+    },
+    {
+      "metric_id": "perception_marker_ratio",
+      "unit": "ratio",
+      "target": 0.068966,
+      "preferred_min": 0.048966,
+      "preferred_max": 0.088966,
+      "priority": "high",
+      "actual": 0.028986,
+      "in_preferred_range": false,
+      "relative_deviation": 0.579706
+    },
+    {
+      "metric_id": "transition_marker_ratio",
+      "unit": "ratio",
+      "target": 0.034483,
+      "preferred_min": 0.014483,
+      "preferred_max": 0.054483,
+      "priority": "high",
+      "actual": 0.0,
+      "in_preferred_range": false,
+      "relative_deviation": 0.68966
+    },
+    {
+      "metric_id": "question_sentence_ratio",
+      "unit": "ratio",
+      "target": 0.051724,
+      "preferred_min": 0.031724,
+      "preferred_max": 0.071724,
+      "priority": "medium",
+      "actual": 0.057971,
+      "in_preferred_range": true,
+      "relative_deviation": 0.120776
+    },
+    {
+      "metric_id": "exclamation_sentence_ratio",
+      "unit": "ratio",
+      "target": 0.086207,
+      "preferred_min": 0.064655,
+      "preferred_max": 0.107759,
+      "priority": "medium",
+      "actual": 0.057971,
+      "in_preferred_range": false,
+      "relative_deviation": 0.327537
+    },
+    {
+      "metric_id": "ellipsis_per_sentence",
+      "unit": "ratio",
+      "target": 0.017241,
+      "preferred_min": 0.0,
+      "preferred_max": 0.037241,
+      "priority": "medium",
+      "actual": 0.014493,
+      "in_preferred_range": true,
+      "relative_deviation": 0.05496
+    }
+  ],
+  "repair_priorities": [
+    "transition_marker_ratio",
+    "perception_marker_ratio",
+    "dialogue_char_ratio",
+    "mean_paragraph_chars"
+  ]
+}

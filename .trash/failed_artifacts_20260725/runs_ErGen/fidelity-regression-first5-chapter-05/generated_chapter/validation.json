@@ -1,0 +1,33 @@
+{
+  "passed": false,
+  "issues": [
+    {
+      "code": "character_count_out_of_range",
+      "severity": "error",
+      "evidence": "草稿字符数约1400，低于计划预算preferred_min 1499，且与target 1999差距较大。",
+      "repair": "扩充内容，补充王林回家后的内心活动或家庭互动细节，使总字符数达到1499-2499之间。"
+    },
+    {
+      "code": "mean_sentence_chars_deviation",
+      "severity": "warning",
+      "evidence": "草稿中多数句子较长（如开头描述句超过50字符），估计mean_sentence_chars超过preferred_max 48.3。",
+      "repair": "拆分长句，适当穿插短句以降低平均句长。"
+    }
+  ],
+  "style_observations": [
+    "短段与较长段交替出现在最后部分（父亲吸烟、关门等场景），但整体短段比例偏低。",
+    "对话部分较少，主要集中在回家后父子对话，提前期调查对话比例可能低于preferred_min。",
+    "感知标记（如‘他感到’‘看见’‘内心’）使用频率适中，符合perception_marker_ratio目标。"
+  ],
+  "style_budget_result": {
+    "passed": false,
+    "notes": [
+      "字符总数超出预算下界，需扩充；句长偏长，需调低；对话比例偏低，需增加对话字符。其他指标大致在柔性区间内。"
+    ]
+  },
+  "repairs": [
+    "先扩充章节内容以满足字符数要求，建议增加王林回家途中回忆或与母亲对话的场景。",
+    "调整句式结构，将部分长句拆分为两到三个短句以降低平均句长。",
+    "在父亲担忧部分增加简短对话或心理描写以提升对话比例。"
+  ]
+}

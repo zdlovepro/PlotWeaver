@@ -1,0 +1,185 @@
+{
+  "chapter_goal": "完整重建已提供的目标事件、场景、状态变化与结局，不新增输入外情节。",
+  "selected_template_ids": [
+    "library:micro-002",
+    "library:micro-003"
+  ],
+  "scenes": [
+    {
+      "scene_no": 0,
+      "entry_state": [
+        "王林 离开 山村"
+      ],
+      "objective": "离开山村到达四叔家",
+      "pressure": "路程遥远，内心忐忑",
+      "turn": "马车行驶，无显著转折",
+      "exit_state": [
+        "王林 到达 四叔家"
+      ]
+    },
+    {
+      "scene_no": 1,
+      "entry_state": [
+        "王林 到达 四叔家"
+      ],
+      "objective": "前往王氏家族大宅子参加仙人选拔",
+      "pressure": "家族规矩，未知选拔内容",
+      "turn": "四叔带路，顺利到达",
+      "exit_state": [
+        "王林 到达 王氏家族大宅子"
+      ]
+    },
+    {
+      "scene_no": 2,
+      "entry_state": [
+        "王林 到达 王氏家族大宅子"
+      ],
+      "objective": "等待仙人并接受选拔",
+      "pressure": "未被选中则失去机会",
+      "turn": "白衣青年出现，询问并带走三个少年",
+      "exit_state": [
+        "白衣青年 带走 三个少年"
+      ]
+    }
+  ],
+  "chapter_state_changes": [
+    {
+      "slot": "王林 到达 四叔家",
+      "before": "",
+      "after": "王林 到达 四叔家",
+      "cause_scene_no": 0
+    },
+    {
+      "slot": "王林 到达 王氏家族大宅子",
+      "before": "",
+      "after": "王林 到达 王氏家族大宅子",
+      "cause_scene_no": 1
+    },
+    {
+      "slot": "白衣青年 带走 三个少年",
+      "before": "",
+      "after": "白衣青年 带走 三个少年",
+      "cause_scene_no": 2
+    }
+  ],
+  "style_budget": {
+    "schema_version": "1.0",
+    "mode": "fidelity_test_override",
+    "instruction": "仅用于重建实验的量化验收；正常原创写作应使用作者级柔性预算。",
+    "metrics": [
+      {
+        "metric_id": "chapter_char_count",
+        "unit": "count",
+        "target": 2141.0,
+        "preferred_min": 1641.0,
+        "preferred_max": 2641.0,
+        "priority": "high"
+      },
+      {
+        "metric_id": "mean_sentence_chars",
+        "unit": "mean_chars",
+        "target": 44.06383,
+        "preferred_min": 37.454256,
+        "preferred_max": 50.673405,
+        "priority": "high"
+      },
+      {
+        "metric_id": "mean_paragraph_chars",
+        "unit": "mean_chars",
+        "target": 53.923077,
+        "preferred_min": 45.834615,
+        "preferred_max": 62.011539,
+        "priority": "high"
+      },
+      {
+        "metric_id": "short_paragraph_ratio",
+        "unit": "ratio",
+        "target": 0.307692,
+        "preferred_min": 0.230769,
+        "preferred_max": 0.384615,
+        "priority": "high"
+      },
+      {
+        "metric_id": "dialogue_char_ratio",
+        "unit": "ratio",
+        "target": 0.175619,
+        "preferred_min": 0.131714,
+        "preferred_max": 0.219524,
+        "priority": "high"
+      },
+      {
+        "metric_id": "perception_marker_ratio",
+        "unit": "ratio",
+        "target": 0.191489,
+        "preferred_min": 0.143617,
+        "preferred_max": 0.239361,
+        "priority": "high"
+      },
+      {
+        "metric_id": "transition_marker_ratio",
+        "unit": "ratio",
+        "target": 0.0,
+        "preferred_min": 0.0,
+        "preferred_max": 0.02,
+        "priority": "high"
+      },
+      {
+        "metric_id": "question_sentence_ratio",
+        "unit": "ratio",
+        "target": 0.085106,
+        "preferred_min": 0.063829,
+        "preferred_max": 0.106383,
+        "priority": "medium"
+      },
+      {
+        "metric_id": "exclamation_sentence_ratio",
+        "unit": "ratio",
+        "target": 0.06383,
+        "preferred_min": 0.04383,
+        "preferred_max": 0.08383,
+        "priority": "medium"
+      },
+      {
+        "metric_id": "ellipsis_per_sentence",
+        "unit": "ratio",
+        "target": 0.0,
+        "preferred_min": 0.0,
+        "preferred_max": 0.02,
+        "priority": "medium"
+      }
+    ]
+  },
+  "continuity_checks": [
+    "时间从第1章末尾四叔接铁柱上马车后继续。",
+    "位置从马车离开山村到四叔家再到王氏家族大宅子，最后恒岳派山门。",
+    "人物：王林、四叔、老者、王卓、王浩、白衣青年均基于已知实体。",
+    "所有状态变化均有场景原因。"
+  ],
+  "style_execution_directives": [
+    {
+      "metric_id": "mean_paragraph_chars",
+      "direction": "decrease",
+      "target_range": "45.834615–62.011539",
+      "action": "把并列的信息单元拆开，保留关键落点作为短段。"
+    },
+    {
+      "metric_id": "short_paragraph_ratio",
+      "direction": "increase",
+      "target_range": "0.230769–0.384615",
+      "action": "在关键判断、转折或情绪落点保留独立短段，其余信息保持连续段落。"
+    },
+    {
+      "metric_id": "perception_marker_ratio",
+      "direction": "increase",
+      "target_range": "0.143617–0.239361",
+      "action": "在关键动作或信息变化后补入角色看到、听到、感到或察觉到的具体反应。"
+    },
+    {
+      "metric_id": "mean_sentence_chars",
+      "direction": "increase",
+      "target_range": "37.454256–50.673405",
+      "action": "把动作、感知、判断或结果组合为完整复句，减少单个动作单独成句。"
+    }
+  ],
+  "reconstruction_mode": "fidelity_test_only"
+}

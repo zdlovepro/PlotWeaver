@@ -1,0 +1,409 @@
+{
+  "reconstruction_mode": "fidelity_test_only",
+  "chapter_id": "ErGen/work-001/0003",
+  "known_prior_chapters": [
+    {
+      "chapter_id": "ErGen/work-001/0001",
+      "events": [
+        {
+          "order": 0,
+          "summary": "铁柱在村口小路边读书后回家",
+          "participants": [
+            "铁柱"
+          ],
+          "action": "回家",
+          "obstacle": "",
+          "decision": "",
+          "preconditions": [],
+          "outcomes": [
+            "铁柱 回到 家中"
+          ],
+          "costs": [],
+          "contract_id": "target-event-001"
+        },
+        {
+          "order": 1,
+          "summary": "父亲劝铁柱好好读书，准备县考",
+          "participants": [
+            "铁柱",
+            "父亲"
+          ],
+          "action": "对话",
+          "obstacle": "",
+          "decision": "",
+          "preconditions": [],
+          "outcomes": [
+            "父亲 期望 铁柱好好读书"
+          ],
+          "costs": [],
+          "contract_id": "target-event-002"
+        },
+        {
+          "order": 2,
+          "summary": "四叔到来并送给铁柱两本书",
+          "participants": [
+            "铁柱",
+            "父亲",
+            "母亲",
+            "四叔"
+          ],
+          "action": "四叔给书",
+          "obstacle": "",
+          "decision": "",
+          "preconditions": [],
+          "outcomes": [
+            "四叔 到达 铁柱家",
+            "四叔 给予 两本线状书"
+          ],
+          "costs": [],
+          "contract_id": "target-event-003"
+        },
+        {
+          "order": 3,
+          "summary": "四叔告知恒岳派招收弟子并推荐铁柱",
+          "participants": [
+            "铁柱",
+            "父亲",
+            "母亲",
+            "四叔"
+          ],
+          "action": "告知推荐",
+          "obstacle": "",
+          "decision": "",
+          "preconditions": [],
+          "outcomes": [
+            "四叔 告知 恒岳派今年收取弟子",
+            "四叔 让出 恒岳派推荐名额"
+          ],
+          "costs": [],
+          "contract_id": "target-event-004"
+        },
+        {
+          "order": 4,
+          "summary": "四叔第二天一早离开村子",
+          "participants": [
+            "四叔"
+          ],
+          "action": "离开",
+          "obstacle": "",
+          "decision": "",
+          "preconditions": [],
+          "outcomes": [
+            "四叔 离开 村子"
+          ],
+          "costs": [],
+          "contract_id": "target-event-005"
+        },
+        {
+          "order": 5,
+          "summary": "村民和家族亲戚前来道贺，举办宴席",
+          "participants": [
+            "铁柱",
+            "父亲",
+            "母亲"
+          ],
+          "action": "举办宴席",
+          "obstacle": "",
+          "decision": "",
+          "preconditions": [],
+          "outcomes": [
+            "父亲 举办 数百桌宴席"
+          ],
+          "costs": [],
+          "contract_id": "target-event-006"
+        },
+        {
+          "order": 6,
+          "summary": "铁柱暗自决心被恒岳派选中",
+          "participants": [
+            "铁柱"
+          ],
+          "action": "决心",
+          "obstacle": "",
+          "decision": "",
+          "preconditions": [],
+          "outcomes": [
+            "铁柱 决心 被恒岳派选中"
+          ],
+          "costs": [],
+          "contract_id": "target-event-007"
+        },
+        {
+          "order": 7,
+          "summary": "四叔接铁柱离开去恒岳派",
+          "participants": [
+            "铁柱",
+            "四叔"
+          ],
+          "action": "接走",
+          "obstacle": "",
+          "decision": "",
+          "preconditions": [],
+          "outcomes": [
+            "四叔 接 铁柱上马车"
+          ],
+          "costs": [],
+          "contract_id": "target-event-008"
+        }
+      ],
+      "state_changes": [
+        {
+          "operation": "add",
+          "event": "铁柱在村口小路边读书后回家",
+          "before": "",
+          "after": "铁柱 回到 家中",
+          "contract_id": "target-change-001"
+        },
+        {
+          "operation": "add",
+          "event": "父亲劝铁柱好好读书，准备县考",
+          "before": "",
+          "after": "父亲 期望 铁柱好好读书",
+          "contract_id": "target-change-002"
+        },
+        {
+          "operation": "add",
+          "event": "四叔到来并送给铁柱两本书",
+          "before": "",
+          "after": "四叔 到达 铁柱家",
+          "contract_id": "target-change-003"
+        },
+        {
+          "operation": "add",
+          "event": "四叔到来并送给铁柱两本书",
+          "before": "",
+          "after": "四叔 给予 两本线状书",
+          "contract_id": "target-change-004"
+        },
+        {
+          "operation": "add",
+          "event": "四叔告知恒岳派招收弟子并推荐铁柱",
+          "before": "",
+          "after": "四叔 告知 恒岳派今年收取弟子",
+          "contract_id": "target-change-005"
+        },
+        {
+          "operation": "add",
+          "event": "四叔告知恒岳派招收弟子并推荐铁柱",
+          "before": "",
+          "after": "四叔 让出 恒岳派推荐名额",
+          "contract_id": "target-change-006"
+        },
+        {
+          "operation": "add",
+          "event": "四叔第二天一早离开村子",
+          "before": "",
+          "after": "四叔 离开 村子",
+          "contract_id": "target-change-007"
+        },
+        {
+          "operation": "add",
+          "event": "村民和家族亲戚前来道贺，举办宴席",
+          "before": "",
+          "after": "父亲 举办 数百桌宴席",
+          "contract_id": "target-change-008"
+        },
+        {
+          "operation": "add",
+          "event": "铁柱暗自决心被恒岳派选中",
+          "before": "",
+          "after": "铁柱 决心 被恒岳派选中",
+          "contract_id": "target-change-009"
+        },
+        {
+          "operation": "add",
+          "event": "四叔接铁柱离开去恒岳派",
+          "before": "",
+          "after": "四叔 接 铁柱上马车",
+          "contract_id": "target-change-010"
+        }
+      ]
+    },
+    {
+      "chapter_id": "ErGen/work-001/0002",
+      "events": [
+        {
+          "order": 0,
+          "summary": "王林离开山村，随四叔到达四叔家",
+          "participants": [
+            "王林",
+            "四叔"
+          ],
+          "action": "乘马车离开山村并到达四叔家",
+          "obstacle": "",
+          "decision": "",
+          "preconditions": [],
+          "outcomes": [
+            "王林 到达 四叔家"
+          ],
+          "costs": [],
+          "contract_id": "target-event-001"
+        },
+        {
+          "order": 1,
+          "summary": "王林随四叔到达王氏家族大宅子",
+          "participants": [
+            "王林",
+            "四叔"
+          ],
+          "action": "前往大宅子",
+          "obstacle": "",
+          "decision": "",
+          "preconditions": [],
+          "outcomes": [
+            "王林 到达 王氏家族大宅子"
+          ],
+          "costs": [],
+          "contract_id": "target-event-002"
+        },
+        {
+          "order": 2,
+          "summary": "在家族大宅院中，白衣青年出现并带走三个少年",
+          "participants": [
+            "王林",
+            "四叔",
+            "老者",
+            "王卓",
+            "王浩",
+            "白衣青年"
+          ],
+          "action": "白衣青年询问并带走少年",
+          "obstacle": "",
+          "decision": "",
+          "preconditions": [
+            "王林 到达 王氏家族大宅子"
+          ],
+          "outcomes": [
+            "白衣青年 带走 三个少年"
+          ],
+          "costs": [],
+          "contract_id": "target-event-003"
+        }
+      ],
+      "state_changes": [
+        {
+          "operation": "add",
+          "event": "王林离开山村，随四叔到达四叔家",
+          "before": "",
+          "after": "王林 到达 四叔家",
+          "contract_id": "target-change-001"
+        },
+        {
+          "operation": "add",
+          "event": "王林随四叔到达王氏家族大宅子",
+          "before": "",
+          "after": "王林 到达 王氏家族大宅子",
+          "contract_id": "target-change-002"
+        },
+        {
+          "operation": "add",
+          "event": "在家族大宅院中，白衣青年出现并带走三个少年",
+          "before": "",
+          "after": "白衣青年 带走 三个少年",
+          "contract_id": "target-change-003"
+        }
+      ]
+    }
+  ],
+  "known_entities": [
+    {
+      "name": "王林",
+      "kind": "person",
+      "aliases": []
+    },
+    {
+      "name": "王卓",
+      "kind": "person",
+      "aliases": []
+    },
+    {
+      "name": "王浩",
+      "kind": "person",
+      "aliases": []
+    },
+    {
+      "name": "黑衣中年人",
+      "kind": "person",
+      "aliases": []
+    },
+    {
+      "name": "恒岳派",
+      "kind": "organization",
+      "aliases": []
+    },
+    {
+      "name": "众少年",
+      "kind": "person",
+      "aliases": [
+        "失败者"
+      ]
+    },
+    {
+      "name": "玉盒",
+      "kind": "item",
+      "aliases": []
+    },
+    {
+      "name": "灵芝",
+      "kind": "item",
+      "aliases": []
+    },
+    {
+      "name": "石阶",
+      "kind": "location",
+      "aliases": []
+    }
+  ],
+  "known_facts": [
+    {
+      "kind": "progression",
+      "statement": "王林 处于 灵根测试",
+      "certainty": 1.0
+    },
+    {
+      "kind": "identity",
+      "statement": "王卓 被选中 合格者",
+      "certainty": 1.0
+    },
+    {
+      "kind": "identity",
+      "statement": "王浩 被收为 药童",
+      "certainty": 1.0
+    },
+    {
+      "kind": "resource",
+      "statement": "王浩 献出 玉盒与灵芝",
+      "certainty": 1.0
+    },
+    {
+      "kind": "identity",
+      "statement": "王林 被判定为 不合格",
+      "certainty": 1.0
+    },
+    {
+      "kind": "progression",
+      "statement": "众少年 开始 第二项测试",
+      "certainty": 1.0
+    },
+    {
+      "kind": "identity",
+      "statement": "王林 成为 毅力测试参与者",
+      "certainty": 1.0
+    },
+    {
+      "kind": "location",
+      "statement": "王卓 离开 跟随中年人见掌门",
+      "certainty": 1.0
+    },
+    {
+      "kind": "location",
+      "statement": "王浩 离开 随中年人前往丹房",
+      "certainty": 1.0
+    }
+  ],
+  "current_chapter_target": {
+    "time_anchors": [],
+    "temporal_relations": [],
+    "spatial_relations": []
+  }
+}

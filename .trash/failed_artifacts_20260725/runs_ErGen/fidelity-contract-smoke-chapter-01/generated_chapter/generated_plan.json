@@ -1,0 +1,306 @@
+{
+  "chapter_goal": "完整重建第一章，覆盖铁柱回家、获得推荐、庆祝、决心与出发等所有目标事件和状态变化。",
+  "selected_template_ids": [
+    "library:chapter-010",
+    "library:scene-008"
+  ],
+  "scenes": [
+    {
+      "scene_no": 0,
+      "entry_state": [
+        "铁柱在村口小路边读书"
+      ],
+      "objective": "回家",
+      "pressure": "无显著压力",
+      "turn": "铁柱合上书本，起身回家",
+      "exit_state": [
+        "铁柱回到家中"
+      ]
+    },
+    {
+      "scene_no": 1,
+      "entry_state": [
+        "铁柱回到家中",
+        "父亲和母亲在家"
+      ],
+      "objective": "家庭互动及获得推荐",
+      "pressure": "父亲期望铁柱通过县考，但铁柱可能另有志向",
+      "turn": "四叔突然到来，告知恒岳派招收弟子并推荐铁柱",
+      "exit_state": [
+        "四叔告知恒岳派今年收取弟子",
+        "四叔让出恒岳派推荐名额"
+      ]
+    },
+    {
+      "scene_no": 2,
+      "entry_state": [
+        "四叔第二天一早离开村子"
+      ],
+      "objective": "庆祝铁柱获得推荐",
+      "pressure": "宴席准备和家族期待",
+      "turn": "村民和亲戚陆续前来道贺，父亲决定举办数百桌宴席",
+      "exit_state": [
+        "父亲举办数百桌宴席"
+      ]
+    },
+    {
+      "scene_no": 3,
+      "entry_state": [
+        "宴席结束后",
+        "铁柱内心波动"
+      ],
+      "objective": "铁柱决心并离家",
+      "pressure": "离别的不舍与未来未知的紧张",
+      "turn": "铁柱暗自决心一定要被选中，四叔驾马车来接",
+      "exit_state": [
+        "四叔接铁柱上马车"
+      ]
+    }
+  ],
+  "chapter_state_changes": [
+    {
+      "slot": "铁柱位置",
+      "before": "村内小路边",
+      "after": "家中",
+      "cause_scene_no": 0
+    },
+    {
+      "slot": "父亲期望",
+      "before": "",
+      "after": "铁柱好好读书",
+      "cause_scene_no": 1
+    },
+    {
+      "slot": "四叔位置",
+      "before": "",
+      "after": "铁柱家",
+      "cause_scene_no": 1
+    },
+    {
+      "slot": "铁柱资源",
+      "before": "",
+      "after": "两本线状书",
+      "cause_scene_no": 1
+    },
+    {
+      "slot": "铁柱知识",
+      "before": "",
+      "after": "恒岳派今年收取弟子",
+      "cause_scene_no": 1
+    },
+    {
+      "slot": "铁柱推荐机会",
+      "before": "",
+      "after": "恒岳派推荐名额",
+      "cause_scene_no": 1
+    },
+    {
+      "slot": "四叔位置",
+      "before": "铁柱家",
+      "after": "村子外",
+      "cause_scene_no": 2
+    },
+    {
+      "slot": "父亲行为",
+      "before": "",
+      "after": "举办数百桌宴席",
+      "cause_scene_no": 2
+    },
+    {
+      "slot": "铁柱决心",
+      "before": "",
+      "after": "被恒岳派选中",
+      "cause_scene_no": 3
+    },
+    {
+      "slot": "铁柱位置",
+      "before": "家中",
+      "after": "马车上",
+      "cause_scene_no": 3
+    }
+  ],
+  "covered_required_event_ids": [
+    "target-event-001",
+    "target-event-002",
+    "target-event-003",
+    "target-event-004",
+    "target-event-005",
+    "target-event-006",
+    "target-event-007",
+    "target-event-008"
+  ],
+  "covered_required_state_change_ids": [
+    "target-change-001",
+    "target-change-002",
+    "target-change-003",
+    "target-change-004",
+    "target-change-005",
+    "target-change-006",
+    "target-change-007",
+    "target-change-008",
+    "target-change-009",
+    "target-change-010"
+  ],
+  "chapter_end_contract": [
+    "本章在四叔接铁柱上马车后结束，不提前进入恒岳派试炼或其他后续情节。"
+  ],
+  "style_budget": {
+    "schema_version": "1.0",
+    "mode": "fidelity_test_override",
+    "instruction": "仅用于重建实验的量化验收；正常原创写作应使用作者级柔性预算。",
+    "metrics": [
+      {
+        "metric_id": "chapter_char_count",
+        "unit": "count",
+        "target": 5449.0,
+        "preferred_min": 4359.2,
+        "preferred_max": 6538.8,
+        "priority": "high"
+      },
+      {
+        "metric_id": "mean_sentence_chars",
+        "unit": "mean_chars",
+        "target": 43.958333,
+        "preferred_min": 37.364583,
+        "preferred_max": 50.552083,
+        "priority": "high"
+      },
+      {
+        "metric_id": "mean_paragraph_chars",
+        "unit": "mean_chars",
+        "target": 54.050505,
+        "preferred_min": 45.942929,
+        "preferred_max": 62.158081,
+        "priority": "high"
+      },
+      {
+        "metric_id": "short_paragraph_ratio",
+        "unit": "ratio",
+        "target": 0.282828,
+        "preferred_min": 0.212121,
+        "preferred_max": 0.353535,
+        "priority": "high"
+      },
+      {
+        "metric_id": "dialogue_char_ratio",
+        "unit": "ratio",
+        "target": 0.36025,
+        "preferred_min": 0.270188,
+        "preferred_max": 0.450313,
+        "priority": "high"
+      },
+      {
+        "metric_id": "perception_marker_ratio",
+        "unit": "ratio",
+        "target": 0.158333,
+        "preferred_min": 0.11875,
+        "preferred_max": 0.197916,
+        "priority": "high"
+      },
+      {
+        "metric_id": "transition_marker_ratio",
+        "unit": "ratio",
+        "target": 0.033333,
+        "preferred_min": 0.013333,
+        "preferred_max": 0.053333,
+        "priority": "high"
+      },
+      {
+        "metric_id": "question_sentence_ratio",
+        "unit": "ratio",
+        "target": 0.1,
+        "preferred_min": 0.075,
+        "preferred_max": 0.125,
+        "priority": "medium"
+      },
+      {
+        "metric_id": "exclamation_sentence_ratio",
+        "unit": "ratio",
+        "target": 0.058333,
+        "preferred_min": 0.038333,
+        "preferred_max": 0.078333,
+        "priority": "medium"
+      },
+      {
+        "metric_id": "ellipsis_per_sentence",
+        "unit": "ratio",
+        "target": 0.075,
+        "preferred_min": 0.055,
+        "preferred_max": 0.095,
+        "priority": "medium"
+      }
+    ]
+  },
+  "continuity_checks": [
+    "时间顺序：从白天读书到晚上家中，第二天四叔离开，宴席，随后出发，连续。",
+    "位置变化：村口 -> 家 -> 家（宴席） -> 马车，连续。",
+    "资源：四叔给的两本书，宴席消耗，连续。",
+    "知识：铁柱获得恒岳派信息，王卓的轻视，连续。",
+    "人物关系：四叔推荐，父亲激动，家族态度，连续。"
+  ],
+  "style_execution_directives": [
+    {
+      "metric_id": "exclamation_sentence_ratio",
+      "direction": "increase",
+      "target_range": "0.038333–0.078333",
+      "action": "在真正的情绪落点保留感叹句，并让前后的陈述句提供蓄势。"
+    },
+    {
+      "metric_id": "transition_marker_ratio",
+      "direction": "increase",
+      "target_range": "0.013333–0.053333",
+      "action": "在场景、时间或注意力变化处加入自然的承接词或结果性过渡，再继续推进。"
+    },
+    {
+      "metric_id": "perception_marker_ratio",
+      "direction": "increase",
+      "target_range": "0.11875–0.197916",
+      "action": "在关键动作或信息变化后补入角色看到、听到、感到或察觉到的具体反应。"
+    },
+    {
+      "metric_id": "chapter_char_count",
+      "direction": "increase",
+      "target_range": "4359.2–6538.8",
+      "action": "在不新增计划外情节的前提下，补足已计划场景中的动作、对话、感知、阻力与结果，使篇幅覆盖完整事件链。"
+    }
+  ],
+  "style_execution_blueprint": {
+    "instruction": "按此蓝图安排正文，但不得删改计划事件或以凑数破坏可读性。",
+    "chapter_char_count": {
+      "target": 5449,
+      "minimum": 4359,
+      "maximum": 6539
+    },
+    "paragraph_count": {
+      "target": 101,
+      "minimum": 70,
+      "maximum": 142
+    },
+    "short_paragraph_count": {
+      "target": 29,
+      "minimum": 15,
+      "maximum": 50
+    },
+    "sentence_count": {
+      "target": 124,
+      "minimum": 86,
+      "maximum": 175
+    },
+    "dialogue_char_count": {
+      "target": 1963,
+      "minimum": 1178,
+      "maximum": 2945
+    },
+    "perception_sentence_count": {
+      "target": 20,
+      "minimum": 15,
+      "maximum": 25
+    },
+    "transition_sentence_count": {
+      "target": 4,
+      "minimum": 2,
+      "maximum": 7
+    }
+  },
+  "reconstruction_mode": "fidelity_test_only"
+}

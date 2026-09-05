@@ -1,0 +1,427 @@
+{
+  "契约版本": "1.0",
+  "章节ID": "ErGen/work-001/0003",
+  "源文本哈希": "1ebd4afd0b180980010e3a9755836136cdb31fe76d762bad9583daa450d96d4d",
+  "实体字典": [
+    {
+      "实体ID": "ErGen/work-001/0003:chunk-01:entity-001",
+      "名称": "王林",
+      "类型": "person"
+    },
+    {
+      "实体ID": "ErGen/work-001/0003:chunk-01:entity-002",
+      "名称": "王卓",
+      "类型": "person"
+    },
+    {
+      "实体ID": "ErGen/work-001/0003:chunk-01:entity-003",
+      "名称": "王浩",
+      "类型": "person"
+    },
+    {
+      "实体ID": "ErGen/work-001/0003:chunk-01:entity-004",
+      "名称": "黑衣中年人",
+      "类型": "person"
+    },
+    {
+      "实体ID": "ErGen/work-001/0003:chunk-01:entity-005",
+      "名称": "恒岳派",
+      "类型": "organization"
+    },
+    {
+      "实体ID": "ErGen/work-001/0003:chunk-01:entity-006",
+      "名称": "众少年",
+      "类型": "person"
+    },
+    {
+      "实体ID": "ErGen/work-001/0003:chunk-01:entity-007",
+      "名称": "玉盒",
+      "类型": "item"
+    },
+    {
+      "实体ID": "ErGen/work-001/0003:chunk-01:entity-008",
+      "名称": "灵芝",
+      "类型": "item"
+    },
+    {
+      "实体ID": "ErGen/work-001/0003:chunk-01:entity-009",
+      "名称": "石阶",
+      "类型": "location"
+    }
+  ],
+  "场景程序": [
+    {
+      "场景ID": "ErGen/work-001/0003:chunk-01:scene-001",
+      "章节ID": "ErGen/work-001/0003",
+      "场景序号": 0,
+      "场景目标": "筛选出灵根充足的弟子",
+      "参与实体ID": [
+        "ErGen/work-001/0003:chunk-01:entity-004",
+        "ErGen/work-001/0003:chunk-01:entity-006",
+        "ErGen/work-001/0003:chunk-01:entity-002",
+        "ErGen/work-001/0003:chunk-01:entity-003",
+        "ErGen/work-001/0003:chunk-01:entity-001"
+      ],
+      "入场状态事实ID": [
+        "ErGen/work-001/0003:chunk-01:fact-001"
+      ],
+      "必现事件": [
+        {
+          "事件ID": "ErGen/work-001/0003:chunk-01:event-001",
+          "场景ID": "ErGen/work-001/0003:chunk-01:scene-001",
+          "事件概述": "黑衣中年人宣布灵根测试开始，众少年依次测试",
+          "行动": "宣布测试规则并逐个测试",
+          "参与实体ID": [
+            "ErGen/work-001/0003:chunk-01:entity-004",
+            "ErGen/work-001/0003:chunk-01:entity-006"
+          ],
+          "阻力": "",
+          "决断": "",
+          "前置事实ID": [
+            "ErGen/work-001/0003:chunk-01:fact-001"
+          ],
+          "必须表达的事实ID": [
+            "ErGen/work-001/0003:chunk-01:fact-002",
+            "ErGen/work-001/0003:chunk-01:fact-003",
+            "ErGen/work-001/0003:chunk-01:fact-005"
+          ],
+          "结果事实ID": [
+            "ErGen/work-001/0003:chunk-01:fact-002",
+            "ErGen/work-001/0003:chunk-01:fact-003",
+            "ErGen/work-001/0003:chunk-01:fact-005"
+          ]
+        },
+        {
+          "事件ID": "ErGen/work-001/0003:chunk-01:event-002",
+          "场景ID": "ErGen/work-001/0003:chunk-01:scene-001",
+          "事件概述": "王卓被测试并选中",
+          "行动": "被测试后得到合格评价",
+          "参与实体ID": [
+            "ErGen/work-001/0003:chunk-01:entity-002",
+            "ErGen/work-001/0003:chunk-01:entity-004"
+          ],
+          "阻力": "",
+          "决断": "",
+          "前置事实ID": [
+            "ErGen/work-001/0003:chunk-01:fact-002"
+          ],
+          "必须表达的事实ID": [
+            "ErGen/work-001/0003:chunk-01:fact-002"
+          ],
+          "结果事实ID": [
+            "ErGen/work-001/0003:chunk-01:fact-002"
+          ]
+        },
+        {
+          "事件ID": "ErGen/work-001/0003:chunk-01:event-003",
+          "场景ID": "ErGen/work-001/0003:chunk-01:scene-001",
+          "事件概述": "王浩献灵芝后被收为药童",
+          "行动": "献玉盒和灵芝，请求做药童",
+          "参与实体ID": [
+            "ErGen/work-001/0003:chunk-01:entity-003",
+            "ErGen/work-001/0003:chunk-01:entity-004"
+          ],
+          "阻力": "最初被说资质差",
+          "决断": "献出宝物",
+          "前置事实ID": [
+            "ErGen/work-001/0003:chunk-01:fact-004"
+          ],
+          "必须表达的事实ID": [
+            "ErGen/work-001/0003:chunk-01:fact-004",
+            "ErGen/work-001/0003:chunk-01:fact-003"
+          ],
+          "结果事实ID": [
+            "ErGen/work-001/0003:chunk-01:fact-003"
+          ]
+        },
+        {
+          "事件ID": "ErGen/work-001/0003:chunk-01:event-004",
+          "场景ID": "ErGen/work-001/0003:chunk-01:scene-001",
+          "事件概述": "王林被测试为不合格",
+          "行动": "接受灵根测试",
+          "参与实体ID": [
+            "ErGen/work-001/0003:chunk-01:entity-001",
+            "ErGen/work-001/0003:chunk-01:entity-004"
+          ],
+          "阻力": "",
+          "决断": "",
+          "前置事实ID": [
+            "ErGen/work-001/0003:chunk-01:fact-005"
+          ],
+          "必须表达的事实ID": [
+            "ErGen/work-001/0003:chunk-01:fact-005"
+          ],
+          "结果事实ID": [
+            "ErGen/work-001/0003:chunk-01:fact-005"
+          ]
+        }
+      ],
+      "事实表达契约": [
+        {
+          "事实ID": "ErGen/work-001/0003:chunk-01:fact-001",
+          "场景ID": "ErGen/work-001/0003:chunk-01:scene-001",
+          "事实类型": "progression",
+          "主体ID": "ErGen/work-001/0003:chunk-01:entity-001",
+          "谓词": "处于",
+          "值": "灵根测试",
+          "客体ID": "",
+          "表达方式": "行动呈现",
+          "必须表达": true,
+          "禁止相反含义": []
+        },
+        {
+          "事实ID": "ErGen/work-001/0003:chunk-01:fact-002",
+          "场景ID": "ErGen/work-001/0003:chunk-01:scene-001",
+          "事实类型": "identity",
+          "主体ID": "ErGen/work-001/0003:chunk-01:entity-002",
+          "谓词": "被选中",
+          "值": "合格者",
+          "客体ID": "",
+          "表达方式": "叙述交代",
+          "必须表达": true,
+          "禁止相反含义": []
+        },
+        {
+          "事实ID": "ErGen/work-001/0003:chunk-01:fact-003",
+          "场景ID": "ErGen/work-001/0003:chunk-01:scene-001",
+          "事实类型": "identity",
+          "主体ID": "ErGen/work-001/0003:chunk-01:entity-003",
+          "谓词": "被收为",
+          "值": "药童",
+          "客体ID": "",
+          "表达方式": "叙述交代",
+          "必须表达": true,
+          "禁止相反含义": []
+        },
+        {
+          "事实ID": "ErGen/work-001/0003:chunk-01:fact-004",
+          "场景ID": "ErGen/work-001/0003:chunk-01:scene-001",
+          "事实类型": "resource",
+          "主体ID": "ErGen/work-001/0003:chunk-01:entity-003",
+          "谓词": "献出",
+          "值": "玉盒与灵芝",
+          "客体ID": "ErGen/work-001/0003:chunk-01:entity-007",
+          "表达方式": "行动呈现",
+          "必须表达": true,
+          "禁止相反含义": []
+        },
+        {
+          "事实ID": "ErGen/work-001/0003:chunk-01:fact-005",
+          "场景ID": "ErGen/work-001/0003:chunk-01:scene-001",
+          "事实类型": "identity",
+          "主体ID": "ErGen/work-001/0003:chunk-01:entity-001",
+          "谓词": "被判定为",
+          "值": "不合格",
+          "客体ID": "",
+          "表达方式": "叙述交代",
+          "必须表达": true,
+          "禁止相反含义": []
+        },
+        {
+          "事实ID": "ErGen/work-001/0003:chunk-01:fact-008",
+          "场景ID": "ErGen/work-001/0003:chunk-01:scene-001",
+          "事实类型": "location",
+          "主体ID": "ErGen/work-001/0003:chunk-01:entity-002",
+          "谓词": "离开",
+          "值": "跟随中年人见掌门",
+          "客体ID": "",
+          "表达方式": "行动呈现",
+          "必须表达": true,
+          "禁止相反含义": []
+        },
+        {
+          "事实ID": "ErGen/work-001/0003:chunk-01:fact-009",
+          "场景ID": "ErGen/work-001/0003:chunk-01:scene-001",
+          "事实类型": "location",
+          "主体ID": "ErGen/work-001/0003:chunk-01:entity-003",
+          "谓词": "离开",
+          "值": "随中年人前往丹房",
+          "客体ID": "",
+          "表达方式": "行动呈现",
+          "必须表达": true,
+          "禁止相反含义": []
+        }
+      ],
+      "段落程序": [
+        {
+          "段落ID": "ErGen/work-001/0003:chunk-01:scene-001:paragraph-00",
+          "场景ID": "ErGen/work-001/0003:chunk-01:scene-001",
+          "段落序号": 0,
+          "段落功能": "场景定位",
+          "必须表达的事实ID": [
+            "ErGen/work-001/0003:chunk-01:fact-001",
+            "ErGen/work-001/0003:chunk-01:fact-008",
+            "ErGen/work-001/0003:chunk-01:fact-009"
+          ],
+          "事件ID列表": [],
+          "视角人物ID": "ErGen/work-001/0003:chunk-01:entity-004",
+          "对话行为": ""
+        },
+        {
+          "段落ID": "ErGen/work-001/0003:chunk-01:scene-001:paragraph-01",
+          "场景ID": "ErGen/work-001/0003:chunk-01:scene-001",
+          "段落序号": 1,
+          "段落功能": "行动推进",
+          "必须表达的事实ID": [
+            "ErGen/work-001/0003:chunk-01:fact-002",
+            "ErGen/work-001/0003:chunk-01:fact-003",
+            "ErGen/work-001/0003:chunk-01:fact-005"
+          ],
+          "事件ID列表": [
+            "ErGen/work-001/0003:chunk-01:event-001"
+          ],
+          "视角人物ID": "ErGen/work-001/0003:chunk-01:entity-004",
+          "对话行为": ""
+        },
+        {
+          "段落ID": "ErGen/work-001/0003:chunk-01:scene-001:paragraph-02",
+          "场景ID": "ErGen/work-001/0003:chunk-01:scene-001",
+          "段落序号": 2,
+          "段落功能": "行动推进",
+          "必须表达的事实ID": [
+            "ErGen/work-001/0003:chunk-01:fact-002"
+          ],
+          "事件ID列表": [
+            "ErGen/work-001/0003:chunk-01:event-002"
+          ],
+          "视角人物ID": "ErGen/work-001/0003:chunk-01:entity-002",
+          "对话行为": ""
+        },
+        {
+          "段落ID": "ErGen/work-001/0003:chunk-01:scene-001:paragraph-03",
+          "场景ID": "ErGen/work-001/0003:chunk-01:scene-001",
+          "段落序号": 3,
+          "段落功能": "对话交锋",
+          "必须表达的事实ID": [
+            "ErGen/work-001/0003:chunk-01:fact-004",
+            "ErGen/work-001/0003:chunk-01:fact-003"
+          ],
+          "事件ID列表": [
+            "ErGen/work-001/0003:chunk-01:event-003"
+          ],
+          "视角人物ID": "ErGen/work-001/0003:chunk-01:entity-003",
+          "对话行为": "以对话施压并暴露冲突"
+        },
+        {
+          "段落ID": "ErGen/work-001/0003:chunk-01:scene-001:paragraph-04",
+          "场景ID": "ErGen/work-001/0003:chunk-01:scene-001",
+          "段落序号": 4,
+          "段落功能": "行动推进",
+          "必须表达的事实ID": [
+            "ErGen/work-001/0003:chunk-01:fact-005"
+          ],
+          "事件ID列表": [
+            "ErGen/work-001/0003:chunk-01:event-004"
+          ],
+          "视角人物ID": "ErGen/work-001/0003:chunk-01:entity-001",
+          "对话行为": ""
+        }
+      ],
+      "出场状态事实ID": [
+        "ErGen/work-001/0003:chunk-01:fact-002",
+        "ErGen/work-001/0003:chunk-01:fact-003",
+        "ErGen/work-001/0003:chunk-01:fact-005"
+      ],
+      "禁止提前事件ID": [
+        "ErGen/work-001/0003:chunk-01:event-005"
+      ]
+    },
+    {
+      "场景ID": "ErGen/work-001/0003:chunk-01:scene-002",
+      "章节ID": "ErGen/work-001/0003",
+      "场景序号": 1,
+      "场景目标": "完成毅力测试",
+      "参与实体ID": [
+        "ErGen/work-001/0003:chunk-01:entity-004",
+        "ErGen/work-001/0003:chunk-01:entity-001",
+        "ErGen/work-001/0003:chunk-01:entity-006"
+      ],
+      "入场状态事实ID": [
+        "ErGen/work-001/0003:chunk-01:fact-006"
+      ],
+      "必现事件": [
+        {
+          "事件ID": "ErGen/work-001/0003:chunk-01:event-005",
+          "场景ID": "ErGen/work-001/0003:chunk-01:scene-002",
+          "事件概述": "黑衣人宣布第二项毅力测试，王林开始攀登石阶",
+          "行动": "宣布毅力测试规则",
+          "参与实体ID": [
+            "ErGen/work-001/0003:chunk-01:entity-004",
+            "ErGen/work-001/0003:chunk-01:entity-001",
+            "ErGen/work-001/0003:chunk-01:entity-006"
+          ],
+          "阻力": "",
+          "决断": "王林决定参加",
+          "前置事实ID": [
+            "ErGen/work-001/0003:chunk-01:fact-006",
+            "ErGen/work-001/0003:chunk-01:fact-005"
+          ],
+          "必须表达的事实ID": [
+            "ErGen/work-001/0003:chunk-01:fact-007"
+          ],
+          "结果事实ID": [
+            "ErGen/work-001/0003:chunk-01:fact-007"
+          ]
+        }
+      ],
+      "事实表达契约": [
+        {
+          "事实ID": "ErGen/work-001/0003:chunk-01:fact-006",
+          "场景ID": "ErGen/work-001/0003:chunk-01:scene-002",
+          "事实类型": "progression",
+          "主体ID": "ErGen/work-001/0003:chunk-01:entity-006",
+          "谓词": "开始",
+          "值": "第二项测试",
+          "客体ID": "",
+          "表达方式": "行动呈现",
+          "必须表达": true,
+          "禁止相反含义": []
+        },
+        {
+          "事实ID": "ErGen/work-001/0003:chunk-01:fact-007",
+          "场景ID": "ErGen/work-001/0003:chunk-01:scene-002",
+          "事实类型": "identity",
+          "主体ID": "ErGen/work-001/0003:chunk-01:entity-001",
+          "谓词": "成为",
+          "值": "毅力测试参与者",
+          "客体ID": "",
+          "表达方式": "叙述交代",
+          "必须表达": true,
+          "禁止相反含义": []
+        }
+      ],
+      "段落程序": [
+        {
+          "段落ID": "ErGen/work-001/0003:chunk-01:scene-002:paragraph-00",
+          "场景ID": "ErGen/work-001/0003:chunk-01:scene-002",
+          "段落序号": 0,
+          "段落功能": "场景定位",
+          "必须表达的事实ID": [
+            "ErGen/work-001/0003:chunk-01:fact-006"
+          ],
+          "事件ID列表": [],
+          "视角人物ID": "ErGen/work-001/0003:chunk-01:entity-004",
+          "对话行为": ""
+        },
+        {
+          "段落ID": "ErGen/work-001/0003:chunk-01:scene-002:paragraph-01",
+          "场景ID": "ErGen/work-001/0003:chunk-01:scene-002",
+          "段落序号": 1,
+          "段落功能": "做出决定",
+          "必须表达的事实ID": [
+            "ErGen/work-001/0003:chunk-01:fact-007"
+          ],
+          "事件ID列表": [
+            "ErGen/work-001/0003:chunk-01:event-005"
+          ],
+          "视角人物ID": "ErGen/work-001/0003:chunk-01:entity-004",
+          "对话行为": ""
+        }
+      ],
+      "出场状态事实ID": [
+        "ErGen/work-001/0003:chunk-01:fact-007"
+      ],
+      "禁止提前事件ID": []
+    }
+  ]
+}

@@ -1,0 +1,51 @@
+{
+  "scene_id": "ErGen/work-001/0001:chunk-01:scene-001",
+  "paragraphs": [
+    {
+      "paragraph_id": "ErGen/work-001/0001:chunk-01:scene-001:paragraph-00",
+      "text": "铁柱本名王林，父亲王天水是村里老实巴交的庄稼人，母亲则是个温顺的农妇，一家三口日子虽清贫倒也安稳。",
+      "claimed_fact_ids": [
+        "ErGen/work-001/0001:chunk-01:fact-001",
+        "ErGen/work-001/0001:chunk-01:fact-002",
+        "ErGen/work-001/0001:chunk-01:fact-003"
+      ],
+      "claimed_event_ids": []
+    },
+    {
+      "paragraph_id": "ErGen/work-001/0001:chunk-01:scene-001:paragraph-01",
+      "text": "四叔是王林的族亲，常年在外走动，见过些世面，回来后常给王家带来外界的消息。",
+      "claimed_fact_ids": [
+        "ErGen/work-001/0001:chunk-01:fact-011"
+      ],
+      "claimed_event_ids": []
+    },
+    {
+      "paragraph_id": "ErGen/work-001/0001:chunk-01:scene-001:paragraph-02",
+      "text": "这天四叔找到王天水，说恒岳派给了王氏家族一个推荐名额，他看铁柱机灵，打算推荐这孩子去试试，王天水夫妇犹豫后点了头，铁柱在一旁听得心跳加速，对传说中的仙人充满了好奇。",
+      "claimed_fact_ids": [
+        "ErGen/work-001/0001:chunk-01:fact-006",
+        "ErGen/work-001/0001:chunk-01:fact-004"
+      ],
+      "claimed_event_ids": [
+        "ErGen/work-001/0001:chunk-01:event-001"
+      ]
+    },
+    {
+      "paragraph_id": "ErGen/work-001/0001:chunk-01:scene-001:paragraph-03",
+      "text": "王天水望着儿子，眼里既有期望也有不安，而同族的王卓路过时轻哼一声，眼神里满是不屑。",
+      "claimed_fact_ids": [
+        "ErGen/work-001/0001:chunk-01:fact-007",
+        "ErGen/work-001/0001:chunk-01:fact-008"
+      ],
+      "claimed_event_ids": []
+    },
+    {
+      "paragraph_id": "ErGen/work-001/0001:chunk-01:scene-001:paragraph-04",
+      "text": "四叔临走时塞给铁柱两本书，叮嘱他好好研读。",
+      "claimed_fact_ids": [
+        "ErGen/work-001/0001:chunk-01:fact-005"
+      ],
+      "claimed_event_ids": []
+    }
+  ]
+}

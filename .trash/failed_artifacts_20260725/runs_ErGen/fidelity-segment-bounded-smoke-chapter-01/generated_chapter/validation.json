@@ -1,0 +1,38 @@
+{
+  "passed": false,
+  "issues": [
+    {
+      "code": "timeline_contradiction",
+      "severity": "error",
+      "evidence": "Draft中出现了多个重复的场景序列（如铁柱回家、四叔到来、宴席、离开），时间线无法统一，部分事件顺序与ChapterPlan不一致（例如宴席发生在四叔离开之前）。",
+      "repair": "合并重复片段，只保留一个连贯的时间线：Scene1读书回家→Scene2家庭互动（四叔到来）→Scene3宴席（四叔离开后）→Scene4决心与离别。"
+    },
+    {
+      "code": "state_duplication",
+      "severity": "warning",
+      "evidence": "状态变化如'四叔给予两本线状书'在Draft中出现多次，不符合状态只发生一次的预期。",
+      "repair": "删除重复的事件描写，确保每个状态变化只发生一次。"
+    },
+    {
+      "code": "scene_entry_exit_mismatch",
+      "severity": "error",
+      "evidence": "ChapterPlan中Scene3的entry为'四叔离开村子'，exit为'父亲举办数百桌宴席'，但Draft中宴席发生在四叔离开之前，导致场景进入退出状态顺序颠倒。",
+      "repair": "调整事件顺序：先写四叔离开村子，再写父亲摆宴席庆祝。"
+    }
+  ],
+  "style_observations": [
+    "Draft中存在大量重复段落，导致段落计数、短段落比率等风格指标失真。",
+    "感知标记和过渡标记在重复描写中反复出现，超出预期正常范围。"
+  ],
+  "style_budget_result": {
+    "passed": true,
+    "notes": [
+      "由于情节重复，风格budget的粒度无法准确评估，但主要节奏指标大致符合计划范围。"
+    ]
+  },
+  "repairs": [
+    "合并所有重复的情节片段，只保留一个完整的叙事线。",
+    "确保场景顺序与ChapterPlan一致：村口→家中→四叔离开→宴席→决心→马车离去。",
+    "删除多余的事件描写，确保每个状态变化只出现一次。"
+  ]
+}

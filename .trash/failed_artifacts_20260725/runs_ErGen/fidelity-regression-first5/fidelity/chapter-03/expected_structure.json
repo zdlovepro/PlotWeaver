@@ -1,0 +1,268 @@
+{
+  "chapter_id": "ErGen/work-001/0003",
+  "entities": [
+    {
+      "name": "王林",
+      "kind": "person",
+      "aliases": []
+    },
+    {
+      "name": "王卓",
+      "kind": "person",
+      "aliases": []
+    },
+    {
+      "name": "王浩",
+      "kind": "person",
+      "aliases": []
+    },
+    {
+      "name": "黑衣中年人",
+      "kind": "person",
+      "aliases": []
+    },
+    {
+      "name": "恒岳派",
+      "kind": "organization",
+      "aliases": []
+    },
+    {
+      "name": "众少年",
+      "kind": "person",
+      "aliases": [
+        "失败者"
+      ]
+    },
+    {
+      "name": "玉盒",
+      "kind": "item",
+      "aliases": []
+    },
+    {
+      "name": "灵芝",
+      "kind": "item",
+      "aliases": []
+    },
+    {
+      "name": "石阶",
+      "kind": "location",
+      "aliases": []
+    }
+  ],
+  "facts": [
+    {
+      "kind": "progression",
+      "statement": "王林 处于 灵根测试",
+      "certainty": 1.0
+    },
+    {
+      "kind": "identity",
+      "statement": "王卓 被选中 合格者",
+      "certainty": 1.0
+    },
+    {
+      "kind": "identity",
+      "statement": "王浩 被收为 药童",
+      "certainty": 1.0
+    },
+    {
+      "kind": "resource",
+      "statement": "王浩 献出 玉盒与灵芝",
+      "certainty": 1.0
+    },
+    {
+      "kind": "identity",
+      "statement": "王林 被判定为 不合格",
+      "certainty": 1.0
+    },
+    {
+      "kind": "progression",
+      "statement": "众少年 开始 第二项测试",
+      "certainty": 1.0
+    },
+    {
+      "kind": "identity",
+      "statement": "王林 成为 毅力测试参与者",
+      "certainty": 1.0
+    },
+    {
+      "kind": "location",
+      "statement": "王卓 离开 跟随中年人见掌门",
+      "certainty": 1.0
+    },
+    {
+      "kind": "location",
+      "statement": "王浩 离开 随中年人前往丹房",
+      "certainty": 1.0
+    }
+  ],
+  "events": [
+    {
+      "order": 0,
+      "summary": "黑衣中年人宣布灵根测试开始，众少年依次测试",
+      "participants": [
+        "黑衣中年人",
+        "众少年"
+      ],
+      "action": "宣布测试规则并逐个测试",
+      "obstacle": "",
+      "decision": "",
+      "preconditions": [],
+      "outcomes": [
+        "王卓 被选中 合格者",
+        "王浩 被收为 药童",
+        "王林 被判定为 不合格"
+      ],
+      "costs": []
+    },
+    {
+      "order": 1,
+      "summary": "王卓被测试并选中",
+      "participants": [
+        "王卓",
+        "黑衣中年人"
+      ],
+      "action": "被测试后得到合格评价",
+      "obstacle": "",
+      "decision": "",
+      "preconditions": [],
+      "outcomes": [
+        "王卓 被选中 合格者"
+      ],
+      "costs": []
+    },
+    {
+      "order": 2,
+      "summary": "王浩献灵芝后被收为药童",
+      "participants": [
+        "王浩",
+        "黑衣中年人"
+      ],
+      "action": "献玉盒和灵芝，请求做药童",
+      "obstacle": "最初被说资质差",
+      "decision": "献出宝物",
+      "preconditions": [],
+      "outcomes": [
+        "王浩 被收为 药童"
+      ],
+      "costs": [
+        "王浩 献出 玉盒与灵芝"
+      ]
+    },
+    {
+      "order": 3,
+      "summary": "王林被测试为不合格",
+      "participants": [
+        "王林",
+        "黑衣中年人"
+      ],
+      "action": "接受灵根测试",
+      "obstacle": "",
+      "decision": "",
+      "preconditions": [],
+      "outcomes": [
+        "王林 被判定为 不合格"
+      ],
+      "costs": []
+    },
+    {
+      "order": 4,
+      "summary": "黑衣人宣布第二项毅力测试，王林开始攀登石阶",
+      "participants": [
+        "黑衣中年人",
+        "王林",
+        "众少年"
+      ],
+      "action": "宣布毅力测试规则",
+      "obstacle": "",
+      "decision": "王林决定参加",
+      "preconditions": [
+        "王林 被判定为 不合格"
+      ],
+      "outcomes": [
+        "王林 成为 毅力测试参与者"
+      ],
+      "costs": []
+    }
+  ],
+  "scenes": [
+    {
+      "order": 0,
+      "participants": [
+        "黑衣中年人",
+        "众少年",
+        "王卓",
+        "王浩",
+        "王林"
+      ],
+      "events": [
+        "黑衣中年人宣布灵根测试开始，众少年依次测试",
+        "王卓被测试并选中",
+        "王浩献灵芝后被收为药童",
+        "王林被测试为不合格"
+      ],
+      "objective": "筛选出灵根充足的弟子",
+      "entry_facts": [
+        "王林 处于 灵根测试"
+      ],
+      "exit_facts": [
+        "王卓 被选中 合格者",
+        "王浩 被收为 药童",
+        "王林 被判定为 不合格"
+      ],
+      "tension": 3,
+      "locations": [],
+      "time_anchors": []
+    },
+    {
+      "order": 1,
+      "participants": [
+        "黑衣中年人",
+        "王林",
+        "众少年"
+      ],
+      "events": [
+        "黑衣人宣布第二项毅力测试，王林开始攀登石阶"
+      ],
+      "objective": "完成毅力测试",
+      "entry_facts": [
+        "众少年 开始 第二项测试"
+      ],
+      "exit_facts": [
+        "王林 成为 毅力测试参与者"
+      ],
+      "tension": 4,
+      "locations": [],
+      "time_anchors": []
+    }
+  ],
+  "state_changes": [
+    {
+      "operation": "add",
+      "event": "王卓被测试并选中",
+      "before": "",
+      "after": "王卓 被选中 合格者"
+    },
+    {
+      "operation": "add",
+      "event": "王浩献灵芝后被收为药童",
+      "before": "",
+      "after": "王浩 被收为 药童"
+    },
+    {
+      "operation": "add",
+      "event": "王林被测试为不合格",
+      "before": "",
+      "after": "王林 被判定为 不合格"
+    },
+    {
+      "operation": "add",
+      "event": "黑衣人宣布第二项毅力测试，王林开始攀登石阶",
+      "before": "",
+      "after": "王林 成为 毅力测试参与者"
+    }
+  ],
+  "time_anchors": [],
+  "temporal_relations": [],
+  "spatial_relations": []
+}

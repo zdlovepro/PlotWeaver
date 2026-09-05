@@ -1,0 +1,181 @@
+{
+  "chapter_goal": "完成灵根测试和毅力测试的宣布，王林面临不合格结果后决定参加毅力测试。",
+  "selected_template_ids": [
+    "library:micro-001",
+    "library:event-004"
+  ],
+  "scenes": [
+    {
+      "scene_no": 1,
+      "entry_state": [
+        "王林 处于 灵根测试"
+      ],
+      "objective": "筛选出灵根充足的弟子，王林测试自己的灵根",
+      "pressure": "测试结果可能导致被淘汰",
+      "turn": "王浩献出玉盒和灵芝，被收为药童；王林被判定为不合格",
+      "exit_state": [
+        "王卓 被选中 合格者",
+        "王浩 被收为 药童",
+        "王林 被判定为 不合格"
+      ]
+    },
+    {
+      "scene_no": 2,
+      "entry_state": [
+        "众少年 开始 第二项测试"
+      ],
+      "objective": "完成毅力测试的宣布，王林决定参加",
+      "pressure": "毅力测试的艰苦挑战",
+      "turn": "王林决定参加毅力测试",
+      "exit_state": [
+        "王林 成为 毅力测试参与者"
+      ]
+    }
+  ],
+  "chapter_state_changes": [
+    {
+      "slot": "王卓 被选中 合格者",
+      "before": "",
+      "after": "王卓 被选中 合格者",
+      "cause_scene_no": 1
+    },
+    {
+      "slot": "王浩 被收为 药童",
+      "before": "",
+      "after": "王浩 被收为 药童",
+      "cause_scene_no": 1
+    },
+    {
+      "slot": "王林 被判定为 不合格",
+      "before": "",
+      "after": "王林 被判定为 不合格",
+      "cause_scene_no": 1
+    },
+    {
+      "slot": "王林 成为 毅力测试参与者",
+      "before": "",
+      "after": "王林 成为 毅力测试参与者",
+      "cause_scene_no": 2
+    }
+  ],
+  "style_budget": {
+    "schema_version": "1.0",
+    "mode": "fidelity_test_override",
+    "instruction": "仅用于重建实验的量化验收；正常原创写作应使用作者级柔性预算。",
+    "metrics": [
+      {
+        "metric_id": "chapter_char_count",
+        "unit": "count",
+        "target": 2036.0,
+        "preferred_min": 1536.0,
+        "preferred_max": 2536.0,
+        "priority": "high"
+      },
+      {
+        "metric_id": "mean_sentence_chars",
+        "unit": "mean_chars",
+        "target": 33.655172,
+        "preferred_min": 28.606896,
+        "preferred_max": 38.703448,
+        "priority": "high"
+      },
+      {
+        "metric_id": "mean_paragraph_chars",
+        "unit": "mean_chars",
+        "target": 44.266667,
+        "preferred_min": 37.626667,
+        "preferred_max": 50.906667,
+        "priority": "high"
+      },
+      {
+        "metric_id": "short_paragraph_ratio",
+        "unit": "ratio",
+        "target": 0.488889,
+        "preferred_min": 0.366667,
+        "preferred_max": 0.611111,
+        "priority": "high"
+      },
+      {
+        "metric_id": "dialogue_char_ratio",
+        "unit": "ratio",
+        "target": 0.278978,
+        "preferred_min": 0.209234,
+        "preferred_max": 0.348722,
+        "priority": "high"
+      },
+      {
+        "metric_id": "perception_marker_ratio",
+        "unit": "ratio",
+        "target": 0.068966,
+        "preferred_min": 0.048966,
+        "preferred_max": 0.088966,
+        "priority": "high"
+      },
+      {
+        "metric_id": "transition_marker_ratio",
+        "unit": "ratio",
+        "target": 0.034483,
+        "preferred_min": 0.014483,
+        "preferred_max": 0.054483,
+        "priority": "high"
+      },
+      {
+        "metric_id": "question_sentence_ratio",
+        "unit": "ratio",
+        "target": 0.051724,
+        "preferred_min": 0.031724,
+        "preferred_max": 0.071724,
+        "priority": "medium"
+      },
+      {
+        "metric_id": "exclamation_sentence_ratio",
+        "unit": "ratio",
+        "target": 0.086207,
+        "preferred_min": 0.064655,
+        "preferred_max": 0.107759,
+        "priority": "medium"
+      },
+      {
+        "metric_id": "ellipsis_per_sentence",
+        "unit": "ratio",
+        "target": 0.017241,
+        "preferred_min": 0.0,
+        "preferred_max": 0.037241,
+        "priority": "medium"
+      }
+    ]
+  },
+  "continuity_checks": [
+    "时间顺序：灵根测试在先，毅力测试在后。",
+    "位置：王林从测试地点移动到石阶。",
+    "知识：王林从不合格变为毅力测试参与者。",
+    "资源：王浩献出玉盒与灵芝。"
+  ],
+  "style_execution_directives": [
+    {
+      "metric_id": "transition_marker_ratio",
+      "direction": "increase",
+      "target_range": "0.014483–0.054483",
+      "action": "在场景、时间或注意力变化处加入自然的承接词或结果性过渡，再继续推进。"
+    },
+    {
+      "metric_id": "perception_marker_ratio",
+      "direction": "increase",
+      "target_range": "0.048966–0.088966",
+      "action": "在关键动作或信息变化后补入角色看到、听到、感到或察觉到的具体反应。"
+    },
+    {
+      "metric_id": "dialogue_char_ratio",
+      "direction": "increase",
+      "target_range": "0.209234–0.348722",
+      "action": "在冲突、试探或信息交接处增加有结果的直接对话，并用动作承接每轮话语。"
+    },
+    {
+      "metric_id": "mean_paragraph_chars",
+      "direction": "decrease",
+      "target_range": "37.626667–50.906667",
+      "action": "把并列的信息单元拆开，保留关键落点作为短段。"
+    }
+  ],
+  "reconstruction_mode": "fidelity_test_only"
+}

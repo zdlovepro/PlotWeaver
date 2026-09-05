@@ -1,0 +1,43 @@
+{
+  "passed": false,
+  "issues": [
+    {
+      "code": "temporal_inconsistency",
+      "severity": "error",
+      "evidence": "Draft包含两段四叔到访场景：第一段在铁柱回家当晚（铁柱在屋里读书，四叔敲门），第二段在宴席后再次出现‘就在这时，院外传来一阵脚步声…’，导致时序混乱——四叔已离开村子后又返回。",
+      "repair": "删除第二段重复的四叔到访（从‘铁柱刚迈进院子’到‘铁柱攥紧了手里的书，指尖抚过泛黄的纸页’），统一按计划顺序：铁柱回家当晚四叔到来并推荐，次日四叔离开，随后举办宴席，最后铁柱离家。"
+    },
+    {
+      "code": "entity_fabrication",
+      "severity": "warning",
+      "evidence": "Draft中出现‘刘婶’、‘赵老四’、‘大姑’等具体称呼，这些不在OriginalStoryState的已知实体列表中。",
+      "repair": "将此类角色替换为无具体姓名的泛称，如‘邻居’、‘亲戚’，或仅在必要时保留但不赋予独立身份和行动。"
+    },
+    {
+      "code": "state_jump",
+      "severity": "warning",
+      "evidence": "场景2在第一次四叔到访后已完成出口状态‘四叔告知恒岳派今年收取弟子’和‘四叔让出恒岳派推荐名额’，但后续重复段落再次触发相同状态更新，导致状态冗余。",
+      "repair": "与temporal_inconsistency修复同步，删除重复段落后状态自然归一。"
+    }
+  ],
+  "style_observations": [
+    "对话占比较高，符合dialogue_char_ratio目标区间。",
+    "短段落比例偏高，可能超出preferred_max上限。",
+    "感知标记词（如‘看见’‘听到’‘觉得’）使用适度，大致在目标范围内。",
+    "部分句子较长，mean_sentence_chars接近目标值。",
+    "省略号使用较少，可能低于elipsis_per_sentence目标下限。"
+  ],
+  "style_budget_result": {
+    "passed": true,
+    "notes": [
+      "总字数、对话比例、段落数等主要指标大致落在预算区间内。",
+      "短段比例略高于preferred_max，但属柔性范围，不单独视为错误。",
+      "省略号使用偏低，可在修订时酌情增加未完成句或停顿。"
+    ]
+  },
+  "repairs": [
+    "首先删除第二段重复的四叔到访场景，统一时间线。",
+    "然后调整短段落密度，合并部分非关键短段以降低short_paragraph_ratio。",
+    "最后将‘刘婶’等替换为泛称，确保无新增实体。"
+  ]
+}
