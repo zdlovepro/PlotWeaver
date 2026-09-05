@@ -35,16 +35,13 @@ def _parser() -> argparse.ArgumentParser:
     synopsis.add_argument("--work-id", required=True)
     synopsis.add_argument("--limit", type=int, default=5)
     synopsis.add_argument("--run-id", default="module-01")
-    synopsis.add_argument("--target-chars", type=int, default=2600)
     synopsis.add_argument("--no-resume", action="store_true")
-    synopsis.add_argument("--local-model-for-chapter", action="store_true")
     synopsis.add_argument(
         "--chapter-thinking",
         action=argparse.BooleanOptionalAction,
         default=False,
-        help="章级状态终审默认关闭思考模式；可显式开启进行对照实验",
+        help="仅为全章导航草稿开启模型思考模式；其他单任务阶段保持关闭",
     )
-    synopsis.add_argument("--no-semantic-review", action="store_true")
     return parser
 
 
@@ -70,11 +67,8 @@ def main(argv: list[str] | None = None) -> int:
             workspace_root=ROOT,
             options={
                 "chapter_limit": args.limit,
-                "target_chars": args.target_chars,
                 "resume": not args.no_resume,
-                "use_quality_model": not args.local_model_for_chapter,
                 "chapter_thinking": args.chapter_thinking,
-                "semantic_review": not args.no_semantic_review,
             },
         ))
         print(json.dumps(result.to_dict(), ensure_ascii=False, indent=2))

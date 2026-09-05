@@ -14,7 +14,8 @@
 8. [EVALUATION_SPEC.md](EVALUATION_SPEC.md)：质量和发布门槛。
 9. [AUTHOR_SKILL_SPEC.md](AUTHOR_SKILL_SPEC.md)：最终 Skill 产物。
 10. [MODEL_GUIDE.md](MODEL_GUIDE.md)：API、本地模型、RAG 和可选微调。
-11. [PRIVATE_MODULE.md](PRIVATE_MODULE.md)：第一模块和语料的 Git 边界。
+11. [PROMPT_CONVENTIONS.md](PROMPT_CONVENTIONS.md)：项目级提示词结构、DeepSeek 适配和评测规范。
+12. [PRIVATE_MODULE.md](PRIVATE_MODULE.md)：第一模块和语料的 Git 边界。
 
 ## 当前工程结论
 
