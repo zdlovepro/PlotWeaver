@@ -1,0 +1,25 @@
+# 任务
+根据已确认问题，对候选 [[TARGET_LEVEL]] 节点做一次最小语义修补。
+
+# 规则
+- 只处理问题清单指向的字段和内容。
+- 保留未被问题指出的正确内容。
+- 不增加输入子节点之外的信息，不推断别名、结局或未来。
+- 输出完整节点语义，字段不得缺失。
+
+# 输出JSON格式
+{"title":"","summary":"","opening_situation":"","central_goal":"","central_conflict":"","causal_chain":[],"turning_points":[],"ending_change":"","open_threads":[],"character_arcs":[{"character_name":"","entry_state":"","pursuit":"","key_choices":[],"change":"","exit_state":""}]}
+
+# 子节点范围
+[[CHILD_OUTLINE_IDS_JSON]]
+
+# 输入数据
+<child_cards>
+[[CHILD_CARDS_JSON]]
+</child_cards>
+<candidate>
+[[CANDIDATE_JSON]]
+</candidate>
+<confirmed_issues>
+[[ISSUES_JSON]]
+</confirmed_issues>

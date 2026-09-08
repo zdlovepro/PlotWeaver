@@ -1,0 +1,22 @@
+# 任务
+把给定连续 [[CHILD_LEVEL]] 节点聚合为一个 [[TARGET_LEVEL]] 大纲节点。
+
+# 成功标准
+- 概括子节点共同构成的宏观目标、核心冲突、因果推进、关键转折与结束变化。
+- opening_situation 必须对应第一个子节点的进入局面；ending_change 必须对应最后一个子节点形成的局面。
+- 不重复占有同一推进，不跳过决定宏观阶段方向的子节点。
+- 跨子节点因果只能来自输入可解释的连续推进，不能把相邻关系升级为确定因果。
+- 只合并表面称呼完全相同的人物发展线，不推断别名或人物身份。
+- open_threads 只保留该跨度末仍未解决的问题。
+- 当目标层是 book 时，只总结完整输入覆盖的作品，不增加结局、未来或背景知识。
+
+# 输出JSON格式
+{"title":"简洁标题","summary":"宏观概述","opening_situation":"进入时局面","central_goal":"中心目标","central_conflict":"中心冲突","causal_chain":["按推进顺序描述因果"],"turning_points":["改变宏观方向的转折"],"ending_change":"跨度结束时的新局面","open_threads":["仍未解决的问题"],"character_arcs":[{"character_name":"输入中的表面称呼","entry_state":"进入状态","pursuit":"该跨度中的追求，可为空字符串","key_choices":["关键选择"],"change":"发生的实质变化","exit_state":"退出状态"}]}
+
+# 子节点范围
+[[CHILD_OUTLINE_IDS_JSON]]
+
+# 输入数据
+<child_cards>
+[[CHILD_CARDS_JSON]]
+</child_cards>

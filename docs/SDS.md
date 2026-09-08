@@ -64,7 +64,7 @@ def run(context: StageContext) -> StageResult:
 chapter_synopsis -> story_arc -> volume -> book
 ```
 
-`short_validation`的最高层是`story_arc`；`full_book`的最高层是`book`。达到最高层后，由大纲节点产生事实需求并交给第三模块。模型不得在没有后文的短样本中补写全书走向。
+`short_validation`的默认最高层是`story_arc`；完整作品可继续聚合至`book`。这里的`volume`表示由连续故事弧组成的宏观叙事阶段，不代表或猜测实体出版分卷。`book`必须是唯一根节点，而且只有第一模块清单明确声明已选择全部叙事章节、没有失败章节且`complete_work=true`时才能生成。达到最高层后，由大纲节点产生事实需求并交给第三模块。模型不得在部分输入中补写全书走向。
 
 ## 6. 事实补全设计
 

@@ -1,0 +1,26 @@
+# 任务
+从整个 [[TARGET_LEVEL]] 层视角审查父子层语义，只报告跨节点的实质结构错误，不修改节点。
+
+# 可报告代码
+- opening_mismatch：父节点开局与首个子节点不一致。
+- ending_mismatch：父节点结束变化与末个子节点不一致。
+- unsupported_cross_child_cause：父节点添加了子节点不支持的跨段因果。
+- unsupported_resolution：开放问题被无依据关闭。
+- lost_open_thread：影响整体理解的未决问题在父层丢失。
+- duplicated_progress：同一主要推进被多个父节点重复占有。
+- incomplete_long_character_arc：长期人物选择或变化在父层被截断。
+- misordered_children：父层语义顺序与子节点顺序不一致。
+- parent_child_coverage_gap：父层遗漏了决定阶段方向的子节点推进。
+
+只依据给定子节点和父节点判断。没有确认错误时返回空 issues。
+
+# 输出JSON格式
+{"issues":[{"code":"上述枚举之一","field":"涉及的父节点字段","message":"结构错误说明","chapter_ids":["相关章ID"],"outline_ids":["相关子节点或父节点ID"]}]}
+
+# 输入数据
+<child_nodes>
+[[CHILD_NODES_JSON]]
+</child_nodes>
+<parent_nodes>
+[[PARENT_NODES_JSON]]
+</parent_nodes>

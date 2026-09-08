@@ -9,6 +9,8 @@ from typing import Any
 OUTLINE_SCHEMA_VERSION = "1.0"
 OUTLINE_LEVELS = frozenset({"story_arc", "volume", "book"})
 OUTLINE_PROFILES = frozenset({"short_validation", "full_book"})
+OUTLINE_LEVEL_ORDER = {"story_arc": 0, "volume": 1, "book": 2}
+OUTLINE_CHILD_LEVEL = {"volume": "story_arc", "book": "volume"}
 
 
 def _strings(payload: dict[str, Any], name: str) -> tuple[str, ...]:
@@ -88,6 +90,7 @@ class OutlineNode:
         _required(self.title, "outline title")
         _required(self.summary, "outline summary")
         _required(self.opening_situation, "outline opening_situation")
+        _required(self.central_goal, "outline central_goal")
         _required(self.central_conflict, "outline central_conflict")
         _required(self.ending_change, "outline ending_change")
         if not self.chapter_ids or not self.causal_chain:
@@ -149,6 +152,8 @@ class HierarchicalOutlineBundle:
     schema_version: str = OUTLINE_SCHEMA_VERSION
 
     def validate(self) -> None:
+        if self.schema_version != OUTLINE_SCHEMA_VERSION:
+            raise ValueError(f"unsupported outline schema version: {self.schema_version}")
         _required(self.author_id, "outline author_id")
         _required(self.work_id, "outline work_id")
         if self.profile not in OUTLINE_PROFILES:
@@ -158,17 +163,91 @@ class HierarchicalOutlineBundle:
         if not self.source_chapter_ids or not self.nodes or not self.root_outline_ids:
             raise ValueError("hierarchical outline bundle is incomplete")
         _unique(self.source_chapter_ids, "outline source_chapter_ids")
+        if len(self.source_synopsis_hashes) != len(self.source_chapter_ids):
+            raise ValueError("outline synopsis hashes must align with source chapters")
+        for value in self.source_synopsis_hashes:
+            _required(value, "outline source synopsis hash")
         node_ids = tuple(item.outline_id for item in self.nodes)
         _unique(node_ids, "outline node_ids")
+        _unique(self.root_outline_ids, "outline root_outline_ids")
         if not set(self.root_outline_ids).issubset(node_ids):
             raise ValueError("outline root refers to an unknown node")
         known = set(node_ids)
+        by_id = {item.outline_id: item for item in self.nodes}
+        ceiling_order = OUTLINE_LEVEL_ORDER[self.aggregation_ceiling]
         for node in self.nodes:
             node.validate()
+            if OUTLINE_LEVEL_ORDER[node.level] > ceiling_order:
+                raise ValueError("outline contains a node above the aggregation ceiling")
             if not set(node.child_outline_ids).issubset(known):
                 raise ValueError("outline node refers to an unknown child")
             if not set(node.chapter_ids).issubset(self.source_chapter_ids):
                 raise ValueError("outline node refers to an unknown chapter")
+            ordered_chapters = tuple(
+                chapter_id for chapter_id in self.source_chapter_ids
+                if chapter_id in set(node.chapter_ids)
+            )
+            if node.chapter_ids != ordered_chapters:
+                raise ValueError("outline node chapters must preserve source order")
+
+        for level in OUTLINE_LEVEL_ORDER:
+            level_nodes = sorted(
+                (node for node in self.nodes if node.level == level),
+                key=lambda node: node.order,
+            )
+            if tuple(node.order for node in level_nodes) != tuple(range(len(level_nodes))):
+                raise ValueError(f"{level} outline orders must be consecutive")
+
+        for node in self.nodes:
+            if node.level == "story_arc":
+                if node.child_outline_ids:
+                    raise ValueError("story arc nodes must not refer to outline children")
+                continue
+            if not node.child_outline_ids:
+                raise ValueError(f"{node.level} outline node requires children")
+            expected_level = OUTLINE_CHILD_LEVEL[node.level]
+            children = tuple(by_id[child_id] for child_id in node.child_outline_ids)
+            if any(child.level != expected_level for child in children):
+                raise ValueError(
+                    f"{node.level} outline children must be {expected_level} nodes"
+                )
+            if node.child_outline_ids != tuple(
+                child.outline_id for child in sorted(children, key=lambda child: child.order)
+            ):
+                raise ValueError("outline children must preserve level order")
+            child_chapters = tuple(
+                chapter_id for child in children for chapter_id in child.chapter_ids
+            )
+            if child_chapters != node.chapter_ids:
+                raise ValueError("outline parent chapters must equal its ordered child coverage")
+
+        roots = tuple(by_id[root_id] for root_id in self.root_outline_ids)
+        if self.aggregation_ceiling == "book":
+            book_nodes = tuple(node for node in self.nodes if node.level == "book")
+            if len(roots) != 1 or len(book_nodes) != 1:
+                raise ValueError("book aggregation requires exactly one book node and root")
+        if any(root.level != self.aggregation_ceiling for root in roots):
+            raise ValueError("outline roots must match the aggregation ceiling")
+        if self.root_outline_ids != tuple(
+            root.outline_id for root in sorted(roots, key=lambda root: root.order)
+        ):
+            raise ValueError("outline roots must preserve level order")
+        root_chapters = tuple(
+            chapter_id for root in roots for chapter_id in root.chapter_ids
+        )
+        if root_chapters != self.source_chapter_ids:
+            raise ValueError("outline roots must cover every source chapter exactly once")
+
+        reachable: set[str] = set()
+        pending = list(self.root_outline_ids)
+        while pending:
+            outline_id = pending.pop()
+            if outline_id in reachable:
+                continue
+            reachable.add(outline_id)
+            pending.extend(by_id[outline_id].child_outline_ids)
+        if reachable != known:
+            raise ValueError("outline contains nodes unreachable from its roots")
 
     def to_dict(self) -> dict[str, Any]:
         return {
@@ -199,4 +278,3 @@ class HierarchicalOutlineBundle:
             aggregation_ceiling=str(payload.get("aggregation_ceiling", "")),
             schema_version=str(payload.get("schema_version", OUTLINE_SCHEMA_VERSION)),
         )
-

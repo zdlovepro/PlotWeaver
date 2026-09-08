@@ -2,7 +2,7 @@ modules:
   ingestion:
     entrypoint: pipeline.modules.module_00_ingestion.api:run
   narrative_extraction:
-    entrypoint: pipeline.modules.module_01_narrative_extraction_private.api:run
+    entrypoint: pipeline.modules.module_01_local_synopsis_private.api:run
   hierarchical_outline:
     entrypoint: pipeline.modules.module_02_hierarchical_outline.api:run
   fact_hydration:
@@ -19,4 +19,3 @@ modules:
     entrypoint: pipeline.modules.module_08_generation.api:run
   evaluation:
     entrypoint: pipeline.modules.module_09_evaluation.api:run
-

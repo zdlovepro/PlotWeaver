@@ -1,0 +1,20 @@
+# 任务
+判断每一对相邻故事弧之间应继续归入同一卷级叙事阶段，还是从右侧故事弧开始新卷。
+
+# 成功标准
+- 按给定顺序为每个相邻故事弧对恰好返回一个判断。
+- 长期目标、核心冲突和宏观阶段仍在连续推进时使用 `continue`。
+- 前一宏观阶段形成实质结果，右侧开始新的长期目标、主要压力、身份位置或行动舞台时使用 `split`。
+- 单个故事弧结束、普通地点变化、视角变化或故事弧数量本身不足以构成 `split`。
+- 这里的 volume 是语义卷，不推断实体出版分卷。
+
+# 输出JSON格式
+{"boundaries":[{"left_outline_id":"左侧故事弧ID","right_outline_id":"紧邻的右侧故事弧ID","decision":"continue或split","reason":"宏观阶段是否延续"}]}
+
+# 故事弧顺序
+[[OUTLINE_IDS_JSON]]
+
+# 输入数据
+<story_arc_cards>
+[[STORY_ARC_CARDS_JSON]]
+</story_arc_cards>

@@ -1,0 +1,22 @@
+# 任务
+从整个短样本的角度审查故事弧序列，只报告跨故事弧层面的实质结构错误。
+
+# 可报告代码
+- duplicate_major_event：同一主要推进被相邻故事弧重复占有。
+- gap_between_arcs：前一弧结束与后一弧开局之间存在主要推进缺口。
+- unsupported_resolution：跨弧开放问题被无依据关闭。
+- invalid_boundary：弧边界明显切断同一阶段，或把两个已分离阶段强行合并。
+- misordered_arcs：故事弧顺序与章节顺序或因果推进不一致。
+
+第一版只将本审校作为质量门，不修改节点。没有确认错误时返回空 issues。
+
+# 输出JSON格式
+{"issues":[{"code":"上述枚举之一","field":"涉及的节点字段或boundary","message":"结构错误说明","chapter_ids":["相关章ID"],"segment_ids":[]}]}
+
+# 输入数据
+<chapter_cards>
+[[CHAPTER_CARDS_JSON]]
+</chapter_cards>
+<story_arc_nodes>
+[[NODES_JSON]]
+</story_arc_nodes>

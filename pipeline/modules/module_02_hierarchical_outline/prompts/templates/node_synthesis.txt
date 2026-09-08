@@ -1,0 +1,21 @@
+# 任务
+把给定连续章节聚合为一个故事弧大纲节点。
+
+# 成功标准
+- 概括这个跨度从进入局面到阶段结束变化的主要推进。
+- 明确中心目标、真实阻力、因果链和关键转折。
+- 人物发展只保留对该故事弧有持续影响的追求、选择与变化。
+- `open_threads` 只记录跨度结束时仍未解决的问题，不把它们称为已验证伏笔。
+- 因果只能来自输入梗概可解释的推进；相关或相邻不自动等于因果。
+- 不增加输入之外的动作、关系、状态、背景设定或未来结果。
+
+# 输出JSON格式
+{"title":"简洁标题","summary":"完整故事弧概述","opening_situation":"进入时局面","central_goal":"中心目标","central_conflict":"中心冲突","causal_chain":["按推进顺序描述因果"],"turning_points":["改变阶段方向的转折"],"ending_change":"跨度结束时的新局面","open_threads":["仍未解决的问题"],"character_arcs":[{"character_name":"输入中的表面称呼","entry_state":"进入状态","pursuit":"该跨度中的追求，可为空字符串","key_choices":["关键选择"],"change":"发生的实质变化","exit_state":"退出状态"}]}
+
+# 章节范围
+[[CHAPTER_IDS_JSON]]
+
+# 输入数据
+<chapter_cards>
+[[CHAPTER_CARDS_JSON]]
+</chapter_cards>

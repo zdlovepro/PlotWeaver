@@ -1,0 +1,35 @@
+# 任务
+在原候选章节梗概上做最小必要修正：纠正确认的实质错误，并补足确认遗漏的主导推进。本次不重新分区、不解释修改，也不输出局部梗概ID。
+
+# 成功标准
+- 以输入局部梗概为唯一内容依据，以原候选为修改底稿。
+- 只改变确认错误直接涉及的片段，只补入覆盖审校明确指出的必要推进。
+- 保留原候选中没有被问题指向的正确内容，并继续覆盖这些局部梗概：[[LOCAL_IDS_JSON]]。
+- 输出一个非空章节梗概字符串，可以包含多个句子，不按局部ID罗列。
+
+# 修正边界
+保留人物、行动或状态、对象、条件、结果、时序、因果、信息来源、确定程度和完成状态。相邻连续推进可以合并，但不能因修正一个局部问题而整体重写、丢弃其他推进或增加输入没有的剧情。
+
+# 语义示例
+- 若确认错误只涉及把“计划启程”写成“已经抵达”，只修改该状态，不重写整段。
+- 若覆盖问题只指出遗漏一次独立冲突，把该推进按原顺序自然补入，不恢复无关细节。
+
+# 输出JSON格式
+{"章节梗概":"在原候选上完成最小必要修正后的完整章节梗概。"}
+
+# 输入数据
+<original_chapter_summary>
+[[SUMMARY_JSON]]
+</original_chapter_summary>
+
+<confirmed_fidelity_issues>
+[[FIDELITY_ISSUES_JSON]]
+</confirmed_fidelity_issues>
+
+<confirmed_coverage_issues>
+[[MISSING_POINTS_JSON]]
+</confirmed_coverage_issues>
+
+<local_synopses>
+[[LOCAL_ROWS_JSON]]
+</local_synopses>

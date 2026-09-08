@@ -3,6 +3,7 @@ from __future__ import annotations
 import hashlib
 import unittest
 
+from pipeline.cli import _parser
 from pipeline.contracts import build_chapter_document
 from pipeline.modules.module_00_ingestion.api import chinese_number, parse_chapters
 from pipeline.orchestrator import ModuleLoadError, load_entrypoint
@@ -38,7 +39,27 @@ class NewArchitectureTests(unittest.TestCase):
         with self.assertRaises(ModuleLoadError):
             load_entrypoint("not-a-valid-entrypoint")
 
+    def test_outline_cli_requires_an_explicit_source_run(self) -> None:
+        args = _parser().parse_args([
+            "build-hierarchical-outline",
+            "--author-id", "Writer",
+            "--work-id", "work-001",
+            "--source-run-id", "module01-run",
+        ])
+        self.assertEqual(args.command, "build-hierarchical-outline")
+        self.assertEqual(args.source_run_id, "module01-run")
+        self.assertIsNone(args.aggregation_ceiling)
+
+    def test_outline_cli_accepts_a_book_ceiling(self) -> None:
+        args = _parser().parse_args([
+            "build-hierarchical-outline",
+            "--author-id", "Writer",
+            "--work-id", "work-001",
+            "--source-run-id", "module01-run",
+            "--aggregation-ceiling", "book",
+        ])
+        self.assertEqual(args.aggregation_ceiling, "book")
+
 
 if __name__ == "__main__":
     unittest.main()
-

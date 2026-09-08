@@ -1,0 +1,19 @@
+# 任务
+独立审查候选故事弧边界，只报告会实质改变跨章阶段理解的错误。
+
+# 判定
+- `false_split`：候选为 split，但右侧章节仍直接延续同一中心目标、压力或未完成结果。
+- `missed_split`：候选为 continue，但前一阶段已经形成实质结果，右侧开始新的中心阶段。
+- 地点、视角、标题、普通时间变化或暂时插曲本身不构成边界错误。
+- 没有确认错误时返回空 issues。
+
+# 输出JSON格式
+{"issues":[{"left_chapter_id":"左章ID","right_chapter_id":"右章ID","problem":"false_split或missed_split","reason":"为什么当前判断会改变故事阶段理解"}]}
+
+# 输入数据
+<chapter_cards>
+[[CHAPTER_CARDS_JSON]]
+</chapter_cards>
+<candidate_boundaries>
+[[BOUNDARIES_JSON]]
+</candidate_boundaries>

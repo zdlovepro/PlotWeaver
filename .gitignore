@@ -50,6 +50,5 @@ chroma_data/
 logs/
 *.log
 
-# The first intelligent module is a local/private implementation.
-pipeline/modules/module_01_local_synopsis_private/
+
 tests/private/

@@ -2,8 +2,8 @@ profile: short_validation
 chapter_limit: 20
 
 hierarchy:
-  aggregation_ceiling: local_arc
-  top_down_start: local_arc
+  aggregation_ceiling: story_arc
+  top_down_start: story_arc
 
 templates:
   release_status: candidate
@@ -11,4 +11,3 @@ templates:
 skill:
   allow_final_export: false
   allow_experimental_export: true
-

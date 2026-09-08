@@ -1,0 +1,26 @@
+# 任务
+判断候选 [[TARGET_LEVEL]] 节点已有陈述是否与输入子节点存在实质冲突。不要检查遗漏，也不要修改候选。
+
+# 可报告代码
+- unsupported_claim：加入子节点没有支持的剧情命题。
+- subject_error：主体或人物归属错误。
+- sequence_error：关键推进顺序错误。
+- result_error：阶段结果或完成状态错误。
+- unsupported_cross_child_cause：把相邻或相关子节点升级为确定因果。
+- unsupported_resolution：把仍开放的问题写成已经解决。
+- range_leak：写入当前子节点范围之外的内容。
+- opening_mismatch：开局与第一个子节点不一致。
+- ending_mismatch：结束变化与最后一个子节点不一致。
+
+正常压缩、合并连续推进、同义改写和省略细节不构成错误。没有实质错误时返回空 issues。
+
+# 输出JSON格式
+{"issues":[{"code":"上述枚举之一","field":"候选字段名","message":"冲突说明","chapter_ids":["相关章ID"],"outline_ids":["相关子节点ID"]}]}
+
+# 输入数据
+<child_cards>
+[[CHILD_CARDS_JSON]]
+</child_cards>
+<candidate>
+[[CANDIDATE_JSON]]
+</candidate>

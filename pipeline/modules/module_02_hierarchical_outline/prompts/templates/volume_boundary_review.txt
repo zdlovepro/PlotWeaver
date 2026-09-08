@@ -1,0 +1,19 @@
+# 任务
+独立审查候选卷边界，只报告会实质改变宏观叙事阶段理解的错误。
+
+# 判定
+- `false_split`：候选为 split，但右侧故事弧仍直接延续同一长期目标、核心冲突或未完成阶段。
+- `missed_split`：候选为 continue，但前一宏观阶段已形成实质结果，右侧开始新的长期目标、主要压力、身份位置或行动舞台。
+- 单弧结果、普通地点或视角变化、故事弧数量本身不构成边界错误。
+- 没有确认错误时返回空 issues。
+
+# 输出JSON格式
+{"issues":[{"left_outline_id":"左侧故事弧ID","right_outline_id":"右侧故事弧ID","problem":"false_split或missed_split","reason":"错误为何改变卷级阶段理解"}]}
+
+# 输入数据
+<story_arc_cards>
+[[STORY_ARC_CARDS_JSON]]
+</story_arc_cards>
+<candidate_boundaries>
+[[BOUNDARIES_JSON]]
+</candidate_boundaries>

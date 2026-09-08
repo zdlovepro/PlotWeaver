@@ -1,0 +1,24 @@
+# 任务
+判断候选故事弧已有陈述是否与输入章纲存在实质冲突。不要检查遗漏，也不要修改候选。
+
+# 可报告代码
+- unsupported_claim：加入输入没有支持的剧情命题。
+- subject_error：主体或人物归属错误。
+- sequence_error：关键推进顺序错误。
+- result_error：阶段结果或完成状态错误。
+- causal_upgrade：把相邻、相关、意向或猜测升级为确定因果。
+- unsupported_resolution：把仍开放的问题写成已经解决。
+- range_leak：写入当前章节范围之外的内容。
+
+正常压缩、合并连续推进、同义改写和省略细节不构成错误。没有实质错误时返回空 issues。
+
+# 输出JSON格式
+{"issues":[{"code":"上述枚举之一","field":"候选字段名","message":"候选理解与输入支持为何不能同时成立","chapter_ids":["支持判断的章ID"],"segment_ids":["可选的局部梗概ID"]}]}
+
+# 输入数据
+<chapter_cards>
+[[CHAPTER_CARDS_JSON]]
+</chapter_cards>
+<candidate>
+[[CANDIDATE_JSON]]
+</candidate>

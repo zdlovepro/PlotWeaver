@@ -1,0 +1,24 @@
+# 任务
+判断候选 [[TARGET_LEVEL]] 节点是否遗漏理解该宏观阶段不可缺少的内容。不要重新审查已有陈述真假，也不要修改候选。
+
+# 可报告代码
+- missing_goal：宏观中心目标缺失或无法辨认。
+- missing_conflict：决定宏观推进方向的主要压力或冲突缺失。
+- missing_turning_point：改变宏观阶段方向的关键选择或转折缺失。
+- missing_ending_change：最后形成的新局面缺失。
+- lost_open_thread：跨度末仍开放且影响整体理解的问题丢失。
+- duplicated_progress：同一主要推进被重复表述并造成结构误解。
+- incomplete_long_character_arc：对主线有持续影响的长期人物选择或变化缺失。
+
+只有缺失会让读者误解宏观阶段起因、方向、转折或结果时才报告。没有必要遗漏时返回空 issues。
+
+# 输出JSON格式
+{"issues":[{"code":"上述枚举之一","field":"应修补的候选字段","message":"问题及其必要性","chapter_ids":["相关章ID"],"outline_ids":["相关子节点ID"]}]}
+
+# 输入数据
+<child_cards>
+[[CHILD_CARDS_JSON]]
+</child_cards>
+<candidate>
+[[CANDIDATE_JSON]]
+</candidate>

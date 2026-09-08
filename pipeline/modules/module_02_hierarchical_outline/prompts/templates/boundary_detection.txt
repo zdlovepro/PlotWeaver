@@ -1,0 +1,21 @@
+# 任务
+判断每一对相邻章节之间应继续同一故事弧，还是从右侧章节开始新的故事弧。
+
+# 成功标准
+- 按给定章节顺序为每个相邻章节对恰好返回一个判断。
+- 同一阶段目标、压力、冲突或直接因果仍在延续时使用 `continue`。
+- 前一阶段形成实质结果，右侧章节开始新的中心目标、压力或叙事阶段时使用 `split`。
+- 地点、视角、标题或普通时间变化本身不足以构成 `split`。
+- 章末悬念在下一章直接延续时使用 `continue`。
+- 不使用输入之外的后文或背景知识。
+
+# 输出JSON格式
+{"boundaries":[{"left_chapter_id":"必须来自输入","right_chapter_id":"必须是紧邻的下一章","decision":"continue或split","reason":"说明目标、压力或阶段是否延续"}]}
+
+# 章节顺序
+[[CHAPTER_IDS_JSON]]
+
+# 输入数据
+<chapter_cards>
+[[CHAPTER_CARDS_JSON]]
+</chapter_cards>
